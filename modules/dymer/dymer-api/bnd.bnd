@@ -1,0 +1,11 @@
+Bundle-Name: dymer-api
+Bundle-SymbolicName: it.eng.rd.dymer.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	it.eng.rd.dymer.exception,\
+	it.eng.rd.dymer.model,\
+	it.eng.rd.dymer.service,\
+	it.eng.rd.dymer.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../dymer-service/service.xml
+

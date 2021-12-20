@@ -1,0 +1,5 @@
+Bundle-Name: dymer-viewer
+Bundle-SymbolicName: it.eng.rd.dymer.viewer.portlet
+Bundle-Version: 1.0.0
+Export-Package: it.eng.rd.dymer.viewer.portlet.constants
+-includeresource: META-INF/lib/jjwt-api.jar=jjwt-api-0.11.2.jar;lib:=true,META-INF/lib/jjwt-impl.jar=jjwt-impl-0.11.2.jar;lib:=true,META-INF/lib/jjwt-jackson.jar=jjwt-jackson-0.11.2.jar;lib:=true

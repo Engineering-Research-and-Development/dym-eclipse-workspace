@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="it.eng.rd.dymer.model.Dymer">
+		<field name="mvccVersion" type="long" />
+		<field name="uuid" type="String" />
+		<field name="dymerId" type="long" />
+		<field name="name" type="String" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+	</model>
+	<model name="it.eng.rd.dymer.model.DymerEntry">
+		<field name="mvccVersion" type="long" />
+		<field name="uuid" type="String" />
+		<field name="entryId" type="long" />
+		<field name="index" type="String" />
+		<field name="type" type="String" />
+		<field name="id" type="String" />
+		<field name="title" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="extContent" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="url" type="String" />
+		<field name="dymerId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+	</model>
+</model-hints>

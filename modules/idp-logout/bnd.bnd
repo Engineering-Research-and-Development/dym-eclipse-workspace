@@ -1,0 +1,3 @@
+Bundle-Name: idp-logout
+Bundle-SymbolicName: it.eng.rd.events.idp.logout
+Bundle-Version: 1.0.0

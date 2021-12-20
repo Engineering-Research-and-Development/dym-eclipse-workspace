@@ -1,0 +1,20 @@
+dependencies {
+	compile project(":modules:dymer:dymer-api")
+	compileOnly group: "com.liferay", name: "com.liferay.portal.search.spi"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.search.api"
+	compileOnly group: "javax.portlet", name: "portlet-api"
+	compileOnly group: "javax.servlet", name: "javax.servlet-api"
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+
+	compileOnly group: "com.liferay", name: "com.liferay.petra.function"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.model.adapter"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.reflect"
+}
+
+buildService {
+	apiDir = "../dymer-api/src/main/java"
+}
+
+
+
+group = "it.eng.rd.dymer"

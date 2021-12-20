@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE resource-action-mapping PUBLIC "-//Liferay//DTD Resource Action  
+Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7_2_0.dtd">
+<resource-action-mapping>
+<model-resource>
+    <model-name>it.eng.rd.dymer</model-name>
+    <portlet-ref>
+        <portlet-name>it_eng_rd_dymer_portlet_DymerPortlet</portlet-name>
+    </portlet-ref>
+    <root>true</root>
+    <permissions>
+        <supports>
+            <action-key>ADD_DYMER</action-key>
+            <action-key>ADD_DYMERENTRY</action-key>
+            <action-key>DELETE_DYMERENTRY</action-key>
+            <action-key>VIEW</action-key>
+        </supports>
+    </permissions>
+</model-resource>
+<model-resource>
+    <model-name>it.eng.rd.dymer.model.Dymer</model-name>
+    <portlet-ref>
+        <portlet-name>it_eng_rd_dymer_portlet_DymerPortlet</portlet-name>
+    </portlet-ref>
+    <permissions>
+        <supports>
+            <action-key>ADD_ENTRY</action-key>
+            <action-key>DELETE</action-key>
+            <action-key>PERMISSIONS</action-key>
+            <action-key>UPDATE</action-key>
+            <action-key>VIEW</action-key>
+        </supports>
+    </permissions>
+</model-resource>
+<model-resource>
+    <model-name>it.eng.rd.dymer.model.DymerEntry</model-name>
+    <portlet-ref>
+        <portlet-name>it_eng_rd_dymer_portlet_DymerPortlet</portlet-name>
+    </portlet-ref>
+    <permissions>
+        <supports>
+            <action-key>DELETE</action-key>
+            <action-key>PERMISSIONS</action-key>
+            <action-key>UPDATE</action-key>
+            <action-key>VIEW</action-key>
+        </supports>
+    </permissions>
+</model-resource>
+</resource-action-mapping>
