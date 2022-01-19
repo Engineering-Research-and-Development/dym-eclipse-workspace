@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="it.eng.rd.collaborativecreation.model.Activity">
+		<field name="mvccVersion" type="long" />
+		<field name="activityId" type="long" />
+		<field name="description" type="String" />
+		<field name="cocreationId" type="long" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Category">
+		<field name="mvccVersion" type="long" />
+		<field name="categoryId" type="long" />
+		<field name="challengeId" type="long" />
+		<field name="name" type="String" />
+		<field name="assetCategoryId" type="long" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Challenge">
+		<field name="mvccVersion" type="long" />
+		<field name="uuid" type="String" />
+		<field name="challengeId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="title" type="String" />
+		<field name="description" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="dlFolderName" type="String" />
+		<field name="dlFolderId" type="long" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="active" type="boolean" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Cocreation">
+		<field name="mvccVersion" type="long" />
+		<field name="uuid" type="String" />
+		<field name="cocreationId" type="long" />
+		<field name="challengeId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="title" type="String" />
+		<field name="description" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="dlFolderName" type="String" />
+		<field name="ldFolderId" type="long" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Cocreator">
+		<field name="mvccVersion" type="long" />
+		<field name="uuid" type="String" />
+		<field name="cocreatorId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="cocreationId" type="long" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Hashtag">
+		<field name="mvccVersion" type="long" />
+		<field name="hashtagId" type="long" />
+		<field name="challengeId" type="long" />
+		<field name="name" type="String" />
+		<field name="assetTagId" type="long" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Location">
+		<field name="mvccVersion" type="long" />
+		<field name="locatoinId" type="long" />
+		<field name="challengeId" type="long" />
+		<field name="name" type="String" />
+		<field name="latitude" type="String" />
+		<field name="longitude" type="String" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Question">
+		<field name="mvccVersion" type="long" />
+		<field name="questionId" type="long" />
+		<field name="description" type="String" />
+		<field name="cocreationId" type="long" />
+	</model>
+	<model name="it.eng.rd.collaborativecreation.model.Task">
+		<field name="mvccVersion" type="long" />
+		<field name="taskId" type="long" />
+		<field name="description" type="String" />
+		<field name="cocreationId" type="long" />
+	</model>
+</model-hints>

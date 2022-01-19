@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="it.eng.rd.collaborativecreation" mvcc-enabled="true">
+    <author>ENGRD</author>
+    <namespace>COCREATION</namespace>
+    
+    <entity name="Challenge" local-service="true" uuid="true" remote-service="true">
+	    <!-- PK field -->
+		<column name="challengeId" type="long" primary="true"></column>
+		
+		<!-- Entity fields -->
+		<column name="groupId" type="long"/>
+		<column name="companyId" type="long"/>
+		<column name="userId" type="long"/>
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+		<column name="title" type="String" />
+		<column name="description" type="String" />
+        <column name="startDate" type="Date"></column>
+        <column name="endDate" type="Date"></column>
+        <column name="dlFolderName" type="String"></column>
+		<column name="dlFolderId" type="long"></column>
+        <column name="locations" type="Collection"></column>
+        <column name="categories" type="Collection"></column>
+        <column name="hashtags" type="Collection"></column>
+		<column name="cocreations" type="Collection"></column>
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
+        <column name="active" type="boolean"></column>
+		
+		<order>
+			<order-column name="createDate" order-by="desc" />
+			<order-column name="startDate" order-by="desc" />
+			<order-column name="endDate" order-by="desc" />
+		</order>
+		
+        <finder name="Title" return-type="Collection">
+        	<finder-column name="title"></finder-column>
+        </finder>
+        <finder name="UserId" return-type="Collection">
+        	<finder-column name="groupId"></finder-column>
+        	<finder-column name="userId"></finder-column>
+        </finder>
+	    <finder name="GroupId" return-type="Collection">
+	       <finder-column name="groupId" />
+	    </finder>
+        <finder name="Active" return-type="Collection">
+            <finder-column name="active"></finder-column>
+        </finder>
+	    
+	    <reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetLink" />
+	</entity>
+    
+    <entity local-service="true" name="Cocreation" remote-service="true" uuid="true">
+    	<!-- PK field -->
+		<column name="cocreationId" type="long" primary="true"></column>
+		
+		<!-- Entity fields -->
+    	<column name="challengeId" type="long"></column>
+    	<column name="groupId" type="long"></column>
+    	<column name="companyId" type="long"></column>
+    	<column name="userId" type="long"></column>
+    	<column name="userName" type="String"></column>
+    	<column name="createDate" type="Date"></column>
+    	<column name="modifiedDate" type="Date"></column>
+        <column name="title" type="String"></column>
+        <column name="description" type="String"></column>
+        <column name="dlFolderName" type="String" primary="false"></column>
+        <column name="ldFolderId" type="long" primary="false"></column>
+        <column name="contacts" type="Collection"></column>
+        <column name="activities" type="Collection"></column>
+        <column name="todo" type="Collection"></column>
+        <column name="questions" type="Collection"></column>
+        <column name="status" type="int"></column>
+        <column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
+
+    	<order>
+            <order-column name="createDate" order-by="desc"></order-column>
+    	</order>
+
+    	<finder name="Title" return-type="Collection">
+    		<finder-column name="title"></finder-column>
+    	</finder>
+        <finder name="UserId" return-type="Collection">
+            <finder-column name="userId"></finder-column>
+            <finder-column name="groupId"></finder-column>
+        </finder>
+        <finder name="GroupId" return-type="Collection">
+            <finder-column name="groupId"></finder-column>
+        </finder>
+        
+        <reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetLink" />
+    </entity>
+    
+    <entity name="Cocreator" local-service="true" uuid="true">
+        <!-- PK field -->
+        <column name="cocreatorId" type="long" primary="true"></column>
+        
+        <!-- Entity fields -->
+        <column name="groupId" type="long"></column>
+        <column name="companyId" type="long"></column>
+        <column name="userId" type="long"></column>
+        <column name="userName" type="String"></column>
+        <column name="cocreationId" type="long"></column>
+        
+        <order>
+            <order-column name="userId" order-by="desc"></order-column>
+            <order-column name="userName" order-by="desc"></order-column>
+        </order>
+        
+        <finder name="CocreationId" return-type="Collection">
+            <finder-column name="cocreationId"></finder-column>
+        </finder>
+        <finder name="UserId" return-type="Collection">
+            <finder-column name="userId"></finder-column>
+        </finder>
+    </entity>
+    
+    <entity name="Location" local-service="true">
+        <!-- PK field -->
+        <column name="locatoinId" type="long" primary="true"></column>
+        
+        <!-- Entity fields -->
+        <column name="challengeId" type="long"></column>
+        <column name="name" type="String"></column>
+        <column name="latitude" type="String"></column>
+        <column name="longitude" type="String"></column>
+        
+        <order>
+            <order-column name="name" order-by="desc"></order-column>
+        </order>
+        
+        <finder name="Name" return-type="Collection">
+            <finder-column name="name"></finder-column>
+        </finder>
+    </entity>
+    
+    <entity name="Category" local-service="true">
+        <!-- PK field -->
+        <column name="categoryId" type="long" primary="true"></column>
+        
+        <!-- Entity fields -->
+        <column name="challengeId" type="long"></column>
+        <column name="name" type="String"></column>
+        <column name="assetCategoryId" type="long"></column>
+        
+        <order>
+            <order-column name="name" order-by="desc"></order-column>
+        </order>
+        
+        <finder name="Name" return-type="Collection">
+            <finder-column name="name"></finder-column>
+        </finder>
+    </entity>
+    
+    <entity name="Hashtag" local-service="true">
+        <!-- PK field -->
+        <column name="hashtagId" type="long" primary="true"></column>
+        
+        <!-- Entity fields -->
+        <column name="challengeId" type="long"></column>
+        <column name="name" type="String"></column>
+        <column name="assetTagId" type="long"></column>
+        
+        <order>
+            <order-column name="name" order-by="desc"></order-column>
+        </order>
+        
+        <finder name="Name" return-type="Collection">
+            <finder-column name="name"></finder-column>
+        </finder>
+    </entity>
+    
+    <entity name="Activity" local-service="true">
+        <!-- PK field -->
+        <column name="activityId" type="long" primary="true"></column>
+        
+        <!-- Entity fields -->
+        <column name="description" type="String"></column>
+        <column name="cocreationId" type="long"></column>
+        <order>
+            <order-column name="description" order-by="desc"></order-column>
+        </order>
+        <finder name="Activity" return-type="Collection">
+            <finder-column name="activityId"></finder-column>
+        </finder>
+    </entity>
+    
+    <entity name="Task" local-service="true">
+        <!-- PK field -->
+        <column name="taskId" type="long" primary="true"></column>
+        
+        <!-- Entity fields -->
+        <column name="description" type="String"></column>
+        <column name="cocreationId" type="long"></column>
+        <order>
+            <order-column name="description" order-by="desc"></order-column>
+        </order>
+        <finder name="Task" return-type="Collection">
+            <finder-column name="taskId"></finder-column>
+        </finder>
+    </entity>
+    
+    <entity name="Question" local-service="true">
+        <!-- PK field -->
+        <column name="questionId" type="long" primary="true"></column>
+        
+        <!-- Entity fields -->
+        <column name="description" type="String"></column>
+        <column name="cocreationId" type="long"></column>
+        <order>
+            <order-column name="description" order-by="desc"></order-column>
+        </order>
+        <finder name="Question" return-type="Collection">
+            <finder-column name="questionId"></finder-column>
+        </finder>
+    </entity>
+</service-builder>

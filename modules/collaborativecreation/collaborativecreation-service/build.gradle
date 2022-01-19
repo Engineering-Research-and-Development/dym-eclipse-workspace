@@ -1,0 +1,11 @@
+dependencies {
+	compile project(":modules:collaborativecreation:collaborativecreation-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+}
+
+buildService {
+	apiDir = "../collaborativecreation-api/src/main/java"
+}
+
+group = "it.eng.rd.collaborativecreation"

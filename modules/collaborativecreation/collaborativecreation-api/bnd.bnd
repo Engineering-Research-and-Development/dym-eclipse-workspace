@@ -1,0 +1,10 @@
+Bundle-Name: collaborativecreation-api
+Bundle-SymbolicName: it.eng.rd.collaborativecreation.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	it.eng.rd.collaborativecreation.exception,\
+	it.eng.rd.collaborativecreation.model,\
+	it.eng.rd.collaborativecreation.service,\
+	it.eng.rd.collaborativecreation.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../collaborativecreation-service/service.xml
