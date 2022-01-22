@@ -1,2 +1,63 @@
 .cocreation {
 }
+
+.co-title, .co-creation .co-title{   
+	font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--link-color,#1264ab);
+}
+
+.co-mainTitle{
+	
+	font-size: 2.0rem;
+    font-weight: 700;
+	
+}
+.co-creation .co-round{
+	 width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: var(--link-color,#1264ab);
+    vertical-align: middle;
+    font-size: 50px;
+    color: #fff;
+    margin:  0px auto;
+    text-align:center;
+}
+.co-creation .co-count{
+	    margin: 0px auto;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 300;
+}
+.co-creation .co-round i{
+	
+}
+
+
+
+.co-creation .nav.nav-tabs{
+	 float: right;
+}
+
+
+.co-creation .co-box {
+	
+	
+}
+
+.co-creation .co-abstract {
+    background-color: #fff;
+    padding: 25px;
+    margin-bottom: 14px !important;
+    box-shadow: 0 1px 3px -1px rgb(0 0 0 / 60%);
+}
+
+
+label.control-label{
+	font-size: 1.0rem;
+    font-weight: 700;
+    color: var(--link-color,#1264ab);
+ }
+
+ .dark{color:#000;}

@@ -6,18 +6,18 @@
 	}
 </style>
 
-<aui:nav cssClass="nav-tabs">
+<div class=" m-2 p-1  ">
+       <div class=" mb-2">
+<%-- <aui:nav cssClass="nav-tabs">
 	<portlet:renderURL var="cocreationsURL">
 		<portlet:param name="jspPage" value="/view.jsp"/>
 	</portlet:renderURL>
 	<aui:nav-item href="<%=cocreationsURL%>" label="Welcome !"/>
-</aui:nav>	
+</aui:nav> --%>	
+ 
+ <h3 class="co-title">  <liferay-ui:message key='collaborativecreationweb.caption'></liferay-ui:message> </h3>
 
-<p>
-	<b><liferay-ui:message key='collaborativecreationweb.caption'></liferay-ui:message></b>
-</p>
-
-<div id="welcome">
+<div id="welcome"  class="m-2 p-2">
 	<div class="span4" id="first">
         <p></p>
         <span>In this section of the <b>SOCS Platform</b>, farmers and technology providers can collaborate</span>
@@ -41,5 +41,8 @@
 <portlet:renderURL var="challengesURL">
 		<portlet:param name="jspPage" value="/challenges.jsp"/>
 </portlet:renderURL>
-<a href="<%=challengesURL%>">Get Started !</a>
+ 
+<a href="<%=challengesURL%>" class="btn btn-primary">Get Started !</a>
+ </div>
 
+</div>

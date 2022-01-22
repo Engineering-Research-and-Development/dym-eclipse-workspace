@@ -56,7 +56,7 @@
     <portlet:param name="jspPage" value="/challengeDetails.jsp" />
 </portlet:renderURL>
 
-<aui:nav cssClass="nav-tabs">
+<%-- <aui:nav cssClass="nav-tabs">
 	<portlet:renderURL var="cocreationsURL">
 		<portlet:param name="jspPage" value="/view.jsp"/>
 	</portlet:renderURL>
@@ -73,18 +73,59 @@
 		<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 	</portlet:renderURL>
 	<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
-</aui:nav>	
+</aui:nav>	 --%>
 
-<aui:fieldset>
-	<div id="farmerProfile">
-	    <div id="farmerProfileName" class="farmerProfileLeft">
-              <aui:input label="Name" name="name" id="name" type="text" value="Johannes Antoniadis"/>
-        </div>
-		<div id="farmerProfileLocation" class="farmerProfileLeft">
-              <aui:input label="Location" name="location" id="location" type="text" value="Ireland"/>
-        </div>
-		<div id="farmInformation" class="farmerProfileRight">
-	        <liferay-ui:tabs names="Land Parcel 1,Land Parcel 2,Land Parcel 3,Land Parcel 4" refresh="false" tabsValues="Land Parcel 1,Land Parcel 2,Land Parcel 3,Land Parcel 4">
+
+
+<div class="container-fluid p-0 co-creation">
+   
+  	<div class="row">
+			 <div class="col-12 col-md-12 border-bottom">
+				 	<div id=" " class="m-1 p-1" >
+					 	 <portlet:renderURL var="challengesURL">
+								<portlet:param name="jspPage" value="/challenges.jsp"/>
+						</portlet:renderURL>
+		
+					      <a href="<%=challengesURL%>" class="newChallenge"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> <span class="co-title dark">Farmer's Profile</span></a>   
+					</div>
+			 </div>
+			 
+		 </div>
+
+
+   <div class="row">
+   <div class="col col-lg-3 col-sm-3 col-3 col-md-12">
+		
+		<div id="userPic" class="co-box mt-2 mb-4">
+	    	    <img alt="" src="<%=request.getContextPath()%>/img/user.png" width="100" >
+		</div>
+		
+		
+		
+		<div class="co-box mt-2 mb-4">
+	    	 <label class="aui-field-label co-sub-title">Name:</label>    
+		     <span>Jhoannes Antoniadis</span>
+		</div>
+		<div class="co-box mt-2 mb-4">
+	    	 <label class="aui-field-label co-sub-title">Location:</label>    
+		     <span>Ireland</span>
+		</div>
+		<div class="co-box mt-2 mb-4">
+	    	 <label class="aui-field-label co-sub-title">Email:</label>    
+		     <span>jhon@emai.com</span>
+		</div>
+		<div class="co-box mt-2 mb-4">
+	    	 <label class="aui-field-label co-sub-title">Farmer's Organization:</label>    
+		     <span>Farmers United</span>
+		</div>
+		 
+		 
+  </div><!-- w-1/4  END-->
+  <div class="col col-lg-9 col-sm-9 col-9 col-md-12"> 
+	   
+	   
+	   
+	   <liferay-ui:tabs names="Land Parcel 1,Land Parcel 2,Land Parcel 3,Land Parcel 4" refresh="false" tabsValues="Land Parcel 1,Land Parcel 2,Land Parcel 3,Land Parcel 4">
 			    <div id="landParcel" class="addlandParcel">
 					<img class="journal-image" hspace="0" id="addLandParcel" src="<%=request.getContextPath()%>/img/plus.png" vspace="0"/>
 				</div>
@@ -165,15 +206,16 @@
 			        </div>
 			    </liferay-ui:section>
 			</liferay-ui:tabs>
-	    </div>    
-		<div id="farmerProfileContactNumber" class="farmerProfileLeft">
-              <aui:input label="Contact Number" name="contactNumber" id="contactNumber" type="text" value="1234567890"/>
-        </div>
-		<div id="farmerProfileEmail" class="farmerProfileLeft">
-              <aui:input label="Email" name="email" id="email" type="text" value="johannes@email.com"/>
-        </div>
-        <div id="farmerProfileOrganization" class="farmerProfileLeft">
-              <aui:input label="Organization" name="organization" id="organization" type="text" value="Farmers United"/>
-        </div>    
-	</div>
-</aui:fieldset>
+		 
+	     
+	  
+  </div><!-- w-3/4 END -->
+ 
+ </div> 
+  
+</div><!-- container -->
+
+ 
+
+
+ 
