@@ -103,23 +103,30 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 	public void processAction(ActionRequest request, ActionResponse response) throws IOException {
 		PortletPreferences portletPreferences = request.getPreferences();
 			
-		String idmUrl = "";
+		String idmUrl = StringPool.BLANK;
 		if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 			idmUrl = portletPreferences.getValue("idmUrl", _idpRegistrationConfiguration.idmUrl());
 		}
-		String idmEmailAdmin = "";
+		String idmEmailAdmin = StringPool.BLANK;
 		if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 			idmEmailAdmin = portletPreferences.getValue("idmEmailAdmin", _idpRegistrationConfiguration.idmEmailAdmin());
 		}
-		String idmPasswordAdmin = "";
+		String idmEmailAdminNotification = StringPool.BLANK;
+		if (Validator.isNotNull(_idpRegistrationConfiguration)) {
+			idmEmailAdminNotification = portletPreferences.getValue("idmEmailAdminNotification", _idpRegistrationConfiguration.idmEmailAdminNotification());
+		}
+		String idmPasswordAdmin = StringPool.BLANK;
 		if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 			idmPasswordAdmin = portletPreferences.getValue("idmPasswordAdmin", _idpRegistrationConfiguration.idmPasswordAdmin());
 		}
-		String idmEnable = "false";
+		String idmEnable = "off";
+		boolean  idmUserEnabled = false;
 		if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 			idmEnable = portletPreferences.getValue("idmEnable", _idpRegistrationConfiguration.idmEnable());
+			if (idmEnable.equalsIgnoreCase("on")) {
+				idmUserEnabled = true;
+			}
 		}
-		
 		
 		try{
 		    CaptchaUtil.check(request);
@@ -136,8 +143,9 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 				_log.debug("------------------Configuration Info----------------");
 				_log.debug("idmUrl: "+idmUrl);
 				_log.debug("idmEmailAdmin: "+idmEmailAdmin);
+				_log.debug("idmEmailAdminNotification: "+idmEmailAdminNotification);
 				_log.debug("idmPasswordAdmin: "+idmPasswordAdmin);	
-				_log.debug("idmEnable: "+idmEnable);
+				_log.debug("idmUserEnabled: "+idmUserEnabled);
 				_log.debug("------------------New user Info---------------------");
 				_log.debug("email: "+email);
 				_log.debug("username: "+username);
@@ -173,7 +181,7 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 						JSONObject parentData = (new JSONFactoryUtil().createJSONObject());
 						JSONObject childData = (new JSONFactoryUtil().createJSONObject());
 						childData.put("email", email);
-						childData.put("enabled", Boolean.valueOf(idmEnable).booleanValue());
+						childData.put("enabled", idmUserEnabled);
 						childData.put("username", username);
 						childData.put("password", password);
 						childData.put("domain_id", "default");
@@ -184,6 +192,10 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 						postAddUser.addHeader("X-Auth-Token",xSubjectToken);
 						StringEntity userInfo = new StringEntity(parentData.toString());
 						postAddUser.setEntity(userInfo);
+						
+						if (_log.isDebugEnabled()) {
+							_log.debug("userInfo " +parentData.toString());
+						}
 							
 						HttpResponse  httpResponseAddUser = client.execute(postAddUser);
 						int statusCodeAddUser = httpResponseAddUser.getStatusLine().getStatusCode();
@@ -235,7 +247,8 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 							}
 							
 							Mailer mailer = new Mailer();
-							mailer.sentMail(mailSubject, from, projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, email, password, idmUrl);
+							mailer.sentMail(projectName + "New Account", from, projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, idmEmailAdminNotification, password, idmUrl, true, idmUserEnabled);
+							mailer.sentMail(mailSubject, from, projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, email, password, idmUrl, false, idmUserEnabled);
 						} else {
 							JSONObject responseMessage = jsonObjectAddUser.getJSONObject ("error");
 							String message = responseMessage.getString("message");

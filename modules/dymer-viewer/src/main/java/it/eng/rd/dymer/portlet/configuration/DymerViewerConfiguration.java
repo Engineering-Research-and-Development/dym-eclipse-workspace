@@ -97,6 +97,9 @@ public interface DymerViewerConfiguration {
 	@Meta.AD(required = false)
 	public String map_markers();
 	
+	@Meta.AD(required = false)
+	public String map_configuration();
+	
 //crypto
 	@Meta.AD(required = false)
 	public String secreKey();

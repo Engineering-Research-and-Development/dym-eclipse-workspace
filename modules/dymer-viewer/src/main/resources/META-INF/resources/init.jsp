@@ -235,6 +235,10 @@
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		map_markers = portletPreferences.getValue("map_markers", dymerViewerConfiguration.map_markers());
 	}
+	String map_configuration = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		map_configuration = portletPreferences.getValue("map_configuration", dymerViewerConfiguration.map_configuration());
+	}
 	
 	String secretKey = "";
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
@@ -319,6 +323,7 @@
 <c:set var="dataTable_" value="<%=dataTable %>" />
 <c:set var="dmapstyle_" value="<%=dmapstyle %>" />
 <c:set var="map_markers_" value="<%=map_markers %>" />
+<c:set var="map_configuration_" value="<%=map_configuration %>" />
 
 <c:set var="secretKey_" value="<%=secretKey %>" />
 

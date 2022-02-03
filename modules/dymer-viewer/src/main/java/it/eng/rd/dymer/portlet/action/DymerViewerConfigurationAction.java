@@ -98,6 +98,7 @@ public class DymerViewerConfigurationAction
 		String dataTable = ParamUtil.getString(actionRequest, "dataTable");
 		String dmapstyle = ParamUtil.getString(actionRequest, "dmapstyle");
 		String map_markers = ParamUtil.getString(actionRequest, "map_markers");
+		String map_configuration = ParamUtil.getString(actionRequest, "map_configuration");
 		
 		String secretKey = ParamUtil.getString(actionRequest, "secretKey");
 		
@@ -140,6 +141,7 @@ public class DymerViewerConfigurationAction
 		setPreference(actionRequest, "dataTable", dataTable);
 		setPreference(actionRequest, "dmapstyle", dmapstyle);
 		setPreference(actionRequest, "map_markers", map_markers);
+		setPreference(actionRequest, "map_configuration", map_configuration);
 		
 		setPreference(actionRequest, "secretKey", secretKey);
 		_log.info("secretKey "+secretKey);
@@ -167,7 +169,11 @@ public class DymerViewerConfigurationAction
 		_log.info("typemapdt: " + typemapdt);
 		_log.info("dataTable: " + dataTable);
 		_log.info("dmapstyle: " + dmapstyle);
-		_log.info("map_markers: " + map_markers);*/
+		_log.info("map_markers: " + map_markers);
+		_log.info("map_configuration: " + map_configuration);
+		
+		*
+		*/
 		
 //		for (int i = 0; i < defaultCheckedRoles.length; i++) {
 //			_log.info(i+1 + ")" + defaultCheckedRoles[i] + "\n\n");

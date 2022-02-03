@@ -471,13 +471,13 @@
 					<% 
 						if(typemapdt.equals("mapdt") || typemapdt.equals("map")) { 
 					%>	
-						map:{style:"<%=dmapstyle%>",
-							<% 
-								if(!map_markers.isEmpty()) { 
+						map:{
+							 <% 
+							if(!map_configuration.isEmpty()) { 
 							%>	
-									markers:<%=map_markers%>
+							<%=map_configuration%>
 							<% 
-								} 
+							} 
 							%>
 						},
 					<% 

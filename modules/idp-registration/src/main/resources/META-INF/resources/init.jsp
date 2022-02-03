@@ -36,6 +36,10 @@ String idmEmailAdmin = "";
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	idmEmailAdmin = portletPreferences.getValue("idmEmailAdmin", idpUserRegistrationConfiguration.idmEmailAdmin());
 }
+String idmEmailAdminNotification = "";
+if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
+	idmEmailAdminNotification = portletPreferences.getValue("idmEmailAdminNotification", idpUserRegistrationConfiguration.idmEmailAdminNotification());
+}
 String idmPasswordAdmin = "";
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	idmPasswordAdmin = portletPreferences.getValue("idmPasswordAdmin", idpUserRegistrationConfiguration.idmPasswordAdmin());

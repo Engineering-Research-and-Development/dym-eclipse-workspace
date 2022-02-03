@@ -90,6 +90,20 @@
 					  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
 						  	 <div class="container_keyget bordercont row">
 								<div class="col-12 span12">
+									<label><liferay-ui:message key="identity-manager-admin-e-mail-notification"/></label>
+								    <input class="form-control form-text lfr-input-resource " 
+										id="<portlet:namespace />idmEmailAdminNotification" 
+										name="<portlet:namespace />idmEmailAdminNotification" 
+										type="text" 
+										value="<%= idmEmailAdminNotification %>">
+								</div>
+						  	 </div>
+					  	 </div>
+					   </div>
+					   <div class="placeholder row">
+					  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
+						  	 <div class="container_keyget bordercont row">
+								<div class="col-12 span12">
 									<label><liferay-ui:message key="identity-manager-admin-password"/></label>
 								    <input class="form-control form-text lfr-input-resource " 
 										id="<portlet:namespace />idmPasswordAdmin" 
@@ -110,7 +124,12 @@
 											id="<portlet:namespace />idmEnable" 
 											name="<portlet:namespace />idmEnable" 
 											onclick="" 
-											type="checkbox" <c:if test="${idmEnable_}">checked="checked"</c:if>>
+											type="checkbox" 
+											<% 
+												if(idmEnable_) { 
+											%>
+											checked="checked"
+											<% } %>>
 								    <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails"><br></span></div>
 								</div>
 						  	 </div>

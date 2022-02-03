@@ -1,6 +1,0 @@
-Bundle-Name: custom-override-project
-Bundle-SymbolicName: custom.override.project
-Bundle-Version: 1.0.0
-Export-Package: custom.override.project.constants
--includeresource: META-INF/jsps=src/META-INF/custom_jsps
-

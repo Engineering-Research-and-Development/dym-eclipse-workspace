@@ -19,6 +19,9 @@ public interface IdpRegistrationConfiguration {
 	public String idmEmailAdmin();
 	
 	@Meta.AD(required = false)
+	public String idmEmailAdminNotification();
+	
+	@Meta.AD(required = false)
 	public String idmPasswordAdmin();
 	
 	@Meta.AD(required = false)

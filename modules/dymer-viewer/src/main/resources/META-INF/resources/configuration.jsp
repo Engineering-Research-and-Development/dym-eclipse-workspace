@@ -538,6 +538,15 @@
 				   			class="field dymerTextarea" >${map_markers_}</textarea>
 								Must be a json object
 					 </div>
+					 
+					 <div class="lfr-ddm-field-group field-wrapper">
+						<span class="control-label">
+							<liferay-ui:message key="label-dymer-map-configuration" />
+					 	</span>
+				   		<textarea class="field form-control lfr-textarea dymerTextarea"  
+				   			name="<portlet:namespace />map_configuration" 
+				   			class="field dymerTextarea" >${map_configuration_}</textarea>
+					 </div>
 			       </div>
 				</div>
 			</fieldset>

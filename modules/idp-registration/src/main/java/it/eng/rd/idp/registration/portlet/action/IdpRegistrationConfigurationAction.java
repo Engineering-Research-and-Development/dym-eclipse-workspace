@@ -62,6 +62,8 @@ public class IdpRegistrationConfigurationAction
 
 		String idmUrl = ParamUtil.getString(actionRequest, "idmUrl");
 		String idmEmailAdmin = ParamUtil.getString(actionRequest, "idmEmailAdmin");
+		String idmEmailAdminNotification = ParamUtil.getString(actionRequest, "idmEmailAdminNotification");
+		
 		String idmPasswordAdmin = ParamUtil.getString(actionRequest, "idmPasswordAdmin");
 		String idmEnable = ParamUtil.getString(actionRequest, "idmEnable");
 		
@@ -74,6 +76,7 @@ public class IdpRegistrationConfigurationAction
 		
 		setPreference(actionRequest, "idmUrl", idmUrl);
 		setPreference(actionRequest, "idmEmailAdmin", idmEmailAdmin);
+		setPreference(actionRequest, "idmEmailAdminNotification", idmEmailAdminNotification);
 		setPreference(actionRequest, "idmPasswordAdmin", idmPasswordAdmin);
 		setPreference(actionRequest, "idmEnable", idmEnable);
 		
