@@ -16,6 +16,7 @@ package it.eng.rd.collaborativecreation.service;
 
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
@@ -57,6 +58,14 @@ public class CocreatorLocalServiceUtil {
 	 */
 	public static Cocreator addCocreator(Cocreator cocreator) {
 		return getService().addCocreator(cocreator);
+	}
+
+	public static Cocreator addCocreator(
+			long cocreationId, long userId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().addCocreator(cocreationId, userId, serviceContext);
 	}
 
 	/**
@@ -108,6 +117,13 @@ public class CocreatorLocalServiceUtil {
 		throws PortalException {
 
 		return getService().deleteCocreator(cocreatorId);
+	}
+
+	public static void deleteCocreatorByCocreatorId(long cocreatorId)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchCocreatorException {
+
+		getService().deleteCocreatorByCocreatorId(cocreatorId);
 	}
 
 	/**
@@ -263,6 +279,29 @@ public class CocreatorLocalServiceUtil {
 		return getService().getCocreators(start, end);
 	}
 
+	public static List<Cocreator> getCocreatorsByCocreationId(long cocreationId)
+		throws PortalException {
+
+		return getService().getCocreatorsByCocreationId(cocreationId);
+	}
+
+	public static List<Cocreator> getCocreatorsByUserId(long userId) {
+		return getService().getCocreatorsByUserId(userId);
+	}
+
+	public static List<Cocreator> getCocreatorsByUserId(
+			long userId, int start, int end)
+		throws SystemException {
+
+		return getService().getCocreatorsByUserId(userId, start, end);
+	}
+
+	public static List<Cocreator> getCocreatorsByUserId(
+		long userId, int start, int end, OrderByComparator<Cocreator> obc) {
+
+		return getService().getCocreatorsByUserId(userId, start, end, obc);
+	}
+
 	/**
 	 * Returns all the cocreators matching the UUID and company.
 	 *
@@ -303,6 +342,10 @@ public class CocreatorLocalServiceUtil {
 		return getService().getCocreatorsCount();
 	}
 
+	public static int getCocreatorsCountByUserId(long userId) {
+		return getService().getCocreatorsCountByUserId(userId);
+	}
+
 	public static
 		com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery
 			getIndexableActionableDynamicQuery() {
@@ -340,6 +383,15 @@ public class CocreatorLocalServiceUtil {
 	 */
 	public static Cocreator updateCocreator(Cocreator cocreator) {
 		return getService().updateCocreator(cocreator);
+	}
+
+	public static Cocreator updateCocreator(
+			long cocreationId, long cocreatorId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return getService().updateCocreator(
+			cocreationId, cocreatorId, serviceContext);
 	}
 
 	public static CocreatorLocalService getService() {

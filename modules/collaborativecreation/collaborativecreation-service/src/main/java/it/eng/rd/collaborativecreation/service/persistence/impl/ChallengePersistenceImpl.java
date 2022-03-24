@@ -3014,40 +3014,46 @@ public class ChallengePersistenceImpl
 	private FinderPath _finderPathCountByActive;
 
 	/**
-	 * Returns all the challenges where active = &#63;.
+	 * Returns all the challenges where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @return the matching challenges
 	 */
 	@Override
-	public List<Challenge> findByActive(boolean active) {
-		return findByActive(active, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public List<Challenge> findByActive(long groupId, boolean active) {
+		return findByActive(
+			groupId, active, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the challenges where active = &#63;.
+	 * Returns a range of all the challenges where groupId = &#63; and active = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @return the range of matching challenges
 	 */
 	@Override
-	public List<Challenge> findByActive(boolean active, int start, int end) {
-		return findByActive(active, start, end, null);
+	public List<Challenge> findByActive(
+		long groupId, boolean active, int start, int end) {
+
+		return findByActive(groupId, active, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the challenges where active = &#63;.
+	 * Returns an ordered range of all the challenges where groupId = &#63; and active = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
@@ -3056,19 +3062,21 @@ public class ChallengePersistenceImpl
 	 */
 	@Override
 	public List<Challenge> findByActive(
-		boolean active, int start, int end,
+		long groupId, boolean active, int start, int end,
 		OrderByComparator<Challenge> orderByComparator) {
 
-		return findByActive(active, start, end, orderByComparator, true);
+		return findByActive(
+			groupId, active, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the challenges where active = &#63;.
+	 * Returns an ordered range of all the challenges where groupId = &#63; and active = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
@@ -3078,7 +3086,7 @@ public class ChallengePersistenceImpl
 	 */
 	@Override
 	public List<Challenge> findByActive(
-		boolean active, int start, int end,
+		long groupId, boolean active, int start, int end,
 		OrderByComparator<Challenge> orderByComparator,
 		boolean useFinderCache) {
 
@@ -3090,12 +3098,14 @@ public class ChallengePersistenceImpl
 
 			if (useFinderCache) {
 				finderPath = _finderPathWithoutPaginationFindByActive;
-				finderArgs = new Object[] {active};
+				finderArgs = new Object[] {groupId, active};
 			}
 		}
 		else if (useFinderCache) {
 			finderPath = _finderPathWithPaginationFindByActive;
-			finderArgs = new Object[] {active, start, end, orderByComparator};
+			finderArgs = new Object[] {
+				groupId, active, start, end, orderByComparator
+			};
 		}
 
 		List<Challenge> list = null;
@@ -3106,7 +3116,9 @@ public class ChallengePersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Challenge challenge : list) {
-					if (active != challenge.isActive()) {
+					if ((groupId != challenge.getGroupId()) ||
+						(active != challenge.isActive())) {
+
 						list = null;
 
 						break;
@@ -3120,13 +3132,15 @@ public class ChallengePersistenceImpl
 
 			if (orderByComparator != null) {
 				sb = new StringBundler(
-					3 + (orderByComparator.getOrderByFields().length * 2));
+					4 + (orderByComparator.getOrderByFields().length * 2));
 			}
 			else {
-				sb = new StringBundler(3);
+				sb = new StringBundler(4);
 			}
 
 			sb.append(_SQL_SELECT_CHALLENGE_WHERE);
+
+			sb.append(_FINDER_COLUMN_ACTIVE_GROUPID_2);
 
 			sb.append(_FINDER_COLUMN_ACTIVE_ACTIVE_2);
 
@@ -3148,6 +3162,8 @@ public class ChallengePersistenceImpl
 				Query query = session.createQuery(sql);
 
 				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(groupId);
 
 				queryPos.add(active);
 
@@ -3172,8 +3188,9 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the first challenge in the ordered set where active = &#63;.
+	 * Returns the first challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge
@@ -3181,20 +3198,25 @@ public class ChallengePersistenceImpl
 	 */
 	@Override
 	public Challenge findByActive_First(
-			boolean active, OrderByComparator<Challenge> orderByComparator)
+			long groupId, boolean active,
+			OrderByComparator<Challenge> orderByComparator)
 		throws NoSuchChallengeException {
 
-		Challenge challenge = fetchByActive_First(active, orderByComparator);
+		Challenge challenge = fetchByActive_First(
+			groupId, active, orderByComparator);
 
 		if (challenge != null) {
 			return challenge;
 		}
 
-		StringBundler sb = new StringBundler(4);
+		StringBundler sb = new StringBundler(6);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("active=");
+		sb.append("groupId=");
+		sb.append(groupId);
+
+		sb.append(", active=");
 		sb.append(active);
 
 		sb.append("}");
@@ -3203,17 +3225,20 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the first challenge in the ordered set where active = &#63;.
+	 * Returns the first challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	@Override
 	public Challenge fetchByActive_First(
-		boolean active, OrderByComparator<Challenge> orderByComparator) {
+		long groupId, boolean active,
+		OrderByComparator<Challenge> orderByComparator) {
 
-		List<Challenge> list = findByActive(active, 0, 1, orderByComparator);
+		List<Challenge> list = findByActive(
+			groupId, active, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -3223,8 +3248,9 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the last challenge in the ordered set where active = &#63;.
+	 * Returns the last challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge
@@ -3232,20 +3258,25 @@ public class ChallengePersistenceImpl
 	 */
 	@Override
 	public Challenge findByActive_Last(
-			boolean active, OrderByComparator<Challenge> orderByComparator)
+			long groupId, boolean active,
+			OrderByComparator<Challenge> orderByComparator)
 		throws NoSuchChallengeException {
 
-		Challenge challenge = fetchByActive_Last(active, orderByComparator);
+		Challenge challenge = fetchByActive_Last(
+			groupId, active, orderByComparator);
 
 		if (challenge != null) {
 			return challenge;
 		}
 
-		StringBundler sb = new StringBundler(4);
+		StringBundler sb = new StringBundler(6);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("active=");
+		sb.append("groupId=");
+		sb.append(groupId);
+
+		sb.append(", active=");
 		sb.append(active);
 
 		sb.append("}");
@@ -3254,24 +3285,26 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the last challenge in the ordered set where active = &#63;.
+	 * Returns the last challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	@Override
 	public Challenge fetchByActive_Last(
-		boolean active, OrderByComparator<Challenge> orderByComparator) {
+		long groupId, boolean active,
+		OrderByComparator<Challenge> orderByComparator) {
 
-		int count = countByActive(active);
+		int count = countByActive(groupId, active);
 
 		if (count == 0) {
 			return null;
 		}
 
 		List<Challenge> list = findByActive(
-			active, count - 1, count, orderByComparator);
+			groupId, active, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -3281,9 +3314,10 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the challenges before and after the current challenge in the ordered set where active = &#63;.
+	 * Returns the challenges before and after the current challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
 	 * @param challengeId the primary key of the current challenge
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next challenge
@@ -3291,7 +3325,7 @@ public class ChallengePersistenceImpl
 	 */
 	@Override
 	public Challenge[] findByActive_PrevAndNext(
-			long challengeId, boolean active,
+			long challengeId, long groupId, boolean active,
 			OrderByComparator<Challenge> orderByComparator)
 		throws NoSuchChallengeException {
 
@@ -3305,12 +3339,12 @@ public class ChallengePersistenceImpl
 			Challenge[] array = new ChallengeImpl[3];
 
 			array[0] = getByActive_PrevAndNext(
-				session, challenge, active, orderByComparator, true);
+				session, challenge, groupId, active, orderByComparator, true);
 
 			array[1] = challenge;
 
 			array[2] = getByActive_PrevAndNext(
-				session, challenge, active, orderByComparator, false);
+				session, challenge, groupId, active, orderByComparator, false);
 
 			return array;
 		}
@@ -3323,21 +3357,23 @@ public class ChallengePersistenceImpl
 	}
 
 	protected Challenge getByActive_PrevAndNext(
-		Session session, Challenge challenge, boolean active,
+		Session session, Challenge challenge, long groupId, boolean active,
 		OrderByComparator<Challenge> orderByComparator, boolean previous) {
 
 		StringBundler sb = null;
 
 		if (orderByComparator != null) {
 			sb = new StringBundler(
-				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
 					(orderByComparator.getOrderByFields().length * 3));
 		}
 		else {
-			sb = new StringBundler(3);
+			sb = new StringBundler(4);
 		}
 
 		sb.append(_SQL_SELECT_CHALLENGE_WHERE);
+
+		sb.append(_FINDER_COLUMN_ACTIVE_GROUPID_2);
 
 		sb.append(_FINDER_COLUMN_ACTIVE_ACTIVE_2);
 
@@ -3410,6 +3446,8 @@ public class ChallengePersistenceImpl
 
 		QueryPos queryPos = QueryPos.getInstance(query);
 
+		queryPos.add(groupId);
+
 		queryPos.add(active);
 
 		if (orderByComparator != null) {
@@ -3431,38 +3469,43 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Removes all the challenges where active = &#63; from the database.
+	 * Removes all the challenges where groupId = &#63; and active = &#63; from the database.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 */
 	@Override
-	public void removeByActive(boolean active) {
+	public void removeByActive(long groupId, boolean active) {
 		for (Challenge challenge :
 				findByActive(
-					active, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+					groupId, active, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null)) {
 
 			remove(challenge);
 		}
 	}
 
 	/**
-	 * Returns the number of challenges where active = &#63;.
+	 * Returns the number of challenges where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @return the number of matching challenges
 	 */
 	@Override
-	public int countByActive(boolean active) {
+	public int countByActive(long groupId, boolean active) {
 		FinderPath finderPath = _finderPathCountByActive;
 
-		Object[] finderArgs = new Object[] {active};
+		Object[] finderArgs = new Object[] {groupId, active};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
 		if (count == null) {
-			StringBundler sb = new StringBundler(2);
+			StringBundler sb = new StringBundler(3);
 
 			sb.append(_SQL_COUNT_CHALLENGE_WHERE);
+
+			sb.append(_FINDER_COLUMN_ACTIVE_GROUPID_2);
 
 			sb.append(_FINDER_COLUMN_ACTIVE_ACTIVE_2);
 
@@ -3476,6 +3519,8 @@ public class ChallengePersistenceImpl
 				Query query = session.createQuery(sql);
 
 				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(groupId);
 
 				queryPos.add(active);
 
@@ -3493,6 +3538,9 @@ public class ChallengePersistenceImpl
 
 		return count.intValue();
 	}
+
+	private static final String _FINDER_COLUMN_ACTIVE_GROUPID_2 =
+		"challenge.groupId = ? AND ";
 
 	private static final String _FINDER_COLUMN_ACTIVE_ACTIVE_2 =
 		"challenge.active = ?";
@@ -4174,20 +4222,21 @@ public class ChallengePersistenceImpl
 		_finderPathWithPaginationFindByActive = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByActive",
 			new String[] {
-				Boolean.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
+				Long.class.getName(), Boolean.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
 			},
-			new String[] {"active_"}, true);
+			new String[] {"groupId", "active_"}, true);
 
 		_finderPathWithoutPaginationFindByActive = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByActive",
-			new String[] {Boolean.class.getName()}, new String[] {"active_"},
-			true);
+			new String[] {Long.class.getName(), Boolean.class.getName()},
+			new String[] {"groupId", "active_"}, true);
 
 		_finderPathCountByActive = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByActive",
-			new String[] {Boolean.class.getName()}, new String[] {"active_"},
-			false);
+			new String[] {Long.class.getName(), Boolean.class.getName()},
+			new String[] {"groupId", "active_"}, false);
 	}
 
 	@Deactivate

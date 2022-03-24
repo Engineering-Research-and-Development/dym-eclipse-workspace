@@ -81,8 +81,9 @@ public interface ChallengeLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public Challenge addChallenge(
-			String title, String description, Date startDate, Date endDate,
-			boolean active, ServiceContext serviceContext)
+			String title, String description, String desiredOutcome,
+			Date startDate, Date endDate, boolean active,
+			ServiceContext serviceContext)
 		throws PortalException;
 
 	/**
@@ -126,10 +127,6 @@ public interface ChallengeLocalService
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	public Challenge deleteChallenge(long challengeId) throws PortalException;
-
-	@Indexable(type = IndexableType.DELETE)
-	public Challenge deleteChallenge(long challengeId, long userId)
-		throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -230,6 +227,10 @@ public interface ChallengeLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Challenge getChallenge(long challengeId) throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Challenge getChallengeByCocreationId(
+		long cocreationId, long groupId);
+
 	/**
 	 * Returns the challenge matching the UUID and group.
 	 *
@@ -255,6 +256,16 @@ public interface ChallengeLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Challenge> getChallenges(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Challenge> getChallengesByActive(long groupId, boolean active);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Challenge> getChallengesByGroupId(long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Challenge> getChallengesBySearch(String keywords)
+		throws ClassNotFoundException, PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Challenge> getChallengesByUserId(long userId, long groupId);
@@ -343,8 +354,9 @@ public interface ChallengeLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public Challenge updateChallenge(
-			long challengeId, String title, String description, Date startDate,
-			Date endDate, boolean active, ServiceContext serviceContext)
+			long challengeId, String title, String description,
+			String desiredOutcome, Date startDate, Date endDate, boolean active,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException;
 
 }

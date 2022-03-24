@@ -38,27 +38,6 @@ public class ChallengeAssetRenderer extends BaseJSPAssetRenderer<Challenge> {
 	}
 	
 	@Override
-	public boolean hasEditPermission(PermissionChecker permissionChecker) 
-	{
-		
-		_log.info("ChallengeAssetRenderer, hasEditPermission");
-        try {
-        	if(_log.isDebugEnabled()){
-        		_log.debug("_challenge.getChallengeId "+_challenge.getChallengeId());
-        		_log.debug("_challenge.getTitle "+_challenge.getTitle());
-        		_log.debug("_challenge.getDescription "+_challenge.getDescription());
-        	}
-    		boolean permission = ChallengePermission.contains(permissionChecker, _challenge, ActionKeys.UPDATE);
-    		_log.info("permission "+permission);
-    		return permission;
-		} catch (PortalException e) {
-			_log.error("Error in ChallengeAssetRenderer, hasEditPermission method: " + e.getMessage());
-		}
-
-		return false;
-	}
-
-	@Override
 	public boolean hasViewPermission(PermissionChecker permissionChecker) 
 	{
 		_log.info("ChallengeAssetRenderer, hasViewPermission");

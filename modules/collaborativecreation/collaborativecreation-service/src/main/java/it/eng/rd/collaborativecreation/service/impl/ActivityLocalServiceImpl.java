@@ -15,10 +15,21 @@
 package it.eng.rd.collaborativecreation.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.ServiceContext;
 
-import it.eng.rd.collaborativecreation.service.base.ActivityLocalServiceBaseImpl;
+import java.util.Date;
+import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
+
+import it.eng.rd.collaborativecreation.model.Activity;
+import it.eng.rd.collaborativecreation.model.Cocreation;
+import it.eng.rd.collaborativecreation.service.base.ActivityLocalServiceBaseImpl;
 
 /**
  * The implementation of the activity local service.
@@ -39,9 +50,41 @@ import org.osgi.service.component.annotations.Component;
 )
 public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Use <code>it.eng.rd.collaborativecreation.service.ActivityLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>it.eng.rd.collaborativecreation.service.ActivityLocalServiceUtil</code>.
-	 */
+	@Indexable(type = IndexableType.REINDEX)
+	public Activity addActivity(
+			long cocreationId,
+			String description,
+			Date expirationDate,
+			ServiceContext serviceContext
+	)
+		throws PortalException {
+		
+		_log.info("ActivityLocalServiceImpl - addActivity method");
+
+		long activityId = counterLocalService.increment();
+
+		Activity activity = activityPersistence.create(activityId);
+		activity.setCocreationId(cocreationId);
+		activity.setDescription(description);
+		activity.setExpirationDate(expirationDate);
+		
+		_log.info("cocreationId: " +cocreationId);
+		_log.info("description: " +description);
+		_log.info("expirationDate: " +expirationDate);
+		
+		activity = activityPersistence.update(activity);
+		
+		return activity;
+	}
+	
+	
+	public List<Activity> getActivitiesByCocreationId(long cocreationId) throws PortalException {
+		_log.info("ActivityLocalServiceImpl - getActivitiesByCocreationId method");
+		_log.info("cocreationId "+cocreationId);
+	  
+	    return activityPersistence.findByCocreation(cocreationId);
+	}
+	 
+	
+	private static final Log _log = LogFactoryUtil.getLog(ActivityLocalServiceImpl.class);
 }

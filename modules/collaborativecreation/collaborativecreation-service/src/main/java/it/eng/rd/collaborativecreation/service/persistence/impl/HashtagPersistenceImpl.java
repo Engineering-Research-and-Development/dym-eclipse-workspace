@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import it.eng.rd.collaborativecreation.exception.NoSuchHashtagException;
 import it.eng.rd.collaborativecreation.model.Hashtag;
@@ -44,6 +45,7 @@ import java.io.Serializable;
 
 import java.lang.reflect.InvocationHandler;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -91,67 +93,69 @@ public class HashtagPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
-	private FinderPath _finderPathWithPaginationFindByName;
-	private FinderPath _finderPathWithoutPaginationFindByName;
-	private FinderPath _finderPathCountByName;
+	private FinderPath _finderPathWithPaginationFindByChallenge;
+	private FinderPath _finderPathWithoutPaginationFindByChallenge;
+	private FinderPath _finderPathCountByChallenge;
 
 	/**
-	 * Returns all the hashtags where name = &#63;.
+	 * Returns all the hashtags where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the matching hashtags
 	 */
 	@Override
-	public List<Hashtag> findByName(String name) {
-		return findByName(name, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public List<Hashtag> findByChallenge(long challengeId) {
+		return findByChallenge(
+			challengeId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the hashtags where name = &#63;.
+	 * Returns a range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @return the range of matching hashtags
 	 */
 	@Override
-	public List<Hashtag> findByName(String name, int start, int end) {
-		return findByName(name, start, end, null);
+	public List<Hashtag> findByChallenge(long challengeId, int start, int end) {
+		return findByChallenge(challengeId, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the hashtags where name = &#63;.
+	 * Returns an ordered range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching hashtags
 	 */
 	@Override
-	public List<Hashtag> findByName(
-		String name, int start, int end,
+	public List<Hashtag> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Hashtag> orderByComparator) {
 
-		return findByName(name, start, end, orderByComparator, true);
+		return findByChallenge(
+			challengeId, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the hashtags where name = &#63;.
+	 * Returns an ordered range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -159,11 +163,9 @@ public class HashtagPersistenceImpl
 	 * @return the ordered range of matching hashtags
 	 */
 	@Override
-	public List<Hashtag> findByName(
-		String name, int start, int end,
+	public List<Hashtag> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Hashtag> orderByComparator, boolean useFinderCache) {
-
-		name = Objects.toString(name, "");
 
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
@@ -172,13 +174,15 @@ public class HashtagPersistenceImpl
 			(orderByComparator == null)) {
 
 			if (useFinderCache) {
-				finderPath = _finderPathWithoutPaginationFindByName;
-				finderArgs = new Object[] {name};
+				finderPath = _finderPathWithoutPaginationFindByChallenge;
+				finderArgs = new Object[] {challengeId};
 			}
 		}
 		else if (useFinderCache) {
-			finderPath = _finderPathWithPaginationFindByName;
-			finderArgs = new Object[] {name, start, end, orderByComparator};
+			finderPath = _finderPathWithPaginationFindByChallenge;
+			finderArgs = new Object[] {
+				challengeId, start, end, orderByComparator
+			};
 		}
 
 		List<Hashtag> list = null;
@@ -189,7 +193,7 @@ public class HashtagPersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Hashtag hashtag : list) {
-					if (!name.equals(hashtag.getName())) {
+					if (challengeId != hashtag.getChallengeId()) {
 						list = null;
 
 						break;
@@ -211,16 +215,7 @@ public class HashtagPersistenceImpl
 
 			sb.append(_SQL_SELECT_HASHTAG_WHERE);
 
-			boolean bindName = false;
-
-			if (name.isEmpty()) {
-				sb.append(_FINDER_COLUMN_NAME_NAME_3);
-			}
-			else {
-				bindName = true;
-
-				sb.append(_FINDER_COLUMN_NAME_NAME_2);
-			}
+			sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(
@@ -241,9 +236,7 @@ public class HashtagPersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
-				if (bindName) {
-					queryPos.add(name);
-				}
+				queryPos.add(challengeId);
 
 				list = (List<Hashtag>)QueryUtil.list(
 					query, getDialect(), start, end);
@@ -266,19 +259,20 @@ public class HashtagPersistenceImpl
 	}
 
 	/**
-	 * Returns the first hashtag in the ordered set where name = &#63;.
+	 * Returns the first hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching hashtag
 	 * @throws NoSuchHashtagException if a matching hashtag could not be found
 	 */
 	@Override
-	public Hashtag findByName_First(
-			String name, OrderByComparator<Hashtag> orderByComparator)
+	public Hashtag findByChallenge_First(
+			long challengeId, OrderByComparator<Hashtag> orderByComparator)
 		throws NoSuchHashtagException {
 
-		Hashtag hashtag = fetchByName_First(name, orderByComparator);
+		Hashtag hashtag = fetchByChallenge_First(
+			challengeId, orderByComparator);
 
 		if (hashtag != null) {
 			return hashtag;
@@ -288,8 +282,8 @@ public class HashtagPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("name=");
-		sb.append(name);
+		sb.append("challengeId=");
+		sb.append(challengeId);
 
 		sb.append("}");
 
@@ -297,17 +291,18 @@ public class HashtagPersistenceImpl
 	}
 
 	/**
-	 * Returns the first hashtag in the ordered set where name = &#63;.
+	 * Returns the first hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching hashtag, or <code>null</code> if a matching hashtag could not be found
 	 */
 	@Override
-	public Hashtag fetchByName_First(
-		String name, OrderByComparator<Hashtag> orderByComparator) {
+	public Hashtag fetchByChallenge_First(
+		long challengeId, OrderByComparator<Hashtag> orderByComparator) {
 
-		List<Hashtag> list = findByName(name, 0, 1, orderByComparator);
+		List<Hashtag> list = findByChallenge(
+			challengeId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -317,19 +312,19 @@ public class HashtagPersistenceImpl
 	}
 
 	/**
-	 * Returns the last hashtag in the ordered set where name = &#63;.
+	 * Returns the last hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching hashtag
 	 * @throws NoSuchHashtagException if a matching hashtag could not be found
 	 */
 	@Override
-	public Hashtag findByName_Last(
-			String name, OrderByComparator<Hashtag> orderByComparator)
+	public Hashtag findByChallenge_Last(
+			long challengeId, OrderByComparator<Hashtag> orderByComparator)
 		throws NoSuchHashtagException {
 
-		Hashtag hashtag = fetchByName_Last(name, orderByComparator);
+		Hashtag hashtag = fetchByChallenge_Last(challengeId, orderByComparator);
 
 		if (hashtag != null) {
 			return hashtag;
@@ -339,8 +334,8 @@ public class HashtagPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("name=");
-		sb.append(name);
+		sb.append("challengeId=");
+		sb.append(challengeId);
 
 		sb.append("}");
 
@@ -348,24 +343,24 @@ public class HashtagPersistenceImpl
 	}
 
 	/**
-	 * Returns the last hashtag in the ordered set where name = &#63;.
+	 * Returns the last hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching hashtag, or <code>null</code> if a matching hashtag could not be found
 	 */
 	@Override
-	public Hashtag fetchByName_Last(
-		String name, OrderByComparator<Hashtag> orderByComparator) {
+	public Hashtag fetchByChallenge_Last(
+		long challengeId, OrderByComparator<Hashtag> orderByComparator) {
 
-		int count = countByName(name);
+		int count = countByChallenge(challengeId);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<Hashtag> list = findByName(
-			name, count - 1, count, orderByComparator);
+		List<Hashtag> list = findByChallenge(
+			challengeId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -375,21 +370,19 @@ public class HashtagPersistenceImpl
 	}
 
 	/**
-	 * Returns the hashtags before and after the current hashtag in the ordered set where name = &#63;.
+	 * Returns the hashtags before and after the current hashtag in the ordered set where challengeId = &#63;.
 	 *
 	 * @param hashtagId the primary key of the current hashtag
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next hashtag
 	 * @throws NoSuchHashtagException if a hashtag with the primary key could not be found
 	 */
 	@Override
-	public Hashtag[] findByName_PrevAndNext(
-			long hashtagId, String name,
+	public Hashtag[] findByChallenge_PrevAndNext(
+			long hashtagId, long challengeId,
 			OrderByComparator<Hashtag> orderByComparator)
 		throws NoSuchHashtagException {
-
-		name = Objects.toString(name, "");
 
 		Hashtag hashtag = findByPrimaryKey(hashtagId);
 
@@ -400,13 +393,13 @@ public class HashtagPersistenceImpl
 
 			Hashtag[] array = new HashtagImpl[3];
 
-			array[0] = getByName_PrevAndNext(
-				session, hashtag, name, orderByComparator, true);
+			array[0] = getByChallenge_PrevAndNext(
+				session, hashtag, challengeId, orderByComparator, true);
 
 			array[1] = hashtag;
 
-			array[2] = getByName_PrevAndNext(
-				session, hashtag, name, orderByComparator, false);
+			array[2] = getByChallenge_PrevAndNext(
+				session, hashtag, challengeId, orderByComparator, false);
 
 			return array;
 		}
@@ -418,8 +411,8 @@ public class HashtagPersistenceImpl
 		}
 	}
 
-	protected Hashtag getByName_PrevAndNext(
-		Session session, Hashtag hashtag, String name,
+	protected Hashtag getByChallenge_PrevAndNext(
+		Session session, Hashtag hashtag, long challengeId,
 		OrderByComparator<Hashtag> orderByComparator, boolean previous) {
 
 		StringBundler sb = null;
@@ -435,16 +428,7 @@ public class HashtagPersistenceImpl
 
 		sb.append(_SQL_SELECT_HASHTAG_WHERE);
 
-		boolean bindName = false;
-
-		if (name.isEmpty()) {
-			sb.append(_FINDER_COLUMN_NAME_NAME_3);
-		}
-		else {
-			bindName = true;
-
-			sb.append(_FINDER_COLUMN_NAME_NAME_2);
-		}
+		sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields =
@@ -515,9 +499,7 @@ public class HashtagPersistenceImpl
 
 		QueryPos queryPos = QueryPos.getInstance(query);
 
-		if (bindName) {
-			queryPos.add(name);
-		}
+		queryPos.add(challengeId);
 
 		if (orderByComparator != null) {
 			for (Object orderByConditionValue :
@@ -538,32 +520,31 @@ public class HashtagPersistenceImpl
 	}
 
 	/**
-	 * Removes all the hashtags where name = &#63; from the database.
+	 * Removes all the hashtags where challengeId = &#63; from the database.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 */
 	@Override
-	public void removeByName(String name) {
+	public void removeByChallenge(long challengeId) {
 		for (Hashtag hashtag :
-				findByName(name, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+				findByChallenge(
+					challengeId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
 
 			remove(hashtag);
 		}
 	}
 
 	/**
-	 * Returns the number of hashtags where name = &#63;.
+	 * Returns the number of hashtags where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the number of matching hashtags
 	 */
 	@Override
-	public int countByName(String name) {
-		name = Objects.toString(name, "");
+	public int countByChallenge(long challengeId) {
+		FinderPath finderPath = _finderPathCountByChallenge;
 
-		FinderPath finderPath = _finderPathCountByName;
-
-		Object[] finderArgs = new Object[] {name};
+		Object[] finderArgs = new Object[] {challengeId};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -571,6 +552,135 @@ public class HashtagPersistenceImpl
 			StringBundler sb = new StringBundler(2);
 
 			sb.append(_SQL_COUNT_HASHTAG_WHERE);
+
+			sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(challengeId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_CHALLENGE_CHALLENGEID_2 =
+		"hashtag.challengeId = ?";
+
+	private FinderPath _finderPathFetchByName;
+	private FinderPath _finderPathCountByName;
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or throws a <code>NoSuchHashtagException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching hashtag
+	 * @throws NoSuchHashtagException if a matching hashtag could not be found
+	 */
+	@Override
+	public Hashtag findByName(long challengeId, String name)
+		throws NoSuchHashtagException {
+
+		Hashtag hashtag = fetchByName(challengeId, name);
+
+		if (hashtag == null) {
+			StringBundler sb = new StringBundler(6);
+
+			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			sb.append("challengeId=");
+			sb.append(challengeId);
+
+			sb.append(", name=");
+			sb.append(name);
+
+			sb.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(sb.toString());
+			}
+
+			throw new NoSuchHashtagException(sb.toString());
+		}
+
+		return hashtag;
+	}
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching hashtag, or <code>null</code> if a matching hashtag could not be found
+	 */
+	@Override
+	public Hashtag fetchByName(long challengeId, String name) {
+		return fetchByName(challengeId, name, true);
+	}
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching hashtag, or <code>null</code> if a matching hashtag could not be found
+	 */
+	@Override
+	public Hashtag fetchByName(
+		long challengeId, String name, boolean useFinderCache) {
+
+		name = Objects.toString(name, "");
+
+		Object[] finderArgs = null;
+
+		if (useFinderCache) {
+			finderArgs = new Object[] {challengeId, name};
+		}
+
+		Object result = null;
+
+		if (useFinderCache) {
+			result = finderCache.getResult(
+				_finderPathFetchByName, finderArgs, this);
+		}
+
+		if (result instanceof Hashtag) {
+			Hashtag hashtag = (Hashtag)result;
+
+			if ((challengeId != hashtag.getChallengeId()) ||
+				!Objects.equals(name, hashtag.getName())) {
+
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_SQL_SELECT_HASHTAG_WHERE);
+
+			sb.append(_FINDER_COLUMN_NAME_CHALLENGEID_2);
 
 			boolean bindName = false;
 
@@ -594,6 +704,123 @@ public class HashtagPersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
+				queryPos.add(challengeId);
+
+				if (bindName) {
+					queryPos.add(name);
+				}
+
+				List<Hashtag> list = query.list();
+
+				if (list.isEmpty()) {
+					if (useFinderCache) {
+						finderCache.putResult(
+							_finderPathFetchByName, finderArgs, list);
+					}
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							if (!useFinderCache) {
+								finderArgs = new Object[] {challengeId, name};
+							}
+
+							_log.warn(
+								"HashtagPersistenceImpl.fetchByName(long, String, boolean) with parameters (" +
+									StringUtil.merge(finderArgs) +
+										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					Hashtag hashtag = list.get(0);
+
+					result = hashtag;
+
+					cacheResult(hashtag);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (Hashtag)result;
+		}
+	}
+
+	/**
+	 * Removes the hashtag where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the hashtag that was removed
+	 */
+	@Override
+	public Hashtag removeByName(long challengeId, String name)
+		throws NoSuchHashtagException {
+
+		Hashtag hashtag = findByName(challengeId, name);
+
+		return remove(hashtag);
+	}
+
+	/**
+	 * Returns the number of hashtags where challengeId = &#63; and name = &#63;.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the number of matching hashtags
+	 */
+	@Override
+	public int countByName(long challengeId, String name) {
+		name = Objects.toString(name, "");
+
+		FinderPath finderPath = _finderPathCountByName;
+
+		Object[] finderArgs = new Object[] {challengeId, name};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_COUNT_HASHTAG_WHERE);
+
+			sb.append(_FINDER_COLUMN_NAME_CHALLENGEID_2);
+
+			boolean bindName = false;
+
+			if (name.isEmpty()) {
+				sb.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
+			else {
+				bindName = true;
+
+				sb.append(_FINDER_COLUMN_NAME_NAME_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(challengeId);
+
 				if (bindName) {
 					queryPos.add(name);
 				}
@@ -612,6 +839,9 @@ public class HashtagPersistenceImpl
 
 		return count.intValue();
 	}
+
+	private static final String _FINDER_COLUMN_NAME_CHALLENGEID_2 =
+		"hashtag.challengeId = ? AND ";
 
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "hashtag.name = ?";
 
@@ -634,6 +864,11 @@ public class HashtagPersistenceImpl
 	public void cacheResult(Hashtag hashtag) {
 		entityCache.putResult(
 			HashtagImpl.class, hashtag.getPrimaryKey(), hashtag);
+
+		finderCache.putResult(
+			_finderPathFetchByName,
+			new Object[] {hashtag.getChallengeId(), hashtag.getName()},
+			hashtag);
 	}
 
 	/**
@@ -696,6 +931,17 @@ public class HashtagPersistenceImpl
 		for (Serializable primaryKey : primaryKeys) {
 			entityCache.removeResult(HashtagImpl.class, primaryKey);
 		}
+	}
+
+	protected void cacheUniqueFindersCache(HashtagModelImpl hashtagModelImpl) {
+		Object[] args = new Object[] {
+			hashtagModelImpl.getChallengeId(), hashtagModelImpl.getName()
+		};
+
+		finderCache.putResult(
+			_finderPathCountByName, args, Long.valueOf(1), false);
+		finderCache.putResult(
+			_finderPathFetchByName, args, hashtagModelImpl, false);
 	}
 
 	/**
@@ -839,6 +1085,8 @@ public class HashtagPersistenceImpl
 		}
 
 		entityCache.putResult(HashtagImpl.class, hashtagModelImpl, false, true);
+
+		cacheUniqueFindersCache(hashtagModelImpl);
 
 		if (isNew) {
 			hashtag.setNew(false);
@@ -1122,22 +1370,33 @@ public class HashtagPersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
 
-		_finderPathWithPaginationFindByName = _createFinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByName",
+		_finderPathWithPaginationFindByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByChallenge",
 			new String[] {
-				String.class.getName(), Integer.class.getName(),
+				Long.class.getName(), Integer.class.getName(),
 				Integer.class.getName(), OrderByComparator.class.getName()
 			},
-			new String[] {"name"}, true);
+			new String[] {"challengeId"}, true);
 
-		_finderPathWithoutPaginationFindByName = _createFinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByName",
-			new String[] {String.class.getName()}, new String[] {"name"}, true);
+		_finderPathWithoutPaginationFindByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByChallenge",
+			new String[] {Long.class.getName()}, new String[] {"challengeId"},
+			true);
+
+		_finderPathCountByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByChallenge",
+			new String[] {Long.class.getName()}, new String[] {"challengeId"},
+			false);
+
+		_finderPathFetchByName = _createFinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByName",
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"challengeId", "name"}, true);
 
 		_finderPathCountByName = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByName",
-			new String[] {String.class.getName()}, new String[] {"name"},
-			false);
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"challengeId", "name"}, false);
 	}
 
 	@Deactivate

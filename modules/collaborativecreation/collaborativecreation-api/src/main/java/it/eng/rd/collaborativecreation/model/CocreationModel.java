@@ -237,6 +237,50 @@ public interface CocreationModel
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
+	 * Returns the completion date of this cocreation.
+	 *
+	 * @return the completion date of this cocreation
+	 */
+	public Date getCompletionDate();
+
+	/**
+	 * Sets the completion date of this cocreation.
+	 *
+	 * @param completionDate the completion date of this cocreation
+	 */
+	public void setCompletionDate(Date completionDate);
+
+	/**
+	 * Returns the request of this cocreation.
+	 *
+	 * @return the request of this cocreation
+	 */
+	@AutoEscape
+	public String getRequest();
+
+	/**
+	 * Sets the request of this cocreation.
+	 *
+	 * @param request the request of this cocreation
+	 */
+	public void setRequest(String request);
+
+	/**
+	 * Returns the message of this cocreation.
+	 *
+	 * @return the message of this cocreation
+	 */
+	@AutoEscape
+	public String getMessage();
+
+	/**
+	 * Sets the message of this cocreation.
+	 *
+	 * @param message the message of this cocreation
+	 */
+	public void setMessage(String message);
+
+	/**
 	 * Returns the title of this cocreation.
 	 *
 	 * @return the title of this cocreation
@@ -375,6 +419,27 @@ public interface CocreationModel
 	 */
 	@Override
 	public void setStatusDate(Date statusDate);
+
+	/**
+	 * Returns the completed of this cocreation.
+	 *
+	 * @return the completed of this cocreation
+	 */
+	public boolean getCompleted();
+
+	/**
+	 * Returns <code>true</code> if this cocreation is completed.
+	 *
+	 * @return <code>true</code> if this cocreation is completed; <code>false</code> otherwise
+	 */
+	public boolean isCompleted();
+
+	/**
+	 * Sets whether this cocreation is completed.
+	 *
+	 * @param completed the completed of this cocreation
+	 */
+	public void setCompleted(boolean completed);
 
 	/**
 	 * Returns <code>true</code> if this cocreation is approved.

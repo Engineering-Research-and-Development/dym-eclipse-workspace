@@ -104,13 +104,13 @@ public abstract class LocationLocalServiceBaseImpl
 	/**
 	 * Creates a new location with the primary key. Does not add the location to the database.
 	 *
-	 * @param locatoinId the primary key for the new location
+	 * @param locationId the primary key for the new location
 	 * @return the new location
 	 */
 	@Override
 	@Transactional(enabled = false)
-	public Location createLocation(long locatoinId) {
-		return locationPersistence.create(locatoinId);
+	public Location createLocation(long locationId) {
+		return locationPersistence.create(locationId);
 	}
 
 	/**
@@ -120,14 +120,14 @@ public abstract class LocationLocalServiceBaseImpl
 	 * <strong>Important:</strong> Inspect LocationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location that was removed
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Location deleteLocation(long locatoinId) throws PortalException {
-		return locationPersistence.remove(locatoinId);
+	public Location deleteLocation(long locationId) throws PortalException {
+		return locationPersistence.remove(locationId);
 	}
 
 	/**
@@ -234,20 +234,20 @@ public abstract class LocationLocalServiceBaseImpl
 	}
 
 	@Override
-	public Location fetchLocation(long locatoinId) {
-		return locationPersistence.fetchByPrimaryKey(locatoinId);
+	public Location fetchLocation(long locationId) {
+		return locationPersistence.fetchByPrimaryKey(locationId);
 	}
 
 	/**
 	 * Returns the location with the primary key.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
 	@Override
-	public Location getLocation(long locatoinId) throws PortalException {
-		return locationPersistence.findByPrimaryKey(locatoinId);
+	public Location getLocation(long locationId) throws PortalException {
+		return locationPersistence.findByPrimaryKey(locationId);
 	}
 
 	@Override
@@ -259,7 +259,7 @@ public abstract class LocationLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(Location.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("locatoinId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("locationId");
 
 		return actionableDynamicQuery;
 	}
@@ -276,7 +276,7 @@ public abstract class LocationLocalServiceBaseImpl
 		indexableActionableDynamicQuery.setClassLoader(getClassLoader());
 		indexableActionableDynamicQuery.setModelClass(Location.class);
 
-		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("locatoinId");
+		indexableActionableDynamicQuery.setPrimaryKeyPropertyName("locationId");
 
 		return indexableActionableDynamicQuery;
 	}
@@ -288,7 +288,7 @@ public abstract class LocationLocalServiceBaseImpl
 		actionableDynamicQuery.setClassLoader(getClassLoader());
 		actionableDynamicQuery.setModelClass(Location.class);
 
-		actionableDynamicQuery.setPrimaryKeyPropertyName("locatoinId");
+		actionableDynamicQuery.setPrimaryKeyPropertyName("locationId");
 	}
 
 	/**

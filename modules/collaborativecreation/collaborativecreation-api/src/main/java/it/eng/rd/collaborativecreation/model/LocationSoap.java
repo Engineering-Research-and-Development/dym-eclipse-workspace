@@ -33,7 +33,7 @@ public class LocationSoap implements Serializable {
 		LocationSoap soapModel = new LocationSoap();
 
 		soapModel.setMvccVersion(model.getMvccVersion());
-		soapModel.setLocatoinId(model.getLocatoinId());
+		soapModel.setLocationId(model.getLocationId());
 		soapModel.setChallengeId(model.getChallengeId());
 		soapModel.setName(model.getName());
 		soapModel.setLatitude(model.getLatitude());
@@ -84,11 +84,11 @@ public class LocationSoap implements Serializable {
 	}
 
 	public long getPrimaryKey() {
-		return _locatoinId;
+		return _locationId;
 	}
 
 	public void setPrimaryKey(long pk) {
-		setLocatoinId(pk);
+		setLocationId(pk);
 	}
 
 	public long getMvccVersion() {
@@ -99,12 +99,12 @@ public class LocationSoap implements Serializable {
 		_mvccVersion = mvccVersion;
 	}
 
-	public long getLocatoinId() {
-		return _locatoinId;
+	public long getLocationId() {
+		return _locationId;
 	}
 
-	public void setLocatoinId(long locatoinId) {
-		_locatoinId = locatoinId;
+	public void setLocationId(long locationId) {
+		_locationId = locationId;
 	}
 
 	public long getChallengeId() {
@@ -140,7 +140,7 @@ public class LocationSoap implements Serializable {
 	}
 
 	private long _mvccVersion;
-	private long _locatoinId;
+	private long _locationId;
 	private long _challengeId;
 	private String _name;
 	private String _latitude;

@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import it.eng.rd.collaborativecreation.exception.NoSuchCategoryException;
 import it.eng.rd.collaborativecreation.model.Category;
@@ -44,6 +45,7 @@ import java.io.Serializable;
 
 import java.lang.reflect.InvocationHandler;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -91,67 +93,71 @@ public class CategoryPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
-	private FinderPath _finderPathWithPaginationFindByName;
-	private FinderPath _finderPathWithoutPaginationFindByName;
-	private FinderPath _finderPathCountByName;
+	private FinderPath _finderPathWithPaginationFindByChallenge;
+	private FinderPath _finderPathWithoutPaginationFindByChallenge;
+	private FinderPath _finderPathCountByChallenge;
 
 	/**
-	 * Returns all the categories where name = &#63;.
+	 * Returns all the categories where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the matching categories
 	 */
 	@Override
-	public List<Category> findByName(String name) {
-		return findByName(name, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public List<Category> findByChallenge(long challengeId) {
+		return findByChallenge(
+			challengeId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the categories where name = &#63;.
+	 * Returns a range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @return the range of matching categories
 	 */
 	@Override
-	public List<Category> findByName(String name, int start, int end) {
-		return findByName(name, start, end, null);
+	public List<Category> findByChallenge(
+		long challengeId, int start, int end) {
+
+		return findByChallenge(challengeId, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the categories where name = &#63;.
+	 * Returns an ordered range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching categories
 	 */
 	@Override
-	public List<Category> findByName(
-		String name, int start, int end,
+	public List<Category> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Category> orderByComparator) {
 
-		return findByName(name, start, end, orderByComparator, true);
+		return findByChallenge(
+			challengeId, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the categories where name = &#63;.
+	 * Returns an ordered range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -159,11 +165,9 @@ public class CategoryPersistenceImpl
 	 * @return the ordered range of matching categories
 	 */
 	@Override
-	public List<Category> findByName(
-		String name, int start, int end,
+	public List<Category> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Category> orderByComparator, boolean useFinderCache) {
-
-		name = Objects.toString(name, "");
 
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
@@ -172,13 +176,15 @@ public class CategoryPersistenceImpl
 			(orderByComparator == null)) {
 
 			if (useFinderCache) {
-				finderPath = _finderPathWithoutPaginationFindByName;
-				finderArgs = new Object[] {name};
+				finderPath = _finderPathWithoutPaginationFindByChallenge;
+				finderArgs = new Object[] {challengeId};
 			}
 		}
 		else if (useFinderCache) {
-			finderPath = _finderPathWithPaginationFindByName;
-			finderArgs = new Object[] {name, start, end, orderByComparator};
+			finderPath = _finderPathWithPaginationFindByChallenge;
+			finderArgs = new Object[] {
+				challengeId, start, end, orderByComparator
+			};
 		}
 
 		List<Category> list = null;
@@ -189,7 +195,7 @@ public class CategoryPersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Category category : list) {
-					if (!name.equals(category.getName())) {
+					if (challengeId != category.getChallengeId()) {
 						list = null;
 
 						break;
@@ -211,16 +217,7 @@ public class CategoryPersistenceImpl
 
 			sb.append(_SQL_SELECT_CATEGORY_WHERE);
 
-			boolean bindName = false;
-
-			if (name.isEmpty()) {
-				sb.append(_FINDER_COLUMN_NAME_NAME_3);
-			}
-			else {
-				bindName = true;
-
-				sb.append(_FINDER_COLUMN_NAME_NAME_2);
-			}
+			sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(
@@ -241,9 +238,7 @@ public class CategoryPersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
-				if (bindName) {
-					queryPos.add(name);
-				}
+				queryPos.add(challengeId);
 
 				list = (List<Category>)QueryUtil.list(
 					query, getDialect(), start, end);
@@ -266,19 +261,20 @@ public class CategoryPersistenceImpl
 	}
 
 	/**
-	 * Returns the first category in the ordered set where name = &#63;.
+	 * Returns the first category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching category
 	 * @throws NoSuchCategoryException if a matching category could not be found
 	 */
 	@Override
-	public Category findByName_First(
-			String name, OrderByComparator<Category> orderByComparator)
+	public Category findByChallenge_First(
+			long challengeId, OrderByComparator<Category> orderByComparator)
 		throws NoSuchCategoryException {
 
-		Category category = fetchByName_First(name, orderByComparator);
+		Category category = fetchByChallenge_First(
+			challengeId, orderByComparator);
 
 		if (category != null) {
 			return category;
@@ -288,8 +284,8 @@ public class CategoryPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("name=");
-		sb.append(name);
+		sb.append("challengeId=");
+		sb.append(challengeId);
 
 		sb.append("}");
 
@@ -297,17 +293,18 @@ public class CategoryPersistenceImpl
 	}
 
 	/**
-	 * Returns the first category in the ordered set where name = &#63;.
+	 * Returns the first category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching category, or <code>null</code> if a matching category could not be found
 	 */
 	@Override
-	public Category fetchByName_First(
-		String name, OrderByComparator<Category> orderByComparator) {
+	public Category fetchByChallenge_First(
+		long challengeId, OrderByComparator<Category> orderByComparator) {
 
-		List<Category> list = findByName(name, 0, 1, orderByComparator);
+		List<Category> list = findByChallenge(
+			challengeId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -317,19 +314,20 @@ public class CategoryPersistenceImpl
 	}
 
 	/**
-	 * Returns the last category in the ordered set where name = &#63;.
+	 * Returns the last category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching category
 	 * @throws NoSuchCategoryException if a matching category could not be found
 	 */
 	@Override
-	public Category findByName_Last(
-			String name, OrderByComparator<Category> orderByComparator)
+	public Category findByChallenge_Last(
+			long challengeId, OrderByComparator<Category> orderByComparator)
 		throws NoSuchCategoryException {
 
-		Category category = fetchByName_Last(name, orderByComparator);
+		Category category = fetchByChallenge_Last(
+			challengeId, orderByComparator);
 
 		if (category != null) {
 			return category;
@@ -339,8 +337,8 @@ public class CategoryPersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("name=");
-		sb.append(name);
+		sb.append("challengeId=");
+		sb.append(challengeId);
 
 		sb.append("}");
 
@@ -348,24 +346,24 @@ public class CategoryPersistenceImpl
 	}
 
 	/**
-	 * Returns the last category in the ordered set where name = &#63;.
+	 * Returns the last category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching category, or <code>null</code> if a matching category could not be found
 	 */
 	@Override
-	public Category fetchByName_Last(
-		String name, OrderByComparator<Category> orderByComparator) {
+	public Category fetchByChallenge_Last(
+		long challengeId, OrderByComparator<Category> orderByComparator) {
 
-		int count = countByName(name);
+		int count = countByChallenge(challengeId);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<Category> list = findByName(
-			name, count - 1, count, orderByComparator);
+		List<Category> list = findByChallenge(
+			challengeId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -375,21 +373,19 @@ public class CategoryPersistenceImpl
 	}
 
 	/**
-	 * Returns the categories before and after the current category in the ordered set where name = &#63;.
+	 * Returns the categories before and after the current category in the ordered set where challengeId = &#63;.
 	 *
 	 * @param categoryId the primary key of the current category
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next category
 	 * @throws NoSuchCategoryException if a category with the primary key could not be found
 	 */
 	@Override
-	public Category[] findByName_PrevAndNext(
-			long categoryId, String name,
+	public Category[] findByChallenge_PrevAndNext(
+			long categoryId, long challengeId,
 			OrderByComparator<Category> orderByComparator)
 		throws NoSuchCategoryException {
-
-		name = Objects.toString(name, "");
 
 		Category category = findByPrimaryKey(categoryId);
 
@@ -400,13 +396,13 @@ public class CategoryPersistenceImpl
 
 			Category[] array = new CategoryImpl[3];
 
-			array[0] = getByName_PrevAndNext(
-				session, category, name, orderByComparator, true);
+			array[0] = getByChallenge_PrevAndNext(
+				session, category, challengeId, orderByComparator, true);
 
 			array[1] = category;
 
-			array[2] = getByName_PrevAndNext(
-				session, category, name, orderByComparator, false);
+			array[2] = getByChallenge_PrevAndNext(
+				session, category, challengeId, orderByComparator, false);
 
 			return array;
 		}
@@ -418,8 +414,8 @@ public class CategoryPersistenceImpl
 		}
 	}
 
-	protected Category getByName_PrevAndNext(
-		Session session, Category category, String name,
+	protected Category getByChallenge_PrevAndNext(
+		Session session, Category category, long challengeId,
 		OrderByComparator<Category> orderByComparator, boolean previous) {
 
 		StringBundler sb = null;
@@ -435,16 +431,7 @@ public class CategoryPersistenceImpl
 
 		sb.append(_SQL_SELECT_CATEGORY_WHERE);
 
-		boolean bindName = false;
-
-		if (name.isEmpty()) {
-			sb.append(_FINDER_COLUMN_NAME_NAME_3);
-		}
-		else {
-			bindName = true;
-
-			sb.append(_FINDER_COLUMN_NAME_NAME_2);
-		}
+		sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields =
@@ -515,9 +502,7 @@ public class CategoryPersistenceImpl
 
 		QueryPos queryPos = QueryPos.getInstance(query);
 
-		if (bindName) {
-			queryPos.add(name);
-		}
+		queryPos.add(challengeId);
 
 		if (orderByComparator != null) {
 			for (Object orderByConditionValue :
@@ -538,32 +523,31 @@ public class CategoryPersistenceImpl
 	}
 
 	/**
-	 * Removes all the categories where name = &#63; from the database.
+	 * Removes all the categories where challengeId = &#63; from the database.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 */
 	@Override
-	public void removeByName(String name) {
+	public void removeByChallenge(long challengeId) {
 		for (Category category :
-				findByName(name, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+				findByChallenge(
+					challengeId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
 
 			remove(category);
 		}
 	}
 
 	/**
-	 * Returns the number of categories where name = &#63;.
+	 * Returns the number of categories where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the number of matching categories
 	 */
 	@Override
-	public int countByName(String name) {
-		name = Objects.toString(name, "");
+	public int countByChallenge(long challengeId) {
+		FinderPath finderPath = _finderPathCountByChallenge;
 
-		FinderPath finderPath = _finderPathCountByName;
-
-		Object[] finderArgs = new Object[] {name};
+		Object[] finderArgs = new Object[] {challengeId};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -571,6 +555,135 @@ public class CategoryPersistenceImpl
 			StringBundler sb = new StringBundler(2);
 
 			sb.append(_SQL_COUNT_CATEGORY_WHERE);
+
+			sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(challengeId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_CHALLENGE_CHALLENGEID_2 =
+		"category.challengeId = ?";
+
+	private FinderPath _finderPathFetchByName;
+	private FinderPath _finderPathCountByName;
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or throws a <code>NoSuchCategoryException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching category
+	 * @throws NoSuchCategoryException if a matching category could not be found
+	 */
+	@Override
+	public Category findByName(long challengeId, String name)
+		throws NoSuchCategoryException {
+
+		Category category = fetchByName(challengeId, name);
+
+		if (category == null) {
+			StringBundler sb = new StringBundler(6);
+
+			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			sb.append("challengeId=");
+			sb.append(challengeId);
+
+			sb.append(", name=");
+			sb.append(name);
+
+			sb.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(sb.toString());
+			}
+
+			throw new NoSuchCategoryException(sb.toString());
+		}
+
+		return category;
+	}
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching category, or <code>null</code> if a matching category could not be found
+	 */
+	@Override
+	public Category fetchByName(long challengeId, String name) {
+		return fetchByName(challengeId, name, true);
+	}
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching category, or <code>null</code> if a matching category could not be found
+	 */
+	@Override
+	public Category fetchByName(
+		long challengeId, String name, boolean useFinderCache) {
+
+		name = Objects.toString(name, "");
+
+		Object[] finderArgs = null;
+
+		if (useFinderCache) {
+			finderArgs = new Object[] {challengeId, name};
+		}
+
+		Object result = null;
+
+		if (useFinderCache) {
+			result = finderCache.getResult(
+				_finderPathFetchByName, finderArgs, this);
+		}
+
+		if (result instanceof Category) {
+			Category category = (Category)result;
+
+			if ((challengeId != category.getChallengeId()) ||
+				!Objects.equals(name, category.getName())) {
+
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_SQL_SELECT_CATEGORY_WHERE);
+
+			sb.append(_FINDER_COLUMN_NAME_CHALLENGEID_2);
 
 			boolean bindName = false;
 
@@ -594,6 +707,123 @@ public class CategoryPersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
+				queryPos.add(challengeId);
+
+				if (bindName) {
+					queryPos.add(name);
+				}
+
+				List<Category> list = query.list();
+
+				if (list.isEmpty()) {
+					if (useFinderCache) {
+						finderCache.putResult(
+							_finderPathFetchByName, finderArgs, list);
+					}
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							if (!useFinderCache) {
+								finderArgs = new Object[] {challengeId, name};
+							}
+
+							_log.warn(
+								"CategoryPersistenceImpl.fetchByName(long, String, boolean) with parameters (" +
+									StringUtil.merge(finderArgs) +
+										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					Category category = list.get(0);
+
+					result = category;
+
+					cacheResult(category);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (Category)result;
+		}
+	}
+
+	/**
+	 * Removes the category where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the category that was removed
+	 */
+	@Override
+	public Category removeByName(long challengeId, String name)
+		throws NoSuchCategoryException {
+
+		Category category = findByName(challengeId, name);
+
+		return remove(category);
+	}
+
+	/**
+	 * Returns the number of categories where challengeId = &#63; and name = &#63;.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the number of matching categories
+	 */
+	@Override
+	public int countByName(long challengeId, String name) {
+		name = Objects.toString(name, "");
+
+		FinderPath finderPath = _finderPathCountByName;
+
+		Object[] finderArgs = new Object[] {challengeId, name};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_COUNT_CATEGORY_WHERE);
+
+			sb.append(_FINDER_COLUMN_NAME_CHALLENGEID_2);
+
+			boolean bindName = false;
+
+			if (name.isEmpty()) {
+				sb.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
+			else {
+				bindName = true;
+
+				sb.append(_FINDER_COLUMN_NAME_NAME_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(challengeId);
+
 				if (bindName) {
 					queryPos.add(name);
 				}
@@ -612,6 +842,9 @@ public class CategoryPersistenceImpl
 
 		return count.intValue();
 	}
+
+	private static final String _FINDER_COLUMN_NAME_CHALLENGEID_2 =
+		"category.challengeId = ? AND ";
 
 	private static final String _FINDER_COLUMN_NAME_NAME_2 =
 		"category.name = ?";
@@ -635,6 +868,11 @@ public class CategoryPersistenceImpl
 	public void cacheResult(Category category) {
 		entityCache.putResult(
 			CategoryImpl.class, category.getPrimaryKey(), category);
+
+		finderCache.putResult(
+			_finderPathFetchByName,
+			new Object[] {category.getChallengeId(), category.getName()},
+			category);
 	}
 
 	/**
@@ -697,6 +935,19 @@ public class CategoryPersistenceImpl
 		for (Serializable primaryKey : primaryKeys) {
 			entityCache.removeResult(CategoryImpl.class, primaryKey);
 		}
+	}
+
+	protected void cacheUniqueFindersCache(
+		CategoryModelImpl categoryModelImpl) {
+
+		Object[] args = new Object[] {
+			categoryModelImpl.getChallengeId(), categoryModelImpl.getName()
+		};
+
+		finderCache.putResult(
+			_finderPathCountByName, args, Long.valueOf(1), false);
+		finderCache.putResult(
+			_finderPathFetchByName, args, categoryModelImpl, false);
 	}
 
 	/**
@@ -841,6 +1092,8 @@ public class CategoryPersistenceImpl
 
 		entityCache.putResult(
 			CategoryImpl.class, categoryModelImpl, false, true);
+
+		cacheUniqueFindersCache(categoryModelImpl);
 
 		if (isNew) {
 			category.setNew(false);
@@ -1124,22 +1377,33 @@ public class CategoryPersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
 
-		_finderPathWithPaginationFindByName = _createFinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByName",
+		_finderPathWithPaginationFindByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByChallenge",
 			new String[] {
-				String.class.getName(), Integer.class.getName(),
+				Long.class.getName(), Integer.class.getName(),
 				Integer.class.getName(), OrderByComparator.class.getName()
 			},
-			new String[] {"name"}, true);
+			new String[] {"challengeId"}, true);
 
-		_finderPathWithoutPaginationFindByName = _createFinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByName",
-			new String[] {String.class.getName()}, new String[] {"name"}, true);
+		_finderPathWithoutPaginationFindByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByChallenge",
+			new String[] {Long.class.getName()}, new String[] {"challengeId"},
+			true);
+
+		_finderPathCountByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByChallenge",
+			new String[] {Long.class.getName()}, new String[] {"challengeId"},
+			false);
+
+		_finderPathFetchByName = _createFinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByName",
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"challengeId", "name"}, true);
 
 		_finderPathCountByName = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByName",
-			new String[] {String.class.getName()}, new String[] {"name"},
-			false);
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"challengeId", "name"}, false);
 	}
 
 	@Deactivate

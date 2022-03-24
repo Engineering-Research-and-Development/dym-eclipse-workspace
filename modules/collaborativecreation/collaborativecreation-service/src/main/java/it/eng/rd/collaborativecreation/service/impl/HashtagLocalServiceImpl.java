@@ -15,7 +15,19 @@
 package it.eng.rd.collaborativecreation.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.ServiceContext;
 
+import java.util.List;
+
+import it.eng.rd.collaborativecreation.exception.NoSuchHashtagException;
+import it.eng.rd.collaborativecreation.model.Category;
+import it.eng.rd.collaborativecreation.model.Hashtag;
 import it.eng.rd.collaborativecreation.service.base.HashtagLocalServiceBaseImpl;
 
 import org.osgi.service.component.annotations.Component;
@@ -39,9 +51,58 @@ import org.osgi.service.component.annotations.Component;
 )
 public class HashtagLocalServiceImpl extends HashtagLocalServiceBaseImpl {
 
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Use <code>it.eng.rd.collaborativecreation.service.HashtagLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>it.eng.rd.collaborativecreation.service.HashtagLocalServiceUtil</code>.
-	 */
+	@Indexable(type = IndexableType.REINDEX)
+	public Hashtag addHashtag(
+			long challengeId,
+			String name,
+			ServiceContext serviceContext
+	)
+		throws PortalException {
+		
+		_log.info("HashtagLocalServiceImpl - addHashtag method");
+
+		
+		long hashtagId = counterLocalService.increment();
+
+		Hashtag hashtag = hashtagPersistence.create(hashtagId);
+
+		hashtag.setHashtagId(hashtagId);
+		hashtag.setChallengeId(challengeId);
+		hashtag.setName(name);
+		
+		_log.info("challengeId: " +challengeId);
+		_log.info("name: " +name);
+		
+		hashtag = hashtagPersistence.update(hashtag);
+		
+		return hashtag;
+	}
+	
+	public Hashtag getHashtag(long challengeId, String name) throws PortalException {
+    	_log.info("HashtagLocalServiceImpl - getHashtagByName method");
+		_log.info("challengeId "+challengeId);
+		_log.info("name "+name);
+		
+		try {
+			return hashtagPersistence.findByName(challengeId, name);
+		} catch (NoSuchHashtagException e) {
+			return null;
+		}
+    }
+	
+	public List<Hashtag> getHashtagsByChallengeId(long challengeId) throws PortalException {
+    	_log.info("HashtagLocalServiceImpl - getHashtagsByChallengeId method");
+		_log.info("challengeId "+challengeId);
+		
+		return hashtagPersistence.findByChallenge(challengeId);
+    }
+	
+	public void deleteHashtagsByChallengeId(long challengeId) throws PortalException {
+    	_log.info("HashtagLocalServiceImpl - deleteHashtagsByChallengeId method");
+		_log.info("challengeId "+challengeId);
+		
+		hashtagPersistence.removeByChallenge(challengeId);
+    }
+	
+	private static final Log _log = LogFactoryUtil.getLog(HashtagLocalServiceImpl.class);
 }

@@ -59,6 +59,14 @@ public class HashtagLocalServiceUtil {
 		return getService().addHashtag(hashtag);
 	}
 
+	public static Hashtag addHashtag(
+			long challengeId, String name,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().addHashtag(challengeId, name, serviceContext);
+	}
+
 	/**
 	 * Creates a new hashtag with the primary key. Does not add the hashtag to the database.
 	 *
@@ -106,6 +114,12 @@ public class HashtagLocalServiceUtil {
 	 */
 	public static Hashtag deleteHashtag(long hashtagId) throws PortalException {
 		return getService().deleteHashtag(hashtagId);
+	}
+
+	public static void deleteHashtagsByChallengeId(long challengeId)
+		throws PortalException {
+
+		getService().deleteHashtagsByChallengeId(challengeId);
 	}
 
 	/**
@@ -216,6 +230,12 @@ public class HashtagLocalServiceUtil {
 		return getService().getHashtag(hashtagId);
 	}
 
+	public static Hashtag getHashtag(long challengeId, String name)
+		throws PortalException {
+
+		return getService().getHashtag(challengeId, name);
+	}
+
 	/**
 	 * Returns a range of all the hashtags.
 	 *
@@ -229,6 +249,12 @@ public class HashtagLocalServiceUtil {
 	 */
 	public static List<Hashtag> getHashtags(int start, int end) {
 		return getService().getHashtags(start, end);
+	}
+
+	public static List<Hashtag> getHashtagsByChallengeId(long challengeId)
+		throws PortalException {
+
+		return getService().getHashtagsByChallengeId(challengeId);
 	}
 
 	/**

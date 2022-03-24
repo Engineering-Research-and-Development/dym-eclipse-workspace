@@ -71,18 +71,18 @@ public interface LocationModel extends BaseModel<Location>, MVCCModel {
 	public void setMvccVersion(long mvccVersion);
 
 	/**
-	 * Returns the locatoin ID of this location.
+	 * Returns the location ID of this location.
 	 *
-	 * @return the locatoin ID of this location
+	 * @return the location ID of this location
 	 */
-	public long getLocatoinId();
+	public long getLocationId();
 
 	/**
-	 * Sets the locatoin ID of this location.
+	 * Sets the location ID of this location.
 	 *
-	 * @param locatoinId the locatoin ID of this location
+	 * @param locationId the location ID of this location
 	 */
-	public void setLocatoinId(long locatoinId);
+	public void setLocationId(long locationId);
 
 	/**
 	 * Returns the challenge ID of this location.

@@ -49,6 +49,16 @@ public class CocreatorLocalServiceWrapper
 		return _cocreatorLocalService.addCocreator(cocreator);
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Cocreator addCocreator(
+			long cocreationId, long userId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _cocreatorLocalService.addCocreator(
+			cocreationId, userId, serviceContext);
+	}
+
 	/**
 	 * Creates a new cocreator with the primary key. Does not add the cocreator to the database.
 	 *
@@ -107,6 +117,14 @@ public class CocreatorLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _cocreatorLocalService.deleteCocreator(cocreatorId);
+	}
+
+	@Override
+	public void deleteCocreatorByCocreatorId(long cocreatorId)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchCocreatorException {
+
+		_cocreatorLocalService.deleteCocreatorByCocreatorId(cocreatorId);
 	}
 
 	/**
@@ -289,6 +307,40 @@ public class CocreatorLocalServiceWrapper
 		return _cocreatorLocalService.getCocreators(start, end);
 	}
 
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreator>
+			getCocreatorsByCocreationId(long cocreationId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _cocreatorLocalService.getCocreatorsByCocreationId(cocreationId);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreator>
+		getCocreatorsByUserId(long userId) {
+
+		return _cocreatorLocalService.getCocreatorsByUserId(userId);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreator>
+			getCocreatorsByUserId(long userId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _cocreatorLocalService.getCocreatorsByUserId(userId, start, end);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreator>
+		getCocreatorsByUserId(
+			long userId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<it.eng.rd.collaborativecreation.model.Cocreator> obc) {
+
+		return _cocreatorLocalService.getCocreatorsByUserId(
+			userId, start, end, obc);
+	}
+
 	/**
 	 * Returns all the cocreators matching the UUID and company.
 	 *
@@ -337,6 +389,11 @@ public class CocreatorLocalServiceWrapper
 	}
 
 	@Override
+	public int getCocreatorsCountByUserId(long userId) {
+		return _cocreatorLocalService.getCocreatorsCountByUserId(userId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery
 		getIndexableActionableDynamicQuery() {
 
@@ -379,6 +436,17 @@ public class CocreatorLocalServiceWrapper
 		it.eng.rd.collaborativecreation.model.Cocreator cocreator) {
 
 		return _cocreatorLocalService.updateCocreator(cocreator);
+	}
+
+	@Override
+	public it.eng.rd.collaborativecreation.model.Cocreator updateCocreator(
+			long cocreationId, long cocreatorId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _cocreatorLocalService.updateCocreator(
+			cocreationId, cocreatorId, serviceContext);
 	}
 
 	@Override

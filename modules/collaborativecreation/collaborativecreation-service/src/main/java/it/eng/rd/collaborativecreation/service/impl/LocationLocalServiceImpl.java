@@ -14,8 +14,29 @@
 
 package it.eng.rd.collaborativecreation.service.impl;
 
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.ContentTypes;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import it.eng.rd.collaborativecreation.exception.NoSuchCategoryException;
+import it.eng.rd.collaborativecreation.exception.NoSuchLocationException;
+import it.eng.rd.collaborativecreation.model.Category;
+import it.eng.rd.collaborativecreation.model.Cocreation;
+import it.eng.rd.collaborativecreation.model.Location;
 import it.eng.rd.collaborativecreation.service.base.LocationLocalServiceBaseImpl;
 
 import org.osgi.service.component.annotations.Component;
@@ -39,9 +60,85 @@ import org.osgi.service.component.annotations.Component;
 )
 public class LocationLocalServiceImpl extends LocationLocalServiceBaseImpl {
 
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Use <code>it.eng.rd.collaborativecreation.service.LocationLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>it.eng.rd.collaborativecreation.service.LocationLocalServiceUtil</code>.
-	 */
+	@Indexable(type = IndexableType.REINDEX)
+	public Location addLocation(
+			long challengeId,
+			String name,
+			String latitude,
+			String longitude,
+			ServiceContext serviceContext
+	)
+		throws PortalException {
+		
+		_log.info("LocationLocalServiceImpl - addLocation method");
+
+		
+		long locationId = counterLocalService.increment();
+
+		Location location = locationPersistence.create(locationId);
+
+		location.setLocationId(locationId);
+		location.setChallengeId(challengeId);
+		location.setName(name);
+		location.setLatitude(latitude);
+		location.setLongitude(longitude);
+		
+		_log.info("challengeId: " +challengeId);
+		_log.info("name: " +name);
+		_log.info("latitude: " +latitude);
+		_log.info("longitude: " +longitude);
+		
+		location = locationPersistence.update(location);
+		
+		return location;
+	}
+	
+	@Indexable(type = IndexableType.REINDEX)
+	public Location updateLocation(
+			long challengeId,
+			String name,
+			String latitude,
+			String longitude,
+			ServiceContext serviceContext
+	)
+		throws PortalException, SystemException {
+		
+		_log.info("LocationLocalServiceImpl - updateLocation method");
+
+		Location location = locationPersistence.findByChallenge(challengeId);
+		
+		location.setName(name);
+		location.setLatitude(latitude);
+		location.setLongitude(longitude);
+		
+		_log.info("challengeId: " +challengeId);
+		_log.info("name: " +name);
+		_log.info("latitude: " +latitude);
+		_log.info("longitude: " +longitude);
+		
+		location = locationPersistence.update(location);
+	
+		return location;
+	}
+	
+	public Location getLocation(long challengeId, String name) throws PortalException {
+    	_log.info("LocationLocalServiceImpl - getLocationByName method");
+		_log.info("challengeId "+challengeId);
+		_log.info("name "+name);
+		
+		try {
+			return locationPersistence.findByName(challengeId, name);
+		} catch (NoSuchLocationException e) {
+			return null;
+		}
+    }
+	
+	public Location getLocationByChallengeId(long challengeId) throws PortalException {
+    	_log.info("LocationLocalServiceImpl - getLocationByChallengeId method");
+		_log.info("challengeId "+challengeId);
+		
+		return locationPersistence.findByChallenge(challengeId);
+    }
+	
+	private static final Log _log = LogFactoryUtil.getLog(LocationLocalServiceImpl.class);
 }

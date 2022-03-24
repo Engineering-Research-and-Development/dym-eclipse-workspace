@@ -125,167 +125,239 @@ public class HashtagUtil {
 	}
 
 	/**
-	 * Returns all the hashtags where name = &#63;.
+	 * Returns all the hashtags where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the matching hashtags
 	 */
-	public static List<Hashtag> findByName(String name) {
-		return getPersistence().findByName(name);
+	public static List<Hashtag> findByChallenge(long challengeId) {
+		return getPersistence().findByChallenge(challengeId);
 	}
 
 	/**
-	 * Returns a range of all the hashtags where name = &#63;.
+	 * Returns a range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @return the range of matching hashtags
 	 */
-	public static List<Hashtag> findByName(String name, int start, int end) {
-		return getPersistence().findByName(name, start, end);
+	public static List<Hashtag> findByChallenge(
+		long challengeId, int start, int end) {
+
+		return getPersistence().findByChallenge(challengeId, start, end);
 	}
 
 	/**
-	 * Returns an ordered range of all the hashtags where name = &#63;.
+	 * Returns an ordered range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching hashtags
 	 */
-	public static List<Hashtag> findByName(
-		String name, int start, int end,
+	public static List<Hashtag> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Hashtag> orderByComparator) {
 
-		return getPersistence().findByName(name, start, end, orderByComparator);
+		return getPersistence().findByChallenge(
+			challengeId, start, end, orderByComparator);
 	}
 
 	/**
-	 * Returns an ordered range of all the hashtags where name = &#63;.
+	 * Returns an ordered range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the ordered range of matching hashtags
 	 */
-	public static List<Hashtag> findByName(
-		String name, int start, int end,
+	public static List<Hashtag> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Hashtag> orderByComparator, boolean useFinderCache) {
 
-		return getPersistence().findByName(
-			name, start, end, orderByComparator, useFinderCache);
+		return getPersistence().findByChallenge(
+			challengeId, start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
-	 * Returns the first hashtag in the ordered set where name = &#63;.
+	 * Returns the first hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching hashtag
 	 * @throws NoSuchHashtagException if a matching hashtag could not be found
 	 */
-	public static Hashtag findByName_First(
-			String name, OrderByComparator<Hashtag> orderByComparator)
+	public static Hashtag findByChallenge_First(
+			long challengeId, OrderByComparator<Hashtag> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchHashtagException {
 
-		return getPersistence().findByName_First(name, orderByComparator);
+		return getPersistence().findByChallenge_First(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the first hashtag in the ordered set where name = &#63;.
+	 * Returns the first hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching hashtag, or <code>null</code> if a matching hashtag could not be found
 	 */
-	public static Hashtag fetchByName_First(
-		String name, OrderByComparator<Hashtag> orderByComparator) {
+	public static Hashtag fetchByChallenge_First(
+		long challengeId, OrderByComparator<Hashtag> orderByComparator) {
 
-		return getPersistence().fetchByName_First(name, orderByComparator);
+		return getPersistence().fetchByChallenge_First(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the last hashtag in the ordered set where name = &#63;.
+	 * Returns the last hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching hashtag
 	 * @throws NoSuchHashtagException if a matching hashtag could not be found
 	 */
-	public static Hashtag findByName_Last(
-			String name, OrderByComparator<Hashtag> orderByComparator)
+	public static Hashtag findByChallenge_Last(
+			long challengeId, OrderByComparator<Hashtag> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchHashtagException {
 
-		return getPersistence().findByName_Last(name, orderByComparator);
+		return getPersistence().findByChallenge_Last(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the last hashtag in the ordered set where name = &#63;.
+	 * Returns the last hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching hashtag, or <code>null</code> if a matching hashtag could not be found
 	 */
-	public static Hashtag fetchByName_Last(
-		String name, OrderByComparator<Hashtag> orderByComparator) {
+	public static Hashtag fetchByChallenge_Last(
+		long challengeId, OrderByComparator<Hashtag> orderByComparator) {
 
-		return getPersistence().fetchByName_Last(name, orderByComparator);
+		return getPersistence().fetchByChallenge_Last(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the hashtags before and after the current hashtag in the ordered set where name = &#63;.
+	 * Returns the hashtags before and after the current hashtag in the ordered set where challengeId = &#63;.
 	 *
 	 * @param hashtagId the primary key of the current hashtag
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next hashtag
 	 * @throws NoSuchHashtagException if a hashtag with the primary key could not be found
 	 */
-	public static Hashtag[] findByName_PrevAndNext(
-			long hashtagId, String name,
+	public static Hashtag[] findByChallenge_PrevAndNext(
+			long hashtagId, long challengeId,
 			OrderByComparator<Hashtag> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchHashtagException {
 
-		return getPersistence().findByName_PrevAndNext(
-			hashtagId, name, orderByComparator);
+		return getPersistence().findByChallenge_PrevAndNext(
+			hashtagId, challengeId, orderByComparator);
 	}
 
 	/**
-	 * Removes all the hashtags where name = &#63; from the database.
+	 * Removes all the hashtags where challengeId = &#63; from the database.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 */
-	public static void removeByName(String name) {
-		getPersistence().removeByName(name);
+	public static void removeByChallenge(long challengeId) {
+		getPersistence().removeByChallenge(challengeId);
 	}
 
 	/**
-	 * Returns the number of hashtags where name = &#63;.
+	 * Returns the number of hashtags where challengeId = &#63;.
 	 *
+	 * @param challengeId the challenge ID
+	 * @return the number of matching hashtags
+	 */
+	public static int countByChallenge(long challengeId) {
+		return getPersistence().countByChallenge(challengeId);
+	}
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or throws a <code>NoSuchHashtagException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching hashtag
+	 * @throws NoSuchHashtagException if a matching hashtag could not be found
+	 */
+	public static Hashtag findByName(long challengeId, String name)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchHashtagException {
+
+		return getPersistence().findByName(challengeId, name);
+	}
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching hashtag, or <code>null</code> if a matching hashtag could not be found
+	 */
+	public static Hashtag fetchByName(long challengeId, String name) {
+		return getPersistence().fetchByName(challengeId, name);
+	}
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching hashtag, or <code>null</code> if a matching hashtag could not be found
+	 */
+	public static Hashtag fetchByName(
+		long challengeId, String name, boolean useFinderCache) {
+
+		return getPersistence().fetchByName(challengeId, name, useFinderCache);
+	}
+
+	/**
+	 * Removes the hashtag where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the hashtag that was removed
+	 */
+	public static Hashtag removeByName(long challengeId, String name)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchHashtagException {
+
+		return getPersistence().removeByName(challengeId, name);
+	}
+
+	/**
+	 * Returns the number of hashtags where challengeId = &#63; and name = &#63;.
+	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
 	 * @return the number of matching hashtags
 	 */
-	public static int countByName(String name) {
-		return getPersistence().countByName(name);
+	public static int countByName(long challengeId, String name) {
+		return getPersistence().countByName(challengeId, name);
 	}
 
 	/**

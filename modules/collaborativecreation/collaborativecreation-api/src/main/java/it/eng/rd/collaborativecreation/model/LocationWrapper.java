@@ -42,7 +42,7 @@ public class LocationWrapper
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
 		attributes.put("mvccVersion", getMvccVersion());
-		attributes.put("locatoinId", getLocatoinId());
+		attributes.put("locationId", getLocationId());
 		attributes.put("challengeId", getChallengeId());
 		attributes.put("name", getName());
 		attributes.put("latitude", getLatitude());
@@ -59,10 +59,10 @@ public class LocationWrapper
 			setMvccVersion(mvccVersion);
 		}
 
-		Long locatoinId = (Long)attributes.get("locatoinId");
+		Long locationId = (Long)attributes.get("locationId");
 
-		if (locatoinId != null) {
-			setLocatoinId(locatoinId);
+		if (locationId != null) {
+			setLocationId(locationId);
 		}
 
 		Long challengeId = (Long)attributes.get("challengeId");
@@ -111,13 +111,13 @@ public class LocationWrapper
 	}
 
 	/**
-	 * Returns the locatoin ID of this location.
+	 * Returns the location ID of this location.
 	 *
-	 * @return the locatoin ID of this location
+	 * @return the location ID of this location
 	 */
 	@Override
-	public long getLocatoinId() {
-		return model.getLocatoinId();
+	public long getLocationId() {
+		return model.getLocationId();
 	}
 
 	/**
@@ -186,13 +186,13 @@ public class LocationWrapper
 	}
 
 	/**
-	 * Sets the locatoin ID of this location.
+	 * Sets the location ID of this location.
 	 *
-	 * @param locatoinId the locatoin ID of this location
+	 * @param locationId the location ID of this location
 	 */
 	@Override
-	public void setLocatoinId(long locatoinId) {
-		model.setLocatoinId(locatoinId);
+	public void setLocationId(long locationId) {
+		model.setLocationId(locationId);
 	}
 
 	/**

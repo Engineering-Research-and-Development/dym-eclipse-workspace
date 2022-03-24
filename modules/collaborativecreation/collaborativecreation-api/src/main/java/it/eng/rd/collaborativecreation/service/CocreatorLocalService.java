@@ -25,11 +25,13 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
+import it.eng.rd.collaborativecreation.exception.NoSuchCocreatorException;
 import it.eng.rd.collaborativecreation.model.Cocreator;
 
 import java.io.Serializable;
@@ -75,6 +77,11 @@ public interface CocreatorLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Cocreator addCocreator(Cocreator cocreator);
 
+	@Indexable(type = IndexableType.REINDEX)
+	public Cocreator addCocreator(
+			long cocreationId, long userId, ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	 * Creates a new cocreator with the primary key. Does not add the cocreator to the database.
 	 *
@@ -116,6 +123,9 @@ public interface CocreatorLocalService
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	public Cocreator deleteCocreator(long cocreatorId) throws PortalException;
+
+	public void deleteCocreatorByCocreatorId(long cocreatorId)
+		throws NoSuchCocreatorException;
 
 	/**
 	 * @throws PortalException
@@ -242,6 +252,22 @@ public interface CocreatorLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Cocreator> getCocreators(int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreator> getCocreatorsByCocreationId(long cocreationId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreator> getCocreatorsByUserId(long userId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreator> getCocreatorsByUserId(
+			long userId, int start, int end)
+		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreator> getCocreatorsByUserId(
+		long userId, int start, int end, OrderByComparator<Cocreator> obc);
+
 	/**
 	 * Returns all the cocreators matching the UUID and company.
 	 *
@@ -277,6 +303,9 @@ public interface CocreatorLocalService
 	public int getCocreatorsCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getCocreatorsCountByUserId(long userId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
 	/**
@@ -306,5 +335,10 @@ public interface CocreatorLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public Cocreator updateCocreator(Cocreator cocreator);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public Cocreator updateCocreator(
+			long cocreationId, long cocreatorId, ServiceContext serviceContext)
+		throws PortalException, SystemException;
 
 }

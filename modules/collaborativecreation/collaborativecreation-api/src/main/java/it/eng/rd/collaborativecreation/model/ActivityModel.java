@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.MVCCModel;
 
+import java.util.Date;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -112,5 +114,19 @@ public interface ActivityModel extends BaseModel<Activity>, MVCCModel {
 	 * @param cocreationId the cocreation ID of this activity
 	 */
 	public void setCocreationId(long cocreationId);
+
+	/**
+	 * Returns the expiration date of this activity.
+	 *
+	 * @return the expiration date of this activity
+	 */
+	public Date getExpirationDate();
+
+	/**
+	 * Sets the expiration date of this activity.
+	 *
+	 * @param expirationDate the expiration date of this activity
+	 */
+	public void setExpirationDate(Date expirationDate);
 
 }

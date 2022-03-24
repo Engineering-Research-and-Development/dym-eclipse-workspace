@@ -253,6 +253,21 @@ public interface ChallengeModel
 	public void setDescription(String description);
 
 	/**
+	 * Returns the desired outcome of this challenge.
+	 *
+	 * @return the desired outcome of this challenge
+	 */
+	@AutoEscape
+	public String getDesiredOutcome();
+
+	/**
+	 * Sets the desired outcome of this challenge.
+	 *
+	 * @param desiredOutcome the desired outcome of this challenge
+	 */
+	public void setDesiredOutcome(String desiredOutcome);
+
+	/**
 	 * Returns the start date of this challenge.
 	 *
 	 * @return the start date of this challenge

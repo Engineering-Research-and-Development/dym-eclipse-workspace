@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
 import it.eng.rd.collaborativecreation.model.Location;
@@ -68,7 +69,7 @@ public class LocationModelImpl
 	public static final String TABLE_NAME = "COCREATION_Location";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"locatoinId", Types.BIGINT},
+		{"mvccVersion", Types.BIGINT}, {"locationId", Types.BIGINT},
 		{"challengeId", Types.BIGINT}, {"name", Types.VARCHAR},
 		{"latitude", Types.VARCHAR}, {"longitude", Types.VARCHAR}
 	};
@@ -78,7 +79,7 @@ public class LocationModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("locatoinId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("locationId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("challengeId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("latitude", Types.VARCHAR);
@@ -86,7 +87,7 @@ public class LocationModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table COCREATION_Location (mvccVersion LONG default 0 not null,locatoinId LONG not null primary key,challengeId LONG,name VARCHAR(75) null,latitude VARCHAR(75) null,longitude VARCHAR(75) null)";
+		"create table COCREATION_Location (mvccVersion LONG default 0 not null,locationId LONG not null primary key,challengeId LONG,name VARCHAR(75) null,latitude VARCHAR(75) null,longitude VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table COCREATION_Location";
@@ -106,7 +107,13 @@ public class LocationModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long NAME_COLUMN_BITMASK = 1L;
+	public static final long CHALLENGEID_COLUMN_BITMASK = 1L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long NAME_COLUMN_BITMASK = 2L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -138,7 +145,7 @@ public class LocationModelImpl
 		Location model = new LocationImpl();
 
 		model.setMvccVersion(soapModel.getMvccVersion());
-		model.setLocatoinId(soapModel.getLocatoinId());
+		model.setLocationId(soapModel.getLocationId());
 		model.setChallengeId(soapModel.getChallengeId());
 		model.setName(soapModel.getName());
 		model.setLatitude(soapModel.getLatitude());
@@ -174,17 +181,17 @@ public class LocationModelImpl
 
 	@Override
 	public long getPrimaryKey() {
-		return _locatoinId;
+		return _locationId;
 	}
 
 	@Override
 	public void setPrimaryKey(long primaryKey) {
-		setLocatoinId(primaryKey);
+		setLocationId(primaryKey);
 	}
 
 	@Override
 	public Serializable getPrimaryKeyObj() {
-		return _locatoinId;
+		return _locationId;
 	}
 
 	@Override
@@ -296,9 +303,9 @@ public class LocationModelImpl
 		attributeSetterBiConsumers.put(
 			"mvccVersion",
 			(BiConsumer<Location, Long>)Location::setMvccVersion);
-		attributeGetterFunctions.put("locatoinId", Location::getLocatoinId);
+		attributeGetterFunctions.put("locationId", Location::getLocationId);
 		attributeSetterBiConsumers.put(
-			"locatoinId", (BiConsumer<Location, Long>)Location::setLocatoinId);
+			"locationId", (BiConsumer<Location, Long>)Location::setLocationId);
 		attributeGetterFunctions.put("challengeId", Location::getChallengeId);
 		attributeSetterBiConsumers.put(
 			"challengeId",
@@ -336,17 +343,17 @@ public class LocationModelImpl
 
 	@JSON
 	@Override
-	public long getLocatoinId() {
-		return _locatoinId;
+	public long getLocationId() {
+		return _locationId;
 	}
 
 	@Override
-	public void setLocatoinId(long locatoinId) {
+	public void setLocationId(long locationId) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_locatoinId = locatoinId;
+		_locationId = locationId;
 	}
 
 	@JSON
@@ -362,6 +369,16 @@ public class LocationModelImpl
 		}
 
 		_challengeId = challengeId;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalChallengeId() {
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("challengeId"));
 	}
 
 	@JSON
@@ -488,7 +505,7 @@ public class LocationModelImpl
 		LocationImpl locationImpl = new LocationImpl();
 
 		locationImpl.setMvccVersion(getMvccVersion());
-		locationImpl.setLocatoinId(getLocatoinId());
+		locationImpl.setLocationId(getLocationId());
 		locationImpl.setChallengeId(getChallengeId());
 		locationImpl.setName(getName());
 		locationImpl.setLatitude(getLatitude());
@@ -572,7 +589,7 @@ public class LocationModelImpl
 
 		locationCacheModel.mvccVersion = getMvccVersion();
 
-		locationCacheModel.locatoinId = getLocatoinId();
+		locationCacheModel.locationId = getLocationId();
 
 		locationCacheModel.challengeId = getChallengeId();
 
@@ -674,7 +691,7 @@ public class LocationModelImpl
 	}
 
 	private long _mvccVersion;
-	private long _locatoinId;
+	private long _locationId;
 	private long _challengeId;
 	private String _name;
 	private String _latitude;
@@ -708,7 +725,7 @@ public class LocationModelImpl
 		_columnOriginalValues = new HashMap<String, Object>();
 
 		_columnOriginalValues.put("mvccVersion", _mvccVersion);
-		_columnOriginalValues.put("locatoinId", _locatoinId);
+		_columnOriginalValues.put("locationId", _locationId);
 		_columnOriginalValues.put("challengeId", _challengeId);
 		_columnOriginalValues.put("name", _name);
 		_columnOriginalValues.put("latitude", _latitude);
@@ -728,7 +745,7 @@ public class LocationModelImpl
 
 		columnBitmasks.put("mvccVersion", 1L);
 
-		columnBitmasks.put("locatoinId", 2L);
+		columnBitmasks.put("locationId", 2L);
 
 		columnBitmasks.put("challengeId", 4L);
 

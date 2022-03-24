@@ -38,12 +38,12 @@ public interface Location extends LocationModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to <code>it.eng.rd.collaborativecreation.model.impl.LocationImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public static final Accessor<Location, Long> LOCATOIN_ID_ACCESSOR =
+	public static final Accessor<Location, Long> LOCATION_ID_ACCESSOR =
 		new Accessor<Location, Long>() {
 
 			@Override
 			public Long get(Location location) {
-				return location.getLocatoinId();
+				return location.getLocationId();
 			}
 
 			@Override

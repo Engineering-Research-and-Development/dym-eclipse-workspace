@@ -82,10 +82,12 @@ public class CocreationModelImpl
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"title", Types.VARCHAR}, {"description", Types.CLOB},
-		{"dlFolderName", Types.VARCHAR}, {"ldFolderId", Types.BIGINT},
-		{"status", Types.INTEGER}, {"statusByUserId", Types.BIGINT},
-		{"statusByUserName", Types.VARCHAR}, {"statusDate", Types.TIMESTAMP}
+		{"completionDate", Types.TIMESTAMP}, {"request", Types.CLOB},
+		{"message", Types.CLOB}, {"title", Types.VARCHAR},
+		{"description", Types.CLOB}, {"dlFolderName", Types.VARCHAR},
+		{"ldFolderId", Types.BIGINT}, {"status", Types.INTEGER},
+		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
+		{"statusDate", Types.TIMESTAMP}, {"completed", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -102,6 +104,9 @@ public class CocreationModelImpl
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("completionDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("request", Types.CLOB);
+		TABLE_COLUMNS_MAP.put("message", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("dlFolderName", Types.VARCHAR);
@@ -110,10 +115,11 @@ public class CocreationModelImpl
 		TABLE_COLUMNS_MAP.put("statusByUserId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("statusByUserName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("statusDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("completed", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table COCREATION_Cocreation (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,cocreationId LONG not null primary key,challengeId LONG,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title VARCHAR(75) null,description TEXT null,dlFolderName VARCHAR(75) null,ldFolderId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
+		"create table COCREATION_Cocreation (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,cocreationId LONG not null primary key,challengeId LONG,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,completionDate DATE null,request TEXT null,message TEXT null,title VARCHAR(75) null,description TEXT null,dlFolderName VARCHAR(75) null,ldFolderId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,completed BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table COCREATION_Cocreation";
@@ -134,38 +140,50 @@ public class CocreationModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long COMPANYID_COLUMN_BITMASK = 1L;
+	public static final long CHALLENGEID_COLUMN_BITMASK = 1L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long GROUPID_COLUMN_BITMASK = 2L;
+	public static final long COMPANYID_COLUMN_BITMASK = 2L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long TITLE_COLUMN_BITMASK = 4L;
+	public static final long COMPLETED_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long USERID_COLUMN_BITMASK = 8L;
+	public static final long GROUPID_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long UUID_COLUMN_BITMASK = 16L;
+	public static final long TITLE_COLUMN_BITMASK = 16L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long USERID_COLUMN_BITMASK = 32L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long UUID_COLUMN_BITMASK = 64L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long CREATEDATE_COLUMN_BITMASK = 32L;
+	public static final long CREATEDATE_COLUMN_BITMASK = 128L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -206,6 +224,9 @@ public class CocreationModelImpl
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setCompletionDate(soapModel.getCompletionDate());
+		model.setRequest(soapModel.getRequest());
+		model.setMessage(soapModel.getMessage());
 		model.setTitle(soapModel.getTitle());
 		model.setDescription(soapModel.getDescription());
 		model.setDlFolderName(soapModel.getDlFolderName());
@@ -214,6 +235,7 @@ public class CocreationModelImpl
 		model.setStatusByUserId(soapModel.getStatusByUserId());
 		model.setStatusByUserName(soapModel.getStatusByUserName());
 		model.setStatusDate(soapModel.getStatusDate());
+		model.setCompleted(soapModel.isCompleted());
 
 		return model;
 	}
@@ -402,6 +424,17 @@ public class CocreationModelImpl
 		attributeSetterBiConsumers.put(
 			"modifiedDate",
 			(BiConsumer<Cocreation, Date>)Cocreation::setModifiedDate);
+		attributeGetterFunctions.put(
+			"completionDate", Cocreation::getCompletionDate);
+		attributeSetterBiConsumers.put(
+			"completionDate",
+			(BiConsumer<Cocreation, Date>)Cocreation::setCompletionDate);
+		attributeGetterFunctions.put("request", Cocreation::getRequest);
+		attributeSetterBiConsumers.put(
+			"request", (BiConsumer<Cocreation, String>)Cocreation::setRequest);
+		attributeGetterFunctions.put("message", Cocreation::getMessage);
+		attributeSetterBiConsumers.put(
+			"message", (BiConsumer<Cocreation, String>)Cocreation::setMessage);
 		attributeGetterFunctions.put("title", Cocreation::getTitle);
 		attributeSetterBiConsumers.put(
 			"title", (BiConsumer<Cocreation, String>)Cocreation::setTitle);
@@ -435,6 +468,10 @@ public class CocreationModelImpl
 		attributeSetterBiConsumers.put(
 			"statusDate",
 			(BiConsumer<Cocreation, Date>)Cocreation::setStatusDate);
+		attributeGetterFunctions.put("completed", Cocreation::getCompleted);
+		attributeSetterBiConsumers.put(
+			"completed",
+			(BiConsumer<Cocreation, Boolean>)Cocreation::setCompleted);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -514,6 +551,16 @@ public class CocreationModelImpl
 		}
 
 		_challengeId = challengeId;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalChallengeId() {
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("challengeId"));
 	}
 
 	@JSON
@@ -659,6 +706,61 @@ public class CocreationModelImpl
 		}
 
 		_modifiedDate = modifiedDate;
+	}
+
+	@JSON
+	@Override
+	public Date getCompletionDate() {
+		return _completionDate;
+	}
+
+	@Override
+	public void setCompletionDate(Date completionDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_completionDate = completionDate;
+	}
+
+	@JSON
+	@Override
+	public String getRequest() {
+		if (_request == null) {
+			return "";
+		}
+		else {
+			return _request;
+		}
+	}
+
+	@Override
+	public void setRequest(String request) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_request = request;
+	}
+
+	@JSON
+	@Override
+	public String getMessage() {
+		if (_message == null) {
+			return "";
+		}
+		else {
+			return _message;
+		}
+	}
+
+	@Override
+	public void setMessage(String message) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_message = message;
 	}
 
 	@JSON
@@ -826,6 +928,37 @@ public class CocreationModelImpl
 		_statusDate = statusDate;
 	}
 
+	@JSON
+	@Override
+	public boolean getCompleted() {
+		return _completed;
+	}
+
+	@JSON
+	@Override
+	public boolean isCompleted() {
+		return _completed;
+	}
+
+	@Override
+	public void setCompleted(boolean completed) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_completed = completed;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public boolean getOriginalCompleted() {
+		return GetterUtil.getBoolean(
+			this.<Boolean>getColumnOriginalValue("completed"));
+	}
+
 	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(
@@ -976,6 +1109,9 @@ public class CocreationModelImpl
 		cocreationImpl.setUserName(getUserName());
 		cocreationImpl.setCreateDate(getCreateDate());
 		cocreationImpl.setModifiedDate(getModifiedDate());
+		cocreationImpl.setCompletionDate(getCompletionDate());
+		cocreationImpl.setRequest(getRequest());
+		cocreationImpl.setMessage(getMessage());
 		cocreationImpl.setTitle(getTitle());
 		cocreationImpl.setDescription(getDescription());
 		cocreationImpl.setDlFolderName(getDlFolderName());
@@ -984,6 +1120,7 @@ public class CocreationModelImpl
 		cocreationImpl.setStatusByUserId(getStatusByUserId());
 		cocreationImpl.setStatusByUserName(getStatusByUserName());
 		cocreationImpl.setStatusDate(getStatusDate());
+		cocreationImpl.setCompleted(isCompleted());
 
 		cocreationImpl.resetOriginalValues();
 
@@ -1109,6 +1246,31 @@ public class CocreationModelImpl
 			cocreationCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
+		Date completionDate = getCompletionDate();
+
+		if (completionDate != null) {
+			cocreationCacheModel.completionDate = completionDate.getTime();
+		}
+		else {
+			cocreationCacheModel.completionDate = Long.MIN_VALUE;
+		}
+
+		cocreationCacheModel.request = getRequest();
+
+		String request = cocreationCacheModel.request;
+
+		if ((request != null) && (request.length() == 0)) {
+			cocreationCacheModel.request = null;
+		}
+
+		cocreationCacheModel.message = getMessage();
+
+		String message = cocreationCacheModel.message;
+
+		if ((message != null) && (message.length() == 0)) {
+			cocreationCacheModel.message = null;
+		}
+
 		cocreationCacheModel.title = getTitle();
 
 		String title = cocreationCacheModel.title;
@@ -1155,6 +1317,8 @@ public class CocreationModelImpl
 		else {
 			cocreationCacheModel.statusDate = Long.MIN_VALUE;
 		}
+
+		cocreationCacheModel.completed = isCompleted();
 
 		return cocreationCacheModel;
 	}
@@ -1240,6 +1404,9 @@ public class CocreationModelImpl
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
+	private Date _completionDate;
+	private String _request;
+	private String _message;
 	private String _title;
 	private String _description;
 	private String _dlFolderName;
@@ -1248,6 +1415,7 @@ public class CocreationModelImpl
 	private long _statusByUserId;
 	private String _statusByUserName;
 	private Date _statusDate;
+	private boolean _completed;
 
 	public <T> T getColumnValue(String columnName) {
 		columnName = _attributeNames.getOrDefault(columnName, columnName);
@@ -1288,6 +1456,9 @@ public class CocreationModelImpl
 		_columnOriginalValues.put("userName", _userName);
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
+		_columnOriginalValues.put("completionDate", _completionDate);
+		_columnOriginalValues.put("request", _request);
+		_columnOriginalValues.put("message", _message);
 		_columnOriginalValues.put("title", _title);
 		_columnOriginalValues.put("description", _description);
 		_columnOriginalValues.put("dlFolderName", _dlFolderName);
@@ -1296,6 +1467,7 @@ public class CocreationModelImpl
 		_columnOriginalValues.put("statusByUserId", _statusByUserId);
 		_columnOriginalValues.put("statusByUserName", _statusByUserName);
 		_columnOriginalValues.put("statusDate", _statusDate);
+		_columnOriginalValues.put("completed", _completed);
 	}
 
 	private static final Map<String, String> _attributeNames;
@@ -1339,21 +1511,29 @@ public class CocreationModelImpl
 
 		columnBitmasks.put("modifiedDate", 512L);
 
-		columnBitmasks.put("title", 1024L);
+		columnBitmasks.put("completionDate", 1024L);
 
-		columnBitmasks.put("description", 2048L);
+		columnBitmasks.put("request", 2048L);
 
-		columnBitmasks.put("dlFolderName", 4096L);
+		columnBitmasks.put("message", 4096L);
 
-		columnBitmasks.put("ldFolderId", 8192L);
+		columnBitmasks.put("title", 8192L);
 
-		columnBitmasks.put("status", 16384L);
+		columnBitmasks.put("description", 16384L);
 
-		columnBitmasks.put("statusByUserId", 32768L);
+		columnBitmasks.put("dlFolderName", 32768L);
 
-		columnBitmasks.put("statusByUserName", 65536L);
+		columnBitmasks.put("ldFolderId", 65536L);
 
-		columnBitmasks.put("statusDate", 131072L);
+		columnBitmasks.put("status", 131072L);
+
+		columnBitmasks.put("statusByUserId", 262144L);
+
+		columnBitmasks.put("statusByUserName", 524288L);
+
+		columnBitmasks.put("statusDate", 1048576L);
+
+		columnBitmasks.put("completed", 2097152L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

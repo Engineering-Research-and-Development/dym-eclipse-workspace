@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -75,6 +76,11 @@ public interface CategoryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Category addCategory(Category category);
 
+	@Indexable(type = IndexableType.REINDEX)
+	public Category addCategory(
+			long challengeId, String name, ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	 * Creates a new category with the primary key. Does not add the category to the database.
 	 *
@@ -88,6 +94,9 @@ public interface CategoryLocalService
 	 * @throws PortalException
 	 */
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
+		throws PortalException;
+
+	public void deleteCategoriesByChallengeId(long challengeId)
 		throws PortalException;
 
 	/**
@@ -210,6 +219,10 @@ public interface CategoryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Category> getCategories(int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Category> getCategoriesByChallengeId(long challengeId)
+		throws PortalException;
+
 	/**
 	 * Returns the number of categories.
 	 *
@@ -227,6 +240,10 @@ public interface CategoryLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Category getCategory(long categoryId) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Category getCategory(long challengeId, String name)
+		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();

@@ -18,6 +18,7 @@
 		<column name="modifiedDate" type="Date" />
 		<column name="title" type="String" />
 		<column name="description" type="String" />
+		<column name="desiredOutcome" type="String" />
         <column name="startDate" type="Date"></column>
         <column name="endDate" type="Date"></column>
         <column name="dlFolderName" type="String"></column>
@@ -49,6 +50,7 @@
 	       <finder-column name="groupId" />
 	    </finder>
         <finder name="Active" return-type="Collection">
+        	<finder-column name="groupId"></finder-column>
             <finder-column name="active"></finder-column>
         </finder>
 	    
@@ -68,6 +70,9 @@
     	<column name="userName" type="String"></column>
     	<column name="createDate" type="Date"></column>
     	<column name="modifiedDate" type="Date"></column>
+    	<column name="completionDate" type="Date"></column>
+    	<column name="request" type="String"></column>
+        <column name="message" type="String"></column>
         <column name="title" type="String"></column>
         <column name="description" type="String"></column>
         <column name="dlFolderName" type="String" primary="false"></column>
@@ -80,11 +85,15 @@
         <column name="statusByUserId" type="long" />
 		<column name="statusByUserName" type="String" />
 		<column name="statusDate" type="Date" />
+		<column name="completed" type="boolean"></column>
 
     	<order>
             <order-column name="createDate" order-by="desc"></order-column>
     	</order>
 
+		<finder name="ChallengeId" return-type="Collection">
+    		<finder-column name="challengeId"></finder-column>
+    	</finder>
     	<finder name="Title" return-type="Collection">
     		<finder-column name="title"></finder-column>
     	</finder>
@@ -94,6 +103,7 @@
         </finder>
         <finder name="GroupId" return-type="Collection">
             <finder-column name="groupId"></finder-column>
+            <finder-column name="completed"></finder-column>
         </finder>
         
         <reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
@@ -110,6 +120,7 @@
         <column name="userId" type="long"></column>
         <column name="userName" type="String"></column>
         <column name="cocreationId" type="long"></column>
+        <column name="activityId" type="long"></column>
         
         <order>
             <order-column name="userId" order-by="desc"></order-column>
@@ -126,7 +137,7 @@
     
     <entity name="Location" local-service="true">
         <!-- PK field -->
-        <column name="locatoinId" type="long" primary="true"></column>
+        <column name="locationId" type="long" primary="true"></column>
         
         <!-- Entity fields -->
         <column name="challengeId" type="long"></column>
@@ -138,7 +149,12 @@
             <order-column name="name" order-by="desc"></order-column>
         </order>
         
-        <finder name="Name" return-type="Collection">
+        <finder name="Challenge" return-type="Location">
+            <finder-column name="challengeId"></finder-column>
+        </finder>
+        
+        <finder name="Name" return-type="Location">
+        	<finder-column name="challengeId"></finder-column>
             <finder-column name="name"></finder-column>
         </finder>
     </entity>
@@ -156,7 +172,12 @@
             <order-column name="name" order-by="desc"></order-column>
         </order>
         
-        <finder name="Name" return-type="Collection">
+        <finder name="Challenge" return-type="Collection">
+            <finder-column name="challengeId"></finder-column>
+        </finder>
+        
+        <finder name="Name" return-type="Category">
+        	<finder-column name="challengeId"></finder-column>
             <finder-column name="name"></finder-column>
         </finder>
     </entity>
@@ -174,7 +195,12 @@
             <order-column name="name" order-by="desc"></order-column>
         </order>
         
-        <finder name="Name" return-type="Collection">
+        <finder name="Challenge" return-type="Collection">
+            <finder-column name="challengeId"></finder-column>
+        </finder>
+        
+        <finder name="Name" return-type="Hahtag">
+        	<finder-column name="challengeId"></finder-column>
             <finder-column name="name"></finder-column>
         </finder>
     </entity>
@@ -186,11 +212,15 @@
         <!-- Entity fields -->
         <column name="description" type="String"></column>
         <column name="cocreationId" type="long"></column>
+        <column name="expirationDate" type="Date"></column>
         <order>
             <order-column name="description" order-by="desc"></order-column>
         </order>
         <finder name="Activity" return-type="Collection">
             <finder-column name="activityId"></finder-column>
+        </finder>
+        <finder name="Cocreation" return-type="Collection">
+            <finder-column name="cocreationId"></finder-column>
         </finder>
     </entity>
     

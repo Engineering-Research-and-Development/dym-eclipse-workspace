@@ -47,7 +47,7 @@ public class LocationCacheModel
 
 		LocationCacheModel locationCacheModel = (LocationCacheModel)object;
 
-		if ((locatoinId == locationCacheModel.locatoinId) &&
+		if ((locationId == locationCacheModel.locationId) &&
 			(mvccVersion == locationCacheModel.mvccVersion)) {
 
 			return true;
@@ -58,7 +58,7 @@ public class LocationCacheModel
 
 	@Override
 	public int hashCode() {
-		int hashCode = HashUtil.hash(0, locatoinId);
+		int hashCode = HashUtil.hash(0, locationId);
 
 		return HashUtil.hash(hashCode, mvccVersion);
 	}
@@ -79,8 +79,8 @@ public class LocationCacheModel
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
-		sb.append(", locatoinId=");
-		sb.append(locatoinId);
+		sb.append(", locationId=");
+		sb.append(locationId);
 		sb.append(", challengeId=");
 		sb.append(challengeId);
 		sb.append(", name=");
@@ -99,7 +99,7 @@ public class LocationCacheModel
 		LocationImpl locationImpl = new LocationImpl();
 
 		locationImpl.setMvccVersion(mvccVersion);
-		locationImpl.setLocatoinId(locatoinId);
+		locationImpl.setLocationId(locationId);
 		locationImpl.setChallengeId(challengeId);
 
 		if (name == null) {
@@ -132,7 +132,7 @@ public class LocationCacheModel
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		mvccVersion = objectInput.readLong();
 
-		locatoinId = objectInput.readLong();
+		locationId = objectInput.readLong();
 
 		challengeId = objectInput.readLong();
 		name = objectInput.readUTF();
@@ -144,7 +144,7 @@ public class LocationCacheModel
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(mvccVersion);
 
-		objectOutput.writeLong(locatoinId);
+		objectOutput.writeLong(locationId);
 
 		objectOutput.writeLong(challengeId);
 
@@ -171,7 +171,7 @@ public class LocationCacheModel
 	}
 
 	public long mvccVersion;
-	public long locatoinId;
+	public long locationId;
 	public long challengeId;
 	public String name;
 	public String latitude;

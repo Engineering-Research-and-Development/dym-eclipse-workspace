@@ -75,7 +75,8 @@ public class CocreatorModelImpl
 		{"mvccVersion", Types.BIGINT}, {"uuid_", Types.VARCHAR},
 		{"cocreatorId", Types.BIGINT}, {"groupId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
-		{"userName", Types.VARCHAR}, {"cocreationId", Types.BIGINT}
+		{"userName", Types.VARCHAR}, {"cocreationId", Types.BIGINT},
+		{"activityId", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -90,10 +91,11 @@ public class CocreatorModelImpl
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("cocreationId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("activityId", Types.BIGINT);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table COCREATION_Cocreator (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,cocreatorId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,cocreationId LONG)";
+		"create table COCREATION_Cocreator (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,cocreatorId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,cocreationId LONG,activityId LONG)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table COCREATION_Cocreator";
@@ -184,6 +186,7 @@ public class CocreatorModelImpl
 		model.setUserId(soapModel.getUserId());
 		model.setUserName(soapModel.getUserName());
 		model.setCocreationId(soapModel.getCocreationId());
+		model.setActivityId(soapModel.getActivityId());
 
 		return model;
 	}
@@ -361,6 +364,10 @@ public class CocreatorModelImpl
 		attributeSetterBiConsumers.put(
 			"cocreationId",
 			(BiConsumer<Cocreator, Long>)Cocreator::setCocreationId);
+		attributeGetterFunctions.put("activityId", Cocreator::getActivityId);
+		attributeSetterBiConsumers.put(
+			"activityId",
+			(BiConsumer<Cocreator, Long>)Cocreator::setActivityId);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -561,6 +568,21 @@ public class CocreatorModelImpl
 			this.<Long>getColumnOriginalValue("cocreationId"));
 	}
 
+	@JSON
+	@Override
+	public long getActivityId() {
+		return _activityId;
+	}
+
+	@Override
+	public void setActivityId(long activityId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_activityId = activityId;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -623,6 +645,7 @@ public class CocreatorModelImpl
 		cocreatorImpl.setUserId(getUserId());
 		cocreatorImpl.setUserName(getUserName());
 		cocreatorImpl.setCocreationId(getCocreationId());
+		cocreatorImpl.setActivityId(getActivityId());
 
 		cocreatorImpl.resetOriginalValues();
 
@@ -744,6 +767,8 @@ public class CocreatorModelImpl
 
 		cocreatorCacheModel.cocreationId = getCocreationId();
 
+		cocreatorCacheModel.activityId = getActivityId();
+
 		return cocreatorCacheModel;
 	}
 
@@ -825,6 +850,7 @@ public class CocreatorModelImpl
 	private long _userId;
 	private String _userName;
 	private long _cocreationId;
+	private long _activityId;
 
 	public <T> T getColumnValue(String columnName) {
 		columnName = _attributeNames.getOrDefault(columnName, columnName);
@@ -863,6 +889,7 @@ public class CocreatorModelImpl
 		_columnOriginalValues.put("userId", _userId);
 		_columnOriginalValues.put("userName", _userName);
 		_columnOriginalValues.put("cocreationId", _cocreationId);
+		_columnOriginalValues.put("activityId", _activityId);
 	}
 
 	private static final Map<String, String> _attributeNames;
@@ -901,6 +928,8 @@ public class CocreatorModelImpl
 		columnBitmasks.put("userName", 64L);
 
 		columnBitmasks.put("cocreationId", 128L);
+
+		columnBitmasks.put("activityId", 256L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

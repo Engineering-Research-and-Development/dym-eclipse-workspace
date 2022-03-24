@@ -49,6 +49,16 @@ public class CategoryLocalServiceWrapper
 		return _categoryLocalService.addCategory(category);
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Category addCategory(
+			long challengeId, String name,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _categoryLocalService.addCategory(
+			challengeId, name, serviceContext);
+	}
+
 	/**
 	 * Creates a new category with the primary key. Does not add the category to the database.
 	 *
@@ -71,6 +81,13 @@ public class CategoryLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _categoryLocalService.createPersistedModel(primaryKeyObj);
+	}
+
+	@Override
+	public void deleteCategoriesByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_categoryLocalService.deleteCategoriesByChallengeId(challengeId);
 	}
 
 	/**
@@ -242,6 +259,14 @@ public class CategoryLocalServiceWrapper
 		return _categoryLocalService.getCategories(start, end);
 	}
 
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Category>
+			getCategoriesByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _categoryLocalService.getCategoriesByChallengeId(challengeId);
+	}
+
 	/**
 	 * Returns the number of categories.
 	 *
@@ -265,6 +290,14 @@ public class CategoryLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _categoryLocalService.getCategory(categoryId);
+	}
+
+	@Override
+	public it.eng.rd.collaborativecreation.model.Category getCategory(
+			long challengeId, String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _categoryLocalService.getCategory(challengeId, name);
 	}
 
 	@Override

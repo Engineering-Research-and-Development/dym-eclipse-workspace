@@ -40,6 +40,7 @@ public class CocreatorSoap implements Serializable {
 		soapModel.setUserId(model.getUserId());
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCocreationId(model.getCocreationId());
+		soapModel.setActivityId(model.getActivityId());
 
 		return soapModel;
 	}
@@ -157,6 +158,14 @@ public class CocreatorSoap implements Serializable {
 		_cocreationId = cocreationId;
 	}
 
+	public long getActivityId() {
+		return _activityId;
+	}
+
+	public void setActivityId(long activityId) {
+		_activityId = activityId;
+	}
+
 	private long _mvccVersion;
 	private String _uuid;
 	private long _cocreatorId;
@@ -165,5 +174,6 @@ public class CocreatorSoap implements Serializable {
 	private long _userId;
 	private String _userName;
 	private long _cocreationId;
+	private long _activityId;
 
 }

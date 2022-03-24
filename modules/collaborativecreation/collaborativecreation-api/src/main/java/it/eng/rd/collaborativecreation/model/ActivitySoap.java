@@ -17,6 +17,7 @@ package it.eng.rd.collaborativecreation.model;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class ActivitySoap implements Serializable {
 		soapModel.setActivityId(model.getActivityId());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setCocreationId(model.getCocreationId());
+		soapModel.setExpirationDate(model.getExpirationDate());
 
 		return soapModel;
 	}
@@ -121,9 +123,18 @@ public class ActivitySoap implements Serializable {
 		_cocreationId = cocreationId;
 	}
 
+	public Date getExpirationDate() {
+		return _expirationDate;
+	}
+
+	public void setExpirationDate(Date expirationDate) {
+		_expirationDate = expirationDate;
+	}
+
 	private long _mvccVersion;
 	private long _activityId;
 	private String _description;
 	private long _cocreationId;
+	private Date _expirationDate;
 
 }

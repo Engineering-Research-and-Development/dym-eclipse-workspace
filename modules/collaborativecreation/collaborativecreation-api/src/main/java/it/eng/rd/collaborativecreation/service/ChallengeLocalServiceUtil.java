@@ -61,13 +61,14 @@ public class ChallengeLocalServiceUtil {
 	}
 
 	public static Challenge addChallenge(
-			String title, String description, java.util.Date startDate,
-			java.util.Date endDate, boolean active,
+			String title, String description, String desiredOutcome,
+			java.util.Date startDate, java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().addChallenge(
-			title, description, startDate, endDate, active, serviceContext);
+			title, description, desiredOutcome, startDate, endDate, active,
+			serviceContext);
 	}
 
 	/**
@@ -119,12 +120,6 @@ public class ChallengeLocalServiceUtil {
 		throws PortalException {
 
 		return getService().deleteChallenge(challengeId);
-	}
-
-	public static Challenge deleteChallenge(long challengeId, long userId)
-		throws PortalException {
-
-		return getService().deleteChallenge(challengeId, userId);
 	}
 
 	/**
@@ -250,6 +245,12 @@ public class ChallengeLocalServiceUtil {
 		return getService().getChallenge(challengeId);
 	}
 
+	public static Challenge getChallengeByCocreationId(
+		long cocreationId, long groupId) {
+
+		return getService().getChallengeByCocreationId(cocreationId, groupId);
+	}
+
 	/**
 	 * Returns the challenge matching the UUID and group.
 	 *
@@ -278,6 +279,22 @@ public class ChallengeLocalServiceUtil {
 	 */
 	public static List<Challenge> getChallenges(int start, int end) {
 		return getService().getChallenges(start, end);
+	}
+
+	public static List<Challenge> getChallengesByActive(
+		long groupId, boolean active) {
+
+		return getService().getChallengesByActive(groupId, active);
+	}
+
+	public static List<Challenge> getChallengesByGroupId(long groupId) {
+		return getService().getChallengesByGroupId(groupId);
+	}
+
+	public static List<Challenge> getChallengesBySearch(String keywords)
+		throws ClassNotFoundException, PortalException, SystemException {
+
+		return getService().getChallengesBySearch(keywords);
 	}
 
 	public static List<Challenge> getChallengesByUserId(
@@ -394,13 +411,14 @@ public class ChallengeLocalServiceUtil {
 
 	public static Challenge updateChallenge(
 			long challengeId, String title, String description,
-			java.util.Date startDate, java.util.Date endDate, boolean active,
+			String desiredOutcome, java.util.Date startDate,
+			java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		return getService().updateChallenge(
-			challengeId, title, description, startDate, endDate, active,
-			serviceContext);
+			challengeId, title, description, desiredOutcome, startDate, endDate,
+			active, serviceContext);
 	}
 
 	public static ChallengeLocalService getService() {

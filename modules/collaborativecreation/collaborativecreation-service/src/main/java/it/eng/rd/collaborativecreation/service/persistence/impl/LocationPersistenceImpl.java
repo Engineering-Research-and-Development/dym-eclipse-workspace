@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import it.eng.rd.collaborativecreation.exception.NoSuchLocationException;
 import it.eng.rd.collaborativecreation.model.Location;
@@ -44,6 +45,7 @@ import java.io.Serializable;
 
 import java.lang.reflect.InvocationHandler;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -91,144 +93,89 @@ public class LocationPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
-	private FinderPath _finderPathWithPaginationFindByName;
-	private FinderPath _finderPathWithoutPaginationFindByName;
-	private FinderPath _finderPathCountByName;
+	private FinderPath _finderPathFetchByChallenge;
+	private FinderPath _finderPathCountByChallenge;
 
 	/**
-	 * Returns all the locations where name = &#63;.
+	 * Returns the location where challengeId = &#63; or throws a <code>NoSuchLocationException</code> if it could not be found.
 	 *
-	 * @param name the name
-	 * @return the matching locations
+	 * @param challengeId the challenge ID
+	 * @return the matching location
+	 * @throws NoSuchLocationException if a matching location could not be found
 	 */
 	@Override
-	public List<Location> findByName(String name) {
-		return findByName(name, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public Location findByChallenge(long challengeId)
+		throws NoSuchLocationException {
+
+		Location location = fetchByChallenge(challengeId);
+
+		if (location == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			sb.append("challengeId=");
+			sb.append(challengeId);
+
+			sb.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(sb.toString());
+			}
+
+			throw new NoSuchLocationException(sb.toString());
+		}
+
+		return location;
 	}
 
 	/**
-	 * Returns a range of all the locations where name = &#63;.
+	 * Returns the location where challengeId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LocationModelImpl</code>.
-	 * </p>
-	 *
-	 * @param name the name
-	 * @param start the lower bound of the range of locations
-	 * @param end the upper bound of the range of locations (not inclusive)
-	 * @return the range of matching locations
+	 * @param challengeId the challenge ID
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
 	 */
 	@Override
-	public List<Location> findByName(String name, int start, int end) {
-		return findByName(name, start, end, null);
+	public Location fetchByChallenge(long challengeId) {
+		return fetchByChallenge(challengeId, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the locations where name = &#63;.
+	 * Returns the location where challengeId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LocationModelImpl</code>.
-	 * </p>
-	 *
-	 * @param name the name
-	 * @param start the lower bound of the range of locations
-	 * @param end the upper bound of the range of locations (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching locations
-	 */
-	@Override
-	public List<Location> findByName(
-		String name, int start, int end,
-		OrderByComparator<Location> orderByComparator) {
-
-		return findByName(name, start, end, orderByComparator, true);
-	}
-
-	/**
-	 * Returns an ordered range of all the locations where name = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LocationModelImpl</code>.
-	 * </p>
-	 *
-	 * @param name the name
-	 * @param start the lower bound of the range of locations
-	 * @param end the upper bound of the range of locations (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param challengeId the challenge ID
 	 * @param useFinderCache whether to use the finder cache
-	 * @return the ordered range of matching locations
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
 	 */
 	@Override
-	public List<Location> findByName(
-		String name, int start, int end,
-		OrderByComparator<Location> orderByComparator, boolean useFinderCache) {
-
-		name = Objects.toString(name, "");
-
-		FinderPath finderPath = null;
+	public Location fetchByChallenge(long challengeId, boolean useFinderCache) {
 		Object[] finderArgs = null;
 
-		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
-			(orderByComparator == null)) {
-
-			if (useFinderCache) {
-				finderPath = _finderPathWithoutPaginationFindByName;
-				finderArgs = new Object[] {name};
-			}
-		}
-		else if (useFinderCache) {
-			finderPath = _finderPathWithPaginationFindByName;
-			finderArgs = new Object[] {name, start, end, orderByComparator};
+		if (useFinderCache) {
+			finderArgs = new Object[] {challengeId};
 		}
 
-		List<Location> list = null;
+		Object result = null;
 
 		if (useFinderCache) {
-			list = (List<Location>)finderCache.getResult(
-				finderPath, finderArgs, this);
+			result = finderCache.getResult(
+				_finderPathFetchByChallenge, finderArgs, this);
+		}
 
-			if ((list != null) && !list.isEmpty()) {
-				for (Location location : list) {
-					if (!name.equals(location.getName())) {
-						list = null;
+		if (result instanceof Location) {
+			Location location = (Location)result;
 
-						break;
-					}
-				}
+			if (challengeId != location.getChallengeId()) {
+				result = null;
 			}
 		}
 
-		if (list == null) {
-			StringBundler sb = null;
-
-			if (orderByComparator != null) {
-				sb = new StringBundler(
-					3 + (orderByComparator.getOrderByFields().length * 2));
-			}
-			else {
-				sb = new StringBundler(3);
-			}
+		if (result == null) {
+			StringBundler sb = new StringBundler(3);
 
 			sb.append(_SQL_SELECT_LOCATION_WHERE);
 
-			boolean bindName = false;
-
-			if (name.isEmpty()) {
-				sb.append(_FINDER_COLUMN_NAME_NAME_3);
-			}
-			else {
-				bindName = true;
-
-				sb.append(_FINDER_COLUMN_NAME_NAME_2);
-			}
-
-			if (orderByComparator != null) {
-				appendOrderByComparator(
-					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
-			}
-			else {
-				sb.append(LocationModelImpl.ORDER_BY_JPQL);
-			}
+			sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
 
 			String sql = sb.toString();
 
@@ -241,17 +188,37 @@ public class LocationPersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
-				if (bindName) {
-					queryPos.add(name);
+				queryPos.add(challengeId);
+
+				List<Location> list = query.list();
+
+				if (list.isEmpty()) {
+					if (useFinderCache) {
+						finderCache.putResult(
+							_finderPathFetchByChallenge, finderArgs, list);
+					}
 				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
 
-				list = (List<Location>)QueryUtil.list(
-					query, getDialect(), start, end);
+						if (_log.isWarnEnabled()) {
+							if (!useFinderCache) {
+								finderArgs = new Object[] {challengeId};
+							}
 
-				cacheResult(list);
+							_log.warn(
+								"LocationPersistenceImpl.fetchByChallenge(long, boolean) with parameters (" +
+									StringUtil.merge(finderArgs) +
+										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
 
-				if (useFinderCache) {
-					finderCache.putResult(finderPath, finderArgs, list);
+					Location location = list.get(0);
+
+					result = location;
+
+					cacheResult(location);
 				}
 			}
 			catch (Exception exception) {
@@ -262,308 +229,40 @@ public class LocationPersistenceImpl
 			}
 		}
 
-		return list;
-	}
-
-	/**
-	 * Returns the first location in the ordered set where name = &#63;.
-	 *
-	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching location
-	 * @throws NoSuchLocationException if a matching location could not be found
-	 */
-	@Override
-	public Location findByName_First(
-			String name, OrderByComparator<Location> orderByComparator)
-		throws NoSuchLocationException {
-
-		Location location = fetchByName_First(name, orderByComparator);
-
-		if (location != null) {
-			return location;
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		sb.append("name=");
-		sb.append(name);
-
-		sb.append("}");
-
-		throw new NoSuchLocationException(sb.toString());
-	}
-
-	/**
-	 * Returns the first location in the ordered set where name = &#63;.
-	 *
-	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching location, or <code>null</code> if a matching location could not be found
-	 */
-	@Override
-	public Location fetchByName_First(
-		String name, OrderByComparator<Location> orderByComparator) {
-
-		List<Location> list = findByName(name, 0, 1, orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the last location in the ordered set where name = &#63;.
-	 *
-	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching location
-	 * @throws NoSuchLocationException if a matching location could not be found
-	 */
-	@Override
-	public Location findByName_Last(
-			String name, OrderByComparator<Location> orderByComparator)
-		throws NoSuchLocationException {
-
-		Location location = fetchByName_Last(name, orderByComparator);
-
-		if (location != null) {
-			return location;
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		sb.append("name=");
-		sb.append(name);
-
-		sb.append("}");
-
-		throw new NoSuchLocationException(sb.toString());
-	}
-
-	/**
-	 * Returns the last location in the ordered set where name = &#63;.
-	 *
-	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching location, or <code>null</code> if a matching location could not be found
-	 */
-	@Override
-	public Location fetchByName_Last(
-		String name, OrderByComparator<Location> orderByComparator) {
-
-		int count = countByName(name);
-
-		if (count == 0) {
+		if (result instanceof List<?>) {
 			return null;
 		}
-
-		List<Location> list = findByName(
-			name, count - 1, count, orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
+		else {
+			return (Location)result;
 		}
-
-		return null;
 	}
 
 	/**
-	 * Returns the locations before and after the current location in the ordered set where name = &#63;.
+	 * Removes the location where challengeId = &#63; from the database.
 	 *
-	 * @param locatoinId the primary key of the current location
-	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next location
-	 * @throws NoSuchLocationException if a location with the primary key could not be found
+	 * @param challengeId the challenge ID
+	 * @return the location that was removed
 	 */
 	@Override
-	public Location[] findByName_PrevAndNext(
-			long locatoinId, String name,
-			OrderByComparator<Location> orderByComparator)
+	public Location removeByChallenge(long challengeId)
 		throws NoSuchLocationException {
 
-		name = Objects.toString(name, "");
+		Location location = findByChallenge(challengeId);
 
-		Location location = findByPrimaryKey(locatoinId);
-
-		Session session = null;
-
-		try {
-			session = openSession();
-
-			Location[] array = new LocationImpl[3];
-
-			array[0] = getByName_PrevAndNext(
-				session, location, name, orderByComparator, true);
-
-			array[1] = location;
-
-			array[2] = getByName_PrevAndNext(
-				session, location, name, orderByComparator, false);
-
-			return array;
-		}
-		catch (Exception exception) {
-			throw processException(exception);
-		}
-		finally {
-			closeSession(session);
-		}
-	}
-
-	protected Location getByName_PrevAndNext(
-		Session session, Location location, String name,
-		OrderByComparator<Location> orderByComparator, boolean previous) {
-
-		StringBundler sb = null;
-
-		if (orderByComparator != null) {
-			sb = new StringBundler(
-				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
-					(orderByComparator.getOrderByFields().length * 3));
-		}
-		else {
-			sb = new StringBundler(3);
-		}
-
-		sb.append(_SQL_SELECT_LOCATION_WHERE);
-
-		boolean bindName = false;
-
-		if (name.isEmpty()) {
-			sb.append(_FINDER_COLUMN_NAME_NAME_3);
-		}
-		else {
-			bindName = true;
-
-			sb.append(_FINDER_COLUMN_NAME_NAME_2);
-		}
-
-		if (orderByComparator != null) {
-			String[] orderByConditionFields =
-				orderByComparator.getOrderByConditionFields();
-
-			if (orderByConditionFields.length > 0) {
-				sb.append(WHERE_AND);
-			}
-
-			for (int i = 0; i < orderByConditionFields.length; i++) {
-				sb.append(_ORDER_BY_ENTITY_ALIAS);
-				sb.append(orderByConditionFields[i]);
-
-				if ((i + 1) < orderByConditionFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
-					}
-					else {
-						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(WHERE_GREATER_THAN);
-					}
-					else {
-						sb.append(WHERE_LESSER_THAN);
-					}
-				}
-			}
-
-			sb.append(ORDER_BY_CLAUSE);
-
-			String[] orderByFields = orderByComparator.getOrderByFields();
-
-			for (int i = 0; i < orderByFields.length; i++) {
-				sb.append(_ORDER_BY_ENTITY_ALIAS);
-				sb.append(orderByFields[i]);
-
-				if ((i + 1) < orderByFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(ORDER_BY_ASC_HAS_NEXT);
-					}
-					else {
-						sb.append(ORDER_BY_DESC_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(ORDER_BY_ASC);
-					}
-					else {
-						sb.append(ORDER_BY_DESC);
-					}
-				}
-			}
-		}
-		else {
-			sb.append(LocationModelImpl.ORDER_BY_JPQL);
-		}
-
-		String sql = sb.toString();
-
-		Query query = session.createQuery(sql);
-
-		query.setFirstResult(0);
-		query.setMaxResults(2);
-
-		QueryPos queryPos = QueryPos.getInstance(query);
-
-		if (bindName) {
-			queryPos.add(name);
-		}
-
-		if (orderByComparator != null) {
-			for (Object orderByConditionValue :
-					orderByComparator.getOrderByConditionValues(location)) {
-
-				queryPos.add(orderByConditionValue);
-			}
-		}
-
-		List<Location> list = query.list();
-
-		if (list.size() == 2) {
-			return list.get(1);
-		}
-		else {
-			return null;
-		}
+		return remove(location);
 	}
 
 	/**
-	 * Removes all the locations where name = &#63; from the database.
+	 * Returns the number of locations where challengeId = &#63;.
 	 *
-	 * @param name the name
-	 */
-	@Override
-	public void removeByName(String name) {
-		for (Location location :
-				findByName(name, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
-
-			remove(location);
-		}
-	}
-
-	/**
-	 * Returns the number of locations where name = &#63;.
-	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the number of matching locations
 	 */
 	@Override
-	public int countByName(String name) {
-		name = Objects.toString(name, "");
+	public int countByChallenge(long challengeId) {
+		FinderPath finderPath = _finderPathCountByChallenge;
 
-		FinderPath finderPath = _finderPathCountByName;
-
-		Object[] finderArgs = new Object[] {name};
+		Object[] finderArgs = new Object[] {challengeId};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -571,6 +270,135 @@ public class LocationPersistenceImpl
 			StringBundler sb = new StringBundler(2);
 
 			sb.append(_SQL_COUNT_LOCATION_WHERE);
+
+			sb.append(_FINDER_COLUMN_CHALLENGE_CHALLENGEID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(challengeId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_CHALLENGE_CHALLENGEID_2 =
+		"location.challengeId = ?";
+
+	private FinderPath _finderPathFetchByName;
+	private FinderPath _finderPathCountByName;
+
+	/**
+	 * Returns the location where challengeId = &#63; and name = &#63; or throws a <code>NoSuchLocationException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching location
+	 * @throws NoSuchLocationException if a matching location could not be found
+	 */
+	@Override
+	public Location findByName(long challengeId, String name)
+		throws NoSuchLocationException {
+
+		Location location = fetchByName(challengeId, name);
+
+		if (location == null) {
+			StringBundler sb = new StringBundler(6);
+
+			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			sb.append("challengeId=");
+			sb.append(challengeId);
+
+			sb.append(", name=");
+			sb.append(name);
+
+			sb.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(sb.toString());
+			}
+
+			throw new NoSuchLocationException(sb.toString());
+		}
+
+		return location;
+	}
+
+	/**
+	 * Returns the location where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
+	 */
+	@Override
+	public Location fetchByName(long challengeId, String name) {
+		return fetchByName(challengeId, name, true);
+	}
+
+	/**
+	 * Returns the location where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
+	 */
+	@Override
+	public Location fetchByName(
+		long challengeId, String name, boolean useFinderCache) {
+
+		name = Objects.toString(name, "");
+
+		Object[] finderArgs = null;
+
+		if (useFinderCache) {
+			finderArgs = new Object[] {challengeId, name};
+		}
+
+		Object result = null;
+
+		if (useFinderCache) {
+			result = finderCache.getResult(
+				_finderPathFetchByName, finderArgs, this);
+		}
+
+		if (result instanceof Location) {
+			Location location = (Location)result;
+
+			if ((challengeId != location.getChallengeId()) ||
+				!Objects.equals(name, location.getName())) {
+
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_SQL_SELECT_LOCATION_WHERE);
+
+			sb.append(_FINDER_COLUMN_NAME_CHALLENGEID_2);
 
 			boolean bindName = false;
 
@@ -593,6 +421,123 @@ public class LocationPersistenceImpl
 				Query query = session.createQuery(sql);
 
 				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(challengeId);
+
+				if (bindName) {
+					queryPos.add(name);
+				}
+
+				List<Location> list = query.list();
+
+				if (list.isEmpty()) {
+					if (useFinderCache) {
+						finderCache.putResult(
+							_finderPathFetchByName, finderArgs, list);
+					}
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							if (!useFinderCache) {
+								finderArgs = new Object[] {challengeId, name};
+							}
+
+							_log.warn(
+								"LocationPersistenceImpl.fetchByName(long, String, boolean) with parameters (" +
+									StringUtil.merge(finderArgs) +
+										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					Location location = list.get(0);
+
+					result = location;
+
+					cacheResult(location);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (Location)result;
+		}
+	}
+
+	/**
+	 * Removes the location where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the location that was removed
+	 */
+	@Override
+	public Location removeByName(long challengeId, String name)
+		throws NoSuchLocationException {
+
+		Location location = findByName(challengeId, name);
+
+		return remove(location);
+	}
+
+	/**
+	 * Returns the number of locations where challengeId = &#63; and name = &#63;.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the number of matching locations
+	 */
+	@Override
+	public int countByName(long challengeId, String name) {
+		name = Objects.toString(name, "");
+
+		FinderPath finderPath = _finderPathCountByName;
+
+		Object[] finderArgs = new Object[] {challengeId, name};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_COUNT_LOCATION_WHERE);
+
+			sb.append(_FINDER_COLUMN_NAME_CHALLENGEID_2);
+
+			boolean bindName = false;
+
+			if (name.isEmpty()) {
+				sb.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
+			else {
+				bindName = true;
+
+				sb.append(_FINDER_COLUMN_NAME_NAME_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(challengeId);
 
 				if (bindName) {
 					queryPos.add(name);
@@ -612,6 +557,9 @@ public class LocationPersistenceImpl
 
 		return count.intValue();
 	}
+
+	private static final String _FINDER_COLUMN_NAME_CHALLENGEID_2 =
+		"location.challengeId = ? AND ";
 
 	private static final String _FINDER_COLUMN_NAME_NAME_2 =
 		"location.name = ?";
@@ -635,6 +583,15 @@ public class LocationPersistenceImpl
 	public void cacheResult(Location location) {
 		entityCache.putResult(
 			LocationImpl.class, location.getPrimaryKey(), location);
+
+		finderCache.putResult(
+			_finderPathFetchByChallenge,
+			new Object[] {location.getChallengeId()}, location);
+
+		finderCache.putResult(
+			_finderPathFetchByName,
+			new Object[] {location.getChallengeId(), location.getName()},
+			location);
 	}
 
 	/**
@@ -699,18 +656,38 @@ public class LocationPersistenceImpl
 		}
 	}
 
+	protected void cacheUniqueFindersCache(
+		LocationModelImpl locationModelImpl) {
+
+		Object[] args = new Object[] {locationModelImpl.getChallengeId()};
+
+		finderCache.putResult(
+			_finderPathCountByChallenge, args, Long.valueOf(1), false);
+		finderCache.putResult(
+			_finderPathFetchByChallenge, args, locationModelImpl, false);
+
+		args = new Object[] {
+			locationModelImpl.getChallengeId(), locationModelImpl.getName()
+		};
+
+		finderCache.putResult(
+			_finderPathCountByName, args, Long.valueOf(1), false);
+		finderCache.putResult(
+			_finderPathFetchByName, args, locationModelImpl, false);
+	}
+
 	/**
 	 * Creates a new location with the primary key. Does not add the location to the database.
 	 *
-	 * @param locatoinId the primary key for the new location
+	 * @param locationId the primary key for the new location
 	 * @return the new location
 	 */
 	@Override
-	public Location create(long locatoinId) {
+	public Location create(long locationId) {
 		Location location = new LocationImpl();
 
 		location.setNew(true);
-		location.setPrimaryKey(locatoinId);
+		location.setPrimaryKey(locationId);
 
 		return location;
 	}
@@ -718,13 +695,13 @@ public class LocationPersistenceImpl
 	/**
 	 * Removes the location with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location that was removed
 	 * @throws NoSuchLocationException if a location with the primary key could not be found
 	 */
 	@Override
-	public Location remove(long locatoinId) throws NoSuchLocationException {
-		return remove((Serializable)locatoinId);
+	public Location remove(long locationId) throws NoSuchLocationException {
+		return remove((Serializable)locationId);
 	}
 
 	/**
@@ -842,6 +819,8 @@ public class LocationPersistenceImpl
 		entityCache.putResult(
 			LocationImpl.class, locationModelImpl, false, true);
 
+		cacheUniqueFindersCache(locationModelImpl);
+
 		if (isNew) {
 			location.setNew(false);
 		}
@@ -879,26 +858,26 @@ public class LocationPersistenceImpl
 	/**
 	 * Returns the location with the primary key or throws a <code>NoSuchLocationException</code> if it could not be found.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location
 	 * @throws NoSuchLocationException if a location with the primary key could not be found
 	 */
 	@Override
-	public Location findByPrimaryKey(long locatoinId)
+	public Location findByPrimaryKey(long locationId)
 		throws NoSuchLocationException {
 
-		return findByPrimaryKey((Serializable)locatoinId);
+		return findByPrimaryKey((Serializable)locationId);
 	}
 
 	/**
 	 * Returns the location with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location, or <code>null</code> if a location with the primary key could not be found
 	 */
 	@Override
-	public Location fetchByPrimaryKey(long locatoinId) {
-		return fetchByPrimaryKey((Serializable)locatoinId);
+	public Location fetchByPrimaryKey(long locationId) {
+		return fetchByPrimaryKey((Serializable)locationId);
 	}
 
 	/**
@@ -1087,7 +1066,7 @@ public class LocationPersistenceImpl
 
 	@Override
 	protected String getPKDBName() {
-		return "locatoinId";
+		return "locationId";
 	}
 
 	@Override
@@ -1124,22 +1103,25 @@ public class LocationPersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
 
-		_finderPathWithPaginationFindByName = _createFinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByName",
-			new String[] {
-				String.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"name"}, true);
+		_finderPathFetchByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByChallenge",
+			new String[] {Long.class.getName()}, new String[] {"challengeId"},
+			true);
 
-		_finderPathWithoutPaginationFindByName = _createFinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByName",
-			new String[] {String.class.getName()}, new String[] {"name"}, true);
+		_finderPathCountByChallenge = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByChallenge",
+			new String[] {Long.class.getName()}, new String[] {"challengeId"},
+			false);
+
+		_finderPathFetchByName = _createFinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByName",
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"challengeId", "name"}, true);
 
 		_finderPathCountByName = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByName",
-			new String[] {String.class.getName()}, new String[] {"name"},
-			false);
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"challengeId", "name"}, false);
 	}
 
 	@Deactivate

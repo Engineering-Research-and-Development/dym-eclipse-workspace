@@ -10,8 +10,6 @@ import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -30,8 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import it.eng.rd.collaborativecreation.model.Challenge;
 import it.eng.rd.collaborativecreation.model.Cocreation;
 import it.eng.rd.collaborativecreation.portlet.constants.CollaborativecreationPortletKeys;
-import it.eng.rd.collaborativecreation.web.internal.security.permission.resource.ChallengePermission;
-import it.eng.rd.collaborativecreation.web.internal.security.permission.resource.CocreationPermission;
 
 public class CocreationAssetRenderer extends BaseJSPAssetRenderer<Cocreation> {
 	public CocreationAssetRenderer(Cocreation cocreation, ModelResourcePermission<Cocreation> modelResourcePermission) {
@@ -39,46 +35,37 @@ public class CocreationAssetRenderer extends BaseJSPAssetRenderer<Cocreation> {
         _cocreationModelResourcePermission = modelResourcePermission;
 	}
 	
-	@Override
-	public boolean hasEditPermission(PermissionChecker permissionChecker) 
-	{
-		
-		_log.info("CocreationAssetRenderer, hasEditPermission");
-        try {
-        	if(_log.isDebugEnabled()){
-        		_log.debug("_cocreation.getChallengeId "+_cocreation.getCocreationId());
-        		_log.debug("_cocreation.getTitle "+_cocreation.getTitle());
-        		_log.debug("_cocreation.getDescription "+_cocreation.getDescription());
-        	}
-    		boolean permission = CocreationPermission.contains(permissionChecker, _cocreation, ActionKeys.UPDATE);
-    		_log.info("permission "+permission);
-    		return permission;
-		} catch (PortalException e) {
-			_log.error("Error in CocreationAssetRenderer, hasEditPermission method: " + e.getMessage());
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean hasViewPermission(PermissionChecker permissionChecker) 
-	{
-		_log.info("CocreationAssetRenderer, hasViewPermission");
-        try {
-        	if(_log.isDebugEnabled()){
-        		_log.debug("_cocreation.getCocreationId "+_cocreation.getCocreationId());
-        		_log.debug("_cocreation.getTitle "+_cocreation.getTitle());
-        		_log.debug("_cocreation.getDescription "+_cocreation.getDescription());
-        	}
-    		boolean permission = CocreationPermission.contains(permissionChecker, _cocreation, "VIEW");
-    		_log.info("permission "+permission);
-    		return permission;
-		} catch (PortalException e) {
-			_log.error("Error in CocreationAssetRenderer, hasViewPermission method: " + e.getMessage());
-		}
-
-		return false;
-	}
+	/*
+	 * @Override public boolean hasEditPermission(PermissionChecker
+	 * permissionChecker) {
+	 * 
+	 * _log.info("CocreationAssetRenderer, hasEditPermission"); try {
+	 * if(_log.isDebugEnabled()){
+	 * _log.debug("_cocreation.getChallengeId "+_cocreation.getCocreationId());
+	 * _log.debug("_cocreation.getTitle "+_cocreation.getTitle());
+	 * _log.debug("_cocreation.getDescription "+_cocreation.getDescription()); }
+	 * boolean permission = CocreationPermission.contains(permissionChecker,
+	 * _cocreation, ActionKeys.UPDATE); _log.info("permission "+permission); return
+	 * permission; } catch (PortalException e) {
+	 * _log.error("Error in CocreationAssetRenderer, hasEditPermission method: " +
+	 * e.getMessage()); }
+	 * 
+	 * return false; }
+	 * 
+	 * @Override public boolean hasViewPermission(PermissionChecker
+	 * permissionChecker) { _log.info("CocreationAssetRenderer, hasViewPermission");
+	 * try { if(_log.isDebugEnabled()){
+	 * _log.debug("_cocreation.getCocreationId "+_cocreation.getCocreationId());
+	 * _log.debug("_cocreation.getTitle "+_cocreation.getTitle());
+	 * _log.debug("_cocreation.getDescription "+_cocreation.getDescription()); }
+	 * boolean permission = CocreationPermission.contains(permissionChecker,
+	 * _cocreation, "VIEW"); _log.info("permission "+permission); return permission;
+	 * } catch (PortalException e) {
+	 * _log.error("Error in CocreationAssetRenderer, hasViewPermission method: " +
+	 * e.getMessage()); }
+	 * 
+	 * return false; }
+	 */
 	
 	@Override
 	public Cocreation getAssetObject() {

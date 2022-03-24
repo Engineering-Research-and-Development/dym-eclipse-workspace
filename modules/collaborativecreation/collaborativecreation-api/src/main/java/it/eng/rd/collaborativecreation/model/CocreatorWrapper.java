@@ -49,6 +49,7 @@ public class CocreatorWrapper
 		attributes.put("userId", getUserId());
 		attributes.put("userName", getUserName());
 		attributes.put("cocreationId", getCocreationId());
+		attributes.put("activityId", getActivityId());
 
 		return attributes;
 	}
@@ -102,6 +103,22 @@ public class CocreatorWrapper
 		if (cocreationId != null) {
 			setCocreationId(cocreationId);
 		}
+
+		Long activityId = (Long)attributes.get("activityId");
+
+		if (activityId != null) {
+			setActivityId(activityId);
+		}
+	}
+
+	/**
+	 * Returns the activity ID of this cocreator.
+	 *
+	 * @return the activity ID of this cocreator
+	 */
+	@Override
+	public long getActivityId() {
+		return model.getActivityId();
 	}
 
 	/**
@@ -207,6 +224,16 @@ public class CocreatorWrapper
 	@Override
 	public void persist() {
 		model.persist();
+	}
+
+	/**
+	 * Sets the activity ID of this cocreator.
+	 *
+	 * @param activityId the activity ID of this cocreator
+	 */
+	@Override
+	public void setActivityId(long activityId) {
+		model.setActivityId(activityId);
 	}
 
 	/**

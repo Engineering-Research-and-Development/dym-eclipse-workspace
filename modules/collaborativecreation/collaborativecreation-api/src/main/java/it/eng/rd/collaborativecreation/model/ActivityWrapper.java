@@ -17,6 +17,7 @@ package it.eng.rd.collaborativecreation.model;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.wrapper.BaseModelWrapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class ActivityWrapper
 		attributes.put("activityId", getActivityId());
 		attributes.put("description", getDescription());
 		attributes.put("cocreationId", getCocreationId());
+		attributes.put("expirationDate", getExpirationDate());
 
 		return attributes;
 	}
@@ -73,6 +75,12 @@ public class ActivityWrapper
 
 		if (cocreationId != null) {
 			setCocreationId(cocreationId);
+		}
+
+		Date expirationDate = (Date)attributes.get("expirationDate");
+
+		if (expirationDate != null) {
+			setExpirationDate(expirationDate);
 		}
 	}
 
@@ -104,6 +112,16 @@ public class ActivityWrapper
 	@Override
 	public String getDescription() {
 		return model.getDescription();
+	}
+
+	/**
+	 * Returns the expiration date of this activity.
+	 *
+	 * @return the expiration date of this activity
+	 */
+	@Override
+	public Date getExpirationDate() {
+		return model.getExpirationDate();
 	}
 
 	/**
@@ -159,6 +177,16 @@ public class ActivityWrapper
 	@Override
 	public void setDescription(String description) {
 		model.setDescription(description);
+	}
+
+	/**
+	 * Sets the expiration date of this activity.
+	 *
+	 * @param expirationDate the expiration date of this activity
+	 */
+	@Override
+	public void setExpirationDate(Date expirationDate) {
+		model.setExpirationDate(expirationDate);
 	}
 
 	/**

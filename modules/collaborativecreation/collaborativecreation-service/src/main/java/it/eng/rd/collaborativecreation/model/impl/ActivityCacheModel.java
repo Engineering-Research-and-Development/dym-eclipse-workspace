@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing Activity in entity cache.
  *
@@ -75,7 +77,7 @@ public class ActivityCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(11);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -85,6 +87,8 @@ public class ActivityCacheModel
 		sb.append(description);
 		sb.append(", cocreationId=");
 		sb.append(cocreationId);
+		sb.append(", expirationDate=");
+		sb.append(expirationDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -106,6 +110,13 @@ public class ActivityCacheModel
 
 		activityImpl.setCocreationId(cocreationId);
 
+		if (expirationDate == Long.MIN_VALUE) {
+			activityImpl.setExpirationDate(null);
+		}
+		else {
+			activityImpl.setExpirationDate(new Date(expirationDate));
+		}
+
 		activityImpl.resetOriginalValues();
 
 		return activityImpl;
@@ -119,6 +130,7 @@ public class ActivityCacheModel
 		description = objectInput.readUTF();
 
 		cocreationId = objectInput.readLong();
+		expirationDate = objectInput.readLong();
 	}
 
 	@Override
@@ -135,11 +147,13 @@ public class ActivityCacheModel
 		}
 
 		objectOutput.writeLong(cocreationId);
+		objectOutput.writeLong(expirationDate);
 	}
 
 	public long mvccVersion;
 	public long activityId;
 	public String description;
 	public long cocreationId;
+	public long expirationDate;
 
 }

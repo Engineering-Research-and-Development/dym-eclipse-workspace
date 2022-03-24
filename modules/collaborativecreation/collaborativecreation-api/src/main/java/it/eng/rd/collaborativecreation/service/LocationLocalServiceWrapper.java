@@ -49,17 +49,27 @@ public class LocationLocalServiceWrapper
 		return _locationLocalService.addLocation(location);
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Location addLocation(
+			long challengeId, String name, String latitude, String longitude,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _locationLocalService.addLocation(
+			challengeId, name, latitude, longitude, serviceContext);
+	}
+
 	/**
 	 * Creates a new location with the primary key. Does not add the location to the database.
 	 *
-	 * @param locatoinId the primary key for the new location
+	 * @param locationId the primary key for the new location
 	 * @return the new location
 	 */
 	@Override
 	public it.eng.rd.collaborativecreation.model.Location createLocation(
-		long locatoinId) {
+		long locationId) {
 
-		return _locationLocalService.createLocation(locatoinId);
+		return _locationLocalService.createLocation(locationId);
 	}
 
 	/**
@@ -97,16 +107,16 @@ public class LocationLocalServiceWrapper
 	 * <strong>Important:</strong> Inspect LocationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location that was removed
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
 	@Override
 	public it.eng.rd.collaborativecreation.model.Location deleteLocation(
-			long locatoinId)
+			long locationId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _locationLocalService.deleteLocation(locatoinId);
+		return _locationLocalService.deleteLocation(locationId);
 	}
 
 	/**
@@ -212,9 +222,9 @@ public class LocationLocalServiceWrapper
 
 	@Override
 	public it.eng.rd.collaborativecreation.model.Location fetchLocation(
-		long locatoinId) {
+		long locationId) {
 
-		return _locationLocalService.fetchLocation(locatoinId);
+		return _locationLocalService.fetchLocation(locationId);
 	}
 
 	@Override
@@ -234,16 +244,32 @@ public class LocationLocalServiceWrapper
 	/**
 	 * Returns the location with the primary key.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
 	@Override
 	public it.eng.rd.collaborativecreation.model.Location getLocation(
-			long locatoinId)
+			long locationId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _locationLocalService.getLocation(locatoinId);
+		return _locationLocalService.getLocation(locationId);
+	}
+
+	@Override
+	public it.eng.rd.collaborativecreation.model.Location getLocation(
+			long challengeId, String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _locationLocalService.getLocation(challengeId, name);
+	}
+
+	@Override
+	public it.eng.rd.collaborativecreation.model.Location
+			getLocationByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _locationLocalService.getLocationByChallengeId(challengeId);
 	}
 
 	/**
@@ -310,6 +336,17 @@ public class LocationLocalServiceWrapper
 		it.eng.rd.collaborativecreation.model.Location location) {
 
 		return _locationLocalService.updateLocation(location);
+	}
+
+	@Override
+	public it.eng.rd.collaborativecreation.model.Location updateLocation(
+			long challengeId, String name, String latitude, String longitude,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _locationLocalService.updateLocation(
+			challengeId, name, latitude, longitude, serviceContext);
 	}
 
 	@Override

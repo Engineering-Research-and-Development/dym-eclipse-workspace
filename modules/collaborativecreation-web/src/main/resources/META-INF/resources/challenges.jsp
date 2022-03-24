@@ -1,33 +1,96 @@
+<%@page import="com.liferay.ratings.kernel.model.RatingsStats"%>
+<%@page import="com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil"%>
+<%@page import="com.liferay.ratings.kernel.service.RatingsStatsLocalService"%>
+<%@page import="com.liferay.ratings.kernel.service.RatingsEntryLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 
-<style>
-	/*.aui .navbar .navbar-inner {
-    	min-height: 67px;
-	}
-   	.challengesRight {
-  		background: #ECF0F1;
-  		padding: 5px;
-  		min-height: 54px !important;
-  		border: 10px solid #fff;
-  		float:right; 
-  		display:block; 
-  		width:70%;
-  	    height:300px;
-   	}
-   	.challengesLeft {
-  		float:left; 
-  		display:block; 
-  		width:auto;
-  	    height:100px;
-  	    margin-bottom: 43px !Important;
-  	    margin-right: 1px !Important;
-  	    clear:left;
-   	}*/
-</style>
+<%
+String keywords = ParamUtil.getString(request, "keywords", null);
+String active = ParamUtil.getString(request, "active", null);
+String inactive = ParamUtil.getString(request, "inactive", null);
+String location = ParamUtil.getString(request, "location", null);
+String category = ParamUtil.getString(request, "category", null);
+String hot = ParamUtil.getString(request, "hot", null);
+String topVoted = ParamUtil.getString(request, "topVoted", null);
+Map<Long, Double> scoreMap = new HashMap<Long, Double>();
+List<Entry<Long, Double>> scoreMapAsList = new ArrayList<Map.Entry<Long, Double>>();
 
-<portlet:renderURL var="challengeDetails">
-    <portlet:param name="jspPage" value="/challengeDetails.jsp" />
+if (location == null){
+	location = "";
+}
+if (category == null){
+	category = "";
+}
+List<Challenge> challenges = new ArrayList();
+List<Challenge> filteredChallenges = new ArrayList();
+
+if ((active == null || active.equalsIgnoreCase("false")) && (inactive == null || inactive.equalsIgnoreCase("false")) ||
+	 active.equalsIgnoreCase("true") && inactive.equalsIgnoreCase("true")){
+	challenges = ChallengeLocalServiceUtil.getChallengesByGroupId(themeDisplay.getScopeGroupId());
+}else{
+	if ((inactive == null || inactive.equalsIgnoreCase("false")) && active.equalsIgnoreCase("true")){
+		challenges = ChallengeLocalServiceUtil.getChallengesByActive(themeDisplay.getScopeGroupId(), true);
+	}else{
+		challenges = ChallengeLocalServiceUtil.getChallengesByActive(themeDisplay.getScopeGroupId(), false);
+	}
+}
+for (Challenge challenge : challenges) {
+	 if (!category.equalsIgnoreCase("") && !location.equalsIgnoreCase("")){
+		 if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), category) != null && 
+		    LocationLocalServiceUtil.getLocation(challenge.getChallengeId(), location) != null){
+		   	filteredChallenges.add(challenge);
+		 }	 
+	 }
+	 if (!category.equalsIgnoreCase("") && location.equalsIgnoreCase("")){
+		 if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), category) != null){
+		   	filteredChallenges.add(challenge);
+		 }	 
+	 }	 
+	 if (category.equalsIgnoreCase("") && !location.equalsIgnoreCase("")){
+		 if (LocationLocalServiceUtil.getLocation(challenge.getChallengeId(), location) != null){
+		   	filteredChallenges.add(challenge);
+		 }	 
+	 }
+	 if (category.equalsIgnoreCase("") && location.equalsIgnoreCase("")){
+		filteredChallenges.add(challenge); 	 
+	 }
+}	
+
+if (topVoted != null && topVoted.equalsIgnoreCase("true")){
+	if (filteredChallenges.size() > 0){
+		for (Challenge challenge : filteredChallenges) {
+			RatingsStats ratingsStats = RatingsStatsLocalServiceUtil.getStats(Challenge.class.getName(), challenge.getChallengeId());
+			scoreMap.put(challenge.getChallengeId(), ratingsStats.getAverageScore());
+		}
+		
+		scoreMapAsList.addAll(scoreMap.entrySet());
+		
+		Collections.sort(scoreMapAsList, new Comparator<Entry<Long, Double>>(){
+		    public int compare(Entry<Long, Double> dataOne, Entry<Long, Double> dataTwo){
+		        return dataOne.getValue().compareTo(dataTwo.getValue());
+		    }
+		});
+		
+		filteredChallenges = new ArrayList();
+		filteredChallenges.add(ChallengeLocalServiceUtil.getChallenge(scoreMapAsList.get(scoreMapAsList.size()-1).getKey()));
+	}
+}
+if (hot != null && hot.equalsIgnoreCase("false")){
+	hot = "";
+}
+if (topVoted != null && topVoted.equalsIgnoreCase("false")){
+	topVoted = "";
+}
+
+if (keywords != null && !keywords.equalsIgnoreCase("")){        
+	filteredChallenges = ChallengeLocalServiceUtil.getChallengesBySearch(keywords);   
+}
+%>
+
+<portlet:renderURL var="search">
+    <portlet:param name="jspPage" value="/challenges.jsp" />
 </portlet:renderURL>
+
 <portlet:renderURL var="needDetails">
     <portlet:param name="jspPage" value="/needDetails.jsp" />
 </portlet:renderURL>
@@ -35,201 +98,226 @@
 <portlet:renderURL var="farmerProfile">
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
 </portlet:renderURL>
-
-
-
-
+	
+<liferay-ui:success key="actionSuccess" message="Operation performed"/>
+<liferay-ui:error key="actionError" message="Operation performed"/>									
 <div class="container-fluid p-0 co-creation">
-   
    <div class="row mb-4 border-bottom">
-			  <div class="col col-lg-6 col-sm-6 col-6 col-md-12  ">
-						    <portlet:renderURL var="cocreationsURL">
-								<portlet:param name="jspPage" value="/view.jsp"/>
-							</portlet:renderURL>
-							<h3 class="co-mainTitle"> <a href="<%=cocreationsURL%>">CHALENGES </a></h3>
-			  </div><!-- w-1/2  END-->
-			  <div class="col col-lg-6 col-sm-6 col-6 col-md-12  "> 
-				  <aui:nav cssClass="nav-tabs nav-co-tabs">
-					<portlet:renderURL var="challengesURL">
-						<portlet:param name="jspPage" value="/challenges.jsp"/>
-					</portlet:renderURL>
-					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-				
-					<portlet:renderURL var="mycocreationsURL">
-						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
-					</portlet:renderURL>
-					<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
-				</aui:nav>	
-			  
-			  </div><!-- w-1/2 END -->
+		<div class="col col-lg-6 col-sm-6 col-6 col-md-12">
+			<h3 class="co-title">Challenges</a></h3>
+		</div><!-- w-1/2  END-->
+		<div class="col col-lg-6 col-sm-6 col-6 col-md-12  "> 
+			  <aui:nav cssClass="nav-tabs nav-co-tabs">
+				<portlet:renderURL var="challengesURL">
+					<portlet:param name="jspPage" value="/challenges.jsp"/>
+				</portlet:renderURL>
+				<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+			
+				<portlet:renderURL var="mycocreationsURL">
+					<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
+				</portlet:renderURL>
+				<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+			</aui:nav>	
+		</div><!-- w-1/2 END -->
 	</div>
-
-
-   <div class="row">
-   <div class="col col-lg-3 col-sm-3 col-3 col-md-12">
-		<div id="trending" class="co-box mt-2 mb-4">
-	    	 <label class="aui-field-label co-title">Trending</label>    
-		    <aui:input label="Hot" name="trending" type="radio" value="1"/>
-			<aui:input label="Top Voted" name="trending" type="radio" value="2"/>
-		</div>
-		
-		<div id="location" class="co-box mt-2 mb-4">
-			<label class="aui-field-label co-title">Location</label>   
-			<aui:select name="Location">
-    			<aui:option value="1">Location 1</aui:option>
-    			<aui:option value="2">Location 2</aui:option>
-    			<aui:option value="3">Location 3</aui:option>
-			</aui:select>
-		</div>
-		
-		<div id="category" class="co-box mt-2 mb-4">
-		<label class="aui-field-label co-title">Category</label>   
-			<aui:select name="Category">
-    			<aui:option value="1">Category 1</aui:option>
-    			<aui:option value="2">Category 2</aui:option>
-    			<aui:option value="3">Category 3</aui:option>
-			</aui:select>
-		</div>
-		<div id="status" class="co-box mt-2 mb-4">
-	    	<label class="aui-field-label co-title">Status</label>
-	    	<aui:input name="active" label="Active" type="checkbox" value="1"></aui:input>
-			<aui:input name="inactive" label="Inactive" type="checkbox" value="2"></aui:input>
-			<aui:input name="inactive" label="Closed" type="checkbox" value="3"></aui:input>
-		</div> 
-  </div><!-- w-1/4  END-->
-  <div class="col col-lg-9 col-sm-9 col-9 col-md-12"> 
-	   
-	    <div id="newChallenge" class="m-1 p-1" >
-		 	 <portlet:renderURL var="newchallengeURL">
-					<portlet:param name="jspPage" value="/newchallenge.jsp"/>
-			 </portlet:renderURL>
-     	     <a href="<%=newchallengeURL%>" class="btn btn-primary">Post a New Challenge</a>
-		</div>
-		
-		<div id="search" class="m-1 p-1">
-			<aui:input inlineLabel="left" label="" name="keywords" placeholder="Search" size="256" />
-		</div>
-	    <div id="challenges" class="m-1 p-1">
-		 
-		 <div class="co-abstract row flex-lg-row flex-sm-row flex-row flex-md-row">
-		         	
-		           <div class="col col-lg-2 col-sm-2 col-2 col-md-12">
-		          			<div class="co-point">
-		          		 		<div id="aui_popup_click1" class="co-round">
-						        	<i class="fa fa-long-arrow-up" aria-hidden="true"></i>
-						        	 
-						        </div>
-						        <div  class="co-count">
-						        	 <b>28</b>
-						         </div>
-						        <div id="aui_popup_content" ></div>
-		          			</div>
-		            </div>
-		            <div class="col col-lg-10 col-sm-10 col-10 col-md-12">
-		          				 <h3 class="co-title">  Sensor integration of soil humidity with weather data to predict future harvest. </h3>
-					  		 	 <div class="co-content">
-									  <div class="co-summary mb-2">
-								           I find the proposal interesting. I think we need to do something more proactive and not remain in a merely theoretical framework.
-										   It is necessary to make the project attractive through merchandising, gamification, .... so that the project reaches them in some way.
-										
-											  
-									  </div>
-									  <div class="co-info ">
+    <div class="row">
+	    <div class="col col-lg-3 col-sm-3 col-3 col-md-12">
+			<div id="trending" class="co-box mt-2 mb-4">
+		    	<label class="aui-field-label co-title">Trending</label>    
+			    <aui:input label="Hot" id="hot" name="hot" type="radio" value="<%=hot%>"></aui:input>
+				<aui:input label="Top Voted" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
+			</div>
+			<div id="location" class="co-box mt-2 mb-4">
+				<label class="aui-field-label co-title">Location</label> 
+				<aui:select label="" id="location" name="location" showEmptyOption="false">
+				    <aui:option selected="<%=true%>" value="">Select a country</aui:option>
+				    <%
+					for (Country country : countries) {
+					%>
+						<aui:option selected="<%=false%>" value="<%=country.getName()%>"><%=country.getName()%></aui:option>	
+					<% 
+					}
+					%>
+			  </aui:select>
+			</div>
+			<div id="category" class="co-box mt-2 mb-4">
+			  <label class="aui-field-label co-title">Category</label> 
+	          <aui:select label="" id="category" name="category" showEmptyOption="false">
+				    <aui:option selected="<%=true%>" value="">Select a category</aui:option>
+				    <%
+					for (AssetCategory assetCategory : assetCategories) {
+					%>
+						<aui:option selected="<%=false%>" value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></aui:option>	
+					<% 
+					}
+					%>
+			  </aui:select>
+		    </div>
+			<div id="challengeStatus" class="co-box mt-2 mb-4">
+		    	<label class="aui-field-label co-title">Status</label>
+		    	<aui:input id="active" name="active" label="Active" type="checkbox" value="<%=active%>"></aui:input>
+		    	<aui:input id="inactive" name="inactive" label="Inactive" type="checkbox" value="<%=inactive%>"></aui:input>
+			</div> 
+			<div>
+				<aui:button id="filter" name="filter" type="submit" value="Filter" cssClass="btn-outline-info"></aui:button>
+				<aui:button id="clearFilter" name="clearFilter" type="button" value="Clear"/>
+			</div>
+		</div><!-- w-1/4  END-->
+		<div class="col col-lg-9 col-sm-9 col-9 col-md-12">    
+		    <div id="newChallenge" class="m-1 p-1" >
+			 	 <portlet:renderURL var="newchallengeURL">
+						<portlet:param name="jspPage" value="/newchallenge.jsp"/>
+						<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+				 </portlet:renderURL>
+				 <%if(isSiteOwner){%>
+	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary">Post a New Challenge</a>
+	     	     <%}%>
+			</div>
+			<div id="search" class="m-1 p-1">
+				<aui:form name="searchForm" action="<%=search%>" method="post">
+		    	 	<aui:input id="keywords" name="keywords" placeholder="Title, description, username" inlineLabel="left" label="" size="256" value=""/> 
+			    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
+			    	<aui:button type="button" value="Clear" id="clearSearch" name="clearSearch" />
+				</aui:form>
+			</div>
+		    <div id="challenges" class="m-1 p-1"> 
+				<div class="co-abstract row flex-lg-row flex-sm-row flex-row flex-md-row">     	
+			            <div class="col col-lg-10 col-sm-10 col-10 col-md-12">
+	            			 <%
+					   		 if (filteredChallenges.size() == 0){
+					   		 %>
+					   			<h3 class="co-title">There are no challenges</a></h3>
+							 <%
+							 }
+							 for (Challenge challenge : filteredChallenges) {
+							 %>
+								<aui:form action="" name="<portlet:namespace />fm">
+									<liferay-portlet:actionURL name="deleteChallenge" var="deleteChallengeURL">
+											<portlet:param name="challengeId" value="<%=String.valueOf(challenge.getChallengeId())%>"/>
+											<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+									</liferay-portlet:actionURL>	
+									<portlet:renderURL var="viewChallengeDetails">
+										<portlet:param name="mvcPath" value="/challengeDetails.jsp" />
+										<portlet:param name="challengeId" value="<%=String.valueOf(challenge.getChallengeId())%>"/>
+										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request)%>"></portlet:param>
+									</portlet:renderURL>
+									<h3 class="sheet-subtitle"></h3>
+			          			    <h3 class="co-title"><%=challenge.getTitle() %></h3>
+						  		    <div class="co-content">
+								    	<%-- <div class="co-summary mb-2">
+								           <%=challenge.getDescription() %>					  
+										</div> --%>
+										<div class="co-info ">
 										    <div class="row mt-2">
-										     <div class="col col-lg-8 col-sm-8 col-8 col-md-8">
-										      	<span><b>Posted by : </b><a href="<%=farmerProfile%>">Johannes Antoniadis</a></span>
-				       						 	<br>
-				     							<div id="status" class="challengesLeft">
-											    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label">Active</label> </span>
-											    </div> 
-										     </div>
-										     <div class="col col-lg-4 col-sm-4 col-4 col-md-4">
-										         <a href="<%=challengeDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i> Details</a>
-										   		 <a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a>
-										     </div>
+											     <div class="col col-lg-6 col-sm-6 col-6 col-md-6">
+											     	<div id="postedBy" class="challengesLeft">
+											      		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=challenge.getUserName()%></a></label></span>
+					       						 	</div>
+					       						 	<div id="date" class="challengesLeft">
+														<span><b><label class="aui-field-label">Created on</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(challenge.getCreateDate()) %></label></span>
+									       			</div>
+					     							<div id="status" class="challengesLeft">
+												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></label></span>
+												    </div> 
+												    <div id="postedBy" class="challengesLeft">
+											      		<span><b><label class="aui-field-label">Co-creators</label></b></span> : <span>
+					       						 	</div>
+												    <%
+												    List<Cocreation> cocreations = CocreationLocalServiceUtil.getCocreationsByChallengeId(challenge.getChallengeId());
+													Iterator<Cocreation> cocreationsIt = cocreations.iterator();
+													while(cocreationsIt.hasNext()){
+														Cocreation cocreation = cocreationsIt.next();
+														List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
+														Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
+														while(cocreatorsIt.hasNext()){
+															Cocreator cocreator = cocreatorsIt.next();
+															%>
+											      			<span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a></label></span>
+															<% 		
+														}
+													}	
+												    %>
+											     </div>
+										     	 <div class="col col-lg-4 col-sm-4 col-4 col-md-4">
+										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
+										   		 	<a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a>
+										   		 	<%if (user != null){
+														if((challenge.getUserId() == user.getUserId()) || isSiteOwner){%>
+												   		 	<div class="listDelete">
+												   		 		<aui:button name="deleteChallenge" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteChallengeURL.toString() +\"'\"%>"/>
+												   		 	</div>
+											   		 	<%}%>
+											   		 <%}%>	
+										   		 </div>	
 										    </div>
-									  </div>
-									  <div class="co-tag mb-2"> <span><a href="">#humidity</a></span>
-			      						  <span><a href="">#weather</a></span>
-			       						  <span><a href="">#harvest</a></span></div>
-					        	</div>
-		           </div>
-		           
-		           
-		           
-		  </div>
-		  
-		  
-		  
-		  <div class="co-abstract row align-items-lg-start align-items-sm-start align-items-start align-items-md-start flex-lg-row flex-sm-row flex-row flex-md-row">
-		           <div class="col col-lg-2 col-sm-2 col-2 col-md-2">
-		          			<div class="co-point">
-		          		 		<div id="aui_popup_click1" class="co-round">
-						        	<i class="fa fa-long-arrow-up" aria-hidden="true"></i>
-						        	 
-						        </div>
-						        <div  class="co-count">
-						        	 <b>28</b>
-						         </div>
-						        <div id="aui_popup_content" ></div>
-		          			</div>
-		            </div>
-		            <div class="col col-lg-10 col-sm-10 col-10 col-md-10">
-		          		 <h3 class="co-title">  Sensor integration of soil humidity with weather data to predict future harvest. </h3>
-			  		 	 <div class="co-content">
-							  <div class="co-summary">
-						           I find the proposal interesting. I think we need to do something more proactive and not remain in a merely theoretical framework.
-								   It is necessary to make the project attractive through merchandising, gamification, .... so that the project reaches them in some way.
-								
-									 
-							    </div>
-							  <div class="co-info">
-							  			 <div class="row mt-2">
-										     <div class="col col-lg-6 col-sm-6 col-6 col-md-6">
-										      	<span><b>Posted by : </b><a href="<%=farmerProfile%>">Johannes Antoniadis</a></span>
-				       						 	<br>
-				     							<div id="status" class="challengesLeft">
-											    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label">Active</label> </span>
-											    </div> 
-										     </div>
-										     <div class="col col-lg-6 col-sm-6 col-6 col-md-6">
-										         <a href="<%=challengeDetails%>" class="btn btn-primary "> <i class="fa fa-info-circle" aria-hidden="true"></i> Details</a>
-										   		 <a href="#" class="btn btn-primary "><i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a>
-										     </div>
-									     </div>
-							  </div>
-							  <div class="co-tag"> <span><a href="">#humidity</a></span>
-	     										   <span><a href="">#weather</a></span>
-	   											     <span><a href="">#harvest</a></span></div>
-			        </div>
-		           </div>
-		  </div>
-		 
-		 
-		    
-	</div>
-	  
-  </div><!-- w-3/4 END -->
- 
- </div> 
-  
+									    </div>
+									    <div id="tags" class="co-tag mb-2">
+									    	  <span><b><label class="aui-field-label">Tags</label></b></span> : <span>	
+									    	  	<%
+												for (Hashtag tag : HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId())) {
+												%>
+													<span><a href="">#<%=tag.getName()%></a></span>	
+												<% 
+												}
+												%>
+			       					    </div>
+						        	</div>
+						        	<%
+									AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
+						        	Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));
+									%>
+									<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="like" /> --%>
+									<liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="stars" />
+									<liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" />
+						        	<liferay-ui:panel-container extended="<%=false%>" id='<%="guestbookCollaborationPanelContainer_" + challenge.getChallengeId()%>' persistState="<%=true%>">
+  										<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id='<%="guestbookCollaborationPanel_" + challenge.getChallengeId()%>' persistState="<%=true%>" title="">
+    										<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
+									    	<liferay-comment:discussion className="<%=Challenge.class.getName()%>"
+      											classPK="<%=challenge.getChallengeId()%>"
+      											formAction="<%=discussionURL%>" formName='<%="fm_" + challenge.getChallengeId()%>'
+      											discussion="<%= discussion %>"
+      											ratingsEnabled="<%=true%>" redirect="<%=PortalUtil.getCurrentURL(request)%>"
+      											userId="<%=entry.getUserId()%>" />
+      									</liferay-ui:panel>
+									</liferay-ui:panel-container>
+						       	</aui:form> 
+							 <%
+							 }
+							 %>
+			           	</div>    
+			  		</div>	    
+				</div>
+	  	</div><!-- w-3/4 END -->
+	</div> 
 </div><!-- container -->
 
- 
-
-<aui:script use="liferay-util-window">
-	A.one("#aui_popup_click1").on('click',function(event){
- 		var dialog = new A.Modal({
-	 		title: "<b>Challenge upvoted successfully !</b>",
-	 		bodyContent: "<b>Challenge</b> : Sensor integration of soil humidity with weather data to predict future harvest.<br><b>Posted by</b> : Johannes Antoniadis",
-	 		headerContent: "<b>Challenge upvoted successfully !</b>",
-		    centered: true,
-		    modal: true,
-		    height: 200,
-		    width:300,
-		    render: '#aui_popup_content', 
-		    close: true
- 		});
- 		dialog.render();
+<aui:script use="liferay-portlet-url,aui-io,aui-io-plugin-deprecated,liferay-util-window,aui-base">
+ 	var getChallenges = Liferay.PortletURL.createRenderURL();
+	getChallenges.setPortletId('it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet');
+	getChallenges.setParameter("mvcPath","/challenges.jsp");
+			
+ 	AUI().ready('aui-base','node', 'event', function (A) {
+      A.one("#<portlet:namespace/>filter").on('click',function(event){
+      		getChallenges.setParameter("active", A.one('#<portlet:namespace />active').attr('checked'));	
+      	    getChallenges.setParameter("inactive", A.one('#<portlet:namespace />inactive').attr('checked'));
+      	    getChallenges.setParameter("location", A.one('#<portlet:namespace />location').val());	
+      	    getChallenges.setParameter("category", A.one('#<portlet:namespace />category').val());
+      	    getChallenges.setParameter("hot", A.one('#<portlet:namespace />hot').attr('checked'));
+      	    getChallenges.setParameter("topVoted", A.one('#<portlet:namespace />topVoted').attr('checked'));
+            window.location.href=getChallenges; 
+      });
+      A.one("#<portlet:namespace/>clearFilter").on('click',function(event){
+      		A.one('#<portlet:namespace />active').val("");	
+      	    A.one('#<portlet:namespace />inactive').val("");
+      	    A.one('#<portlet:namespace />location').val("");	
+      	    A.one('#<portlet:namespace />category').val("");
+      	    A.one('#<portlet:namespace />hot').val("");
+      	    A.one('#<portlet:namespace />topVoted').val("");
+      	    window.location.href=getChallenges;     
+      });
+      A.one("#<portlet:namespace/>clearSearch").on('click',function(event){
+      		A.one('#<portlet:namespace />keywords').val("");	
+      	    window.location.href=getChallenges;     
+      });
  	});
 </aui:script>

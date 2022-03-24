@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -75,6 +76,11 @@ public interface HashtagLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Hashtag addHashtag(Hashtag hashtag);
 
+	@Indexable(type = IndexableType.REINDEX)
+	public Hashtag addHashtag(
+			long challengeId, String name, ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	 * Creates a new hashtag with the primary key. Does not add the hashtag to the database.
 	 *
@@ -116,6 +122,9 @@ public interface HashtagLocalService
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	public Hashtag deleteHashtag(long hashtagId) throws PortalException;
+
+	public void deleteHashtagsByChallengeId(long challengeId)
+		throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -206,6 +215,10 @@ public interface HashtagLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Hashtag getHashtag(long hashtagId) throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Hashtag getHashtag(long challengeId, String name)
+		throws PortalException;
+
 	/**
 	 * Returns a range of all the hashtags.
 	 *
@@ -219,6 +232,10 @@ public interface HashtagLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Hashtag> getHashtags(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Hashtag> getHashtagsByChallengeId(long challengeId)
+		throws PortalException;
 
 	/**
 	 * Returns the number of hashtags.

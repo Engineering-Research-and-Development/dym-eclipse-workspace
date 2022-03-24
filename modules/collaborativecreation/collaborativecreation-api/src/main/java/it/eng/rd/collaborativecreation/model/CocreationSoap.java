@@ -43,6 +43,9 @@ public class CocreationSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
+		soapModel.setCompletionDate(model.getCompletionDate());
+		soapModel.setRequest(model.getRequest());
+		soapModel.setMessage(model.getMessage());
 		soapModel.setTitle(model.getTitle());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setDlFolderName(model.getDlFolderName());
@@ -51,6 +54,7 @@ public class CocreationSoap implements Serializable {
 		soapModel.setStatusByUserId(model.getStatusByUserId());
 		soapModel.setStatusByUserName(model.getStatusByUserName());
 		soapModel.setStatusDate(model.getStatusDate());
+		soapModel.setCompleted(model.isCompleted());
 
 		return soapModel;
 	}
@@ -184,6 +188,30 @@ public class CocreationSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
+	public Date getCompletionDate() {
+		return _completionDate;
+	}
+
+	public void setCompletionDate(Date completionDate) {
+		_completionDate = completionDate;
+	}
+
+	public String getRequest() {
+		return _request;
+	}
+
+	public void setRequest(String request) {
+		_request = request;
+	}
+
+	public String getMessage() {
+		return _message;
+	}
+
+	public void setMessage(String message) {
+		_message = message;
+	}
+
 	public String getTitle() {
 		return _title;
 	}
@@ -248,6 +276,18 @@ public class CocreationSoap implements Serializable {
 		_statusDate = statusDate;
 	}
 
+	public boolean getCompleted() {
+		return _completed;
+	}
+
+	public boolean isCompleted() {
+		return _completed;
+	}
+
+	public void setCompleted(boolean completed) {
+		_completed = completed;
+	}
+
 	private long _mvccVersion;
 	private String _uuid;
 	private long _cocreationId;
@@ -258,6 +298,9 @@ public class CocreationSoap implements Serializable {
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private Date _completionDate;
+	private String _request;
+	private String _message;
 	private String _title;
 	private String _description;
 	private String _dlFolderName;
@@ -266,5 +309,6 @@ public class CocreationSoap implements Serializable {
 	private long _statusByUserId;
 	private String _statusByUserName;
 	private Date _statusDate;
+	private boolean _completed;
 
 }

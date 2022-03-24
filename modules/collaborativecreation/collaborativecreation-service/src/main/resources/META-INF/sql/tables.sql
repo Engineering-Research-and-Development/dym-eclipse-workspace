@@ -2,7 +2,8 @@ create table COCREATION_Activity (
 	mvccVersion LONG default 0 not null,
 	activityId LONG not null primary key,
 	description VARCHAR(75) null,
-	cocreationId LONG
+	cocreationId LONG,
+	expirationDate DATE null
 );
 
 create table COCREATION_Category (
@@ -25,6 +26,7 @@ create table COCREATION_Challenge (
 	modifiedDate DATE null,
 	title VARCHAR(75) null,
 	description TEXT null,
+	desiredOutcome TEXT null,
 	startDate DATE null,
 	endDate DATE null,
 	dlFolderName VARCHAR(75) null,
@@ -47,6 +49,9 @@ create table COCREATION_Cocreation (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
+	completionDate DATE null,
+	request TEXT null,
+	message TEXT null,
 	title VARCHAR(75) null,
 	description TEXT null,
 	dlFolderName VARCHAR(75) null,
@@ -54,7 +59,8 @@ create table COCREATION_Cocreation (
 	status INTEGER,
 	statusByUserId LONG,
 	statusByUserName VARCHAR(75) null,
-	statusDate DATE null
+	statusDate DATE null,
+	completed BOOLEAN
 );
 
 create table COCREATION_Cocreator (
@@ -65,7 +71,8 @@ create table COCREATION_Cocreator (
 	companyId LONG,
 	userId LONG,
 	userName VARCHAR(75) null,
-	cocreationId LONG
+	cocreationId LONG,
+	activityId LONG
 );
 
 create table COCREATION_Hashtag (
@@ -78,7 +85,7 @@ create table COCREATION_Hashtag (
 
 create table COCREATION_Location (
 	mvccVersion LONG default 0 not null,
-	locatoinId LONG not null primary key,
+	locationId LONG not null primary key,
 	challengeId LONG,
 	name VARCHAR(75) null,
 	latitude VARCHAR(75) null,

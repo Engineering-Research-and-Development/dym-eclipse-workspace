@@ -51,12 +51,12 @@ public class CocreationLocalServiceWrapper
 
 	@Override
 	public it.eng.rd.collaborativecreation.model.Cocreation addCocreation(
-			long challengeId, String title, String description,
+			long challengeId, long cocreatorId, String req, String message,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _cocreationLocalService.addCocreation(
-			challengeId, title, description, serviceContext);
+			challengeId, cocreatorId, req, message, serviceContext);
 	}
 
 	/**
@@ -125,6 +125,22 @@ public class CocreationLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _cocreationLocalService.deleteCocreation(cocreationId, userId);
+	}
+
+	@Override
+	public it.eng.rd.collaborativecreation.model.Cocreation
+			deleteCocreationByCocreationId(long cocreationId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _cocreationLocalService.deleteCocreationByCocreationId(
+			cocreationId);
+	}
+
+	@Override
+	public void deleteCocreationsByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_cocreationLocalService.deleteCocreationsByChallengeId(challengeId);
 	}
 
 	/**
@@ -309,6 +325,56 @@ public class CocreationLocalServiceWrapper
 
 	@Override
 	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreation>
+			getCocreationsByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _cocreationLocalService.getCocreationsByChallengeId(challengeId);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreation>
+		getCocreationsByCocreatorId(
+			long userId, long groupId, boolean completed) {
+
+		return _cocreationLocalService.getCocreationsByCocreatorId(
+			userId, groupId, completed);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreation>
+			getCocreationsByGroupId(long groupId, boolean completed)
+		throws com.liferay.portal.kernel.exception.SystemException {
+
+		return _cocreationLocalService.getCocreationsByGroupId(
+			groupId, completed);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreation>
+			getCocreationsBySearchGroupId(
+				String keywords, long groupId, boolean completed)
+		throws ClassNotFoundException,
+			   com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _cocreationLocalService.getCocreationsBySearchGroupId(
+			keywords, groupId, completed);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreation>
+			getCocreationsBySearchUserId(
+				String keywords, long userId, long groupId, boolean completed)
+		throws ClassNotFoundException,
+			   com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _cocreationLocalService.getCocreationsBySearchUserId(
+			keywords, userId, groupId, completed);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Cocreation>
 		getCocreationsByUserId(long userId, long groupId) {
 
 		return _cocreationLocalService.getCocreationsByUserId(userId, groupId);
@@ -445,16 +511,14 @@ public class CocreationLocalServiceWrapper
 
 	@Override
 	public it.eng.rd.collaborativecreation.model.Cocreation updateCocreation(
-			long cocreationId, long challengeId, String title,
-			String description, java.util.Date startDate,
-			java.util.Date endDate, boolean active,
+			long cocreationId, String title, String description,
+			boolean completed,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _cocreationLocalService.updateCocreation(
-			cocreationId, challengeId, title, description, startDate, endDate,
-			active, serviceContext);
+			cocreationId, title, description, completed, serviceContext);
 	}
 
 	@Override

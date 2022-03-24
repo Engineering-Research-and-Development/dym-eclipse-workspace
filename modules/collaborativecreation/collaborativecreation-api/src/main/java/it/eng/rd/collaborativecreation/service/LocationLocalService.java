@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -75,14 +76,20 @@ public interface LocationLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Location addLocation(Location location);
 
+	@Indexable(type = IndexableType.REINDEX)
+	public Location addLocation(
+			long challengeId, String name, String latitude, String longitude,
+			ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	 * Creates a new location with the primary key. Does not add the location to the database.
 	 *
-	 * @param locatoinId the primary key for the new location
+	 * @param locationId the primary key for the new location
 	 * @return the new location
 	 */
 	@Transactional(enabled = false)
-	public Location createLocation(long locatoinId);
+	public Location createLocation(long locationId);
 
 	/**
 	 * @throws PortalException
@@ -110,12 +117,12 @@ public interface LocationLocalService
 	 * <strong>Important:</strong> Inspect LocationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location that was removed
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public Location deleteLocation(long locatoinId) throws PortalException;
+	public Location deleteLocation(long locationId) throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -191,7 +198,7 @@ public interface LocationLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Location fetchLocation(long locatoinId);
+	public Location fetchLocation(long locationId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -202,12 +209,20 @@ public interface LocationLocalService
 	/**
 	 * Returns the location with the primary key.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Location getLocation(long locatoinId) throws PortalException;
+	public Location getLocation(long locationId) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Location getLocation(long challengeId, String name)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Location getLocationByChallengeId(long challengeId)
+		throws PortalException;
 
 	/**
 	 * Returns a range of all the locations.
@@ -258,5 +273,11 @@ public interface LocationLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public Location updateLocation(Location location);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public Location updateLocation(
+			long challengeId, String name, String latitude, String longitude,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException;
 
 }

@@ -9,7 +9,6 @@ import org.osgi.service.component.annotations.Reference;
 
 import it.eng.rd.collaborativecreation.model.Challenge;
 
-
 @Component(immediate = true)
 public class ChallengePermission {
 	public static boolean contains(
@@ -29,7 +28,7 @@ public class ChallengePermission {
             unbind = "-")
     protected void setEntryModelPermission(ModelResourcePermission<Challenge> modelResourcePermission) {
 
-        _challengeModelResourcePermission = modelResourcePermission;
+    	_challengeModelResourcePermission = modelResourcePermission;
     }
 
     private static ModelResourcePermission<Challenge>_challengeModelResourcePermission;

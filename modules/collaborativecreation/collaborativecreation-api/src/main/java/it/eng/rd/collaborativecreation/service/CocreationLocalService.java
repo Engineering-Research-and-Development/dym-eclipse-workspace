@@ -37,7 +37,6 @@ import it.eng.rd.collaborativecreation.model.Cocreation;
 
 import java.io.Serializable;
 
-import java.util.Date;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -81,7 +80,7 @@ public interface CocreationLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public Cocreation addCocreation(
-			long challengeId, String title, String description,
+			long challengeId, long cocreatorId, String req, String message,
 			ServiceContext serviceContext)
 		throws PortalException;
 
@@ -130,6 +129,13 @@ public interface CocreationLocalService
 
 	@Indexable(type = IndexableType.DELETE)
 	public Cocreation deleteCocreation(long cocreationId, long userId)
+		throws PortalException;
+
+	public Cocreation deleteCocreationByCocreationId(long cocreationId)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.DELETE)
+	public void deleteCocreationsByChallengeId(long challengeId)
 		throws PortalException;
 
 	/**
@@ -259,6 +265,29 @@ public interface CocreationLocalService
 	public List<Cocreation> getCocreations(int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreation> getCocreationsByChallengeId(long challengeId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreation> getCocreationsByCocreatorId(
+		long userId, long groupId, boolean completed);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreation> getCocreationsByGroupId(
+			long groupId, boolean completed)
+		throws SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreation> getCocreationsBySearchGroupId(
+			String keywords, long groupId, boolean completed)
+		throws ClassNotFoundException, PortalException, SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Cocreation> getCocreationsBySearchUserId(
+			String keywords, long userId, long groupId, boolean completed)
+		throws ClassNotFoundException, PortalException, SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Cocreation> getCocreationsByUserId(long userId, long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -345,9 +374,8 @@ public interface CocreationLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public Cocreation updateCocreation(
-			long cocreationId, long challengeId, String title,
-			String description, Date startDate, Date endDate, boolean active,
-			ServiceContext serviceContext)
+			long cocreationId, String title, String description,
+			boolean completed, ServiceContext serviceContext)
 		throws PortalException, SystemException;
 
 }

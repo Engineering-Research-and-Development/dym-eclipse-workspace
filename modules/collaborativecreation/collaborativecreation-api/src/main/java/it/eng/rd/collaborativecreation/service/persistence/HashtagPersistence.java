@@ -42,146 +42,197 @@ public interface HashtagPersistence extends BasePersistence<Hashtag> {
 	 */
 
 	/**
-	 * Returns all the hashtags where name = &#63;.
+	 * Returns all the hashtags where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the matching hashtags
 	 */
-	public java.util.List<Hashtag> findByName(String name);
+	public java.util.List<Hashtag> findByChallenge(long challengeId);
 
 	/**
-	 * Returns a range of all the hashtags where name = &#63;.
+	 * Returns a range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @return the range of matching hashtags
 	 */
-	public java.util.List<Hashtag> findByName(String name, int start, int end);
+	public java.util.List<Hashtag> findByChallenge(
+		long challengeId, int start, int end);
 
 	/**
-	 * Returns an ordered range of all the hashtags where name = &#63;.
+	 * Returns an ordered range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching hashtags
 	 */
-	public java.util.List<Hashtag> findByName(
-		String name, int start, int end,
+	public java.util.List<Hashtag> findByChallenge(
+		long challengeId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Hashtag>
 			orderByComparator);
 
 	/**
-	 * Returns an ordered range of all the hashtags where name = &#63;.
+	 * Returns an ordered range of all the hashtags where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>HashtagModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of hashtags
 	 * @param end the upper bound of the range of hashtags (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the ordered range of matching hashtags
 	 */
-	public java.util.List<Hashtag> findByName(
-		String name, int start, int end,
+	public java.util.List<Hashtag> findByChallenge(
+		long challengeId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Hashtag>
 			orderByComparator,
 		boolean useFinderCache);
 
 	/**
-	 * Returns the first hashtag in the ordered set where name = &#63;.
+	 * Returns the first hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching hashtag
 	 * @throws NoSuchHashtagException if a matching hashtag could not be found
 	 */
-	public Hashtag findByName_First(
-			String name,
+	public Hashtag findByChallenge_First(
+			long challengeId,
 			com.liferay.portal.kernel.util.OrderByComparator<Hashtag>
 				orderByComparator)
 		throws NoSuchHashtagException;
 
 	/**
-	 * Returns the first hashtag in the ordered set where name = &#63;.
+	 * Returns the first hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching hashtag, or <code>null</code> if a matching hashtag could not be found
 	 */
-	public Hashtag fetchByName_First(
-		String name,
+	public Hashtag fetchByChallenge_First(
+		long challengeId,
 		com.liferay.portal.kernel.util.OrderByComparator<Hashtag>
 			orderByComparator);
 
 	/**
-	 * Returns the last hashtag in the ordered set where name = &#63;.
+	 * Returns the last hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching hashtag
 	 * @throws NoSuchHashtagException if a matching hashtag could not be found
 	 */
-	public Hashtag findByName_Last(
-			String name,
+	public Hashtag findByChallenge_Last(
+			long challengeId,
 			com.liferay.portal.kernel.util.OrderByComparator<Hashtag>
 				orderByComparator)
 		throws NoSuchHashtagException;
 
 	/**
-	 * Returns the last hashtag in the ordered set where name = &#63;.
+	 * Returns the last hashtag in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching hashtag, or <code>null</code> if a matching hashtag could not be found
 	 */
-	public Hashtag fetchByName_Last(
-		String name,
+	public Hashtag fetchByChallenge_Last(
+		long challengeId,
 		com.liferay.portal.kernel.util.OrderByComparator<Hashtag>
 			orderByComparator);
 
 	/**
-	 * Returns the hashtags before and after the current hashtag in the ordered set where name = &#63;.
+	 * Returns the hashtags before and after the current hashtag in the ordered set where challengeId = &#63;.
 	 *
 	 * @param hashtagId the primary key of the current hashtag
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next hashtag
 	 * @throws NoSuchHashtagException if a hashtag with the primary key could not be found
 	 */
-	public Hashtag[] findByName_PrevAndNext(
-			long hashtagId, String name,
+	public Hashtag[] findByChallenge_PrevAndNext(
+			long hashtagId, long challengeId,
 			com.liferay.portal.kernel.util.OrderByComparator<Hashtag>
 				orderByComparator)
 		throws NoSuchHashtagException;
 
 	/**
-	 * Removes all the hashtags where name = &#63; from the database.
+	 * Removes all the hashtags where challengeId = &#63; from the database.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 */
-	public void removeByName(String name);
+	public void removeByChallenge(long challengeId);
 
 	/**
-	 * Returns the number of hashtags where name = &#63;.
+	 * Returns the number of hashtags where challengeId = &#63;.
 	 *
+	 * @param challengeId the challenge ID
+	 * @return the number of matching hashtags
+	 */
+	public int countByChallenge(long challengeId);
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or throws a <code>NoSuchHashtagException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching hashtag
+	 * @throws NoSuchHashtagException if a matching hashtag could not be found
+	 */
+	public Hashtag findByName(long challengeId, String name)
+		throws NoSuchHashtagException;
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching hashtag, or <code>null</code> if a matching hashtag could not be found
+	 */
+	public Hashtag fetchByName(long challengeId, String name);
+
+	/**
+	 * Returns the hashtag where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching hashtag, or <code>null</code> if a matching hashtag could not be found
+	 */
+	public Hashtag fetchByName(
+		long challengeId, String name, boolean useFinderCache);
+
+	/**
+	 * Removes the hashtag where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the hashtag that was removed
+	 */
+	public Hashtag removeByName(long challengeId, String name)
+		throws NoSuchHashtagException;
+
+	/**
+	 * Returns the number of hashtags where challengeId = &#63; and name = &#63;.
+	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
 	 * @return the number of matching hashtags
 	 */
-	public int countByName(String name);
+	public int countByName(long challengeId, String name);
 
 	/**
 	 * Caches the hashtag in the entity cache if it is enabled.

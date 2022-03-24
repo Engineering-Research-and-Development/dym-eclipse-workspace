@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -34,6 +35,7 @@ import it.eng.rd.collaborativecreation.model.Activity;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -74,6 +76,12 @@ public interface ActivityLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public Activity addActivity(Activity activity);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public Activity addActivity(
+			long cocreationId, String description, Date expirationDate,
+			ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	 * Creates a new activity with the primary key. Does not add the activity to the database.
@@ -209,6 +217,10 @@ public interface ActivityLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Activity> getActivities(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Activity> getActivitiesByCocreationId(long cocreationId)
+		throws PortalException;
 
 	/**
 	 * Returns the number of activities.

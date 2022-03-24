@@ -49,6 +49,17 @@ public class ActivityLocalServiceWrapper
 		return _activityLocalService.addActivity(activity);
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Activity addActivity(
+			long cocreationId, String description,
+			java.util.Date expirationDate,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _activityLocalService.addActivity(
+			cocreationId, description, expirationDate, serviceContext);
+	}
+
 	/**
 	 * Creates a new activity with the primary key. Does not add the activity to the database.
 	 *
@@ -240,6 +251,14 @@ public class ActivityLocalServiceWrapper
 		getActivities(int start, int end) {
 
 		return _activityLocalService.getActivities(start, end);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Activity>
+			getActivitiesByCocreationId(long cocreationId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _activityLocalService.getActivitiesByCocreationId(cocreationId);
 	}
 
 	/**

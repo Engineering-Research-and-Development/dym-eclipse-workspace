@@ -61,12 +61,12 @@ public class CocreationLocalServiceUtil {
 	}
 
 	public static Cocreation addCocreation(
-			long challengeId, String title, String description,
+			long challengeId, long cocreatorId, String req, String message,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().addCocreation(
-			challengeId, title, description, serviceContext);
+			challengeId, cocreatorId, req, message, serviceContext);
 	}
 
 	/**
@@ -124,6 +124,18 @@ public class CocreationLocalServiceUtil {
 		throws PortalException {
 
 		return getService().deleteCocreation(cocreationId, userId);
+	}
+
+	public static Cocreation deleteCocreationByCocreationId(long cocreationId)
+		throws PortalException {
+
+		return getService().deleteCocreationByCocreationId(cocreationId);
+	}
+
+	public static void deleteCocreationsByChallengeId(long challengeId)
+		throws PortalException {
+
+		getService().deleteCocreationsByChallengeId(challengeId);
 	}
 
 	/**
@@ -279,6 +291,42 @@ public class CocreationLocalServiceUtil {
 		return getService().getCocreations(start, end);
 	}
 
+	public static List<Cocreation> getCocreationsByChallengeId(long challengeId)
+		throws PortalException {
+
+		return getService().getCocreationsByChallengeId(challengeId);
+	}
+
+	public static List<Cocreation> getCocreationsByCocreatorId(
+		long userId, long groupId, boolean completed) {
+
+		return getService().getCocreationsByCocreatorId(
+			userId, groupId, completed);
+	}
+
+	public static List<Cocreation> getCocreationsByGroupId(
+			long groupId, boolean completed)
+		throws SystemException {
+
+		return getService().getCocreationsByGroupId(groupId, completed);
+	}
+
+	public static List<Cocreation> getCocreationsBySearchGroupId(
+			String keywords, long groupId, boolean completed)
+		throws ClassNotFoundException, PortalException, SystemException {
+
+		return getService().getCocreationsBySearchGroupId(
+			keywords, groupId, completed);
+	}
+
+	public static List<Cocreation> getCocreationsBySearchUserId(
+			String keywords, long userId, long groupId, boolean completed)
+		throws ClassNotFoundException, PortalException, SystemException {
+
+		return getService().getCocreationsBySearchUserId(
+			keywords, userId, groupId, completed);
+	}
+
 	public static List<Cocreation> getCocreationsByUserId(
 		long userId, long groupId) {
 
@@ -392,15 +440,13 @@ public class CocreationLocalServiceUtil {
 	}
 
 	public static Cocreation updateCocreation(
-			long cocreationId, long challengeId, String title,
-			String description, java.util.Date startDate,
-			java.util.Date endDate, boolean active,
+			long cocreationId, String title, String description,
+			boolean completed,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		return getService().updateCocreation(
-			cocreationId, challengeId, title, description, startDate, endDate,
-			active, serviceContext);
+			cocreationId, title, description, completed, serviceContext);
 	}
 
 	public static CocreationLocalService getService() {

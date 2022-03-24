@@ -78,7 +78,7 @@ public class CocreationCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(45);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -100,6 +100,12 @@ public class CocreationCacheModel
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", completionDate=");
+		sb.append(completionDate);
+		sb.append(", request=");
+		sb.append(request);
+		sb.append(", message=");
+		sb.append(message);
 		sb.append(", title=");
 		sb.append(title);
 		sb.append(", description=");
@@ -116,6 +122,8 @@ public class CocreationCacheModel
 		sb.append(statusByUserName);
 		sb.append(", statusDate=");
 		sb.append(statusDate);
+		sb.append(", completed=");
+		sb.append(completed);
 		sb.append("}");
 
 		return sb.toString();
@@ -161,6 +169,27 @@ public class CocreationCacheModel
 			cocreationImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
+		if (completionDate == Long.MIN_VALUE) {
+			cocreationImpl.setCompletionDate(null);
+		}
+		else {
+			cocreationImpl.setCompletionDate(new Date(completionDate));
+		}
+
+		if (request == null) {
+			cocreationImpl.setRequest("");
+		}
+		else {
+			cocreationImpl.setRequest(request);
+		}
+
+		if (message == null) {
+			cocreationImpl.setMessage("");
+		}
+		else {
+			cocreationImpl.setMessage(message);
+		}
+
 		if (title == null) {
 			cocreationImpl.setTitle("");
 		}
@@ -200,6 +229,8 @@ public class CocreationCacheModel
 			cocreationImpl.setStatusDate(new Date(statusDate));
 		}
 
+		cocreationImpl.setCompleted(completed);
+
 		cocreationImpl.resetOriginalValues();
 
 		return cocreationImpl;
@@ -224,6 +255,9 @@ public class CocreationCacheModel
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+		completionDate = objectInput.readLong();
+		request = (String)objectInput.readObject();
+		message = (String)objectInput.readObject();
 		title = objectInput.readUTF();
 		description = (String)objectInput.readObject();
 		dlFolderName = objectInput.readUTF();
@@ -235,6 +269,8 @@ public class CocreationCacheModel
 		statusByUserId = objectInput.readLong();
 		statusByUserName = objectInput.readUTF();
 		statusDate = objectInput.readLong();
+
+		completed = objectInput.readBoolean();
 	}
 
 	@Override
@@ -267,6 +303,21 @@ public class CocreationCacheModel
 
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
+		objectOutput.writeLong(completionDate);
+
+		if (request == null) {
+			objectOutput.writeObject("");
+		}
+		else {
+			objectOutput.writeObject(request);
+		}
+
+		if (message == null) {
+			objectOutput.writeObject("");
+		}
+		else {
+			objectOutput.writeObject(message);
+		}
 
 		if (title == null) {
 			objectOutput.writeUTF("");
@@ -303,6 +354,8 @@ public class CocreationCacheModel
 		}
 
 		objectOutput.writeLong(statusDate);
+
+		objectOutput.writeBoolean(completed);
 	}
 
 	public long mvccVersion;
@@ -315,6 +368,9 @@ public class CocreationCacheModel
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public long completionDate;
+	public String request;
+	public String message;
 	public String title;
 	public String description;
 	public String dlFolderName;
@@ -323,5 +379,6 @@ public class CocreationCacheModel
 	public long statusByUserId;
 	public String statusByUserName;
 	public long statusDate;
+	public boolean completed;
 
 }

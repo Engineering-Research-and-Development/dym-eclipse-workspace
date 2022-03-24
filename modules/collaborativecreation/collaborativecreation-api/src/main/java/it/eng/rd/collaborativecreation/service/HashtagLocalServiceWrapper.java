@@ -47,6 +47,16 @@ public class HashtagLocalServiceWrapper
 		return _hashtagLocalService.addHashtag(hashtag);
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Hashtag addHashtag(
+			long challengeId, String name,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _hashtagLocalService.addHashtag(
+			challengeId, name, serviceContext);
+	}
+
 	/**
 	 * Creates a new hashtag with the primary key. Does not add the hashtag to the database.
 	 *
@@ -105,6 +115,13 @@ public class HashtagLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _hashtagLocalService.deleteHashtag(hashtagId);
+	}
+
+	@Override
+	public void deleteHashtagsByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_hashtagLocalService.deleteHashtagsByChallengeId(challengeId);
 	}
 
 	/**
@@ -236,6 +253,14 @@ public class HashtagLocalServiceWrapper
 		return _hashtagLocalService.getHashtag(hashtagId);
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Hashtag getHashtag(
+			long challengeId, String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _hashtagLocalService.getHashtag(challengeId, name);
+	}
+
 	/**
 	 * Returns a range of all the hashtags.
 	 *
@@ -252,6 +277,14 @@ public class HashtagLocalServiceWrapper
 		getHashtags(int start, int end) {
 
 		return _hashtagLocalService.getHashtags(start, end);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Hashtag>
+			getHashtagsByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _hashtagLocalService.getHashtagsByChallengeId(challengeId);
 	}
 
 	/**

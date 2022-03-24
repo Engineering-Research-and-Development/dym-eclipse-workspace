@@ -16,6 +16,7 @@ package it.eng.rd.collaborativecreation.service;
 
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
@@ -59,14 +60,23 @@ public class LocationLocalServiceUtil {
 		return getService().addLocation(location);
 	}
 
+	public static Location addLocation(
+			long challengeId, String name, String latitude, String longitude,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().addLocation(
+			challengeId, name, latitude, longitude, serviceContext);
+	}
+
 	/**
 	 * Creates a new location with the primary key. Does not add the location to the database.
 	 *
-	 * @param locatoinId the primary key for the new location
+	 * @param locationId the primary key for the new location
 	 * @return the new location
 	 */
-	public static Location createLocation(long locatoinId) {
-		return getService().createLocation(locatoinId);
+	public static Location createLocation(long locationId) {
+		return getService().createLocation(locationId);
 	}
 
 	/**
@@ -100,14 +110,14 @@ public class LocationLocalServiceUtil {
 	 * <strong>Important:</strong> Inspect LocationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
 	 * </p>
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location that was removed
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
-	public static Location deleteLocation(long locatoinId)
+	public static Location deleteLocation(long locationId)
 		throws PortalException {
 
-		return getService().deleteLocation(locatoinId);
+		return getService().deleteLocation(locationId);
 	}
 
 	/**
@@ -197,8 +207,8 @@ public class LocationLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static Location fetchLocation(long locatoinId) {
-		return getService().fetchLocation(locatoinId);
+	public static Location fetchLocation(long locationId) {
+		return getService().fetchLocation(locationId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
@@ -217,12 +227,24 @@ public class LocationLocalServiceUtil {
 	/**
 	 * Returns the location with the primary key.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location
 	 * @throws PortalException if a location with the primary key could not be found
 	 */
-	public static Location getLocation(long locatoinId) throws PortalException {
-		return getService().getLocation(locatoinId);
+	public static Location getLocation(long locationId) throws PortalException {
+		return getService().getLocation(locationId);
+	}
+
+	public static Location getLocation(long challengeId, String name)
+		throws PortalException {
+
+		return getService().getLocation(challengeId, name);
+	}
+
+	public static Location getLocationByChallengeId(long challengeId)
+		throws PortalException {
+
+		return getService().getLocationByChallengeId(challengeId);
 	}
 
 	/**
@@ -279,6 +301,15 @@ public class LocationLocalServiceUtil {
 	 */
 	public static Location updateLocation(Location location) {
 		return getService().updateLocation(location);
+	}
+
+	public static Location updateLocation(
+			long challengeId, String name, String latitude, String longitude,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return getService().updateLocation(
+			challengeId, name, latitude, longitude, serviceContext);
 	}
 
 	public static LocationLocalService getService() {

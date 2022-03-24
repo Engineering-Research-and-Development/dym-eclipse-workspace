@@ -13,6 +13,7 @@
     font-weight: 700;
 	
 }
+
 .co-creation .co-round{
 	 width: 100px;
     height: 100px;
@@ -24,26 +25,24 @@
     margin:  0px auto;
     text-align:center;
 }
+
 .co-creation .co-count{
 	    margin: 0px auto;
     text-align: center;
     font-size: 25px;
     font-weight: 300;
 }
+
 .co-creation .co-round i{
 	
 }
-
-
 
 .co-creation .nav.nav-tabs{
 	 float: right;
 }
 
-
 .co-creation .co-box {
-	
-	
+		
 }
 
 .co-creation .co-abstract {
@@ -53,11 +52,99 @@
     box-shadow: 0 1px 3px -1px rgb(0 0 0 / 60%);
 }
 
-
 label.control-label{
 	font-size: 1.0rem;
     font-weight: 700;
     color: var(--link-color,#1264ab);
  }
 
- .dark{color:#000;}
+.dark{color:#000;}
+ 
+.col-lg-6-2 {
+	max-width: 35%;
+}
+
+.listDelete {
+	margin-top: 5px;
+}
+
+.view-group {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.thumbnail {
+    margin-bottom: 30px;
+    padding: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+}
+
+.item.list-group-item {
+    float: none;
+    width: 100%;
+    background-color: #fff;
+    margin-bottom: 30px;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 0 1rem;
+    border: 0;
+}
+
+.item.list-group-item .thumbnail {
+    margin-bottom: 0px;
+    /* display: inline-block; */
+}
+
+.item.list-group-item .caption {
+    float: left;
+    /*width: 70%;*/
+    margin: 0;
+}
+
+.item.list-group-item:before,
+.item.list-group-item:after {
+    display: table;
+    content: " ";
+}
+
+.item.list-group-item:after {
+    clear: both;
+}
+
+.p0 {
+    padding: 0;
+}
+
+.card-title {
+    color: #117a8b;
+}
+
+.card-title:hover {
+    color: #17a2b8;
+    cursor: pointer;
+}
+
+p[id^="desc"] {
+    min-height: 180px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.resource-title {
+    max-height: 100px;
+    height: 70px;
+overflow:hidden;
+}
+
+.resourse-card {
+
+    height: 170px;
+}

@@ -53,6 +53,9 @@ public class CocreationWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("completionDate", getCompletionDate());
+		attributes.put("request", getRequest());
+		attributes.put("message", getMessage());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("dlFolderName", getDlFolderName());
@@ -61,6 +64,7 @@ public class CocreationWrapper
 		attributes.put("statusByUserId", getStatusByUserId());
 		attributes.put("statusByUserName", getStatusByUserName());
 		attributes.put("statusDate", getStatusDate());
+		attributes.put("completed", isCompleted());
 
 		return attributes;
 	}
@@ -127,6 +131,24 @@ public class CocreationWrapper
 			setModifiedDate(modifiedDate);
 		}
 
+		Date completionDate = (Date)attributes.get("completionDate");
+
+		if (completionDate != null) {
+			setCompletionDate(completionDate);
+		}
+
+		String request = (String)attributes.get("request");
+
+		if (request != null) {
+			setRequest(request);
+		}
+
+		String message = (String)attributes.get("message");
+
+		if (message != null) {
+			setMessage(message);
+		}
+
 		String title = (String)attributes.get("title");
 
 		if (title != null) {
@@ -174,6 +196,12 @@ public class CocreationWrapper
 		if (statusDate != null) {
 			setStatusDate(statusDate);
 		}
+
+		Boolean completed = (Boolean)attributes.get("completed");
+
+		if (completed != null) {
+			setCompleted(completed);
+		}
 	}
 
 	/**
@@ -204,6 +232,26 @@ public class CocreationWrapper
 	@Override
 	public long getCompanyId() {
 		return model.getCompanyId();
+	}
+
+	/**
+	 * Returns the completed of this cocreation.
+	 *
+	 * @return the completed of this cocreation
+	 */
+	@Override
+	public boolean getCompleted() {
+		return model.getCompleted();
+	}
+
+	/**
+	 * Returns the completion date of this cocreation.
+	 *
+	 * @return the completion date of this cocreation
+	 */
+	@Override
+	public Date getCompletionDate() {
+		return model.getCompletionDate();
 	}
 
 	/**
@@ -257,6 +305,16 @@ public class CocreationWrapper
 	}
 
 	/**
+	 * Returns the message of this cocreation.
+	 *
+	 * @return the message of this cocreation
+	 */
+	@Override
+	public String getMessage() {
+		return model.getMessage();
+	}
+
+	/**
 	 * Returns the modified date of this cocreation.
 	 *
 	 * @return the modified date of this cocreation
@@ -284,6 +342,16 @@ public class CocreationWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
+	}
+
+	/**
+	 * Returns the request of this cocreation.
+	 *
+	 * @return the request of this cocreation
+	 */
+	@Override
+	public String getRequest() {
+		return model.getRequest();
 	}
 
 	/**
@@ -397,6 +465,16 @@ public class CocreationWrapper
 	}
 
 	/**
+	 * Returns <code>true</code> if this cocreation is completed.
+	 *
+	 * @return <code>true</code> if this cocreation is completed; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isCompleted() {
+		return model.isCompleted();
+	}
+
+	/**
 	 * Returns <code>true</code> if this cocreation is denied.
 	 *
 	 * @return <code>true</code> if this cocreation is denied; <code>false</code> otherwise
@@ -502,6 +580,26 @@ public class CocreationWrapper
 	}
 
 	/**
+	 * Sets whether this cocreation is completed.
+	 *
+	 * @param completed the completed of this cocreation
+	 */
+	@Override
+	public void setCompleted(boolean completed) {
+		model.setCompleted(completed);
+	}
+
+	/**
+	 * Sets the completion date of this cocreation.
+	 *
+	 * @param completionDate the completion date of this cocreation
+	 */
+	@Override
+	public void setCompletionDate(Date completionDate) {
+		model.setCompletionDate(completionDate);
+	}
+
+	/**
 	 * Sets the create date of this cocreation.
 	 *
 	 * @param createDate the create date of this cocreation
@@ -552,6 +650,16 @@ public class CocreationWrapper
 	}
 
 	/**
+	 * Sets the message of this cocreation.
+	 *
+	 * @param message the message of this cocreation
+	 */
+	@Override
+	public void setMessage(String message) {
+		model.setMessage(message);
+	}
+
+	/**
 	 * Sets the modified date of this cocreation.
 	 *
 	 * @param modifiedDate the modified date of this cocreation
@@ -579,6 +687,16 @@ public class CocreationWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the request of this cocreation.
+	 *
+	 * @param request the request of this cocreation
+	 */
+	@Override
+	public void setRequest(String request) {
+		model.setRequest(request);
 	}
 
 	/**

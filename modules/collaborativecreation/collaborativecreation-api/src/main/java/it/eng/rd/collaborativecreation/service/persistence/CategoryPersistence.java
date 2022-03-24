@@ -42,146 +42,197 @@ public interface CategoryPersistence extends BasePersistence<Category> {
 	 */
 
 	/**
-	 * Returns all the categories where name = &#63;.
+	 * Returns all the categories where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the matching categories
 	 */
-	public java.util.List<Category> findByName(String name);
+	public java.util.List<Category> findByChallenge(long challengeId);
 
 	/**
-	 * Returns a range of all the categories where name = &#63;.
+	 * Returns a range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @return the range of matching categories
 	 */
-	public java.util.List<Category> findByName(String name, int start, int end);
+	public java.util.List<Category> findByChallenge(
+		long challengeId, int start, int end);
 
 	/**
-	 * Returns an ordered range of all the categories where name = &#63;.
+	 * Returns an ordered range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching categories
 	 */
-	public java.util.List<Category> findByName(
-		String name, int start, int end,
+	public java.util.List<Category> findByChallenge(
+		long challengeId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Category>
 			orderByComparator);
 
 	/**
-	 * Returns an ordered range of all the categories where name = &#63;.
+	 * Returns an ordered range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the ordered range of matching categories
 	 */
-	public java.util.List<Category> findByName(
-		String name, int start, int end,
+	public java.util.List<Category> findByChallenge(
+		long challengeId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Category>
 			orderByComparator,
 		boolean useFinderCache);
 
 	/**
-	 * Returns the first category in the ordered set where name = &#63;.
+	 * Returns the first category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching category
 	 * @throws NoSuchCategoryException if a matching category could not be found
 	 */
-	public Category findByName_First(
-			String name,
+	public Category findByChallenge_First(
+			long challengeId,
 			com.liferay.portal.kernel.util.OrderByComparator<Category>
 				orderByComparator)
 		throws NoSuchCategoryException;
 
 	/**
-	 * Returns the first category in the ordered set where name = &#63;.
+	 * Returns the first category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching category, or <code>null</code> if a matching category could not be found
 	 */
-	public Category fetchByName_First(
-		String name,
+	public Category fetchByChallenge_First(
+		long challengeId,
 		com.liferay.portal.kernel.util.OrderByComparator<Category>
 			orderByComparator);
 
 	/**
-	 * Returns the last category in the ordered set where name = &#63;.
+	 * Returns the last category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching category
 	 * @throws NoSuchCategoryException if a matching category could not be found
 	 */
-	public Category findByName_Last(
-			String name,
+	public Category findByChallenge_Last(
+			long challengeId,
 			com.liferay.portal.kernel.util.OrderByComparator<Category>
 				orderByComparator)
 		throws NoSuchCategoryException;
 
 	/**
-	 * Returns the last category in the ordered set where name = &#63;.
+	 * Returns the last category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching category, or <code>null</code> if a matching category could not be found
 	 */
-	public Category fetchByName_Last(
-		String name,
+	public Category fetchByChallenge_Last(
+		long challengeId,
 		com.liferay.portal.kernel.util.OrderByComparator<Category>
 			orderByComparator);
 
 	/**
-	 * Returns the categories before and after the current category in the ordered set where name = &#63;.
+	 * Returns the categories before and after the current category in the ordered set where challengeId = &#63;.
 	 *
 	 * @param categoryId the primary key of the current category
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next category
 	 * @throws NoSuchCategoryException if a category with the primary key could not be found
 	 */
-	public Category[] findByName_PrevAndNext(
-			long categoryId, String name,
+	public Category[] findByChallenge_PrevAndNext(
+			long categoryId, long challengeId,
 			com.liferay.portal.kernel.util.OrderByComparator<Category>
 				orderByComparator)
 		throws NoSuchCategoryException;
 
 	/**
-	 * Removes all the categories where name = &#63; from the database.
+	 * Removes all the categories where challengeId = &#63; from the database.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 */
-	public void removeByName(String name);
+	public void removeByChallenge(long challengeId);
 
 	/**
-	 * Returns the number of categories where name = &#63;.
+	 * Returns the number of categories where challengeId = &#63;.
 	 *
+	 * @param challengeId the challenge ID
+	 * @return the number of matching categories
+	 */
+	public int countByChallenge(long challengeId);
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or throws a <code>NoSuchCategoryException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching category
+	 * @throws NoSuchCategoryException if a matching category could not be found
+	 */
+	public Category findByName(long challengeId, String name)
+		throws NoSuchCategoryException;
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching category, or <code>null</code> if a matching category could not be found
+	 */
+	public Category fetchByName(long challengeId, String name);
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching category, or <code>null</code> if a matching category could not be found
+	 */
+	public Category fetchByName(
+		long challengeId, String name, boolean useFinderCache);
+
+	/**
+	 * Removes the category where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the category that was removed
+	 */
+	public Category removeByName(long challengeId, String name)
+		throws NoSuchCategoryException;
+
+	/**
+	 * Returns the number of categories where challengeId = &#63; and name = &#63;.
+	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
 	 * @return the number of matching categories
 	 */
-	public int countByName(String name);
+	public int countByName(long challengeId, String name);
 
 	/**
 	 * Caches the category in the entity cache if it is enabled.

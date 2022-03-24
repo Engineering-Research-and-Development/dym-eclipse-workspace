@@ -39,6 +39,7 @@ import java.sql.Types;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,7 +71,8 @@ public class ActivityModelImpl
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"mvccVersion", Types.BIGINT}, {"activityId", Types.BIGINT},
-		{"description", Types.VARCHAR}, {"cocreationId", Types.BIGINT}
+		{"description", Types.VARCHAR}, {"cocreationId", Types.BIGINT},
+		{"expirationDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -81,10 +83,11 @@ public class ActivityModelImpl
 		TABLE_COLUMNS_MAP.put("activityId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("cocreationId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("expirationDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table COCREATION_Activity (mvccVersion LONG default 0 not null,activityId LONG not null primary key,description VARCHAR(75) null,cocreationId LONG)";
+		"create table COCREATION_Activity (mvccVersion LONG default 0 not null,activityId LONG not null primary key,description VARCHAR(75) null,cocreationId LONG,expirationDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table COCREATION_Activity";
@@ -108,11 +111,17 @@ public class ActivityModelImpl
 	public static final long ACTIVITYID_COLUMN_BITMASK = 1L;
 
 	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long COCREATIONID_COLUMN_BITMASK = 2L;
+
+	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long DESCRIPTION_COLUMN_BITMASK = 2L;
+	public static final long DESCRIPTION_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -147,6 +156,7 @@ public class ActivityModelImpl
 		model.setActivityId(soapModel.getActivityId());
 		model.setDescription(soapModel.getDescription());
 		model.setCocreationId(soapModel.getCocreationId());
+		model.setExpirationDate(soapModel.getExpirationDate());
 
 		return model;
 	}
@@ -311,6 +321,11 @@ public class ActivityModelImpl
 		attributeSetterBiConsumers.put(
 			"cocreationId",
 			(BiConsumer<Activity, Long>)Activity::setCocreationId);
+		attributeGetterFunctions.put(
+			"expirationDate", Activity::getExpirationDate);
+		attributeSetterBiConsumers.put(
+			"expirationDate",
+			(BiConsumer<Activity, Date>)Activity::setExpirationDate);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -393,6 +408,31 @@ public class ActivityModelImpl
 		_cocreationId = cocreationId;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalCocreationId() {
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("cocreationId"));
+	}
+
+	@JSON
+	@Override
+	public Date getExpirationDate() {
+		return _expirationDate;
+	}
+
+	@Override
+	public void setExpirationDate(Date expirationDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_expirationDate = expirationDate;
+	}
+
 	public long getColumnBitmask() {
 		if (_columnBitmask > 0) {
 			return _columnBitmask;
@@ -451,6 +491,7 @@ public class ActivityModelImpl
 		activityImpl.setActivityId(getActivityId());
 		activityImpl.setDescription(getDescription());
 		activityImpl.setCocreationId(getCocreationId());
+		activityImpl.setExpirationDate(getExpirationDate());
 
 		activityImpl.resetOriginalValues();
 
@@ -542,6 +583,15 @@ public class ActivityModelImpl
 
 		activityCacheModel.cocreationId = getCocreationId();
 
+		Date expirationDate = getExpirationDate();
+
+		if (expirationDate != null) {
+			activityCacheModel.expirationDate = expirationDate.getTime();
+		}
+		else {
+			activityCacheModel.expirationDate = Long.MIN_VALUE;
+		}
+
 		return activityCacheModel;
 	}
 
@@ -619,6 +669,7 @@ public class ActivityModelImpl
 	private long _activityId;
 	private String _description;
 	private long _cocreationId;
+	private Date _expirationDate;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<Activity, Object> function = _attributeGetterFunctions.get(
@@ -651,6 +702,7 @@ public class ActivityModelImpl
 		_columnOriginalValues.put("activityId", _activityId);
 		_columnOriginalValues.put("description", _description);
 		_columnOriginalValues.put("cocreationId", _cocreationId);
+		_columnOriginalValues.put("expirationDate", _expirationDate);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -671,6 +723,8 @@ public class ActivityModelImpl
 		columnBitmasks.put("description", 4L);
 
 		columnBitmasks.put("cocreationId", 8L);
+
+		columnBitmasks.put("expirationDate", 16L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

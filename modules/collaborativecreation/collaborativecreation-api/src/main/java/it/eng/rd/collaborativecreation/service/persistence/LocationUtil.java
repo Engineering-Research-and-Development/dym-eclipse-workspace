@@ -125,167 +125,128 @@ public class LocationUtil {
 	}
 
 	/**
-	 * Returns all the locations where name = &#63;.
+	 * Returns the location where challengeId = &#63; or throws a <code>NoSuchLocationException</code> if it could not be found.
 	 *
-	 * @param name the name
-	 * @return the matching locations
+	 * @param challengeId the challenge ID
+	 * @return the matching location
+	 * @throws NoSuchLocationException if a matching location could not be found
 	 */
-	public static List<Location> findByName(String name) {
-		return getPersistence().findByName(name);
+	public static Location findByChallenge(long challengeId)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchLocationException {
+
+		return getPersistence().findByChallenge(challengeId);
 	}
 
 	/**
-	 * Returns a range of all the locations where name = &#63;.
+	 * Returns the location where challengeId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LocationModelImpl</code>.
-	 * </p>
-	 *
-	 * @param name the name
-	 * @param start the lower bound of the range of locations
-	 * @param end the upper bound of the range of locations (not inclusive)
-	 * @return the range of matching locations
+	 * @param challengeId the challenge ID
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
 	 */
-	public static List<Location> findByName(String name, int start, int end) {
-		return getPersistence().findByName(name, start, end);
+	public static Location fetchByChallenge(long challengeId) {
+		return getPersistence().fetchByChallenge(challengeId);
 	}
 
 	/**
-	 * Returns an ordered range of all the locations where name = &#63;.
+	 * Returns the location where challengeId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LocationModelImpl</code>.
-	 * </p>
-	 *
-	 * @param name the name
-	 * @param start the lower bound of the range of locations
-	 * @param end the upper bound of the range of locations (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching locations
-	 */
-	public static List<Location> findByName(
-		String name, int start, int end,
-		OrderByComparator<Location> orderByComparator) {
-
-		return getPersistence().findByName(name, start, end, orderByComparator);
-	}
-
-	/**
-	 * Returns an ordered range of all the locations where name = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LocationModelImpl</code>.
-	 * </p>
-	 *
-	 * @param name the name
-	 * @param start the lower bound of the range of locations
-	 * @param end the upper bound of the range of locations (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param challengeId the challenge ID
 	 * @param useFinderCache whether to use the finder cache
-	 * @return the ordered range of matching locations
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
 	 */
-	public static List<Location> findByName(
-		String name, int start, int end,
-		OrderByComparator<Location> orderByComparator, boolean useFinderCache) {
+	public static Location fetchByChallenge(
+		long challengeId, boolean useFinderCache) {
 
-		return getPersistence().findByName(
-			name, start, end, orderByComparator, useFinderCache);
+		return getPersistence().fetchByChallenge(challengeId, useFinderCache);
 	}
 
 	/**
-	 * Returns the first location in the ordered set where name = &#63;.
+	 * Removes the location where challengeId = &#63; from the database.
 	 *
+	 * @param challengeId the challenge ID
+	 * @return the location that was removed
+	 */
+	public static Location removeByChallenge(long challengeId)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchLocationException {
+
+		return getPersistence().removeByChallenge(challengeId);
+	}
+
+	/**
+	 * Returns the number of locations where challengeId = &#63;.
+	 *
+	 * @param challengeId the challenge ID
+	 * @return the number of matching locations
+	 */
+	public static int countByChallenge(long challengeId) {
+		return getPersistence().countByChallenge(challengeId);
+	}
+
+	/**
+	 * Returns the location where challengeId = &#63; and name = &#63; or throws a <code>NoSuchLocationException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching location
+	 * @return the matching location
 	 * @throws NoSuchLocationException if a matching location could not be found
 	 */
-	public static Location findByName_First(
-			String name, OrderByComparator<Location> orderByComparator)
+	public static Location findByName(long challengeId, String name)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchLocationException {
 
-		return getPersistence().findByName_First(name, orderByComparator);
+		return getPersistence().findByName(challengeId, name);
 	}
 
 	/**
-	 * Returns the first location in the ordered set where name = &#63;.
+	 * Returns the location where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching location, or <code>null</code> if a matching location could not be found
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
 	 */
-	public static Location fetchByName_First(
-		String name, OrderByComparator<Location> orderByComparator) {
-
-		return getPersistence().fetchByName_First(name, orderByComparator);
+	public static Location fetchByName(long challengeId, String name) {
+		return getPersistence().fetchByName(challengeId, name);
 	}
 
 	/**
-	 * Returns the last location in the ordered set where name = &#63;.
+	 * Returns the location where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching location
-	 * @throws NoSuchLocationException if a matching location could not be found
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching location, or <code>null</code> if a matching location could not be found
 	 */
-	public static Location findByName_Last(
-			String name, OrderByComparator<Location> orderByComparator)
+	public static Location fetchByName(
+		long challengeId, String name, boolean useFinderCache) {
+
+		return getPersistence().fetchByName(challengeId, name, useFinderCache);
+	}
+
+	/**
+	 * Removes the location where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the location that was removed
+	 */
+	public static Location removeByName(long challengeId, String name)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchLocationException {
 
-		return getPersistence().findByName_Last(name, orderByComparator);
+		return getPersistence().removeByName(challengeId, name);
 	}
 
 	/**
-	 * Returns the last location in the ordered set where name = &#63;.
+	 * Returns the number of locations where challengeId = &#63; and name = &#63;.
 	 *
-	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching location, or <code>null</code> if a matching location could not be found
-	 */
-	public static Location fetchByName_Last(
-		String name, OrderByComparator<Location> orderByComparator) {
-
-		return getPersistence().fetchByName_Last(name, orderByComparator);
-	}
-
-	/**
-	 * Returns the locations before and after the current location in the ordered set where name = &#63;.
-	 *
-	 * @param locatoinId the primary key of the current location
-	 * @param name the name
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next location
-	 * @throws NoSuchLocationException if a location with the primary key could not be found
-	 */
-	public static Location[] findByName_PrevAndNext(
-			long locatoinId, String name,
-			OrderByComparator<Location> orderByComparator)
-		throws it.eng.rd.collaborativecreation.exception.
-			NoSuchLocationException {
-
-		return getPersistence().findByName_PrevAndNext(
-			locatoinId, name, orderByComparator);
-	}
-
-	/**
-	 * Removes all the locations where name = &#63; from the database.
-	 *
-	 * @param name the name
-	 */
-	public static void removeByName(String name) {
-		getPersistence().removeByName(name);
-	}
-
-	/**
-	 * Returns the number of locations where name = &#63;.
-	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
 	 * @return the number of matching locations
 	 */
-	public static int countByName(String name) {
-		return getPersistence().countByName(name);
+	public static int countByName(long challengeId, String name) {
+		return getPersistence().countByName(challengeId, name);
 	}
 
 	/**
@@ -309,25 +270,25 @@ public class LocationUtil {
 	/**
 	 * Creates a new location with the primary key. Does not add the location to the database.
 	 *
-	 * @param locatoinId the primary key for the new location
+	 * @param locationId the primary key for the new location
 	 * @return the new location
 	 */
-	public static Location create(long locatoinId) {
-		return getPersistence().create(locatoinId);
+	public static Location create(long locationId) {
+		return getPersistence().create(locationId);
 	}
 
 	/**
 	 * Removes the location with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location that was removed
 	 * @throws NoSuchLocationException if a location with the primary key could not be found
 	 */
-	public static Location remove(long locatoinId)
+	public static Location remove(long locationId)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchLocationException {
 
-		return getPersistence().remove(locatoinId);
+		return getPersistence().remove(locationId);
 	}
 
 	public static Location updateImpl(Location location) {
@@ -337,25 +298,25 @@ public class LocationUtil {
 	/**
 	 * Returns the location with the primary key or throws a <code>NoSuchLocationException</code> if it could not be found.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location
 	 * @throws NoSuchLocationException if a location with the primary key could not be found
 	 */
-	public static Location findByPrimaryKey(long locatoinId)
+	public static Location findByPrimaryKey(long locationId)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchLocationException {
 
-		return getPersistence().findByPrimaryKey(locatoinId);
+		return getPersistence().findByPrimaryKey(locationId);
 	}
 
 	/**
 	 * Returns the location with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param locatoinId the primary key of the location
+	 * @param locationId the primary key of the location
 	 * @return the location, or <code>null</code> if a location with the primary key could not be found
 	 */
-	public static Location fetchByPrimaryKey(long locatoinId) {
-		return getPersistence().fetchByPrimaryKey(locatoinId);
+	public static Location fetchByPrimaryKey(long locationId) {
+		return getPersistence().fetchByPrimaryKey(locationId);
 	}
 
 	/**

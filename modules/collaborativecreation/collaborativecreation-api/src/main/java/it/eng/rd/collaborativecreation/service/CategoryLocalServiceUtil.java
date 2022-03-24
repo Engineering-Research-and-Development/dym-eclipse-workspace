@@ -59,6 +59,14 @@ public class CategoryLocalServiceUtil {
 		return getService().addCategory(category);
 	}
 
+	public static Category addCategory(
+			long challengeId, String name,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().addCategory(challengeId, name, serviceContext);
+	}
+
 	/**
 	 * Creates a new category with the primary key. Does not add the category to the database.
 	 *
@@ -77,6 +85,12 @@ public class CategoryLocalServiceUtil {
 		throws PortalException {
 
 		return getService().createPersistedModel(primaryKeyObj);
+	}
+
+	public static void deleteCategoriesByChallengeId(long challengeId)
+		throws PortalException {
+
+		getService().deleteCategoriesByChallengeId(challengeId);
 	}
 
 	/**
@@ -222,6 +236,12 @@ public class CategoryLocalServiceUtil {
 		return getService().getCategories(start, end);
 	}
 
+	public static List<Category> getCategoriesByChallengeId(long challengeId)
+		throws PortalException {
+
+		return getService().getCategoriesByChallengeId(challengeId);
+	}
+
 	/**
 	 * Returns the number of categories.
 	 *
@@ -240,6 +260,12 @@ public class CategoryLocalServiceUtil {
 	 */
 	public static Category getCategory(long categoryId) throws PortalException {
 		return getService().getCategory(categoryId);
+	}
+
+	public static Category getCategory(long challengeId, String name)
+		throws PortalException {
+
+		return getService().getCategory(challengeId, name);
 	}
 
 	public static

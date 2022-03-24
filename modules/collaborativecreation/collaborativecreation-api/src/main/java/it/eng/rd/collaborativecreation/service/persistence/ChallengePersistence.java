@@ -829,35 +829,38 @@ public interface ChallengePersistence extends BasePersistence<Challenge> {
 	public int countByGroupId(long groupId);
 
 	/**
-	 * Returns all the challenges where active = &#63;.
+	 * Returns all the challenges where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @return the matching challenges
 	 */
-	public java.util.List<Challenge> findByActive(boolean active);
+	public java.util.List<Challenge> findByActive(long groupId, boolean active);
 
 	/**
-	 * Returns a range of all the challenges where active = &#63;.
+	 * Returns a range of all the challenges where groupId = &#63; and active = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @return the range of matching challenges
 	 */
 	public java.util.List<Challenge> findByActive(
-		boolean active, int start, int end);
+		long groupId, boolean active, int start, int end);
 
 	/**
-	 * Returns an ordered range of all the challenges where active = &#63;.
+	 * Returns an ordered range of all the challenges where groupId = &#63; and active = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
@@ -865,17 +868,18 @@ public interface ChallengePersistence extends BasePersistence<Challenge> {
 	 * @return the ordered range of matching challenges
 	 */
 	public java.util.List<Challenge> findByActive(
-		boolean active, int start, int end,
+		long groupId, boolean active, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator);
 
 	/**
-	 * Returns an ordered range of all the challenges where active = &#63;.
+	 * Returns an ordered range of all the challenges where groupId = &#63; and active = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
@@ -884,92 +888,99 @@ public interface ChallengePersistence extends BasePersistence<Challenge> {
 	 * @return the ordered range of matching challenges
 	 */
 	public java.util.List<Challenge> findByActive(
-		boolean active, int start, int end,
+		long groupId, boolean active, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator,
 		boolean useFinderCache);
 
 	/**
-	 * Returns the first challenge in the ordered set where active = &#63;.
+	 * Returns the first challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	public Challenge findByActive_First(
-			boolean active,
+			long groupId, boolean active,
 			com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 				orderByComparator)
 		throws NoSuchChallengeException;
 
 	/**
-	 * Returns the first challenge in the ordered set where active = &#63;.
+	 * Returns the first challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	public Challenge fetchByActive_First(
-		boolean active,
+		long groupId, boolean active,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator);
 
 	/**
-	 * Returns the last challenge in the ordered set where active = &#63;.
+	 * Returns the last challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	public Challenge findByActive_Last(
-			boolean active,
+			long groupId, boolean active,
 			com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 				orderByComparator)
 		throws NoSuchChallengeException;
 
 	/**
-	 * Returns the last challenge in the ordered set where active = &#63;.
+	 * Returns the last challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	public Challenge fetchByActive_Last(
-		boolean active,
+		long groupId, boolean active,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator);
 
 	/**
-	 * Returns the challenges before and after the current challenge in the ordered set where active = &#63;.
+	 * Returns the challenges before and after the current challenge in the ordered set where groupId = &#63; and active = &#63;.
 	 *
 	 * @param challengeId the primary key of the current challenge
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next challenge
 	 * @throws NoSuchChallengeException if a challenge with the primary key could not be found
 	 */
 	public Challenge[] findByActive_PrevAndNext(
-			long challengeId, boolean active,
+			long challengeId, long groupId, boolean active,
 			com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 				orderByComparator)
 		throws NoSuchChallengeException;
 
 	/**
-	 * Removes all the challenges where active = &#63; from the database.
+	 * Removes all the challenges where groupId = &#63; and active = &#63; from the database.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 */
-	public void removeByActive(boolean active);
+	public void removeByActive(long groupId, boolean active);
 
 	/**
-	 * Returns the number of challenges where active = &#63;.
+	 * Returns the number of challenges where groupId = &#63; and active = &#63;.
 	 *
+	 * @param groupId the group ID
 	 * @param active the active
 	 * @return the number of matching challenges
 	 */
-	public int countByActive(boolean active);
+	public int countByActive(long groupId, boolean active);
 
 	/**
 	 * Caches the challenge in the entity cache if it is enabled.

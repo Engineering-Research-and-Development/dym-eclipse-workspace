@@ -77,7 +77,7 @@ public class ChallengeCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(41);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -101,6 +101,8 @@ public class ChallengeCacheModel
 		sb.append(title);
 		sb.append(", description=");
 		sb.append(description);
+		sb.append(", desiredOutcome=");
+		sb.append(desiredOutcome);
 		sb.append(", startDate=");
 		sb.append(startDate);
 		sb.append(", endDate=");
@@ -177,6 +179,13 @@ public class ChallengeCacheModel
 			challengeImpl.setDescription(description);
 		}
 
+		if (desiredOutcome == null) {
+			challengeImpl.setDesiredOutcome("");
+		}
+		else {
+			challengeImpl.setDesiredOutcome(desiredOutcome);
+		}
+
 		if (startDate == Long.MIN_VALUE) {
 			challengeImpl.setStartDate(null);
 		}
@@ -242,6 +251,7 @@ public class ChallengeCacheModel
 		modifiedDate = objectInput.readLong();
 		title = objectInput.readUTF();
 		description = (String)objectInput.readObject();
+		desiredOutcome = (String)objectInput.readObject();
 		startDate = objectInput.readLong();
 		endDate = objectInput.readLong();
 		dlFolderName = objectInput.readUTF();
@@ -300,6 +310,13 @@ public class ChallengeCacheModel
 			objectOutput.writeObject(description);
 		}
 
+		if (desiredOutcome == null) {
+			objectOutput.writeObject("");
+		}
+		else {
+			objectOutput.writeObject(desiredOutcome);
+		}
+
 		objectOutput.writeLong(startDate);
 		objectOutput.writeLong(endDate);
 
@@ -339,6 +356,7 @@ public class ChallengeCacheModel
 	public long modifiedDate;
 	public String title;
 	public String description;
+	public String desiredOutcome;
 	public long startDate;
 	public long endDate;
 	public String dlFolderName;

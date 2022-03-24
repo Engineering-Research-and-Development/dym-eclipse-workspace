@@ -6,6 +6,7 @@
 		<field name="activityId" type="long" />
 		<field name="description" type="String" />
 		<field name="cocreationId" type="long" />
+		<field name="expirationDate" type="Date" />
 	</model>
 	<model name="it.eng.rd.collaborativecreation.model.Category">
 		<field name="mvccVersion" type="long" />
@@ -26,6 +27,9 @@
 		<field name="modifiedDate" type="Date" />
 		<field name="title" type="String" />
 		<field name="description" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="desiredOutcome" type="String">
 			<hint-collection name="CLOB" />
 		</field>
 		<field name="startDate" type="Date" />
@@ -49,6 +53,13 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
+		<field name="completionDate" type="Date" />
+		<field name="request" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="message" type="String">
+			<hint-collection name="CLOB" />
+		</field>
 		<field name="title" type="String" />
 		<field name="description" type="String">
 			<hint-collection name="CLOB" />
@@ -59,6 +70,7 @@
 		<field name="statusByUserId" type="long" />
 		<field name="statusByUserName" type="String" />
 		<field name="statusDate" type="Date" />
+		<field name="completed" type="boolean" />
 	</model>
 	<model name="it.eng.rd.collaborativecreation.model.Cocreator">
 		<field name="mvccVersion" type="long" />
@@ -69,6 +81,7 @@
 		<field name="userId" type="long" />
 		<field name="userName" type="String" />
 		<field name="cocreationId" type="long" />
+		<field name="activityId" type="long" />
 	</model>
 	<model name="it.eng.rd.collaborativecreation.model.Hashtag">
 		<field name="mvccVersion" type="long" />
@@ -79,7 +92,7 @@
 	</model>
 	<model name="it.eng.rd.collaborativecreation.model.Location">
 		<field name="mvccVersion" type="long" />
-		<field name="locatoinId" type="long" />
+		<field name="locationId" type="long" />
 		<field name="challengeId" type="long" />
 		<field name="name" type="String" />
 		<field name="latitude" type="String" />

@@ -51,13 +51,14 @@ public class ChallengeLocalServiceWrapper
 
 	@Override
 	public it.eng.rd.collaborativecreation.model.Challenge addChallenge(
-			String title, String description, java.util.Date startDate,
-			java.util.Date endDate, boolean active,
+			String title, String description, String desiredOutcome,
+			java.util.Date startDate, java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _challengeLocalService.addChallenge(
-			title, description, startDate, endDate, active, serviceContext);
+			title, description, desiredOutcome, startDate, endDate, active,
+			serviceContext);
 	}
 
 	/**
@@ -118,14 +119,6 @@ public class ChallengeLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _challengeLocalService.deleteChallenge(challengeId);
-	}
-
-	@Override
-	public it.eng.rd.collaborativecreation.model.Challenge deleteChallenge(
-			long challengeId, long userId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _challengeLocalService.deleteChallenge(challengeId, userId);
 	}
 
 	/**
@@ -273,6 +266,14 @@ public class ChallengeLocalServiceWrapper
 		return _challengeLocalService.getChallenge(challengeId);
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Challenge
+		getChallengeByCocreationId(long cocreationId, long groupId) {
+
+		return _challengeLocalService.getChallengeByCocreationId(
+			cocreationId, groupId);
+	}
+
 	/**
 	 * Returns the challenge matching the UUID and group.
 	 *
@@ -306,6 +307,30 @@ public class ChallengeLocalServiceWrapper
 		getChallenges(int start, int end) {
 
 		return _challengeLocalService.getChallenges(start, end);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Challenge>
+		getChallengesByActive(long groupId, boolean active) {
+
+		return _challengeLocalService.getChallengesByActive(groupId, active);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Challenge>
+		getChallengesByGroupId(long groupId) {
+
+		return _challengeLocalService.getChallengesByGroupId(groupId);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Challenge>
+			getChallengesBySearch(String keywords)
+		throws ClassNotFoundException,
+			   com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _challengeLocalService.getChallengesBySearch(keywords);
 	}
 
 	@Override
@@ -446,14 +471,15 @@ public class ChallengeLocalServiceWrapper
 	@Override
 	public it.eng.rd.collaborativecreation.model.Challenge updateChallenge(
 			long challengeId, String title, String description,
-			java.util.Date startDate, java.util.Date endDate, boolean active,
+			String desiredOutcome, java.util.Date startDate,
+			java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _challengeLocalService.updateChallenge(
-			challengeId, title, description, startDate, endDate, active,
-			serviceContext);
+			challengeId, title, description, desiredOutcome, startDate, endDate,
+			active, serviceContext);
 	}
 
 	@Override

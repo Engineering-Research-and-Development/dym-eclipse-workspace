@@ -54,6 +54,7 @@ public class ChallengeWrapper
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
+		attributes.put("desiredOutcome", getDesiredOutcome());
 		attributes.put("startDate", getStartDate());
 		attributes.put("endDate", getEndDate());
 		attributes.put("dlFolderName", getDlFolderName());
@@ -133,6 +134,12 @@ public class ChallengeWrapper
 
 		if (description != null) {
 			setDescription(description);
+		}
+
+		String desiredOutcome = (String)attributes.get("desiredOutcome");
+
+		if (desiredOutcome != null) {
+			setDesiredOutcome(desiredOutcome);
 		}
 
 		Date startDate = (Date)attributes.get("startDate");
@@ -238,6 +245,16 @@ public class ChallengeWrapper
 	@Override
 	public String getDescription() {
 		return model.getDescription();
+	}
+
+	/**
+	 * Returns the desired outcome of this challenge.
+	 *
+	 * @return the desired outcome of this challenge
+	 */
+	@Override
+	public String getDesiredOutcome() {
+		return model.getDesiredOutcome();
 	}
 
 	/**
@@ -563,6 +580,16 @@ public class ChallengeWrapper
 	@Override
 	public void setDescription(String description) {
 		model.setDescription(description);
+	}
+
+	/**
+	 * Sets the desired outcome of this challenge.
+	 *
+	 * @param desiredOutcome the desired outcome of this challenge
+	 */
+	@Override
+	public void setDesiredOutcome(String desiredOutcome) {
+		model.setDesiredOutcome(desiredOutcome);
 	}
 
 	/**

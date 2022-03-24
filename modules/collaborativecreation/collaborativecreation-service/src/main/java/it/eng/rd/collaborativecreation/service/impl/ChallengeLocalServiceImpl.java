@@ -15,8 +15,12 @@
 package it.eng.rd.collaborativecreation.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
+import com.liferay.portal.kernel.dao.orm.Criterion;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -28,12 +32,16 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 
 import it.eng.rd.collaborativecreation.model.Challenge;
+import it.eng.rd.collaborativecreation.model.Cocreation;
+import it.eng.rd.collaborativecreation.service.ChallengeLocalServiceUtil;
 import it.eng.rd.collaborativecreation.service.base.ChallengeLocalServiceBaseImpl;
 
 /**
@@ -59,6 +67,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 	public Challenge addChallenge(
 			String title,
 			String description,
+			String desiredOutcome,
 	        Date startDate,
 	        Date endDate,
 	        boolean active,
@@ -66,7 +75,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 	)
 		throws PortalException {
 		
-		_log.info("ChallengeLocalServiceImpl, addChallenge method");
+		_log.info("ChallengeLocalServiceImpl - addChallenge method");
 
 		long groupId = serviceContext.getScopeGroupId();
 
@@ -89,6 +98,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		challenge.setChallengeId(challengeId);
 		challenge.setTitle(title);
 		challenge.setDescription(description);
+		challenge.setDesiredOutcome(desiredOutcome);
 		challenge.setStartDate(startDate);
 		challenge.setEndDate(endDate);
 		challenge.setActive(active);
@@ -104,6 +114,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		_log.info("challengeId: " +challengeId);
 		_log.info("title: " +title);
 		_log.info("description: " +description);
+		_log.info("desiredOutcome: " +desiredOutcome);
 		_log.info("startDate: " +startDate);
 		_log.info("endDate: " +endDate);
 		_log.info("active: " +active);
@@ -117,20 +128,8 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
                 serviceContext.getAssetTagNames(), true, true, null, null, null, null,
                 ContentTypes.TEXT_HTML, null, null, null, null,
                 null, 0, 0, null);
-		
 		_log.info("generated challenge");
-
-		assetLinkLocalService.updateLinks(serviceContext.getUserId(), assetEntry.getEntryId(),
-		                serviceContext.getAssetLinkEntryIds(),
-		                AssetLinkConstants.TYPE_RELATED);
 		
-		_log.info("generated assetLink");
-		
-		//set permission
-		resourceLocalService.addResources(user.getCompanyId(), groupId, serviceContext.getUserId(),
-			    Challenge.class.getName(), challengeId, false, true, true);
-
-		_log.info("generated permission");
 		return challenge;
 	}
 	
@@ -139,6 +138,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 			long challengeId,
 			String title,
 			String description,
+			String desiredOutcome,
 	        Date startDate,
 	        Date endDate,
 	        boolean active,
@@ -146,12 +146,11 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 	)
 		throws PortalException, SystemException {
 		
-		_log.info("ChallengeLocalServiceImpl, updateChallenge method");
+		_log.info("ChallengeLocalServiceImpl - updateChallenge method");
 
 		Date now = new Date();
 
-		Challenge challenge =
-			challengePersistence.findByPrimaryKey(challengeId);
+		Challenge challenge = challengePersistence.findByPrimaryKey(challengeId);
 		
 		User user = userLocalService.getUserById(serviceContext.getUserId());
 
@@ -161,6 +160,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		
 		challenge.setTitle(title);
 		challenge.setDescription(description);
+		challenge.setDesiredOutcome(desiredOutcome);
 		challenge.setStartDate(startDate);
 		challenge.setEndDate(endDate);
 		challenge.setActive(active);
@@ -174,6 +174,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		_log.info("challengeId: " +challengeId);
 		_log.info("title: " +title);
 		_log.info("description: " +description);
+		_log.info("desiredOutcome: " +desiredOutcome);
 		_log.info("startDate: " +startDate);
 		_log.info("endDate: " +endDate);
 		_log.info("active: " +active);
@@ -193,19 +194,13 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		
 		_log.info("generated assetEntry");
 	
-		assetLinkLocalService.updateLinks(serviceContext.getUserId(), assetEntry.getEntryId(),
-		              serviceContext.getAssetLinkEntryIds(),
-		              AssetLinkConstants.TYPE_RELATED);
-		
-		_log.info("generated assetLink");
-		
 		return challenge;
 	}
 	
 	@Indexable(type = IndexableType.DELETE)
 	public Challenge deleteChallenge(Challenge challenge) {
 		
-		_log.info("ChallengeLocalServiceImpl, deleteChallenge method");
+		_log.info("ChallengeLocalServiceImpl - deleteChallenge method");
 		
 		challengePersistence.remove(challenge);
 		
@@ -213,10 +208,6 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
                 Challenge.class.getName(), challenge.getChallengeId());
 		
 		_log.info("removed assetEntry");
-		
-		assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
-		
-		_log.info("removed assetLink");
 		
 		try {
 			assetEntryLocalService.deleteEntry(assetEntry);
@@ -231,23 +222,75 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 
 		return challenge;
 	}
-	
-	@Indexable(type = IndexableType.DELETE)
-    public Challenge deleteChallenge(long challengeId, long userId) throws PortalException {
-		_log.info("deleteChallenge method");
-		_log.info("challengeId "+challengeId);
-		_log.info("userId "+userId);
-		
-		Challenge challenge = challengePersistence.findByPrimaryKey(challengeId);
-
-        return deleteChallenge(challenge);
-    }
 
 	public Challenge deleteChallenge(long challengeId) throws PortalException {
+		_log.info("ChallengeLocalServiceImpl - deleteChallenge method");
+		_log.info("challengeId "+challengeId);
 
 		Challenge challenge = challengePersistence.findByPrimaryKey(challengeId);
 
 		return deleteChallenge(challenge);
+	}
+	
+	public List<Challenge> getChallengesBySearch(String keywords) throws PortalException, SystemException, ClassNotFoundException {
+		_log.info("ChallengeLocalServiceImpl - getChallengesBySearch method");
+		_log.info("keywords "+keywords);
+		
+		List<Challenge> challengesList  = new ArrayList<Challenge>();
+		
+		Criterion cr1 = RestrictionsFactoryUtil.ilike("title", "%"+keywords+"%");
+		Criterion cr2 = RestrictionsFactoryUtil.ilike("description", "%"+keywords+"%");
+		Criterion cr3 = RestrictionsFactoryUtil.ilike("userName", "%"+keywords+"%");
+	
+		DynamicQuery challengeQuery1 = ChallengeLocalServiceUtil.dynamicQuery().add(RestrictionsFactoryUtil.or(cr1, cr2));;
+		DynamicQuery challengeQuery2 = ChallengeLocalServiceUtil.dynamicQuery().add(cr3);;
+		
+	    List<Challenge> challengesList1 = ChallengeLocalServiceUtil.dynamicQuery(challengeQuery1);
+	    List<Challenge> challengesList2 = ChallengeLocalServiceUtil.dynamicQuery(challengeQuery2);
+	   
+	    for (int i = 0; i < challengesList1.size(); i++){
+	    	challengesList.add(challengesList1.get(i));
+	    }
+	    for (int i = 0; i < challengesList2.size(); i++){
+	    	challengesList.add(challengesList2.get(i));
+	    }
+	    return challengesList;
+	}
+	
+	public Challenge getChallengeByCocreationId(long cocreationId, long groupId) {
+		_log.info("ChallengeLocalServiceImpl - getChallengeByCocreationId method");
+		_log.info("cocreationId "+cocreationId);
+		_log.info("groupId "+groupId);
+		
+		List<Challenge> challenges = challengePersistence.findByGroupId(groupId);
+		Challenge returnChallenge = challenges.get(0);
+		
+		Iterator<Challenge> challengesIt = challenges.iterator();
+		while(challengesIt.hasNext()){
+			Challenge challenge = challengesIt.next();	
+			List<Cocreation> cocreations = cocreationPersistence.findByChallengeId(challenge.getChallengeId());
+			Iterator<Cocreation> cocreationsIt = cocreations.iterator();
+			while(cocreationsIt.hasNext()){
+				Cocreation cocreation = cocreationsIt.next();
+				if (cocreation.getCocreationId() == cocreationId){
+					return challenge;
+				}
+			}
+		}	
+		return returnChallenge;
+	}
+	
+	
+	public List<Challenge> getChallengesByActive(long groupId, boolean active) {
+		_log.info("ChallengeLocalServiceImpl - getChallengesByActive method");
+		_log.info("groupId "+groupId);
+		_log.info("active "+active);
+		
+	    return challengePersistence.findByActive(groupId, active);
+	} 
+	
+	public List<Challenge> getChallengesByGroupId(long groupId) {
+		return challengePersistence.findByGroupId(groupId);
 	}
 	
 	public List<Challenge> getChallengesByUserId(long userId, long groupId) {

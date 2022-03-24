@@ -75,7 +75,7 @@ public class CocreatorCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(17);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -93,6 +93,8 @@ public class CocreatorCacheModel
 		sb.append(userName);
 		sb.append(", cocreationId=");
 		sb.append(cocreationId);
+		sb.append(", activityId=");
+		sb.append(activityId);
 		sb.append("}");
 
 		return sb.toString();
@@ -124,6 +126,7 @@ public class CocreatorCacheModel
 		}
 
 		cocreatorImpl.setCocreationId(cocreationId);
+		cocreatorImpl.setActivityId(activityId);
 
 		cocreatorImpl.resetOriginalValues();
 
@@ -145,6 +148,8 @@ public class CocreatorCacheModel
 		userName = objectInput.readUTF();
 
 		cocreationId = objectInput.readLong();
+
+		activityId = objectInput.readLong();
 	}
 
 	@Override
@@ -174,6 +179,8 @@ public class CocreatorCacheModel
 		}
 
 		objectOutput.writeLong(cocreationId);
+
+		objectOutput.writeLong(activityId);
 	}
 
 	public long mvccVersion;
@@ -184,5 +191,6 @@ public class CocreatorCacheModel
 	public long userId;
 	public String userName;
 	public long cocreationId;
+	public long activityId;
 
 }

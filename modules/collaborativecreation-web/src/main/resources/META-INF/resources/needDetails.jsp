@@ -26,7 +26,7 @@
 	<portlet:renderURL var="mycocreationsURL">
 		<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 	</portlet:renderURL>
-	<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
+	<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
 </aui:nav>	
 
 <aui:fieldset>

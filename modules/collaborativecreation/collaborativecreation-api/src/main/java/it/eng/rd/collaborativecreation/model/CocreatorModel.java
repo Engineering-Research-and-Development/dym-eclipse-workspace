@@ -188,4 +188,18 @@ public interface CocreatorModel
 	 */
 	public void setCocreationId(long cocreationId);
 
+	/**
+	 * Returns the activity ID of this cocreator.
+	 *
+	 * @return the activity ID of this cocreator
+	 */
+	public long getActivityId();
+
+	/**
+	 * Sets the activity ID of this cocreator.
+	 *
+	 * @param activityId the activity ID of this cocreator
+	 */
+	public void setActivityId(long activityId);
+
 }

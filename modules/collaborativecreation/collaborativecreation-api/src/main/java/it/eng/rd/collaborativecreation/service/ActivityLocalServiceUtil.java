@@ -59,6 +59,16 @@ public class ActivityLocalServiceUtil {
 		return getService().addActivity(activity);
 	}
 
+	public static Activity addActivity(
+			long cocreationId, String description,
+			java.util.Date expirationDate,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().addActivity(
+			cocreationId, description, expirationDate, serviceContext);
+	}
+
 	/**
 	 * Creates a new activity with the primary key. Does not add the activity to the database.
 	 *
@@ -220,6 +230,12 @@ public class ActivityLocalServiceUtil {
 	 */
 	public static List<Activity> getActivities(int start, int end) {
 		return getService().getActivities(start, end);
+	}
+
+	public static List<Activity> getActivitiesByCocreationId(long cocreationId)
+		throws PortalException {
+
+		return getService().getActivitiesByCocreationId(cocreationId);
 	}
 
 	/**

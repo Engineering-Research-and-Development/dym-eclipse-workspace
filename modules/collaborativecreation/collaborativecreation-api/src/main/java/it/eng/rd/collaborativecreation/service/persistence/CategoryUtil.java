@@ -125,167 +125,239 @@ public class CategoryUtil {
 	}
 
 	/**
-	 * Returns all the categories where name = &#63;.
+	 * Returns all the categories where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @return the matching categories
 	 */
-	public static List<Category> findByName(String name) {
-		return getPersistence().findByName(name);
+	public static List<Category> findByChallenge(long challengeId) {
+		return getPersistence().findByChallenge(challengeId);
 	}
 
 	/**
-	 * Returns a range of all the categories where name = &#63;.
+	 * Returns a range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @return the range of matching categories
 	 */
-	public static List<Category> findByName(String name, int start, int end) {
-		return getPersistence().findByName(name, start, end);
+	public static List<Category> findByChallenge(
+		long challengeId, int start, int end) {
+
+		return getPersistence().findByChallenge(challengeId, start, end);
 	}
 
 	/**
-	 * Returns an ordered range of all the categories where name = &#63;.
+	 * Returns an ordered range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching categories
 	 */
-	public static List<Category> findByName(
-		String name, int start, int end,
+	public static List<Category> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Category> orderByComparator) {
 
-		return getPersistence().findByName(name, start, end, orderByComparator);
+		return getPersistence().findByChallenge(
+			challengeId, start, end, orderByComparator);
 	}
 
 	/**
-	 * Returns an ordered range of all the categories where name = &#63;.
+	 * Returns an ordered range of all the categories where challengeId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CategoryModelImpl</code>.
 	 * </p>
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param start the lower bound of the range of categories
 	 * @param end the upper bound of the range of categories (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the ordered range of matching categories
 	 */
-	public static List<Category> findByName(
-		String name, int start, int end,
+	public static List<Category> findByChallenge(
+		long challengeId, int start, int end,
 		OrderByComparator<Category> orderByComparator, boolean useFinderCache) {
 
-		return getPersistence().findByName(
-			name, start, end, orderByComparator, useFinderCache);
+		return getPersistence().findByChallenge(
+			challengeId, start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
-	 * Returns the first category in the ordered set where name = &#63;.
+	 * Returns the first category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching category
 	 * @throws NoSuchCategoryException if a matching category could not be found
 	 */
-	public static Category findByName_First(
-			String name, OrderByComparator<Category> orderByComparator)
+	public static Category findByChallenge_First(
+			long challengeId, OrderByComparator<Category> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchCategoryException {
 
-		return getPersistence().findByName_First(name, orderByComparator);
+		return getPersistence().findByChallenge_First(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the first category in the ordered set where name = &#63;.
+	 * Returns the first category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching category, or <code>null</code> if a matching category could not be found
 	 */
-	public static Category fetchByName_First(
-		String name, OrderByComparator<Category> orderByComparator) {
+	public static Category fetchByChallenge_First(
+		long challengeId, OrderByComparator<Category> orderByComparator) {
 
-		return getPersistence().fetchByName_First(name, orderByComparator);
+		return getPersistence().fetchByChallenge_First(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the last category in the ordered set where name = &#63;.
+	 * Returns the last category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching category
 	 * @throws NoSuchCategoryException if a matching category could not be found
 	 */
-	public static Category findByName_Last(
-			String name, OrderByComparator<Category> orderByComparator)
+	public static Category findByChallenge_Last(
+			long challengeId, OrderByComparator<Category> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchCategoryException {
 
-		return getPersistence().findByName_Last(name, orderByComparator);
+		return getPersistence().findByChallenge_Last(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the last category in the ordered set where name = &#63;.
+	 * Returns the last category in the ordered set where challengeId = &#63;.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching category, or <code>null</code> if a matching category could not be found
 	 */
-	public static Category fetchByName_Last(
-		String name, OrderByComparator<Category> orderByComparator) {
+	public static Category fetchByChallenge_Last(
+		long challengeId, OrderByComparator<Category> orderByComparator) {
 
-		return getPersistence().fetchByName_Last(name, orderByComparator);
+		return getPersistence().fetchByChallenge_Last(
+			challengeId, orderByComparator);
 	}
 
 	/**
-	 * Returns the categories before and after the current category in the ordered set where name = &#63;.
+	 * Returns the categories before and after the current category in the ordered set where challengeId = &#63;.
 	 *
 	 * @param categoryId the primary key of the current category
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next category
 	 * @throws NoSuchCategoryException if a category with the primary key could not be found
 	 */
-	public static Category[] findByName_PrevAndNext(
-			long categoryId, String name,
+	public static Category[] findByChallenge_PrevAndNext(
+			long categoryId, long challengeId,
 			OrderByComparator<Category> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchCategoryException {
 
-		return getPersistence().findByName_PrevAndNext(
-			categoryId, name, orderByComparator);
+		return getPersistence().findByChallenge_PrevAndNext(
+			categoryId, challengeId, orderByComparator);
 	}
 
 	/**
-	 * Removes all the categories where name = &#63; from the database.
+	 * Removes all the categories where challengeId = &#63; from the database.
 	 *
-	 * @param name the name
+	 * @param challengeId the challenge ID
 	 */
-	public static void removeByName(String name) {
-		getPersistence().removeByName(name);
+	public static void removeByChallenge(long challengeId) {
+		getPersistence().removeByChallenge(challengeId);
 	}
 
 	/**
-	 * Returns the number of categories where name = &#63;.
+	 * Returns the number of categories where challengeId = &#63;.
 	 *
+	 * @param challengeId the challenge ID
+	 * @return the number of matching categories
+	 */
+	public static int countByChallenge(long challengeId) {
+		return getPersistence().countByChallenge(challengeId);
+	}
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or throws a <code>NoSuchCategoryException</code> if it could not be found.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching category
+	 * @throws NoSuchCategoryException if a matching category could not be found
+	 */
+	public static Category findByName(long challengeId, String name)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchCategoryException {
+
+		return getPersistence().findByName(challengeId, name);
+	}
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the matching category, or <code>null</code> if a matching category could not be found
+	 */
+	public static Category fetchByName(long challengeId, String name) {
+		return getPersistence().fetchByName(challengeId, name);
+	}
+
+	/**
+	 * Returns the category where challengeId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching category, or <code>null</code> if a matching category could not be found
+	 */
+	public static Category fetchByName(
+		long challengeId, String name, boolean useFinderCache) {
+
+		return getPersistence().fetchByName(challengeId, name, useFinderCache);
+	}
+
+	/**
+	 * Removes the category where challengeId = &#63; and name = &#63; from the database.
+	 *
+	 * @param challengeId the challenge ID
+	 * @param name the name
+	 * @return the category that was removed
+	 */
+	public static Category removeByName(long challengeId, String name)
+		throws it.eng.rd.collaborativecreation.exception.
+			NoSuchCategoryException {
+
+		return getPersistence().removeByName(challengeId, name);
+	}
+
+	/**
+	 * Returns the number of categories where challengeId = &#63; and name = &#63;.
+	 *
+	 * @param challengeId the challenge ID
 	 * @param name the name
 	 * @return the number of matching categories
 	 */
-	public static int countByName(String name) {
-		return getPersistence().countByName(name);
+	public static int countByName(long challengeId, String name) {
+		return getPersistence().countByName(challengeId, name);
 	}
 
 	/**
