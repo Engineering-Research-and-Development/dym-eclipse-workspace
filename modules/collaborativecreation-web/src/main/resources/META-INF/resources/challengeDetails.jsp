@@ -10,6 +10,10 @@ String participationURL = "";
 String folderTitle = challenge.getTitle().replaceAll("[^a-zA-Z0-9]", "_");
 Folder folder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, folderTitle);
 %>
+<portlet:renderURL var="farmerProfile">
+    <portlet:param name="jspPage" value="/farmerProfile.jsp" />
+    <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+</portlet:renderURL>
 
 <portlet:renderURL var="requestParticipationURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/requestParticipation.jsp" />
@@ -67,7 +71,7 @@ Folder folder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, fo
    	   	<div class="row">
 	   	   	   <div class="col-12 col-md-12">
 		       		<div class="pb-2">     
-				       <span><b>Posted by : </b><%=challenge.getUserName()%></span>
+				       <span><b>Posted by : </b><a href="<%=farmerProfile%>"><%=challenge.getUserName()%></a></span>
 				       <br>
 				       <span><b>Created on : </b><%=formatter.format(challenge.getCreateDate()) %></span>
 				       <p></p>    

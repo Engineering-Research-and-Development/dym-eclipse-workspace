@@ -1,5 +1,8 @@
 <%@ include file="/init.jsp" %>
 
+<%
+String redirectTo = request.getParameter("redirectTo");
+%>
 <style>
 	.aui .navbar .navbar-inner {
     	min-height: 67px;
@@ -63,7 +66,7 @@
 			 	 <portlet:renderURL var="challengesURL">
 						<portlet:param name="jspPage" value="/challenges.jsp"/>
 				</portlet:renderURL>
-			    <a href="<%=challengesURL%>" class="newChallenge"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> <span class="co-title dark">Farmer's Profile</span></a>   
+			    <a href="<%=redirectTo%>" class="newChallenge"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> <span class="co-title dark">Farmer's Profile</span></a>   
 			</div>
 		 </div>	 
 	</div>

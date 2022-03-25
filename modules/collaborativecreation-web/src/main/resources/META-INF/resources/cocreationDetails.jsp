@@ -13,6 +13,7 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 
 <portlet:renderURL var="farmerProfile">
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
+    <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
 <portlet:renderURL var="addMilestoneURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/addMilestone.jsp" />
@@ -37,6 +38,12 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 </portlet:renderURL>
 <portlet:renderURL var="addToDoURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/addToDo.jsp" />
+    <portlet:param name="challengeId" value="<%=String.valueOf(ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getChallengeId())%>"/>
+    <portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
+    <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+</portlet:renderURL>
+<portlet:renderURL var="addQuestionFeedbackURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+    <portlet:param name="jspPage" value="/addQuestionFeedback.jsp" />
     <portlet:param name="challengeId" value="<%=String.valueOf(ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getChallengeId())%>"/>
     <portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
     <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
@@ -156,8 +163,7 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 			    <input type="file" id="uploadedFile" name="uploadedFile" style="visibility:hidden;" multiple="multiple" accept="image/*, .xlsx, .xls, .doc, .docx, .ppt, .pptx, .txt, .pdf" onchange="javascript:updateFileList()"/>
 	       </div>    	
 		   <h3 class="sheet-subtitle"></h3>
-		   <div id="products" class="row view-group">
-		   						
+		   <div id="products" class="row view-group">			
 			        <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 			            <div class="thumbnail card">
 			                <div class="caption card-body">
@@ -193,32 +199,56 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 			                </div>
 			            </div>
 			         </div>   
-		         
-		         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
-		            <div class="thumbnail card">
-		                <div class="caption card-body">
-		                    <h3 class="co-title">My To-do's</h3>
-						    <div class="col-12 p0 mb-2">
-		                    </div>
-		                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
-		                        My To Do 1...</p>
-		                    <hr>
-		                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
-		                        My To Do 2...</p>
-		                    <hr>
-		                    <div class="row">
-		                        <div class="col-12">
-		                            <aui:button-row>
-							  			<div id="aui_popup_mytodos_click">
-							       			<aui:button type="button" value="Add To Do" cssClass="btn-outline-info"></aui:button>
-							   			</div>
-							   			<div id="aui_popup_mytodos_content" ></div>
-									</aui:button-row>  
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		         </div>   
+			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
+			            <div class="thumbnail card">
+			                <div class="caption card-body">
+			                    <h3 class="co-title">My To-do's</h3>
+							    <div class="col-12 p0 mb-2">
+			                    </div>
+			                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
+			                        Send e-mail</p>
+			                    <hr>
+			                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
+			                        Schedule meeting</p>
+			                    <hr>
+			                    <div class="row">
+			                        <div class="col-12">
+			                            <aui:button-row>
+								  			<div id="aui_popup_mytodos_click">
+								       			<aui:button type="button" value="Add To Do" cssClass="btn-outline-info"></aui:button>
+								   			</div>
+								   			<div id="aui_popup_mytodos_content" ></div>
+										</aui:button-row>  
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			         </div>
+			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
+			            <div class="thumbnail card">
+			                <div class="caption card-body">
+			                    <h3 class="co-title">Questions and Feedback</h3>
+							    <div class="col-12 p0 mb-2">
+			                    </div>
+			                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
+			                        Would it be possible to have some clarification ?</p>
+			                    <hr>
+			                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
+			                        We organize a call as soon as possible.</p>
+			                    <hr>
+			                    <div class="row">
+			                        <div class="col-12">
+			                            <aui:button-row>
+								  			<div id="aui_popup_questionsFeedbacks_click">
+								       			<aui:button type="button" value="Add Question or Feedback" cssClass="btn-outline-info"></aui:button>
+								   			</div>
+								   			<div id="aui_popup_questionsFeedbacks_content" ></div>
+										</aui:button-row>  
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			         </div>   
 		   </div>					   				   
 		   <h3 class="sheet-subtitle"></h3>	
 		   <div class="col-12 col-md-12">
@@ -305,5 +335,27 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 		).render();
 		popUpWindow.show(popUpWindow);
 		popUpWindow.titleNode.html("Add To Do");
+	});
+	
+	A.one("#aui_popup_questionsFeedbacks_click").on('click',function(event){
+		var popUpWindow=Liferay.Util.Window.getWindow(
+			{
+				dialog: {
+					centered: true,
+					constrain2view: true,					
+					modal: true,
+					resizable: false,
+					width: 500
+				}
+			}
+		).plug(
+			A.Plugin.DialogIframe,
+			{
+				autoLoad: true,
+				uri:"<%=addQuestionFeedbackURL.toString()%>"
+			}
+		).render();
+		popUpWindow.show(popUpWindow);
+		popUpWindow.titleNode.html("Add Question or Feedback");
 	});
 </aui:script>

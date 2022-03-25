@@ -24,6 +24,7 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 
 <portlet:renderURL var="farmerProfile">
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
+    <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
 
 <liferay-ui:success key="actionSuccess" message="Operation performed"/>

@@ -17,17 +17,14 @@
 		        <span>In this section of the <b>SOCS Platform</b>, farmers and technology providers can collaborate</span>
 		        <span>to co-ceate innovative technology solutions to improve farming.</span>
 		        <p></p>
-		        <span>Under <b>needs</b> you can find a list of needs that farmers experience on their farms.</span>
-		        <span>You can browse through the list of existing needs and engage in conversations with farmers that have experienced similar needs.</span>
+		        <span>Under <b>challenges</b> you can find a list of contests : </span>
+		        <span>they are a call for action for technology developers and farmers to <b>co-create a solution</b>.</span>
 		        <p></p>
-		        <span>You can upvote needs to express importance for this specific need.</span>
-		        <span>If you want to stay up-to-date about a need, you can <b>follow</b> it by pressing the <b>star</b> icon in the top-left corner.</span>
-		        <span>If you want to post your own need, press on <b>post new need</b>.</span>
+		        <span>You can upvote to express importance for a specific challenge.</span>
+		        <span>If you want to stay up-to-date about a challenge, you can <b>follow</b> it.</span>
+		        <span>If you want to post your own challenge, press on <b>post new challenge</b>.</span>
 		        <p></p>
-		        <span>If a need gets enough backing from the community in the form of upvotes or followers, a need can be promoted to a <b>challenge</b>.</span>
-		        <span>Challenges are a call for action for technology developers and farmers to <b>co-create a solution</b>.</span>
-		        <p></p>
-		        <span>Under <b>my co-creations</b> you can find all the needs that you follow and all the challenges that you are part of.</span>
+		        <span>Under <b>co-creations</b> you can find all the co-creations you belong to.</span>
 		        <p></p>
 		    </div>
 		</div>
