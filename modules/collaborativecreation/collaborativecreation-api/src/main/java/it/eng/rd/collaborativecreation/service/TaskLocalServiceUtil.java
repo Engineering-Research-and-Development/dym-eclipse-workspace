@@ -44,6 +44,15 @@ public class TaskLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>it.eng.rd.collaborativecreation.service.impl.TaskLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static Task addTask(
+			long cocreationId, long userId, String description,
+			java.util.Date expirationDate,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().addTask(
+			cocreationId, userId, description, expirationDate, serviceContext);
+	}
 
 	/**
 	 * Adds the task to the database. Also notifies the appropriate model listeners.
@@ -254,6 +263,13 @@ public class TaskLocalServiceUtil {
 	 */
 	public static List<Task> getTasks(int start, int end) {
 		return getService().getTasks(start, end);
+	}
+
+	public static List<Task> getTasksByCocreationId(
+			long cocreationId, long userId)
+		throws PortalException {
+
+		return getService().getTasksByCocreationId(cocreationId, userId);
 	}
 
 	/**

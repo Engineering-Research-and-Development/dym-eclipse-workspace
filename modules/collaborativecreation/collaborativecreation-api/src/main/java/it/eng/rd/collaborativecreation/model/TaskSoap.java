@@ -17,6 +17,7 @@ package it.eng.rd.collaborativecreation.model;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,8 +35,10 @@ public class TaskSoap implements Serializable {
 
 		soapModel.setMvccVersion(model.getMvccVersion());
 		soapModel.setTaskId(model.getTaskId());
+		soapModel.setUserId(model.getUserId());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setCocreationId(model.getCocreationId());
+		soapModel.setExpirationDate(model.getExpirationDate());
 
 		return soapModel;
 	}
@@ -104,6 +107,14 @@ public class TaskSoap implements Serializable {
 		_taskId = taskId;
 	}
 
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
 	public String getDescription() {
 		return _description;
 	}
@@ -120,9 +131,19 @@ public class TaskSoap implements Serializable {
 		_cocreationId = cocreationId;
 	}
 
+	public Date getExpirationDate() {
+		return _expirationDate;
+	}
+
+	public void setExpirationDate(Date expirationDate) {
+		_expirationDate = expirationDate;
+	}
+
 	private long _mvccVersion;
 	private long _taskId;
+	private long _userId;
 	private String _description;
 	private long _cocreationId;
+	private Date _expirationDate;
 
 }

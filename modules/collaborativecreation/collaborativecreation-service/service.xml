@@ -229,13 +229,19 @@
         <column name="taskId" type="long" primary="true"></column>
         
         <!-- Entity fields -->
+        <column name="userId" type="long"></column>
         <column name="description" type="String"></column>
         <column name="cocreationId" type="long"></column>
+        <column name="expirationDate" type="Date"></column>
         <order>
             <order-column name="description" order-by="desc"></order-column>
         </order>
         <finder name="Task" return-type="Collection">
             <finder-column name="taskId"></finder-column>
+        </finder>
+        <finder name="Cocreation" return-type="Collection">
+            <finder-column name="userId"></finder-column>
+            <finder-column name="cocreationId"></finder-column>
         </finder>
     </entity>
     

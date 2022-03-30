@@ -17,6 +17,7 @@ package it.eng.rd.collaborativecreation.model;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.wrapper.BaseModelWrapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +43,10 @@ public class TaskWrapper
 
 		attributes.put("mvccVersion", getMvccVersion());
 		attributes.put("taskId", getTaskId());
+		attributes.put("userId", getUserId());
 		attributes.put("description", getDescription());
 		attributes.put("cocreationId", getCocreationId());
+		attributes.put("expirationDate", getExpirationDate());
 
 		return attributes;
 	}
@@ -62,6 +65,12 @@ public class TaskWrapper
 			setTaskId(taskId);
 		}
 
+		Long userId = (Long)attributes.get("userId");
+
+		if (userId != null) {
+			setUserId(userId);
+		}
+
 		String description = (String)attributes.get("description");
 
 		if (description != null) {
@@ -72,6 +81,12 @@ public class TaskWrapper
 
 		if (cocreationId != null) {
 			setCocreationId(cocreationId);
+		}
+
+		Date expirationDate = (Date)attributes.get("expirationDate");
+
+		if (expirationDate != null) {
+			setExpirationDate(expirationDate);
 		}
 	}
 
@@ -93,6 +108,16 @@ public class TaskWrapper
 	@Override
 	public String getDescription() {
 		return model.getDescription();
+	}
+
+	/**
+	 * Returns the expiration date of this task.
+	 *
+	 * @return the expiration date of this task
+	 */
+	@Override
+	public Date getExpirationDate() {
+		return model.getExpirationDate();
 	}
 
 	/**
@@ -125,6 +150,26 @@ public class TaskWrapper
 		return model.getTaskId();
 	}
 
+	/**
+	 * Returns the user ID of this task.
+	 *
+	 * @return the user ID of this task
+	 */
+	@Override
+	public long getUserId() {
+		return model.getUserId();
+	}
+
+	/**
+	 * Returns the user uuid of this task.
+	 *
+	 * @return the user uuid of this task
+	 */
+	@Override
+	public String getUserUuid() {
+		return model.getUserUuid();
+	}
+
 	@Override
 	public void persist() {
 		model.persist();
@@ -148,6 +193,16 @@ public class TaskWrapper
 	@Override
 	public void setDescription(String description) {
 		model.setDescription(description);
+	}
+
+	/**
+	 * Sets the expiration date of this task.
+	 *
+	 * @param expirationDate the expiration date of this task
+	 */
+	@Override
+	public void setExpirationDate(Date expirationDate) {
+		model.setExpirationDate(expirationDate);
 	}
 
 	/**
@@ -178,6 +233,26 @@ public class TaskWrapper
 	@Override
 	public void setTaskId(long taskId) {
 		model.setTaskId(taskId);
+	}
+
+	/**
+	 * Sets the user ID of this task.
+	 *
+	 * @param userId the user ID of this task
+	 */
+	@Override
+	public void setUserId(long userId) {
+		model.setUserId(userId);
+	}
+
+	/**
+	 * Sets the user uuid of this task.
+	 *
+	 * @param userUuid the user uuid of this task
+	 */
+	@Override
+	public void setUserUuid(String userUuid) {
+		model.setUserUuid(userUuid);
 	}
 
 	@Override

@@ -15,7 +15,23 @@
 package it.eng.rd.collaborativecreation.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.ServiceContext;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import it.eng.rd.collaborativecreation.model.Cocreation;
+import it.eng.rd.collaborativecreation.model.Cocreator;
+import it.eng.rd.collaborativecreation.model.Task;
+import it.eng.rd.collaborativecreation.service.CocreationLocalServiceUtil;
+import it.eng.rd.collaborativecreation.service.CocreatorLocalServiceUtil;
 import it.eng.rd.collaborativecreation.service.base.TaskLocalServiceBaseImpl;
 
 import org.osgi.service.component.annotations.Component;
@@ -39,9 +55,45 @@ import org.osgi.service.component.annotations.Component;
 )
 public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Use <code>it.eng.rd.collaborativecreation.service.TaskLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>it.eng.rd.collaborativecreation.service.TaskLocalServiceUtil</code>.
-	 */
+	@Indexable(type = IndexableType.REINDEX)
+	public Task addTask(
+			long cocreationId,
+			long userId,
+			String description,
+			Date expirationDate,
+			ServiceContext serviceContext
+	)
+		throws PortalException {
+		
+		_log.info("TaskLocalServiceImpl - addTask method");
+
+		long taskId = counterLocalService.increment();
+
+		Task task = taskPersistence.create(taskId);
+		task.setCocreationId(cocreationId);
+		task.setUserId(userId);
+		task.setDescription(description);
+		task.setExpirationDate(expirationDate);
+		
+		_log.info("userId: " +userId);
+		_log.info("cocreationId: " +cocreationId);
+		_log.info("description: " +description);
+		_log.info("expirationDate: " +expirationDate);
+		
+		task = taskPersistence.update(task);
+		
+		return task;
+	}
+	
+	
+	public List<Task> getTasksByCocreationId(long cocreationId, long userId) throws PortalException {
+		_log.info("TaskLocalServiceImpl - getTasksByCocreationId method");
+		_log.info("cocreationId "+cocreationId);
+		_log.info("userId "+userId);
+	  
+		return taskPersistence.findByCocreation(userId, cocreationId);
+	}
+	 
+	
+	private static final Log _log = LogFactoryUtil.getLog(TaskLocalServiceImpl.class);
 }

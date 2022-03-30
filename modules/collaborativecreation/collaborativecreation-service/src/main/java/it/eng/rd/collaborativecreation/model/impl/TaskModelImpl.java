@@ -18,11 +18,14 @@ import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
@@ -39,6 +42,7 @@ import java.sql.Types;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -69,7 +73,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 	public static final Object[][] TABLE_COLUMNS = {
 		{"mvccVersion", Types.BIGINT}, {"taskId", Types.BIGINT},
-		{"description", Types.VARCHAR}, {"cocreationId", Types.BIGINT}
+		{"userId", Types.BIGINT}, {"description", Types.VARCHAR},
+		{"cocreationId", Types.BIGINT}, {"expirationDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -78,12 +83,14 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("taskId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("cocreationId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("expirationDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table COCREATION_Task (mvccVersion LONG default 0 not null,taskId LONG not null primary key,description VARCHAR(75) null,cocreationId LONG)";
+		"create table COCREATION_Task (mvccVersion LONG default 0 not null,taskId LONG not null primary key,userId LONG,description VARCHAR(75) null,cocreationId LONG,expirationDate DATE null)";
 
 	public static final String TABLE_SQL_DROP = "drop table COCREATION_Task";
 
@@ -103,14 +110,26 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long TASKID_COLUMN_BITMASK = 1L;
+	public static final long COCREATIONID_COLUMN_BITMASK = 1L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long TASKID_COLUMN_BITMASK = 2L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long USERID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long DESCRIPTION_COLUMN_BITMASK = 2L;
+	public static final long DESCRIPTION_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -143,8 +162,10 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		model.setMvccVersion(soapModel.getMvccVersion());
 		model.setTaskId(soapModel.getTaskId());
+		model.setUserId(soapModel.getUserId());
 		model.setDescription(soapModel.getDescription());
 		model.setCocreationId(soapModel.getCocreationId());
+		model.setExpirationDate(soapModel.getExpirationDate());
 
 		return model;
 	}
@@ -295,12 +316,18 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		attributeGetterFunctions.put("taskId", Task::getTaskId);
 		attributeSetterBiConsumers.put(
 			"taskId", (BiConsumer<Task, Long>)Task::setTaskId);
+		attributeGetterFunctions.put("userId", Task::getUserId);
+		attributeSetterBiConsumers.put(
+			"userId", (BiConsumer<Task, Long>)Task::setUserId);
 		attributeGetterFunctions.put("description", Task::getDescription);
 		attributeSetterBiConsumers.put(
 			"description", (BiConsumer<Task, String>)Task::setDescription);
 		attributeGetterFunctions.put("cocreationId", Task::getCocreationId);
 		attributeSetterBiConsumers.put(
 			"cocreationId", (BiConsumer<Task, Long>)Task::setCocreationId);
+		attributeGetterFunctions.put("expirationDate", Task::getExpirationDate);
+		attributeSetterBiConsumers.put(
+			"expirationDate", (BiConsumer<Task, Date>)Task::setExpirationDate);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -349,6 +376,46 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 	@JSON
 	@Override
+	public long getUserId() {
+		return _userId;
+	}
+
+	@Override
+	public void setUserId(long userId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_userId = userId;
+	}
+
+	@Override
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException portalException) {
+			return "";
+		}
+	}
+
+	@Override
+	public void setUserUuid(String userUuid) {
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalUserId() {
+		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("userId"));
+	}
+
+	@JSON
+	@Override
 	public String getDescription() {
 		if (_description == null) {
 			return "";
@@ -380,6 +447,31 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		}
 
 		_cocreationId = cocreationId;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalCocreationId() {
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("cocreationId"));
+	}
+
+	@JSON
+	@Override
+	public Date getExpirationDate() {
+		return _expirationDate;
+	}
+
+	@Override
+	public void setExpirationDate(Date expirationDate) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_expirationDate = expirationDate;
 	}
 
 	public long getColumnBitmask() {
@@ -438,8 +530,10 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		taskImpl.setMvccVersion(getMvccVersion());
 		taskImpl.setTaskId(getTaskId());
+		taskImpl.setUserId(getUserId());
 		taskImpl.setDescription(getDescription());
 		taskImpl.setCocreationId(getCocreationId());
+		taskImpl.setExpirationDate(getExpirationDate());
 
 		taskImpl.resetOriginalValues();
 
@@ -521,6 +615,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		taskCacheModel.taskId = getTaskId();
 
+		taskCacheModel.userId = getUserId();
+
 		taskCacheModel.description = getDescription();
 
 		String description = taskCacheModel.description;
@@ -530,6 +626,15 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		}
 
 		taskCacheModel.cocreationId = getCocreationId();
+
+		Date expirationDate = getExpirationDate();
+
+		if (expirationDate != null) {
+			taskCacheModel.expirationDate = expirationDate.getTime();
+		}
+		else {
+			taskCacheModel.expirationDate = Long.MIN_VALUE;
+		}
 
 		return taskCacheModel;
 	}
@@ -604,8 +709,10 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 	private long _mvccVersion;
 	private long _taskId;
+	private long _userId;
 	private String _description;
 	private long _cocreationId;
+	private Date _expirationDate;
 
 	public <T> T getColumnValue(String columnName) {
 		Function<Task, Object> function = _attributeGetterFunctions.get(
@@ -636,8 +743,10 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		_columnOriginalValues.put("mvccVersion", _mvccVersion);
 		_columnOriginalValues.put("taskId", _taskId);
+		_columnOriginalValues.put("userId", _userId);
 		_columnOriginalValues.put("description", _description);
 		_columnOriginalValues.put("cocreationId", _cocreationId);
+		_columnOriginalValues.put("expirationDate", _expirationDate);
 	}
 
 	private transient Map<String, Object> _columnOriginalValues;
@@ -655,9 +764,13 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		columnBitmasks.put("taskId", 2L);
 
-		columnBitmasks.put("description", 4L);
+		columnBitmasks.put("userId", 4L);
 
-		columnBitmasks.put("cocreationId", 8L);
+		columnBitmasks.put("description", 8L);
+
+		columnBitmasks.put("cocreationId", 16L);
+
+		columnBitmasks.put("expirationDate", 32L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

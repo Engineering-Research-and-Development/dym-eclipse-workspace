@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing Task in entity cache.
  *
@@ -75,16 +77,20 @@ public class TaskCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
 		sb.append(", taskId=");
 		sb.append(taskId);
+		sb.append(", userId=");
+		sb.append(userId);
 		sb.append(", description=");
 		sb.append(description);
 		sb.append(", cocreationId=");
 		sb.append(cocreationId);
+		sb.append(", expirationDate=");
+		sb.append(expirationDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -96,6 +102,7 @@ public class TaskCacheModel
 
 		taskImpl.setMvccVersion(mvccVersion);
 		taskImpl.setTaskId(taskId);
+		taskImpl.setUserId(userId);
 
 		if (description == null) {
 			taskImpl.setDescription("");
@@ -105,6 +112,13 @@ public class TaskCacheModel
 		}
 
 		taskImpl.setCocreationId(cocreationId);
+
+		if (expirationDate == Long.MIN_VALUE) {
+			taskImpl.setExpirationDate(null);
+		}
+		else {
+			taskImpl.setExpirationDate(new Date(expirationDate));
+		}
 
 		taskImpl.resetOriginalValues();
 
@@ -116,9 +130,12 @@ public class TaskCacheModel
 		mvccVersion = objectInput.readLong();
 
 		taskId = objectInput.readLong();
+
+		userId = objectInput.readLong();
 		description = objectInput.readUTF();
 
 		cocreationId = objectInput.readLong();
+		expirationDate = objectInput.readLong();
 	}
 
 	@Override
@@ -126,6 +143,8 @@ public class TaskCacheModel
 		objectOutput.writeLong(mvccVersion);
 
 		objectOutput.writeLong(taskId);
+
+		objectOutput.writeLong(userId);
 
 		if (description == null) {
 			objectOutput.writeUTF("");
@@ -135,11 +154,14 @@ public class TaskCacheModel
 		}
 
 		objectOutput.writeLong(cocreationId);
+		objectOutput.writeLong(expirationDate);
 	}
 
 	public long mvccVersion;
 	public long taskId;
+	public long userId;
 	public String description;
 	public long cocreationId;
+	public long expirationDate;
 
 }

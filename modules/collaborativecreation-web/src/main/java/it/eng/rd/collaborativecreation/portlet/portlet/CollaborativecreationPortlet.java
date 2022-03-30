@@ -68,6 +68,7 @@ import it.eng.rd.collaborativecreation.model.Activity;
 import it.eng.rd.collaborativecreation.model.Challenge;
 import it.eng.rd.collaborativecreation.model.Cocreation;
 import it.eng.rd.collaborativecreation.model.Cocreator;
+import it.eng.rd.collaborativecreation.model.Task;
 import it.eng.rd.collaborativecreation.portlet.constants.CollaborativecreationPortletKeys;
 import it.eng.rd.collaborativecreation.service.ActivityLocalService;
 import it.eng.rd.collaborativecreation.service.ActivityLocalServiceUtil;
@@ -78,6 +79,7 @@ import it.eng.rd.collaborativecreation.service.CocreationLocalServiceUtil;
 import it.eng.rd.collaborativecreation.service.CocreatorLocalServiceUtil;
 import it.eng.rd.collaborativecreation.service.HashtagLocalServiceUtil;
 import it.eng.rd.collaborativecreation.service.LocationLocalServiceUtil;
+import it.eng.rd.collaborativecreation.service.TaskLocalServiceUtil;
 
 /**
  * @author giacal
@@ -458,6 +460,39 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    } catch (Exception e) {
 	    	SessionErrors.add(request, "actionError");
 	        response.setRenderParameter("mvcPath", "/addMilestone.jsp");
+	    }
+	}
+	
+	@ProcessAction(name = "addToDo")
+	public void addToDo(ActionRequest request, ActionResponse response)
+	        throws PortalException, SystemException, ParseException {
+
+	    ServiceContext serviceContext = ServiceContextFactory.getInstance(Challenge.class.getName(), request);
+	    UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(request);
+	    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+	    
+	    String redirectTo = ParamUtil.getString(request, "redirectTo");
+	    long challengeId = ParamUtil.getLong(request, "challengeId");
+	    long cocreationId = ParamUtil.getLong(request, "cocreationId");
+	    String description = ParamUtil.getString(request, "description");
+	    Date expirationDate = new SimpleDateFormat("dd/MM/yyyy").parse(uploadRequest.getParameter("expirationDate"));	
+	    
+	    _log.info("CollaborativecreationPortlet - addToDo");
+        _log.info("description: "+description);
+        _log.info("expirationDate: "+expirationDate);
+        
+	    try {
+			  TaskLocalServiceUtil.addTask(cocreationId, serviceContext.getUserId(), description, expirationDate, serviceContext);   	
+			  sendCocreationNotification("Dear user", "Have a nice day!", "You have a to-do for the co-creation "+ CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle() + ": " + CocreationLocalServiceUtil.getCocreation(cocreationId).getDescription(),
+					  serviceContext.getUserId(), serviceContext.getUserId(),
+					  UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(),
+					  cocreationId, 
+		    		  ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle(), ChallengeLocalServiceUtil.getChallenge(challengeId).getDesiredOutcome(), serviceContext);
+			  SessionMessages.add(request, "actionSuccess");
+	          response.sendRedirect(redirectTo);
+	    } catch (Exception e) {
+	    	SessionErrors.add(request, "actionError");
+	        response.setRenderParameter("mvcPath", "/addToDo.jsp");
 	    }
 	}
 	

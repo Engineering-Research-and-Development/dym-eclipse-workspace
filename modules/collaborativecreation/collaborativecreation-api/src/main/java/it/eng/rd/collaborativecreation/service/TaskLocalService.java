@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -34,6 +35,7 @@ import it.eng.rd.collaborativecreation.model.Task;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -61,6 +63,11 @@ public interface TaskLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>it.eng.rd.collaborativecreation.service.impl.TaskLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the task local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link TaskLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	@Indexable(type = IndexableType.REINDEX)
+	public Task addTask(
+			long cocreationId, long userId, String description,
+			Date expirationDate, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	 * Adds the task to the database. Also notifies the appropriate model listeners.
@@ -237,6 +244,10 @@ public interface TaskLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Task> getTasks(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Task> getTasksByCocreationId(long cocreationId, long userId)
+		throws PortalException;
 
 	/**
 	 * Returns the number of tasks.

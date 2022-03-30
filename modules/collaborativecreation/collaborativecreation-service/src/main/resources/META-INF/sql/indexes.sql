@@ -27,3 +27,6 @@ create index IX_DCAF69BD on COCREATION_Hashtag (name[$COLUMN_LENGTH:75$]);
 
 create index IX_6FE50A9E on COCREATION_Location (challengeId, name[$COLUMN_LENGTH:75$]);
 create index IX_5BEB0C4E on COCREATION_Location (name[$COLUMN_LENGTH:75$]);
+
+create index IX_A903DF99 on COCREATION_Task (cocreationId);
+create index IX_18357B53 on COCREATION_Task (userId, cocreationId);

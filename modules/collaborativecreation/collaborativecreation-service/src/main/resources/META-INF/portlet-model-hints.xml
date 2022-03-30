@@ -107,7 +107,9 @@
 	<model name="it.eng.rd.collaborativecreation.model.Task">
 		<field name="mvccVersion" type="long" />
 		<field name="taskId" type="long" />
+		<field name="userId" type="long" />
 		<field name="description" type="String" />
 		<field name="cocreationId" type="long" />
+		<field name="expirationDate" type="Date" />
 	</model>
 </model-hints>

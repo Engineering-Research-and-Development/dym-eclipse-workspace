@@ -30,6 +30,17 @@ public class TaskLocalServiceWrapper
 		_taskLocalService = taskLocalService;
 	}
 
+	@Override
+	public it.eng.rd.collaborativecreation.model.Task addTask(
+			long cocreationId, long userId, String description,
+			java.util.Date expirationDate,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _taskLocalService.addTask(
+			cocreationId, userId, description, expirationDate, serviceContext);
+	}
+
 	/**
 	 * Adds the task to the database. Also notifies the appropriate model listeners.
 	 *
@@ -274,6 +285,14 @@ public class TaskLocalServiceWrapper
 		int start, int end) {
 
 		return _taskLocalService.getTasks(start, end);
+	}
+
+	@Override
+	public java.util.List<it.eng.rd.collaborativecreation.model.Task>
+			getTasksByCocreationId(long cocreationId, long userId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _taskLocalService.getTasksByCocreationId(cocreationId, userId);
 	}
 
 	/**

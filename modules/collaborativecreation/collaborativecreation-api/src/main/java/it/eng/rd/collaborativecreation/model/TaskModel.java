@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.MVCCModel;
 
+import java.util.Date;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -85,6 +87,34 @@ public interface TaskModel extends BaseModel<Task>, MVCCModel {
 	public void setTaskId(long taskId);
 
 	/**
+	 * Returns the user ID of this task.
+	 *
+	 * @return the user ID of this task
+	 */
+	public long getUserId();
+
+	/**
+	 * Sets the user ID of this task.
+	 *
+	 * @param userId the user ID of this task
+	 */
+	public void setUserId(long userId);
+
+	/**
+	 * Returns the user uuid of this task.
+	 *
+	 * @return the user uuid of this task
+	 */
+	public String getUserUuid();
+
+	/**
+	 * Sets the user uuid of this task.
+	 *
+	 * @param userUuid the user uuid of this task
+	 */
+	public void setUserUuid(String userUuid);
+
+	/**
 	 * Returns the description of this task.
 	 *
 	 * @return the description of this task
@@ -112,5 +142,19 @@ public interface TaskModel extends BaseModel<Task>, MVCCModel {
 	 * @param cocreationId the cocreation ID of this task
 	 */
 	public void setCocreationId(long cocreationId);
+
+	/**
+	 * Returns the expiration date of this task.
+	 *
+	 * @return the expiration date of this task
+	 */
+	public Date getExpirationDate();
+
+	/**
+	 * Sets the expiration date of this task.
+	 *
+	 * @param expirationDate the expiration date of this task
+	 */
+	public void setExpirationDate(Date expirationDate);
 
 }

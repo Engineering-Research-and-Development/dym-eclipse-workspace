@@ -9,6 +9,7 @@ Cocreation cocreation = CocreationLocalServiceUtil.getCocreation(Long.parseLong(
 String folderTitle = challengeTitle.replaceAll("[^a-zA-Z0-9]", "_");
 Folder folder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, folderTitle);
 List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId(Long.parseLong(cocreationId));
+List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(cocreationId), user.getUserId());
 %>
 
 <portlet:renderURL var="farmerProfile">
@@ -199,23 +200,26 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 			                </div>
 			            </div>
 			         </div>   
-			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
+			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 			            <div class="thumbnail card">
 			                <div class="caption card-body">
-			                    <h3 class="co-title">My To-do's</h3>
+			                    <h3 class="co-title">My To-Do's</h3>
 							    <div class="col-12 p0 mb-2">
 			                    </div>
-			                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
-			                        Send e-mail</p>
-			                    <hr>
-			                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
-			                        Schedule meeting</p>
-			                    <hr>
+			                    <%
+								for (Task toDo : toDos) {
+								%>
+				                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card">
+				                    <h3 class="sheet-subtitle"><%=toDo.getDescription()%><br>Expire : <%=formatter.format(toDo.getExpirationDate())%></h3>    
+				                    </p>
+				                <% 
+								}
+								%>
 			                    <div class="row">
 			                        <div class="col-12">
 			                            <aui:button-row>
 								  			<div id="aui_popup_mytodos_click">
-								       			<aui:button type="button" value="Add To Do" cssClass="btn-outline-info"></aui:button>
+								       			<aui:button type="button" value="Add To-Do" cssClass="btn-outline-info"></aui:button>
 								   			</div>
 								   			<div id="aui_popup_mytodos_content" ></div>
 										</aui:button-row>  
@@ -223,7 +227,7 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 			                    </div>
 			                </div>
 			            </div>
-			         </div>
+			         </div>   
 			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
 			            <div class="thumbnail card">
 			                <div class="caption card-body">
@@ -334,7 +338,7 @@ List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId
 			}
 		).render();
 		popUpWindow.show(popUpWindow);
-		popUpWindow.titleNode.html("Add To Do");
+		popUpWindow.titleNode.html("Add To-Do");
 	});
 	
 	A.one("#aui_popup_questionsFeedbacks_click").on('click',function(event){

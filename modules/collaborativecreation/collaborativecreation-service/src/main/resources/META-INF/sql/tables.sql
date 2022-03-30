@@ -102,6 +102,8 @@ create table COCREATION_Question (
 create table COCREATION_Task (
 	mvccVersion LONG default 0 not null,
 	taskId LONG not null primary key,
+	userId LONG,
 	description VARCHAR(75) null,
-	cocreationId LONG
+	cocreationId LONG,
+	expirationDate DATE null
 );

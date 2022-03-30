@@ -29,8 +29,8 @@ User currentUser = themeDisplay.getUser();
 	             	<aui:input label="Description" name="description" id="description" type="text" required='true'/>
 	             </div>
 	             <div>  
-		  			<label class="control-label">Date</label>
-		  			<input id="date" name="date" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="" required='true'>
+		  			<label class="control-label">Expiration Date</label>
+		  			<input id="expirationDate" name="expirationDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="" required='true'>
 			     </div> 
 		    </div>            
 		</aui:fieldset>
