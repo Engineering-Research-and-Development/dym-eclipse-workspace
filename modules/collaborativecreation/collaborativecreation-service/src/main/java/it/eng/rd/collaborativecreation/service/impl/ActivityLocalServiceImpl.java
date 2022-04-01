@@ -28,6 +28,7 @@ import java.util.List;
 import org.osgi.service.component.annotations.Component;
 
 import it.eng.rd.collaborativecreation.model.Activity;
+import it.eng.rd.collaborativecreation.model.Challenge;
 import it.eng.rd.collaborativecreation.model.Cocreation;
 import it.eng.rd.collaborativecreation.service.base.ActivityLocalServiceBaseImpl;
 
@@ -77,6 +78,14 @@ public class ActivityLocalServiceImpl extends ActivityLocalServiceBaseImpl {
 		return activity;
 	}
 	
+	public Activity deleteActivity(long activityId) throws PortalException {
+		_log.info("ActivityLocalServiceImpl - deleteActivity method");
+		_log.info("activityId "+activityId);
+
+		Activity activity = activityPersistence.findByPrimaryKey(activityId);
+
+		return deleteActivity(activity);
+	}
 	
 	public List<Activity> getActivitiesByCocreationId(long cocreationId) throws PortalException {
 		_log.info("ActivityLocalServiceImpl - getActivitiesByCocreationId method");

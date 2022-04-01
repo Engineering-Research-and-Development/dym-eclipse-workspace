@@ -58,6 +58,8 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 	<portlet:param name="redirectTo" value="<%=redirectTo%>"/>
 </portlet:actionURL>
 
+<liferay-ui:success key="actionSuccess" message="Operation performed"/>
+<liferay-ui:error key="actionError" message="Operation performed"/>				
 <div id="details">
 	<div class="container-fluid p-0 co-creation">
 	   <div class="row mb-4 border-bottom">
@@ -93,8 +95,9 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 		   Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
 		   while(cocreatorsIt.hasNext()){
 				Cocreator cocreator = cocreatorsIt.next();
+				User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId()); 
 				%>
-      			<span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a></label></span>
+				<span><label class="aui-field-label"><a href="<%=userDisplay.getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
 				<%		
 			}	
 		    %>
@@ -174,16 +177,33 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 			                    <%
 								for (Activity milestone : milestones) {
 								%>
-				                    <p id="desc-"<%=milestone.getActivityId()%> class="card-text group inner list-group-item-text resourse-card">
+									<h3 class="sheet-subtitle"</h3>
+									<liferay-portlet:actionURL name="deleteMilestone" var="deleteMilestoneURL">
+										<portlet:param name="activityId" value="<%=String.valueOf(milestone.getActivityId())%>"/>
+										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+									</liferay-portlet:actionURL>	
+				                    <p id="desc-"<%=milestone.getActivityId()%> class="card-text group inner list-group-item-text resourse-card"></p>
+				                    <p>
 				                    <%
 									for (Cocreator cocreator : CocreatorLocalServiceUtil.getCocreatorsByCocreationId(milestone.getActivityId())) {
 									%>
-				                        <h3 class="sheet-subtitle"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a><br>    
+				                        <h3 class="sheet-subtitle"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a>    
 				                    <% 
 									}
 									%>
-									<%=milestone.getDescription()%><br>Expire : <%=formatter.format(milestone.getExpirationDate())%></h3>
-				                    </p>
+									</p>
+									<br>
+									<p>
+										<%=milestone.getDescription()%>
+									</p>
+							   		<br>
+							   		<p>	
+										Expire : <%=formatter.format(milestone.getExpirationDate())%>
+							   		</p>
+							   		<br>
+							   		<p>
+							   			<aui:button name="deleteMilestone" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteMilestoneURL.toString() +\"'\"%>"/></h3>
+				                    </p>	 	
 				                <% 
 								}
 								%>
@@ -209,8 +229,22 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 			                    <%
 								for (Task toDo : toDos) {
 								%>
-				                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card">
-				                    <h3 class="sheet-subtitle"><%=toDo.getDescription()%><br>Expire : <%=formatter.format(toDo.getExpirationDate())%></h3>    
+									<h3 class="sheet-subtitle"</h3>
+									<liferay-portlet:actionURL name="deleteToDo" var="deleteToDoURL">
+										<portlet:param name="taskId" value="<%=String.valueOf(toDo.getTaskId())%>"/>
+										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+									</liferay-portlet:actionURL>	
+				                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card"></p>
+				                    <p>
+				                    	<h3 class="sheet-subtitle"><%=toDo.getDescription()%>
+				                    </p>
+				                    <br>
+				                    <p>	
+				                    	Expire : <%=formatter.format(toDo.getExpirationDate())%>    
+				                    </p>
+				                    <br>
+							   		<p>
+							   			<aui:button name="deleteToDo" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteToDoURL.toString() +\"'\"%>"/></h3>	
 				                    </p>
 				                <% 
 								}
@@ -233,13 +267,23 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 			                <div class="caption card-body">
 			                    <h3 class="co-title">Questions and Feedback</h3>
 							    <div class="col-12 p0 mb-2">
-			                    </div>
+			          			</div>
+			                    <h3 class="sheet-subtitle"</h3>
 			                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
-			                        Would it be possible to have some clarification ?</p>
-			                    <hr>
+			                        <h3 class="sheet-subtitle">Would it be possible to have some clarification ?
+			                    </p>
+			                    <br>
+							   	<p>
+							   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
+				                </p>
+				                <br>
 			                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
-			                        We organize a call as soon as possible.</p>
-			                    <hr>
+			                        <h3 class="sheet-subtitle">We'll arrange a call as soon as possible.
+			                    </p>
+			                    <br>
+							   	<p>
+							   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
+				                </p>
 			                    <div class="row">
 			                        <div class="col-12">
 			                            <aui:button-row>

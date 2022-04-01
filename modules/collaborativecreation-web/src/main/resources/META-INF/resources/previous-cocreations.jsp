@@ -108,44 +108,6 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 										<portlet:param name="challengeId" value="<%=String.valueOf(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getChallengeId())%>" />
 										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 									</portlet:renderURL>
-								    
-								    <%-- <h3 class="sheet-subtitle"></h3>
-								    <h3 class="co-title"><%=cocreation.getTitle() != "" ?  cocreation.getTitle() : "To be developed"%></h3>
-								    <div class="co-content">
-										<div class="co-info ">
-										    <div class="row mt-2">
-											     <div class="col col-lg-6 col-sm-6 col-6 col-md-6">
-								   				 	<div id="challenge" class="challengesLeft">
-														<span><b><label class="aui-field-label">Challenge</label></b></span> : <span><label class="aui-field-label"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a></label></span>
-									       			</div>
-									       			<div id="postedBy" class="challengesLeft">
-														<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span>
-									       			</div>
-									       			<div id="cocreators" class="challengesLeft">
-												   		<span><b><label class="aui-field-label">Co-creators</label></b></span> : <span>
-							       				  	</div>
-												    <%
-													List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
-													Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
-													while(cocreatorsIt.hasNext()){
-														Cocreator cocreator = cocreatorsIt.next();
-														%>
-										      			<span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a></label></span>
-														<%		
-													}	
-												    %>
-									       			<div id="date" class="challengesLeft">
-														<span><b><label class="aui-field-label">Started on</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(cocreation.getCreateDate())%></label></span>
-									       			</div>
-											     </div>
-										     	 <div class="col col-lg-4 col-sm-4 col-4 col-md-4">
-									         		<a href="<%=viewCocreationDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
-									   		 		<aui:button name="deleteCocreation" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteCocreationURL.toString() +\"'\"%>"/>
-									   		 	</div>	   		 
-										    </div>
-									    </div>
-							     	</div>  --%>
-							     	
 							        <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 							            <div class="thumbnail card">
 							                <div class="caption card-body">
@@ -155,7 +117,7 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 							                        	<span><b><label class="aui-field-label">Challenge</label></b></span> : <span><label class="aui-field-label"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a></label></span>
 							                    	</div>
 							                    	<div id="postedBy" class="challengesLeft">
-							                    		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span>
+							                    		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span>
 							                    	</div>
 							                    	<div id="cocreators" class="challengesLeft">
 							                    		<span><b><label class="aui-field-label">Co-creators</label></b></span> : <span>
@@ -166,7 +128,7 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 													while(cocreatorsIt.hasNext()){
 														Cocreator cocreator = cocreatorsIt.next();
 														%>
-										      			<span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a></label></span>
+										      			<span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
 														<%		
 													}	
 												    %>

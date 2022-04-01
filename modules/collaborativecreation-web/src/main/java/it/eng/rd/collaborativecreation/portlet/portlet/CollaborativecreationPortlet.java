@@ -463,6 +463,39 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    }
 	}
 	
+	@ProcessAction(name = "deleteMilestone")
+	public void deleteMilestone(ActionRequest request, ActionResponse response)
+	        throws PortalException, SystemException, ParseException {
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(Challenge.class.getName(), request);
+		
+		String redirectTo = ParamUtil.getString(request, "redirectTo");
+	    long activityId = ParamUtil.getLong(request, "activityId");
+	    Activity activity = ActivityLocalServiceUtil.getActivity(activityId);
+	    
+	    _log.info("CollaborativecreationPortlet - deleteActivity");
+        _log.info("activityId: "+activityId);
+      
+	    try {
+			List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(activity.getActivityId());
+			Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
+			while(cocreatorsIt.hasNext()){
+				Cocreator cocreator = cocreatorsIt.next();
+				CocreatorLocalServiceUtil.deleteCocreator(cocreator);
+				sendCocreationNotification("Dear user", "Have a nice day!", 
+		    			"The milestone "+ activity.getDescription() + 
+		    			" has been deleted.", cocreator.getUserId(), serviceContext.getUserId(), 
+		    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), activityId, "", "", serviceContext);
+			}
+			ActivityLocalServiceUtil.deleteActivity(activityId);
+	        SessionMessages.add(request, "actionSuccess");
+	        response.sendRedirect(redirectTo);
+	    } catch (Exception e) {
+	    	SessionErrors.add(request, "actionError");
+	        response.setRenderParameter("mvcPath", "/cocreationDetails.jsp");
+	    }
+	}
+	
 	@ProcessAction(name = "addToDo")
 	public void addToDo(ActionRequest request, ActionResponse response)
 	        throws PortalException, SystemException, ParseException {
@@ -493,6 +526,33 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    } catch (Exception e) {
 	    	SessionErrors.add(request, "actionError");
 	        response.setRenderParameter("mvcPath", "/addToDo.jsp");
+	    }
+	}
+	
+	@ProcessAction(name = "deleteToDo")
+	public void deleteToDo(ActionRequest request, ActionResponse response)
+	        throws PortalException, SystemException, ParseException {
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(Challenge.class.getName(), request);
+		
+		String redirectTo = ParamUtil.getString(request, "redirectTo");
+	    long taskId = ParamUtil.getLong(request, "taskId");
+	    Task task = TaskLocalServiceUtil.getTask(taskId);
+	    
+	    _log.info("CollaborativecreationPortlet - deleteTask");
+        _log.info("taskId: "+taskId);
+      
+	    try {
+			sendCocreationNotification("Dear user", "Have a nice day!", 
+	    			"The to-do "+ task.getDescription() + 
+	    			" has been deleted.", serviceContext.getUserId(), serviceContext.getUserId(), 
+	    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), taskId, "", "", serviceContext);
+			TaskLocalServiceUtil.deleteTask(taskId);
+	        SessionMessages.add(request, "actionSuccess");
+	        response.sendRedirect(redirectTo);
+	    } catch (Exception e) {
+	    	SessionErrors.add(request, "actionError");
+	        response.setRenderParameter("mvcPath", "/cocreationDetails.jsp");
 	    }
 	}
 	

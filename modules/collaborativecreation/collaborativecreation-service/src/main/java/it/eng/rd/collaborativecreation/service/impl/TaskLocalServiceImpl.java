@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import it.eng.rd.collaborativecreation.model.Activity;
 import it.eng.rd.collaborativecreation.model.Cocreation;
 import it.eng.rd.collaborativecreation.model.Cocreator;
 import it.eng.rd.collaborativecreation.model.Task;
@@ -85,6 +86,14 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 		return task;
 	}
 	
+	public Task deleteTask(long taskId) throws PortalException {
+		_log.info("TaskLocalServiceImpl - deleteTask method");
+		_log.info("taskId "+taskId);
+
+		Task task = taskPersistence.findByPrimaryKey(taskId);
+
+		return deleteTask(task);
+	}
 	
 	public List<Task> getTasksByCocreationId(long cocreationId, long userId) throws PortalException {
 		_log.info("TaskLocalServiceImpl - getTasksByCocreationId method");

@@ -212,7 +212,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 										    <div class="row mt-2">
 											     <div class="col col-lg-6 col-sm-6 col-6 col-md-6">
 											     	<div id="postedBy" class="challengesLeft">
-											      		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=challenge.getUserName()%></a></label></span>
+											      		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></label></span>
 					       						 	</div>
 					       						 	<div id="date" class="challengesLeft">
 														<span><b><label class="aui-field-label">Created on</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(challenge.getCreateDate()) %></label></span>
@@ -233,7 +233,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 														while(cocreatorsIt.hasNext()){
 															Cocreator cocreator = cocreatorsIt.next();
 															%>
-											      			<span><label class="aui-field-label"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a></label></span>
+											      			<span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
 															<% 		
 														}
 													}	
