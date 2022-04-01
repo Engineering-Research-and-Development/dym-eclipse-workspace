@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
@@ -102,6 +103,11 @@ import it.eng.rd.collaborativecreation.service.TaskLocalServiceUtil;
 	service = Portlet.class
 )
 public class CollaborativecreationPortlet extends MVCPortlet {
+	
+	/*Gestione properties*/
+	private ResourceBundle properties = ResourceBundle.getBundle("portlet");
+	private boolean webNotification = Boolean.parseBoolean(properties.getString("collaborativecreation.webNotification"));
+	private boolean emailNotification = Boolean.parseBoolean(properties.getString("collaborativecreation.emailNotification"));
 	
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -672,9 +678,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         _log.info("challengeTitle: "+challengeTitle);
         _log.info("desiredOutcome: "+desiredOutcome);
 		
-		boolean isDeliver = true;
-	
-		if(isDeliver){
+		if(webNotification){
 			JSONObject notificationEventJSONObject = JSONFactoryUtil.createJSONObject();
 			notificationEventJSONObject.put("title","Co-creation Notification");
 			notificationEventJSONObject.put("text-message",textMessage);
@@ -686,11 +690,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 			notificationEventJSONObject.put("type", "cocreation");
 			UserNotificationEventLocalServiceUtil.addUserNotificationEvent(destinationUderId, CollaborativecreationPortletKeys.COLLABORATIVECREATION, System.currentTimeMillis(), UserNotificationDeliveryConstants.TYPE_WEBSITE, senderUserId, notificationEventJSONObject.toString(), false, serviceContext);
 		}
-	
-		/*NO MAIL*/
-		/* isDeliver = false; */
-		
-		if(isDeliver){
+
+		if(emailNotification){
 			User destinationUser = UserLocalServiceUtil.fetchUser(destinationUderId);
 			User senderUser = UserLocalServiceUtil.fetchUser(senderUserId);
 			
@@ -721,9 +722,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         _log.info("senderUserName: "+senderUserName);
         _log.info("textMessage: "+textMessage);
 		
-		boolean isDeliver = true;
-	
-		if(isDeliver){
+		if(webNotification){
 			JSONObject notificationEventJSONObject = JSONFactoryUtil.createJSONObject();
 			notificationEventJSONObject.put("title","Co-creation Notification");
 			notificationEventJSONObject.put("text-message",textMessage);
@@ -736,10 +735,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 			UserNotificationEventLocalServiceUtil.addUserNotificationEvent(destinationUserId, CollaborativecreationPortletKeys.COLLABORATIVECREATION, System.currentTimeMillis(), UserNotificationDeliveryConstants.TYPE_WEBSITE, senderUserId, notificationEventJSONObject.toString(), false, serviceContext);
 		}
 	
-		/*NO MAIL*/
-		/* isDeliver = false; */
-		
-		if(isDeliver){
+		if(emailNotification){
 			User destinationUser = UserLocalServiceUtil.fetchUser(destinationUserId);
 			User senderUser = UserLocalServiceUtil.fetchUser(senderUserId);
 			
