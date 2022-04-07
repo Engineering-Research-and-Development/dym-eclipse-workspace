@@ -220,10 +220,10 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 					     							<div id="status" class="challengesLeft">
 												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></label></span>
 												    </div> 
-												    <div id="postedBy" class="challengesLeft">
+												    <!-- <div id="postedBy" class="challengesLeft">
 											      		<span><b><label class="aui-field-label">Co-creators</label></b></span> : <span>
-					       						 	</div>
-												    <%
+					       						 	</div> -->
+												    <%-- <%
 												    List<Cocreation> cocreations = CocreationLocalServiceUtil.getCocreationsByChallengeId(challenge.getChallengeId());
 													Iterator<Cocreation> cocreationsIt = cocreations.iterator();
 													while(cocreationsIt.hasNext()){
@@ -237,9 +237,29 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 															<% 		
 														}
 													}	
-												    %>
-											     </div>
-										     	 <div class="col col-lg-4 col-sm-4 col-4 col-md-4">
+												    %> --%>
+												    <div id="tags" class="challengesLeft">
+													    <span><b><label class="aui-field-label">Tags</label></b></span> : <span>	
+											    	  	<%
+														for (Hashtag tag : HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId())) {
+														%>
+															<span><a href="">#<%=tag.getName()%></a></span>	
+														<% 
+														}
+														%>
+													</div> 
+													<div id="categories" class="challengesLeft">
+														<span><b><label class="aui-field-label">Categories</label></b></span> : <span>	
+											    	  	<%
+														for (Category cat : CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId())) {
+														%>
+															<span><a href="">#<%=cat.getName()%></a></span>	
+														<% 
+														}
+														%>
+											     	</div>
+										    	</div>
+										    	<div class="col col-lg-6 col-sm-6 col-6 col-md-6">
 										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
 										   		 	<a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a>
 										   		 	<%if (user != null){
@@ -249,20 +269,10 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 												   		 	</div>
 											   		 	<%}%>
 											   		 <%}%>	
-										   		 </div>	
-										    </div>
-									    </div>
-									    <div id="tags" class="co-tag mb-2">
-									    	  <span><b><label class="aui-field-label">Tags</label></b></span> : <span>	
-									    	  	<%
-												for (Hashtag tag : HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId())) {
-												%>
-													<span><a href="">#<%=tag.getName()%></a></span>	
-												<% 
-												}
-												%>
-			       					    </div>
-						        	</div>
+										   		</div>	
+									    	</div>
+						        		</div>
+						        	</div>	
 						        	<%
 									AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
 						        	Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));

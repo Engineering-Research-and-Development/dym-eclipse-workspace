@@ -7,9 +7,12 @@ String challengeTitle = request.getParameter("challengeTitle").toString();
 String desiredOutcome = request.getParameter("desiredOutcome").toString();
 Cocreation cocreation = CocreationLocalServiceUtil.getCocreation(Long.parseLong(cocreationId));
 String folderTitle = challengeTitle.replaceAll("[^a-zA-Z0-9]", "_");
-Folder folder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, folderTitle);
+Folder cocreationFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, "CO-CREATION");
+Folder challengeFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), cocreationFolder.getFolderId(), folderTitle);
+List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), challengeFolder.getFolderId());
 List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId(Long.parseLong(cocreationId));
 List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(cocreationId), user.getUserId());
+boolean isCocreator = false;
 %>
 
 <portlet:renderURL var="farmerProfile">
@@ -95,7 +98,11 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 		   Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
 		   while(cocreatorsIt.hasNext()){
 				Cocreator cocreator = cocreatorsIt.next();
-				User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId()); 
+				User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId());
+				if (user.getUserId() == cocreator.getUserId()){
+					/*L'utente loggato è uno dei co-creatori*/
+					isCocreator = true;
+				}
 				%>
 				<span><label class="aui-field-label"><a href="<%=userDisplay.getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
 				<%		
@@ -125,10 +132,9 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 					<h3 class="sheet-subtitle">View pictures</h3>
 					<% 
 					String fileURL = "";
-					List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), folder.getFolderId());
 					for (FileEntry file : fileEntries) {    
 						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-						if (file.getMimeType().equalsIgnoreCase("image/jpeg") ){
+						if (file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_") && (isCocreator || isSiteOwner)){
 						%>	
 							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 					 	<%
@@ -141,7 +147,7 @@ List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(co
 					<% 
 					for (FileEntry file : fileEntries) {    
 						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-						if (!file.getMimeType().equalsIgnoreCase("image/jpeg") ){
+						if (!file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_") && (isCocreator || isSiteOwner)){
 						%>	
 							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 					 	<%

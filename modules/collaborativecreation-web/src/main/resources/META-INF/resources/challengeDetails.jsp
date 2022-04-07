@@ -8,7 +8,9 @@ String challengeId = request.getParameter("challengeId").toString();
 Challenge challenge = ChallengeLocalServiceUtil.getChallenge(Long.parseLong(challengeId));
 String participationURL = "";
 String folderTitle = challenge.getTitle().replaceAll("[^a-zA-Z0-9]", "_");
-Folder folder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, folderTitle);
+Folder cocreationFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, "CO-CREATION");
+Folder challengeFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), cocreationFolder.getFolderId(), folderTitle);
+List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), challengeFolder.getFolderId());
 %>
 <portlet:renderURL var="farmerProfile">
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
@@ -188,10 +190,9 @@ Folder folder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, fo
 						<h3 class="sheet-subtitle">View pictures</h3>
 						<% 
 						String fileURL = "";
-						List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), folder.getFolderId());
 						for (FileEntry file : fileEntries) {    
 							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if (file.getMimeType().equalsIgnoreCase("image/jpeg") ){
+							if (file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("CHALLENGE_")){
 							%>	
 								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 						 	<%
@@ -211,7 +212,7 @@ Folder folder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, fo
 						<% 
 						for (FileEntry file : fileEntries) {    
 							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if (!file.getMimeType().equalsIgnoreCase("image/jpeg") ){
+							if (!file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("CHALLENGE_")){
 							%>	
 								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 						 	<%

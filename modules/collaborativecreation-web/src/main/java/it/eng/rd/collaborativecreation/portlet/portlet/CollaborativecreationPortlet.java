@@ -1,6 +1,7 @@
 package it.eng.rd.collaborativecreation.portlet.portlet;
 
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
@@ -170,8 +171,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = title.replaceAll("[^a-zA-Z0-9]", "_");
-	    String folder = folderTitle;
-    	createFolder(request, themeDisplay, folder);
+    	Folder folder = createFolder(request, themeDisplay, folderTitle);
 		fileUpload(themeDisplay, request, files, "CHALLENGE_", "uploadedFile", folder);
     	
 	    _log.info("CollaborativecreationPortlet - addChallenge");
@@ -183,7 +183,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         _log.info("active: "+active);
         
         /*Recupero di immagini e documenti dalla Document Library*/
-		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folder);
+		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folderTitle);
 		Iterator iterator = allFiles.entrySet().iterator();
 	    while (iterator.hasNext()) {
 	        Map.Entry pair = (Map.Entry)iterator.next();
@@ -232,8 +232,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = title.replaceAll("[^a-zA-Z0-9]", "_");
-	    String folder = folderTitle;
-    	createFolder(request, themeDisplay, folder);
+    	Folder folder = createFolder(request, themeDisplay, folderTitle);
 		fileUpload(themeDisplay, request, files, "CHALLENGE_", "uploadedFile", folder);
 		
 	    _log.info("CollaborativecreationPortlet - updateChallenge");
@@ -246,7 +245,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         _log.info("active: "+active);
         
         /*Recupero di immagini e documenti dalla Document Library*/
-		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folder);
+		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folderTitle);
 		Iterator iterator = allFiles.entrySet().iterator();
 	    while (iterator.hasNext()) {
 	        Map.Entry pair = (Map.Entry)iterator.next();
@@ -343,8 +342,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getTitle().replaceAll("[^a-zA-Z0-9]", "_");
-	    String folder = folderTitle;
-    	createFolder(request, themeDisplay, folder);
+    	Folder folder = createFolder(request, themeDisplay, folderTitle);
 		fileUpload(themeDisplay, request, files, "COCREATION_", "uploadedFile", folder);
 		
 	    _log.info("CollaborativecreationPortlet - updateCocreation");
@@ -354,7 +352,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         _log.info("completed: "+completed);
        
         /*Recupero di immagini e documenti dalla Document Library*/
-		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folder);
+		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folderTitle);
 		Iterator iterator = allFiles.entrySet().iterator();
 	    while (iterator.hasNext()) {
 	        Map.Entry pair = (Map.Entry)iterator.next();
@@ -431,8 +429,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle().replaceAll("[^a-zA-Z0-9]", "_");
-	    String folder = folderTitle;
-    	createFolder(request, themeDisplay, folder);
+    	Folder folder = createFolder(request, themeDisplay, folderTitle);
 		fileUpload(themeDisplay, request, files, "CHALLENGE_", "uploadedFile", folder);
     	
 	    _log.info("CollaborativecreationPortlet - addMilestone");
@@ -440,7 +437,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         _log.info("expirationDate: "+expirationDate);
         
         /*Recupero di immagini e documenti dalla Document Library*/
-		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folder);
+		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folderTitle);
 		Iterator iterator = allFiles.entrySet().iterator();
 	    while (iterator.hasNext()) {
 	        Map.Entry pair = (Map.Entry)iterator.next();
@@ -799,13 +796,24 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	
 	/*Creazione cartella nella Document Library*/
 	public Folder createFolder(ActionRequest actionRequest,ThemeDisplay themeDisplay, String name){
-        boolean folderExist = isFolderExist(themeDisplay, name);
+        boolean folderExist = false;
+        Folder cocreationFolder = null;
         Folder folder = null;
 		if (!folderExist){
 			long repositoryId = themeDisplay.getScopeGroupId();		
 			try {
 				ServiceContext serviceContext = ServiceContextFactory.getInstance(DLFolder.class.getName(), actionRequest);
-				folder = DLAppServiceUtil.addFolder(repositoryId, PARENT_FOLDER_ID, name, ROOT_FOLDER_DESCRIPTION, serviceContext);
+				folderExist = isFolderExist(themeDisplay, "CO-CREATION");
+				if (!folderExist){
+					cocreationFolder = DLAppServiceUtil.addFolder(repositoryId, PARENT_FOLDER_ID, "CO-CREATION", ROOT_FOLDER_DESCRIPTION, serviceContext);
+				}else {
+					cocreationFolder = DLAppServiceUtil.getFolder(repositoryId, PARENT_FOLDER_ID, "CO-CREATION");
+				}
+				try {
+					folder = DLAppServiceUtil.getFolder(repositoryId, cocreationFolder.getFolderId(), name);
+				} catch (NoSuchFolderException nsfe) {
+					return folder = DLAppServiceUtil.addFolder(repositoryId, cocreationFolder.getFolderId(), name, ROOT_FOLDER_DESCRIPTION, serviceContext);
+				}
 			} catch (PortalException e1) {
 				e1.printStackTrace();
 			} catch (SystemException e1) {
@@ -836,8 +844,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	}
 	
 	/*Caricamento file nella Document Library*/
-	public void fileUpload(ThemeDisplay themeDisplay, ActionRequest actionRequest, Map<String, FileItem[]> files, String prefix, String field, String name){
-		Folder folder = getFolder(themeDisplay, name);
+	public void fileUpload(ThemeDisplay themeDisplay, ActionRequest actionRequest, Map<String, FileItem[]> files, String prefix, String field, Folder folder){
 		InputStream is;
 		File file;
 		String title, description, mimeType;
