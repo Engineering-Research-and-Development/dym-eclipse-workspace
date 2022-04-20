@@ -3,7 +3,7 @@
 <%
 String keywords = ParamUtil.getString(request, "keywords", null);
 List<Cocreation> myCocreations = new ArrayList();
-if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUserId() == themeDisplay.getUser().getUserId()) || isSiteOwner){
+if (isChallengeOwner){
 	if (keywords != null && !keywords.equalsIgnoreCase("")){        
 		myCocreations = CocreationLocalServiceUtil.getCocreationsBySearchGroupId(keywords, themeDisplay.getScopeGroupId(), false);   
 	}else{
@@ -41,11 +41,14 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 						<portlet:param name="jspPage" value="/challenges.jsp"/>
 					</portlet:renderURL>
 					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-				
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
-					<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%if (isChallengeOwner){%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%}else{%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
+					<%}%>
 				</aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
@@ -69,7 +72,7 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
    </div>
    <div id="search" class="m-1 p-1">
 		<aui:form name="searchForm" action="<%=search%>" method="post">
-			<%if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUserId() == themeDisplay.getUser().getUserId()) || isSiteOwner){%>
+			<%if (isChallengeOwner){%>
     	 		<aui:input id="keywords" name="keywords" placeholder="Title, description, username" inlineLabel="left" label="" size="256" value=""/> 
     	 	<%}else{%>
     	 		<aui:input id="keywords" name="keywords" placeholder="Title, description" inlineLabel="left" label="" size="256" value=""/>
@@ -87,15 +90,20 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 						   		<%
 						   		if (myCocreations.size() == 0){
 						   		%>
-						   			<h3 class="co-title">There are no co-creations</a></h3>
+						   			<h3 class="co-title">You have no ongoing co-creations</a></h3>
 								<%
 								}
 								for (Cocreation cocreation : myCocreations) {
-								%>
+									boolean isCocreator = false;
+									%>
+									<portlet:renderURL var="ongoingCocreationsURL" windowState="<%=LiferayWindowState.MAXIMIZED.toString()%>">
+										<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
+									</portlet:renderURL>
 									<portlet:actionURL name="deleteCocreation" var="deleteCocreationURL">
 										<portlet:param name="cocreationId" value="<%=String.valueOf(cocreation.getCocreationId())%>"/>
-										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+										<portlet:param name="redirectTo" value="<%=ongoingCocreationsURL %>"></portlet:param>
 									</portlet:actionURL>
+									<%String deleteConfirmation = "javascript:deleteConfirmation('"+deleteCocreationURL+"');";%>
 									<portlet:renderURL var="viewCocreationDetails">
 										<portlet:param name="mvcPath" value="/cocreationDetails.jsp" />
 										<portlet:param name="cocreationId" value="<%=String.valueOf(cocreation.getCocreationId())%>" />
@@ -127,6 +135,11 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 													Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
 													while(cocreatorsIt.hasNext()){
 														Cocreator cocreator = cocreatorsIt.next();
+														User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId());
+														if (user.getUserId() == cocreator.getUserId()){
+															/*L'utente loggato è uno dei co-creatori*/
+															isCocreator = true;
+														}
 														%>
 										      			<span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
 														<%		
@@ -142,7 +155,9 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 							                    <div class="row">
 							                        <div class="col-12">
 							                            <a href="<%=viewCocreationDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
-									   		 			<aui:button name="deleteCocreation" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteCocreationURL.toString() +\"'\"%>"/>
+									   		 			<%if (isCocreator){%>
+									   		 				<aui:button name="deleteCocreation" type="button" value="Delete" onClick="<%=deleteConfirmation%>"/>
+							                        	<%}%>
 							                        </div>
 							                    </div>
 							                </div>
@@ -158,6 +173,17 @@ if ((GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId()).getCreatorUs
 		</div>
 	</div>	 -->
 </div>
+
+<script type="text/javascript">
+	function deleteConfirmation(url) {
+		msg = "Are you sure you want to proceed with the delete operation?";
+		if(confirm(msg)) {
+			window.location.href = url;
+		}else{
+			return false;
+		}
+	}
+</script>
 
 <aui:script use="liferay-portlet-url,aui-io,aui-io-plugin-deprecated,liferay-util-window,aui-base">
  	var getOngoingCocreations = Liferay.PortletURL.createRenderURL();

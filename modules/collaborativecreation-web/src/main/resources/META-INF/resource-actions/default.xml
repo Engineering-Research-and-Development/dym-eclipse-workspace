@@ -12,5 +12,17 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
             <action-key>VIEW</action-key>
         </supports>
     </permissions>
-</portlet-resource>    
+   </portlet-resource>   
+   <model-resource>
+		<model-name>it.eng.rd.collaborativecreation.model.Challenge</model-name>
+		<portlet-ref>
+			<portlet-name>it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet</portlet-name>
+		</portlet-ref>
+		<weight>1</weight>
+		<permissions>
+	        <supports>
+	            <action-key>ADD_CHALLENGE</action-key>
+	        </supports>
+        </permissions>
+   </model-resource>  	  
 </resource-action-mapping>

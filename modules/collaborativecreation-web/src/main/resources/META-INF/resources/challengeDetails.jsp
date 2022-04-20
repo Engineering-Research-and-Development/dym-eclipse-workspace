@@ -11,6 +11,10 @@ String folderTitle = challenge.getTitle().replaceAll("[^a-zA-Z0-9]", "_");
 Folder cocreationFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, "CO-CREATION");
 Folder challengeFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), cocreationFolder.getFolderId(), folderTitle);
 List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), challengeFolder.getFolderId());
+boolean readonly = true;
+if (challenge.getUserId() == themeDisplay.getUserId()){
+	readonly = false;
+}
 %>
 <portlet:renderURL var="farmerProfile">
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
@@ -60,11 +64,14 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 						<portlet:param name="jspPage" value="/challenges.jsp"/>
 					</portlet:renderURL>
 					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-				
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
-					<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%if (isChallengeOwner){%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%}else{%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
+					<%}%>
 				</aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
@@ -85,19 +92,27 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 			   		</div>
 			   </div>
 		       <div class="col-12 col-md-12">
-		       		<div class="pb-2">     
-	           			<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" required="true"/>
+		       		<div class="pb-2">   
+		       			<%if (readonly){%>  
+	           				<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" readonly="true"/>   			
+	           			<%}else{%>
+	           				<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" required="true" />
+	           			<%}%>
 	           		</div>
 			   </div>	
-			   <div class="col-12 col-md-12">
-		       		<div class="pb-2">
-	    	   			<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" required="true"/>
-	    	   		</div>
+			   <div class="col-12 col-md-12"> 
+			   <%if (readonly){%> 		
+	    	   		<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" readonly="true"/>
+	    	   <%}else{%> 
+	    	   		<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" required="true"/>
+	    	   <%}%> 
 			   </div>
 			   <div class="col-12 col-md-12">
-		       		<div class="pb-2">
+			   		<%if (readonly){%>
+	    	   			<aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" readonly="true"/>
+	    	   		<%}else{%>
 	    	   			<aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" required="true"/>
-	    	   		</div>
+	    	   		<%}%>
 			   </div>
 			   <div class="col-12 col-md-12">
 	       	   		<div class="pb-2">	
@@ -106,6 +121,9 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 			   </div>
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
+		           <%if (readonly){%>
+		           		  <aui:input label="Location" name="location" id="location" type="text" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>" readonly="true" />
+		           <%}else{%>
 			          <aui:select label="Location" id="location" name="location" showEmptyOption="false" required="true">
 			          		<aui:option selected="<%=true%>" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>"><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></aui:option>
 						    <%
@@ -116,22 +134,27 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 							}
 							%>
 					  </aui:select>
+				  <%}%>
 				  </div>
 			   </div>
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
-			          <aui:select label="Status" id="active" name="active" showEmptyOption="false" required="true">
-						    <aui:option selected="<%=true%>" value="<%=challenge.getActive()%>"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></aui:option>
-						    <aui:option selected="<%=false%>" value="true">Active</aui:option>
-						    <aui:option selected="<%=false%>" value="false">Inactive</aui:option>
-					  </aui:select>
+		           <%if (readonly){%>
+		           		  <aui:input label="Status" name="status" id="status" type="text" value="<%=challenge.getActive()%>" readonly="true" />
+		           <%}else{%>
+			           	  <aui:select label="Status" id="active" name="active" showEmptyOption="false" required="true">
+							    <aui:option selected="<%=true%>" value="<%=challenge.getActive()%>"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></aui:option>
+							    <aui:option selected="<%=false%>" value="true">Active</aui:option>
+							    <aui:option selected="<%=false%>" value="false">Inactive</aui:option>
+						  </aui:select>
+		           <%}%>
 				  </div>
 			   </div>
 			   <h3 class="sheet-subtitle"></h3>
 			   <div class="col-sm-6 col-md-6">
 			        <div class=" pb-2 borderGroup">
-			              <label class="control-label">Tags</label>
-				          <select label="Tags" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" required>
+			              <label class="control-label">Tags*</label>
+				          <select label="Tags*" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 							    <%
 								for (AssetTag assetTag : assetTags) {
 									if (HashtagLocalServiceUtil.getHashtag(challenge.getChallengeId(), assetTag.getName()) == null){
@@ -150,8 +173,8 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 			    </div>
 				<div class="col-sm-6 col-md-6">
 			        <div class=" pb-2 borderGroup">
-			        	  <label class="control-label">Categories</label>
-				          <select label="Categories" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
+			        	  <label class="control-label">Categories*</label>
+				          <select label="Categories*" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 							    <%
 								for (AssetCategory assetCategory : assetCategories) {
 									if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), assetCategory.getName()) == null){
@@ -170,14 +193,22 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 			   </div>
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">   
-			  			<label class="control-label">Start Date</label>
-			  			<input id="startDate" name="startDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getStartDate())%>" required='true'>
+			  			<label class="control-label">Start Date*</label>
+			  			<%if (readonly){%>
+			  				<aui:input label="Start Date" name="startDate" id="startDate" type="text" value="<%=formatter.format(challenge.getStartDate())%>" readonly="true" />
+						<%}else{%>
+							<input id="startDate" name="startDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getStartDate())%>" required='true'>
+						<%}%>
 					</div>
 			   </div>		 
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
-			  			<label class="control-label">End Date</label>
-			  			<input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getEndDate())%>" required='true'>
+			  			<label class="control-label">End Date*</label>
+			  			<%if (readonly){%>
+			  				<aui:input label="End Date" name="endDate" id="endDate" type="text" value="<%=formatter.format(challenge.getEndDate())%>" readonly="true" />
+	          	 		<%}else{%>
+	          	 			<input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getEndDate())%>" required='true'>
+	          	 		<%}%>
 	          	  </div>
 	           </div>
 			   <div class="col-12 col-md-12">
@@ -208,7 +239,7 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 			   </div>
 			   <div class="col-12 col-md-12">
 	       	   		<div class="pb-2">	
-						<h3 class="sheet-subtitle">Download documents</h3>
+						<h3 class="sheet-subtitle">Attached Documents</h3>
 						<% 
 						for (FileEntry file : fileEntries) {    
 							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
@@ -226,7 +257,7 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 			   			<h3 class="sheet-subtitle"></h3>
 			   		</div>
 			   </div>
-			   <%if((challenge.getUserId() == user.getUserId()) || isSiteOwner){%>
+			   <%if (challenge.getUserId() == user.getUserId()){%>
 				   <div class="col-sm-6 col-md-6">
 			       	   <div class="pb-2">
 			       			<div id="fileList"></div>
@@ -263,26 +294,35 @@ List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getSc
 						</aui:button-row>  
 					</div>
 			   </div>
-		 </div>
-       	 <%if(user != null){
-       		if((challenge.getUserId() == user.getUserId()) || isSiteOwner){%>
-		        <div class="row">
-		       		<div class="col-12 col-md-12">
-				       <aui:button-row>
-				        	<aui:button type="submit" value="Update" cssClass="btn-outline-info"></aui:button>
-				        	<aui:button name="deleteChallenge" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteChallengeURL.toString() +\"'\"%>"/>
-				        </aui:button-row>
-		        	</div>
-		        </div>
-        	<%}%>
-         <%}%>
+		 </div> 
+     	<%if (challenge.getUserId() == user.getUserId()){%>
+	        <div class="row">
+	       		<div class="col-12 col-md-12">
+			       <aui:button-row>
+			        	<aui:button type="submit" value="Update" cssClass="btn-outline-info"></aui:button>
+			        	<aui:button name="deleteChallenge" type="button" value="Delete" onClick="javascript:deleteConfirmation();"/>
+			        </aui:button-row>
+	        	</div>
+	        </div>
+      	<%}%>
   	</aui:form>
 </div>
+
+<script type="text/javascript">
+	function deleteConfirmation() {
+		msg = "Are you sure you want to proceed with the delete operation?";
+		if(confirm(msg)) {
+			window.location.href = '<%=deleteChallengeURL.toString()%>';
+		}else{
+			return false;
+		}
+	}
+</script>
  
 <aui:script use="liferay-util-window">
 	A.one("#aui_popup_click").on('click',function(event){
 		
-		<%if((challenge.getUserId() == user.getUserId()) || isSiteOwner){
+		<%if((challenge.getUserId() == user.getUserId()) || isChallengeOwner){
 			participationURL = inviteParticipantsURL.toString();
 		}else{
 			participationURL = requestParticipationURL.toString();

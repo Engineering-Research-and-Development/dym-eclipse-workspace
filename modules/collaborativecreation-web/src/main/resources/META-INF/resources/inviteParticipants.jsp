@@ -33,7 +33,7 @@ User currentUser = themeDisplay.getUser();
 	             		<aui:option selected="<%=true%>" value="">Select...</aui:option>
 						<%
 						for (User groupUser : users) {
-							if (groupUser.getUserId() != currentUser.getUserId()){
+							if (groupUser.getUserId() != currentUser.getUserId() || isChallengeOwner){
 						%>
 								<aui:option value="<%=groupUser.getUserId()%>"><%=groupUser.getFullName()%> - <%=groupUser.getEmailAddress()%></aui:option>
 						<%

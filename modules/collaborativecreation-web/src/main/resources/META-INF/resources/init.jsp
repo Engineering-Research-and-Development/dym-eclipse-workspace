@@ -1,3 +1,12 @@
+<%@page import="com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionUtil"%>
+<%@page import="com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission"%>
+<%@page import="com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.security.permission.ResourcePermissionCheckerUtil"%>
+<%@page import="com.liferay.portal.kernel.security.permission.PermissionChecker"%>
+<%@page import="com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.service.ResourceLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.service.PermissionServiceUtil"%>
 <%@page import="com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil"%>
 <%@page import="com.liferay.asset.kernel.model.AssetCategory"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -83,13 +92,13 @@ SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 List<Country> countries = CountryServiceUtil.getCountries();
 List<AssetTag> assetTags = AssetTagLocalServiceUtil.getAssetTags(0, 999);
 List<AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getAssetCategories(0, 999);
-boolean isSiteOwner = false;
-List<Role> userGroupRoles = RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId());
-Iterator<Role> rolesIt = userGroupRoles.iterator();
-while(rolesIt.hasNext()){
-	Role role = rolesIt.next();
-	if (role.getName().equalsIgnoreCase("Site Owner")){
-		isSiteOwner = true;
+boolean isChallengeOwner = false;
+List<Role> userRelatedRoles = RoleLocalServiceUtil.getUserRelatedRoles(themeDisplay.getUserId(), themeDisplay.getScopeGroupId());
+Iterator<Role> userRelatedRolesIt = userRelatedRoles.iterator();
+while(userRelatedRolesIt.hasNext()){
+	Role role = userRelatedRolesIt.next();
+	if (role.getName().equalsIgnoreCase("SOCS Challenge Owner")){
+		isChallengeOwner = true;
 	}
 }
 %>

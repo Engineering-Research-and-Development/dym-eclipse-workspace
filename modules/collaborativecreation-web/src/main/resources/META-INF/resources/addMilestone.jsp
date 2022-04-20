@@ -23,7 +23,7 @@ User currentUser = themeDisplay.getUser();
 		<aui:fieldset>
 			<div class="clearfix" style="margin-right:20px; margin-left:20px;">
 	             <div>
-	             	<aui:input label="Cocreation" name="cocreation" id="cocreation" readonly="true" value="<%=CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle()%>"/>
+	             	<aui:input label="Co-creation" name="cocreation" id="cocreation" readonly="true" value="<%=CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle()%>"/>
 	             </div>
 	             <div>
 	             	<aui:input label="Description" name="description" id="description" type="text" required='true'/>

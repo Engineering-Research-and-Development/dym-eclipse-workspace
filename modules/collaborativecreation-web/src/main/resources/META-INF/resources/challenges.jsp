@@ -113,11 +113,14 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 					<portlet:param name="jspPage" value="/challenges.jsp"/>
 				</portlet:renderURL>
 				<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-			
 				<portlet:renderURL var="mycocreationsURL">
 					<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 				</portlet:renderURL>
-				<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+				<%if (isChallengeOwner){%>
+					<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+				<%}else{%>
+					<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
+				<%}%>
 			</aui:nav>	
 		</div><!-- w-1/2 END -->
 	</div>
@@ -170,7 +173,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 						<portlet:param name="jspPage" value="/newchallenge.jsp"/>
 						<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 				 </portlet:renderURL>
-				 <%if(isSiteOwner){%>
+				 <%if(isChallengeOwner){%>
 	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary">Post a New Challenge</a>
 	     	     <%}%>
 			</div>
@@ -197,13 +200,14 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 											<portlet:param name="challengeId" value="<%=String.valueOf(challenge.getChallengeId())%>"/>
 											<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 									</liferay-portlet:actionURL>	
+									<%String deleteConfirmation = "javascript:deleteConfirmation('"+deleteChallengeURL+"');";%>
 									<portlet:renderURL var="viewChallengeDetails">
 										<portlet:param name="mvcPath" value="/challengeDetails.jsp" />
 										<portlet:param name="challengeId" value="<%=String.valueOf(challenge.getChallengeId())%>"/>
 										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request)%>"></portlet:param>
 									</portlet:renderURL>
 									<h3 class="sheet-subtitle"></h3>
-			          			    <h3 class="co-title"><%=challenge.getTitle() %></h3>
+			          			    <h3 class="co-title"><a href="<%=viewChallengeDetails%>"><%=challenge.getTitle() %></a></h3>
 						  		    <div class="co-content">
 								    	<%-- <div class="co-summary mb-2">
 								           <%=challenge.getDescription() %>					  
@@ -220,24 +224,9 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 					     							<div id="status" class="challengesLeft">
 												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></label></span>
 												    </div> 
-												    <!-- <div id="postedBy" class="challengesLeft">
-											      		<span><b><label class="aui-field-label">Co-creators</label></b></span> : <span>
-					       						 	</div> -->
-												    <%-- <%
-												    List<Cocreation> cocreations = CocreationLocalServiceUtil.getCocreationsByChallengeId(challenge.getChallengeId());
-													Iterator<Cocreation> cocreationsIt = cocreations.iterator();
-													while(cocreationsIt.hasNext()){
-														Cocreation cocreation = cocreationsIt.next();
-														List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
-														Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
-														while(cocreatorsIt.hasNext()){
-															Cocreator cocreator = cocreatorsIt.next();
-															%>
-											      			<span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
-															<% 		
-														}
-													}	
-												    %> --%>
+												    <div id="location" class="challengesLeft">
+												    	<span><b><label class="aui-field-label">Location</label></b></span> : <span><label class="aui-field-label"><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></label></span>
+												    </div> 
 												    <div id="tags" class="challengesLeft">
 													    <span><b><label class="aui-field-label">Tags</label></b></span> : <span>	
 											    	  	<%
@@ -263,9 +252,9 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
 										   		 	<a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a>
 										   		 	<%if (user != null){
-														if((challenge.getUserId() == user.getUserId()) || isSiteOwner){%>
+														if((challenge.getUserId() == user.getUserId()) || isChallengeOwner){%>
 												   		 	<div class="listDelete">
-												   		 		<aui:button name="deleteChallenge" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteChallengeURL.toString() +\"'\"%>"/>
+												   		 		<aui:button name="deleteChallenge" type="button" value="Delete" onClick="<%=deleteConfirmation%>"/>
 												   		 	</div>
 											   		 	<%}%>
 											   		 <%}%>	
@@ -301,6 +290,17 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 	  	</div><!-- w-3/4 END -->
 	</div> 
 </div><!-- container -->
+
+<script type="text/javascript">
+	function deleteConfirmation(url) {
+		msg = "Are you sure you want to proceed with the delete operation?";
+		if(confirm(msg)) {
+			window.location.href = url;
+		}else{
+			return false;
+		}
+	}
+</script>
 
 <aui:script use="liferay-portlet-url,aui-io,aui-io-plugin-deprecated,liferay-util-window,aui-base">
  	var getChallenges = Liferay.PortletURL.createRenderURL();

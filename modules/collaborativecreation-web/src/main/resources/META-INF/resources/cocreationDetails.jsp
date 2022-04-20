@@ -34,6 +34,10 @@ boolean isCocreator = false;
     <portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
     <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
+<portlet:renderURL var="deleteConfirmationURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+    <portlet:param name="jspPage" value="/deleteConfirmation.jsp" />
+    <portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
+</portlet:renderURL>
 <portlet:renderURL var="addMilestoneURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/addMilestone.jsp" />
     <portlet:param name="challengeId" value="<%=String.valueOf(ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getChallengeId())%>"/>
@@ -52,9 +56,12 @@ boolean isCocreator = false;
     <portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
     <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
+<portlet:renderURL var="ongoingCocreationsURL" windowState="<%=LiferayWindowState.MAXIMIZED.toString()%>">
+	<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
+</portlet:renderURL>
 <portlet:actionURL name="deleteCocreation" var="deleteCocreationURL">
 	<portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
-	<portlet:param name="redirectTo" value="<%=redirectTo%>"/>
+	<portlet:param name="redirectTo" value="<%=ongoingCocreationsURL%>"/>
 </portlet:actionURL>
 <portlet:actionURL name="updateCocreation" var="updateCocreationURL">
 	<portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
@@ -79,11 +86,14 @@ boolean isCocreator = false;
 						<portlet:param name="jspPage" value="/challenges.jsp"/>
 					</portlet:renderURL>
 					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-				
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
-					<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%if (isChallengeOwner){%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%}else{%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
+					<%}%>
 				</aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
@@ -116,16 +126,22 @@ boolean isCocreator = false;
 	       <aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=challengeTitle%>"/>
 	       <aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" readonly="true" value="<%=desiredOutcome%>"/>
 	       <h3 class="sheet-subtitle">Request</h3>      
-           <aui:input label="Request" name="request" id="request" type="text" value="<%=cocreation.getRequest()%>" readonly="true"/>
-    	   <aui:input label="Contribution requested" name="message" id="message" type="textarea" value="<%=cocreation.getMessage()%>" readonly="true"/>
+           <aui:input label="Request" name="request" id="request" type="textarea" value="<%=cocreation.getRequest()%>" readonly="true"/>
+    	   <aui:input label="Request Reply" name="message" id="message" type="textarea" value="<%=cocreation.getMessage()%>" readonly="true"/>
     	   <h3 class="sheet-subtitle">Co-creation</h3>
-    	   <aui:input label="Title" name="title" id="title" type="textarea" value="<%=cocreation.getTitle()%>" required="true"/>
-    	   <aui:input label="Description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" required="true"/>
-           <aui:select label="Status" id="completed" name="completed" showEmptyOption="false" required="true">
-			    <aui:option selected="<%=true%>" value="<%=cocreation.getCompleted()%>"><%=cocreation.getCompleted() == true ?  "Completed" : "To complete"%></aui:option>
-			    <aui:option selected="<%=false%>" value="true">Completed</aui:option>
-			    <aui:option selected="<%=false%>" value="false">To complete</aui:option>
-		   </aui:select>
+    	   <%if (!isCocreator){%>
+	    	   <aui:input label="Title" name="title" id="title" type="textarea" value="<%=cocreation.getTitle()%>" readonly="true"/>
+	    	   <aui:input label="Description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" readonly="true"/>
+	    	   <aui:input label="Status" name="status" id="status" type="text" value='<%=cocreation.getCompleted() == true ?  "Completed" : "To complete"%>' readonly="true"/>
+		   <%}else{%>
+		   		<aui:input label="Title" name="title" id="title" type="textarea" value="<%=cocreation.getTitle()%>" required="true"/>
+	    	    <aui:input label="Description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" required="true"/>
+	            <aui:select label="Status" id="completed" name="completed" showEmptyOption="false" required="true">
+				    <aui:option selected="<%=true%>" value="<%=cocreation.getCompleted()%>"><%=cocreation.getCompleted() == true ?  "Completed" : "To complete"%></aui:option>
+				    <aui:option selected="<%=false%>" value="true">Completed</aui:option>
+				    <aui:option selected="<%=false%>" value="false">To complete</aui:option>
+			    </aui:select>
+		   <%}%>
 		   <h3 class="sheet-subtitle">Document and Pictures</h3>
 		   <div class="col-12 col-md-12">
        	   		<div class="pb-2">	
@@ -134,7 +150,7 @@ boolean isCocreator = false;
 					String fileURL = "";
 					for (FileEntry file : fileEntries) {    
 						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-						if (file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_") && (isCocreator || isSiteOwner)){
+						if (file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_")){
 						%>	
 							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 					 	<%
@@ -143,11 +159,11 @@ boolean isCocreator = false;
 					 %>
 				</div>
 				<div class="pb-2">	
-					<h3 class="sheet-subtitle">Download documents</h3>
+					<h3 class="sheet-subtitle">Attached Documents</h3>
 					<% 
 					for (FileEntry file : fileEntries) {    
 						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-						if (!file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_") && (isCocreator || isSiteOwner)){
+						if (!file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_")){
 						%>	
 							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 					 	<%
@@ -160,7 +176,9 @@ boolean isCocreator = false;
      	   <div id="fileList"></div>
 		   <span style="display:block; height: 10px;"></span>
 		   <div class="btn-group">
-				<label for="uploadedFile" class="btn btn-primary pull-left">Upload pictures and documents</label>
+		   		<%if (isCocreator){%>
+					<label for="uploadedFile" class="btn btn-primary pull-left">Upload pictures and documents</label>
+				<%}%>
 			    <div id="clearFileList" style="display:none">
 					<liferay-ui:icon
 							cssClass="btn-outline-info"
@@ -207,67 +225,73 @@ boolean isCocreator = false;
 										Expire : <%=formatter.format(milestone.getExpirationDate())%>
 							   		</p>
 							   		<br>
-							   		<p>
-							   			<aui:button name="deleteMilestone" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteMilestoneURL.toString() +\"'\"%>"/></h3>
-				                    </p>	 	
+							   		<%if (isCocreator){%>
+								   		<p>
+								   			<aui:button name="deleteMilestone" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteMilestoneURL.toString() +\"'\"%>"/></h3>
+					                    </p>
+				                    <%}%>	 	
 				                <% 
 								}
 								%>
-			                    <div class="row">
-			                        <div class="col-12">
-			                            <aui:button-row>
-								  			<div id="aui_popup_milestonesAndDeadlines_click">
-								       			<aui:button type="button" value="Add Milestone" cssClass="btn-outline-info"></aui:button>
-								   			</div>
-								   			<div id="aui_popup_milestonesAndDeadlines_content" ></div>
-										</aui:button-row>  
-			                        </div>
-			                    </div>
+								<%if (isCocreator){%>
+				                    <div class="row">
+				                        <div class="col-12">
+				                            <aui:button-row>
+									  			<div id="aui_popup_milestonesAndDeadlines_click">
+									       			<aui:button type="button" value="Add Milestone" cssClass="btn-outline-info"></aui:button>
+									   			</div>
+									   			<div id="aui_popup_milestonesAndDeadlines_content" ></div>
+											</aui:button-row>  
+				                        </div>
+				                    </div>
+			                    <%}%>
 			                </div>
 			            </div>
 			         </div>   
-			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
-			            <div class="thumbnail card">
-			                <div class="caption card-body">
-			                    <h3 class="co-title">My To-Do's</h3>
-							    <div class="col-12 p0 mb-2">
-			                    </div>
-			                    <%
-								for (Task toDo : toDos) {
-								%>
-									<h3 class="sheet-subtitle"</h3>
-									<liferay-portlet:actionURL name="deleteToDo" var="deleteToDoURL">
-										<portlet:param name="taskId" value="<%=String.valueOf(toDo.getTaskId())%>"/>
-										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
-									</liferay-portlet:actionURL>	
-				                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card"></p>
-				                    <p>
-				                    	<h3 class="sheet-subtitle"><%=toDo.getDescription()%>
-				                    </p>
-				                    <br>
-				                    <p>	
-				                    	Expire : <%=formatter.format(toDo.getExpirationDate())%>    
-				                    </p>
-				                    <br>
-							   		<p>
-							   			<aui:button name="deleteToDo" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteToDoURL.toString() +\"'\"%>"/></h3>	
-				                    </p>
-				                <% 
-								}
-								%>
-			                    <div class="row">
-			                        <div class="col-12">
-			                            <aui:button-row>
-								  			<div id="aui_popup_mytodos_click">
-								       			<aui:button type="button" value="Add To-Do" cssClass="btn-outline-info"></aui:button>
-								   			</div>
-								   			<div id="aui_popup_mytodos_content" ></div>
-										</aui:button-row>  
-			                        </div>
-			                    </div>
-			                </div>
-			            </div>
-			         </div>   
+			         <%if (isCocreator){%>
+				         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
+				            <div class="thumbnail card">
+				                <div class="caption card-body">
+				                    <h3 class="co-title">My To-Do's</h3>
+								    <div class="col-12 p0 mb-2">
+				                    </div>
+				                    <%
+									for (Task toDo : toDos) {
+									%>
+										<h3 class="sheet-subtitle"</h3>
+										<liferay-portlet:actionURL name="deleteToDo" var="deleteToDoURL">
+											<portlet:param name="taskId" value="<%=String.valueOf(toDo.getTaskId())%>"/>
+											<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+										</liferay-portlet:actionURL>	
+					                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card"></p>
+					                    <p>
+					                    	<h3 class="sheet-subtitle"><%=toDo.getDescription()%>
+					                    </p>
+					                    <br>
+					                    <p>	
+					                    	Expire : <%=formatter.format(toDo.getExpirationDate())%>    
+					                    </p>
+					                    <br>
+								   		<p>
+								   			<aui:button name="deleteToDo" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteToDoURL.toString() +\"'\"%>"/></h3>	
+					                    </p>
+					                <% 
+									}
+									%>
+				                    <div class="row">
+				                        <div class="col-12">
+				                            <aui:button-row>
+									  			<div id="aui_popup_mytodos_click">
+									       			<aui:button type="button" value="Add To-Do" cssClass="btn-outline-info"></aui:button>
+									   			</div>
+									   			<div id="aui_popup_mytodos_content" ></div>
+											</aui:button-row>  
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				         </div>   
+			         <%}%>
 			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
 			            <div class="thumbnail card">
 			                <div class="caption card-body">
@@ -317,12 +341,25 @@ boolean isCocreator = false;
 			</div>
 			<h3 class="sheet-subtitle"></h3>	
        </aui:fieldset>
-	   <aui:button-row>
-	   		<aui:button type="submit" value="Update" cssClass="btn-outline-info"></aui:button>
-	   		<aui:button name="deleteCocreation" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteCocreationURL.toString() +\"'\"%>"/>
-	  </aui:button-row>
+       <%if (isCocreator){%>
+		   <aui:button-row>
+		   		<aui:button type="submit" value="Update" cssClass="btn-outline-info"></aui:button>
+		   		<aui:button name="deleteCocreation" type="button" value="Delete" onClick="javascript:deleteConfirmation();"/>
+		   </aui:button-row>
+	   <%}%>
   </aui:form>
 </div>
+
+<script type="text/javascript">
+	function deleteConfirmation() {
+		msg = "Are you sure you want to proceed with the delete operation?";
+		if(confirm(msg)) {
+			window.location.href = '<%=deleteCocreationURL.toString()%>';
+		}else{
+			return false;
+		}
+	}
+</script>
 
 <aui:script use="liferay-util-window">
 	A.one("#aui_popup_requestToCocreate_click").on('click',function(event){

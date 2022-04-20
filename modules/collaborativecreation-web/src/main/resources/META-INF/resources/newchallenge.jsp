@@ -24,11 +24,14 @@ String redirectTo = request.getParameter("redirectTo");
 						<portlet:param name="jspPage" value="/challenges.jsp"/>
 					</portlet:renderURL>
 					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-				
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
-					<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%if (isChallengeOwner){%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+					<%}else{%>
+						<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
+					<%}%>
 				</aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
