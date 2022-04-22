@@ -34,6 +34,9 @@ if ((active == null || active.equalsIgnoreCase("false")) && (inactive == null ||
 		challenges = ChallengeLocalServiceUtil.getChallengesByActive(themeDisplay.getScopeGroupId(), false);
 	}
 }
+
+int challengesSize = challenges.size();
+
 for (Challenge challenge : challenges) {
 	 if (!category.equalsIgnoreCase("") && !location.equalsIgnoreCase("")){
 		 if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), category) != null && 
@@ -108,11 +111,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 			<h3 class="co-title">Challenges</a></h3>
 		</div><!-- w-1/2  END-->
 		<div class="col col-lg-6 col-sm-6 col-6 col-md-12  "> 
-			  <aui:nav cssClass="nav-tabs nav-co-tabs">
-				<portlet:renderURL var="challengesURL">
-					<portlet:param name="jspPage" value="/challenges.jsp"/>
-				</portlet:renderURL>
-				<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+			  <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
 				<portlet:renderURL var="mycocreationsURL">
 					<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 				</portlet:renderURL>
@@ -122,6 +121,12 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 					<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
 				<%}%>
 			</aui:nav>	
+			<aui:nav cssClass="nav-tabs nav-co-tabs">
+				<portlet:renderURL var="challengesURL">
+					<portlet:param name="jspPage" value="/challenges.jsp"/>
+				</portlet:renderURL>
+				<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+			  </aui:nav>
 		</div><!-- w-1/2 END -->
 	</div>
     <div class="row">
@@ -188,10 +193,16 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 				<div class="co-abstract row flex-lg-row flex-sm-row flex-row flex-md-row">     	
 			            <div class="col col-lg-10 col-sm-10 col-10 col-md-12">
 	            			 <%
-					   		 if (filteredChallenges.size() == 0){
+					   		 if (challengesSize == 0){
 					   		 %>
 					   			<h3 class="co-title">There are no challenges</a></h3>
 							 <%
+							 }else{
+						   		 if (filteredChallenges.size() == 0){
+						   		 %>
+						   			<h3 class="co-title">You have no challenges</a></h3>
+								 <%
+								 }
 							 }
 							 for (Challenge challenge : filteredChallenges) {
 							 %>
@@ -268,7 +279,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 									%>
 									<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="like" /> --%>
 									<liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="stars" />
-									<liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" />
+									<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" /> --%>
 						        	<liferay-ui:panel-container extended="<%=false%>" id='<%="guestbookCollaborationPanelContainer_" + challenge.getChallengeId()%>' persistState="<%=true%>">
   										<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id='<%="guestbookCollaborationPanel_" + challenge.getChallengeId()%>' persistState="<%=true%>" title="">
     										<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />

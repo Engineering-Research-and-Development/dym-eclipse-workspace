@@ -3,17 +3,20 @@
 <%
 String keywords = ParamUtil.getString(request, "keywords", null);
 List<Cocreation> myCocreations = new ArrayList();
+int cocreationsSize = 1;
 if (isChallengeOwner){
 	if (keywords != null && !keywords.equalsIgnoreCase("")){        
 		myCocreations = CocreationLocalServiceUtil.getCocreationsBySearchGroupId(keywords, themeDisplay.getScopeGroupId(), false);   
 	}else{
 		myCocreations = CocreationLocalServiceUtil.getCocreationsByGroupId(themeDisplay.getScopeGroupId(), false);
+		cocreationsSize = myCocreations.size();
 	}
 }else{
 	if (keywords != null && !keywords.equalsIgnoreCase("")){        
 		myCocreations = CocreationLocalServiceUtil.getCocreationsBySearchUserId(keywords, themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId(), false);   
 	}else{
 		myCocreations = CocreationLocalServiceUtil.getCocreationsByCocreatorId(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId(), false);
+		cocreationsSize = myCocreations.size();
 	}
 }
 %>
@@ -36,11 +39,7 @@ if (isChallengeOwner){
 				<h3 class="co-title">Ongoing co-creations</a></h3>
 			</div><!-- w-1/2  END-->
 			<div class="col col-lg-6 col-sm-6 col-6 col-md-12  "> 
-				  <aui:nav cssClass="nav-tabs nav-co-tabs">
-					<portlet:renderURL var="challengesURL">
-						<portlet:param name="jspPage" value="/challenges.jsp"/>
-					</portlet:renderURL>
-					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+				  <aui:nav cssClass="nav-tabs nav-co-tabs"> 	
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
@@ -49,24 +48,31 @@ if (isChallengeOwner){
 					<%}else{%>
 						<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
 					<%}%>
-				</aui:nav>	
+				</aui:nav>
+				<aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
+					<portlet:renderURL var="challengesURL">
+						<portlet:param name="jspPage" value="/challenges.jsp"/>
+					</portlet:renderURL>
+					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+				  </aui:nav>		
 			</div><!-- w-1/2 END -->
 		</div>
    </div>
    <div class="container-fluid p-0 co-creation">
 	   <div class="row mb-4 border-bottom">
 			<div class="col col-lg-4-2 col-sm-4 col-4 col-md-12  "> 
-				  <aui:nav cssClass="nav-tabs nav-co-tabs">
-					<portlet:renderURL var="ongoingCocreationsURL">
-						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
-					</portlet:renderURL>
-					<aui:nav-item href="<%=ongoingCocreationsURL%>" label="Ongoing Co-Creations"/>
-				
+				  <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
 					<portlet:renderURL var="previousCocreationsURL">
 						<portlet:param name="jspPage" value="/previous-cocreations.jsp"/>
 					</portlet:renderURL>
 					<aui:nav-item href="<%=previousCocreationsURL%>" label="Previous Co-Creations"/>
-				</aui:nav>	
+				</aui:nav>
+				<aui:nav cssClass="nav-tabs nav-co-tabs">
+					<portlet:renderURL var="ongoingCocreationsURL">
+						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
+					</portlet:renderURL>
+					<aui:nav-item href="<%=ongoingCocreationsURL%>" label="Ongoing Co-Creations"/>
+				  </aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
    </div>
@@ -88,10 +94,16 @@ if (isChallengeOwner){
 				   		<aui:form action="" name="<portlet:namespace />fm">
 					   		<div id="products" class="row view-group">
 						   		<%
-						   		if (myCocreations.size() == 0){
+						   		if (cocreationsSize == 0){
 						   		%>
-						   			<h3 class="co-title">You have no ongoing co-creations</a></h3>
+						   			<h3 class="co-title">There are no ongoing co-creations</a></h3>
 								<%
+								}else{
+							   		if (myCocreations.size() == 0){
+							   		%>
+							   			<h3 class="co-title">You have no ongoing co-creations</a></h3>
+									<%
+									}
 								}
 								for (Cocreation cocreation : myCocreations) {
 									boolean isCocreator = false;
@@ -119,17 +131,19 @@ if (isChallengeOwner){
 							        <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 							            <div class="thumbnail card">
 							                <div class="caption card-body">
-							                    <h3 class="co-title"><%=cocreation.getTitle() != "" ?  cocreation.getTitle() : "To be developed"%></h3>
+											    <h3 style="margin-bottom: 2px;" class="co-title group font-weight-bold inner list-group-item-heading resource-title">
+								                     <a href="<%=viewCocreationDetails%>"><%=cocreation.getTitle() != "" ?  cocreation.getTitle() : "To be developed"%></a>
+								                </h3>
 											    <div class="col-12 p0 mb-2">
-											    	<div id="challenge" class="challengesLeft">
-							                        	<span><b><label class="aui-field-label">Challenge</label></b></span> : <span><label class="aui-field-label"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a></label></span>
-							                    	</div>
-							                    	<div id="postedBy" class="challengesLeft">
-							                    		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span>
-							                    	</div>
-							                    	<div id="cocreators" class="challengesLeft">
-							                    		<span><b><label class="aui-field-label">Co-creators</label></b></span> : <span>
-							                    	</div>	
+											    	<p id="challenge" class="resource-title">
+							                        	<b><label class="aui-field-label">Challenge</label></b> : <label class="aui-field-label"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a></label>
+							                    	</p>
+							                    	<p id="postedBy" class="card-text group inner list-group-item-text">
+							                    		<b><label class="aui-field-label">Posted by</label></b> : <label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label>
+							                    	</p>
+							                    	<p id="cocreators" class="card-text group inner list-group-item-text">
+							                    		<b><label class="aui-field-label">Co-creators</label></b> : 
+							                    	</p>	
 							                    	<%
 													List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
 													Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
@@ -141,13 +155,13 @@ if (isChallengeOwner){
 															isCocreator = true;
 														}
 														%>
-										      			<span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
+										      			<label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label>
 														<%		
 													}	
 												    %>
-												    <div id="date" class="challengesLeft">
-												    	<span><b><label class="aui-field-label">Started on</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(cocreation.getCreateDate())%></label></span>
-							                    	</div>
+												    <p id="date" class="card-text group inner list-group-item-text">
+												    	<b><label class="aui-field-label">Started on</label></b> : <label class="aui-field-label"><%=formatter.format(cocreation.getCreateDate())%></label>
+							                    	</p>
 							                    </div>
 							                    <p id="desc-"<%=cocreation.getCocreationId()%> class="card-text group inner list-group-item-text resourse-card">
 							                        <%=cocreation.getDescription()%></p>

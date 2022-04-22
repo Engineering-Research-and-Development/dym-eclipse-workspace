@@ -59,11 +59,7 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 				<span class="co-title">Challenge details</span>
 			</div><!-- w-1/2  END-->
 			<div class="col col-lg-6 col-sm-6 col-6 col-md-12"> 
-				  <aui:nav cssClass="nav-tabs nav-co-tabs">
-					<portlet:renderURL var="challengesURL">
-						<portlet:param name="jspPage" value="/challenges.jsp"/>
-					</portlet:renderURL>
-					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+				  <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">	
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
@@ -73,6 +69,12 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 						<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
 					<%}%>
 				</aui:nav>	
+				<aui:nav cssClass="nav-tabs nav-co-tabs">
+					<portlet:renderURL var="challengesURL">
+						<portlet:param name="jspPage" value="/challenges.jsp"/>
+					</portlet:renderURL>
+					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+				  </aui:nav>
 			</div><!-- w-1/2 END -->
 		</div>
    </div>
@@ -94,7 +96,7 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 		       <div class="col-12 col-md-12">
 		       		<div class="pb-2">   
 		       			<%if (readonly){%>  
-	           				<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" readonly="true"/>   			
+	           				<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" readonly="true" cssClass="field disabled form-control"/>   			
 	           			<%}else{%>
 	           				<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" required="true" />
 	           			<%}%>
@@ -102,14 +104,14 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 			   </div>	
 			   <div class="col-12 col-md-12"> 
 			   <%if (readonly){%> 		
-	    	   		<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" readonly="true"/>
+	    	   		<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" readonly="true" cssClass="field disabled form-control"/>
 	    	   <%}else{%> 
 	    	   		<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" required="true"/>
 	    	   <%}%> 
 			   </div>
 			   <div class="col-12 col-md-12">
 			   		<%if (readonly){%>
-	    	   			<aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" readonly="true"/>
+	    	   			<aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" readonly="true" cssClass="field disabled form-control"/>
 	    	   		<%}else{%>
 	    	   			<aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" required="true"/>
 	    	   		<%}%>
@@ -122,7 +124,7 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
 		           <%if (readonly){%>
-		           		  <aui:input label="Location" name="location" id="location" type="text" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>" readonly="true" />
+		           		  <aui:input label="Location" name="location" id="location" type="text" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>" readonly="true" cssClass="field disabled form-control"/>
 		           <%}else{%>
 			          <aui:select label="Location" id="location" name="location" showEmptyOption="false" required="true">
 			          		<aui:option selected="<%=true%>" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>"><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></aui:option>
@@ -140,7 +142,7 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
 		           <%if (readonly){%>
-		           		  <aui:input label="Status" name="status" id="status" type="text" value="<%=challenge.getActive()%>" readonly="true" />
+		           		  <aui:input label="Status" name="status" id="status" type="text" value="<%=challenge.getActive()%>" readonly="true" cssClass="field disabled form-control"/>
 		           <%}else{%>
 			           	  <aui:select label="Status" id="active" name="active" showEmptyOption="false" required="true">
 							    <aui:option selected="<%=true%>" value="<%=challenge.getActive()%>"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></aui:option>
@@ -153,7 +155,11 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 			   <h3 class="sheet-subtitle"></h3>
 			   <div class="col-sm-6 col-md-6">
 			        <div class=" pb-2 borderGroup">
-			              <label class="control-label">Tags*</label>
+			        	  <%if (readonly){%>	
+			              		<label class="control-label">Tags</label>
+			              <%}else{%>
+			              		<label class="control-label">Tags*</label>
+			              <%}%>
 				          <select label="Tags*" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 							    <%
 								for (AssetTag assetTag : assetTags) {
@@ -173,7 +179,11 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 			    </div>
 				<div class="col-sm-6 col-md-6">
 			        <div class=" pb-2 borderGroup">
-			        	  <label class="control-label">Categories*</label>
+			        	  <%if (readonly){%>	
+			              		<label class="control-label">Categories</label>
+			              <%}else{%>
+			              		<label class="control-label">Categories*</label>
+			              <%}%>
 				          <select label="Categories*" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 							    <%
 								for (AssetCategory assetCategory : assetCategories) {
@@ -193,9 +203,13 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 			   </div>
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">   
-			  			<label class="control-label">Start Date*</label>
+			  			  <%if (readonly){%>	
+			              		<label class="control-label">Start Date</label>
+			              <%}else{%>
+			              		<label class="control-label">Start Date*</label>
+			              <%}%>
 			  			<%if (readonly){%>
-			  				<aui:input label="Start Date" name="startDate" id="startDate" type="text" value="<%=formatter.format(challenge.getStartDate())%>" readonly="true" />
+			  				<aui:input name="startDate" id="startDate" type="text" value="<%=formatter.format(challenge.getStartDate())%>" readonly="true" cssClass="field disabled form-control"/>
 						<%}else{%>
 							<input id="startDate" name="startDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getStartDate())%>" required='true'>
 						<%}%>
@@ -203,9 +217,13 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 			   </div>		 
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
-			  			<label class="control-label">End Date*</label>
+			  			  <%if (readonly){%>	
+			              		<label class="control-label">End Date</label>
+			              <%}else{%>
+			              		<label class="control-label">End Date*</label>
+			              <%}%>
 			  			<%if (readonly){%>
-			  				<aui:input label="End Date" name="endDate" id="endDate" type="text" value="<%=formatter.format(challenge.getEndDate())%>" readonly="true" />
+			  				<aui:input name="endDate" id="endDate" type="text" value="<%=formatter.format(challenge.getEndDate())%>" readonly="true" cssClass="field disabled form-control"/>
 	          	 		<%}else{%>
 	          	 			<input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getEndDate())%>" required='true'>
 	          	 		<%}%>
@@ -288,23 +306,28 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 				 	<div class="pb-2">
 				 		<aui:button-row>
 				  			<div id="aui_popup_click">
-				       			<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
+				  				<%if (challenge.getUserId() == user.getUserId()){%>
+				       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
+				       			<%}else{%>
+				       				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
+				       			<%}%>
 				   			</div>
 				   			<div id="aui_popup_content" ></div>
 						</aui:button-row>  
 					</div>
 			   </div>
 		 </div> 
-     	<%if (challenge.getUserId() == user.getUserId()){%>
-	        <div class="row">
-	       		<div class="col-12 col-md-12">
-			       <aui:button-row>
-			        	<aui:button type="submit" value="Update" cssClass="btn-outline-info"></aui:button>
+         <div class="row">
+       		<div class="col-12 col-md-12">
+		       <aui:button-row>
+		       		<%if (challenge.getUserId() == user.getUserId()){%>
+			        	<aui:button type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
 			        	<aui:button name="deleteChallenge" type="button" value="Delete" onClick="javascript:deleteConfirmation();"/>
-			        </aui:button-row>
-	        	</div>
-	        </div>
-      	<%}%>
+		        	<%}%>
+		        	<aui:button name="cancel" type="button" value="Cancel" onClick="<%=challengesURL%>"/>
+		        </aui:button-row>
+        	</div>
+         </div>
   	</aui:form>
 </div>
 

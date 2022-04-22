@@ -33,17 +33,15 @@ User currentUser = themeDisplay.getUser();
 	             		<aui:option selected="<%=true%>" value="">Select...</aui:option>
 						<%
 						for (User groupUser : users) {
-							if (groupUser.getUserId() != currentUser.getUserId()){
 						%>
-								<aui:option value="<%=groupUser.getUserId()%>"><%=groupUser.getFullName()%> - <%=groupUser.getEmailAddress()%></aui:option>
+							<aui:option value="<%=groupUser.getUserId()%>"><%=groupUser.getFullName()%> - <%=groupUser.getEmailAddress()%></aui:option>
 						<%
-							}
 						}
 						%>
 				   </aui:select>
 	             </div> 
 	             <div>  
-		  			<label class="control-label">Expiration Date</label>
+		  			<label class="control-label">Expiration Date*</label>
 		  			<input id="expirationDate" name="expirationDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="" required='true'>
 			     </div> 
 	             <div id="fileList"></div>
@@ -65,9 +63,16 @@ User currentUser = themeDisplay.getUser();
 		</aui:fieldset>
 		<aui:button-row>
 		  	<div id="aui_popup_click">
-		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Post" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="closePopup" name="closePopup" type="button" value="Close and Refresh" cssClass="btn-outline-info"></aui:button>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>
 	</aui:form>      
 </div>
+
+<aui:script use="aui-io-request,aui-node" >
+	A.one('#<portlet:namespace/>closePopup').on('click',function(event){
+		Liferay.Util.getOpener().refreshPortlet();
+	});
+</aui:script>

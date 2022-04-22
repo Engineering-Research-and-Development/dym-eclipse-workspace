@@ -29,7 +29,7 @@ User currentUser = themeDisplay.getUser();
 		</aui:fieldset>
 		<aui:button-row>
 		  	<div id="aui_popup_click">
-		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Post" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>
