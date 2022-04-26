@@ -37,7 +37,7 @@ User currentUser = themeDisplay.getUser();
 		<aui:button-row>
 		  	<div id="aui_popup_click">
 		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
-		       	<aui:button id="closePopup" name="closePopup" type="button" value="Close and Refresh" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="closePopup" name="closePopup" type="button" value="Close" cssClass="btn-outline-info"></aui:button>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>

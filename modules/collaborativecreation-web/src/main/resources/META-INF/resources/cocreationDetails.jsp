@@ -194,141 +194,141 @@ boolean isCocreator = false;
 	       </div>    	
 		   <h3 class="sheet-subtitle"></h3>
 		   <div id="products" class="row view-group">			
-			        <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
+		        <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
+		            <div class="thumbnail card">
+		                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
+		                    <h3 class="co-title">Milestones and Deadlines</h3>
+						    <div class="col-12 p0 mb-2">
+		                    </div>
+		                    <%
+					   		if (milestones.size() == 0){
+					   		%>
+					   			<h3 class="sheet-subtitle"</h3>
+					   			<h3 class="co-title">There are no Milestones and Deadlines</a></h3>
+							<%
+							}
+							for (Activity milestone : milestones) {
+							%>
+								<h3 class="sheet-subtitle"</h3>
+								<liferay-portlet:actionURL name="deleteMilestone" var="deleteMilestoneURL">
+									<portlet:param name="activityId" value="<%=String.valueOf(milestone.getActivityId())%>"/>
+									<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
+								</liferay-portlet:actionURL>	
+			                    <p id="desc-"<%=milestone.getActivityId()%> class="card-text group inner list-group-item-text resourse-card"></p>
+			                    <p>
+			                    <%
+								for (Cocreator cocreator : CocreatorLocalServiceUtil.getCocreatorsByCocreationId(milestone.getActivityId())) {
+								%>
+			                        <h3 class="sheet-subtitle"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a>    
+			                    <% 
+								}
+								%>
+								</p>
+								<br>
+								<p>
+									<%=milestone.getDescription()%>
+								</p>
+						   		<br>
+						   		<p>	
+									Expire : <%=formatter.format(milestone.getExpirationDate())%>
+						   		</p>
+						   		<br>
+						   		<%if (isCocreator){%>
+							   		<p>
+							   			<aui:button name="deleteMilestone" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteMilestoneURL.toString() +\"'\"%>"/></h3>
+				                    </p>
+			                    <%}%>	 	
+			                <% 
+							}
+							%>
+		                </div>
+		            </div>
+		            <%if (isCocreator){%>
+                        <aui:button-row>
+				  			<div id="aui_popup_milestonesAndDeadlines_click">
+				       			<aui:button type="button" value="Add Milestone" cssClass="btn-outline-info"></aui:button>
+				   			</div>
+				   			<div id="aui_popup_milestonesAndDeadlines_content" ></div>
+						</aui:button-row>             
+		            <%}%>
+		         </div>   
+		         <%if (isCocreator){%>
+			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 			            <div class="thumbnail card">
-			                <div class="caption card-body">
-			                    <h3 class="co-title">Milestones and Deadlines</h3>
+			                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
+			                    <h3 class="co-title">My To-Do's</h3>
 							    <div class="col-12 p0 mb-2">
 			                    </div>
 			                    <%
-								for (Activity milestone : milestones) {
+						   		if (toDos.size() == 0){
+						   		%>
+						   			<h3 class="sheet-subtitle"</h3>
+						   			<h3 class="co-title">There are no My To-Do's</a></h3>
+								<%
+								}
+								for (Task toDo : toDos) {
 								%>
 									<h3 class="sheet-subtitle"</h3>
-									<liferay-portlet:actionURL name="deleteMilestone" var="deleteMilestoneURL">
-										<portlet:param name="activityId" value="<%=String.valueOf(milestone.getActivityId())%>"/>
+									<liferay-portlet:actionURL name="deleteToDo" var="deleteToDoURL">
+										<portlet:param name="taskId" value="<%=String.valueOf(toDo.getTaskId())%>"/>
 										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 									</liferay-portlet:actionURL>	
-				                    <p id="desc-"<%=milestone.getActivityId()%> class="card-text group inner list-group-item-text resourse-card"></p>
+				                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card"></p>
 				                    <p>
-				                    <%
-									for (Cocreator cocreator : CocreatorLocalServiceUtil.getCocreatorsByCocreationId(milestone.getActivityId())) {
-									%>
-				                        <h3 class="sheet-subtitle"><a href="<%=farmerProfile%>"><%=cocreator.getUserName()%></a>    
-				                    <% 
-									}
-									%>
-									</p>
-									<br>
-									<p>
-										<%=milestone.getDescription()%>
-									</p>
-							   		<br>
-							   		<p>	
-										Expire : <%=formatter.format(milestone.getExpirationDate())%>
-							   		</p>
-							   		<br>
-							   		<%if (isCocreator){%>
-								   		<p>
-								   			<aui:button name="deleteMilestone" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteMilestoneURL.toString() +\"'\"%>"/></h3>
-					                    </p>
-				                    <%}%>	 	
+				                    	<h3 class="sheet-subtitle"><%=toDo.getDescription()%>
+				                    </p>
+				                    <br>
+				                    <p>	
+				                    	Expire : <%=formatter.format(toDo.getExpirationDate())%>    
+				                    </p>
+				                    <br>
+							   		<p>
+							   			<aui:button name="deleteToDo" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteToDoURL.toString() +\"'\"%>"/></h3>	
+				                    </p>
 				                <% 
 								}
 								%>
-								<%if (isCocreator){%>
-				                    <div class="row">
-				                        <div class="col-12">
-				                            <aui:button-row>
-									  			<div id="aui_popup_milestonesAndDeadlines_click">
-									       			<aui:button type="button" value="Add Milestone" cssClass="btn-outline-info"></aui:button>
-									   			</div>
-									   			<div id="aui_popup_milestonesAndDeadlines_content" ></div>
-											</aui:button-row>  
-				                        </div>
-				                    </div>
-			                    <%}%>
 			                </div>
-			            </div>
+			            </div> 
+                           <aui:button-row>
+				  			<div id="aui_popup_mytodos_click">
+				       			<aui:button type="button" value="Add To-Do" cssClass="btn-outline-info"></aui:button>
+				   			</div>
+				   			<div id="aui_popup_mytodos_content" ></div>
+						</aui:button-row>              
 			         </div>   
-			         <%if (isCocreator){%>
-				         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
-				            <div class="thumbnail card">
-				                <div class="caption card-body">
-				                    <h3 class="co-title">My To-Do's</h3>
-								    <div class="col-12 p0 mb-2">
-				                    </div>
-				                    <%
-									for (Task toDo : toDos) {
-									%>
-										<h3 class="sheet-subtitle"</h3>
-										<liferay-portlet:actionURL name="deleteToDo" var="deleteToDoURL">
-											<portlet:param name="taskId" value="<%=String.valueOf(toDo.getTaskId())%>"/>
-											<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
-										</liferay-portlet:actionURL>	
-					                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card"></p>
-					                    <p>
-					                    	<h3 class="sheet-subtitle"><%=toDo.getDescription()%>
-					                    </p>
-					                    <br>
-					                    <p>	
-					                    	Expire : <%=formatter.format(toDo.getExpirationDate())%>    
-					                    </p>
-					                    <br>
-								   		<p>
-								   			<aui:button name="deleteToDo" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteToDoURL.toString() +\"'\"%>"/></h3>	
-					                    </p>
-					                <% 
-									}
-									%>
-				                    <div class="row">
-				                        <div class="col-12">
-				                            <aui:button-row>
-									  			<div id="aui_popup_mytodos_click">
-									       			<aui:button type="button" value="Add To-Do" cssClass="btn-outline-info"></aui:button>
-									   			</div>
-									   			<div id="aui_popup_mytodos_content" ></div>
-											</aui:button-row>  
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-				         </div>   
-			         <%}%>
-			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
-			            <div class="thumbnail card">
-			                <div class="caption card-body">
-			                    <h3 class="co-title">Questions and Feedback</h3>
-							    <div class="col-12 p0 mb-2">
-			          			</div>
-			                    <h3 class="sheet-subtitle"</h3>
-			                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
-			                        <h3 class="sheet-subtitle">Would it be possible to have some clarification ?
-			                    </p>
-			                    <br>
-							   	<p>
-							   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
-				                </p>
-				                <br>
-			                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
-			                        <h3 class="sheet-subtitle">We'll arrange a call as soon as possible.
-			                    </p>
-			                    <br>
-							   	<p>
-							   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
-				                </p>
-			                    <div class="row">
-			                        <div class="col-12">
-			                            <aui:button-row>
-								  			<div id="aui_popup_questionsFeedbacks_click">
-								       			<aui:button type="button" value="Add Question or Feedback" cssClass="btn-outline-info"></aui:button>
-								   			</div>
-								   			<div id="aui_popup_questionsFeedbacks_content" ></div>
-										</aui:button-row>  
-			                        </div>
-			                    </div>
-			                </div>
-			            </div>
-			         </div>   
+		         <%}%>
+		         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
+		            <div class="thumbnail card">
+		                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
+		                    <h3 class="co-title">Questions and Feedback</h3>
+						    <div class="col-12 p0 mb-2">
+		          			</div>
+		                    <h3 class="sheet-subtitle"</h3>
+		                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
+		                        <h3 class="sheet-subtitle">Would it be possible to have some clarification ?
+		                    </p>
+		                    <br>
+						   	<p>
+						   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
+			                </p>
+			                <br>
+		                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
+		                        <h3 class="sheet-subtitle">We'll arrange a call as soon as possible.
+		                    </p>
+		                    <br>
+						   	<p>
+						   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
+			                </p>
+		                </div>
+		            </div>
+                       <aui:button-row>
+			  			<div id="aui_popup_questionsFeedbacks_click">
+			       			<aui:button type="button" value="Add Question or Feedback" cssClass="btn-outline-info"></aui:button>
+			   			</div>
+			   			<div id="aui_popup_questionsFeedbacks_content" ></div>
+				    </aui:button-row>             
+		         </div>   
 		   </div>					   				   
 		   <h3 class="sheet-subtitle"></h3>	
 		   <div class="col-12 col-md-12">
