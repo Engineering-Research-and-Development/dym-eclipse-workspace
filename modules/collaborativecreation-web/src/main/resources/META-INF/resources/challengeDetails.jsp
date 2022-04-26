@@ -15,6 +15,22 @@ boolean readonly = true;
 if (challenge.getUserId() == themeDisplay.getUserId()){
 	readonly = false;
 }
+boolean isCocreator = false;
+List<Cocreation> cocreations = CocreationLocalServiceUtil.getCocreationsByChallengeId(Long.parseLong(challengeId));
+Iterator<Cocreation> cocreationsIt = cocreations.iterator();
+while(cocreationsIt.hasNext()){
+	Cocreation cocreation = cocreationsIt.next();
+	List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
+	Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
+	while(cocreatorsIt.hasNext()){
+			Cocreator cocreator = cocreatorsIt.next();
+			User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId());
+			if (user.getUserId() == cocreator.getUserId()){
+				/*L'utente loggato è uno dei co-creatori*/
+				isCocreator = true;
+			}		
+	}
+}
 %>
 <portlet:renderURL var="farmerProfile">
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
@@ -308,9 +324,13 @@ if (challenge.getUserId() == themeDisplay.getUserId()){
 				  			<div id="aui_popup_click">
 				  				<%if (challenge.getUserId() == user.getUserId()){%>
 				       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
-				       			<%}else{%>
-				       				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
-				       			<%}%>
+				       			<%}else{
+				       			    if (!isCocreator){%>
+				       					<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
+				       			    <%}else{%>
+				       			    	<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+				       			   	<%}
+				       			 }%>
 				   			</div>
 				   			<div id="aui_popup_content" ></div>
 						</aui:button-row>  
