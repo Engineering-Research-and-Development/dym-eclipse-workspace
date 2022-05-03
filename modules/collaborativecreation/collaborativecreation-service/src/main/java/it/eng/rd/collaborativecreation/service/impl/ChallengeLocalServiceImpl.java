@@ -16,10 +16,8 @@ package it.eng.rd.collaborativecreation.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -130,6 +128,12 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
                 null, 0, 0, null);
 		_log.info("generated challenge");
 		
+		/*
+		 * resourceLocalService.addResources(user.getCompanyId(), groupId,
+		 * serviceContext.getUserId(), Challenge.class.getName(), challengeId, false,
+		 * true, true);
+		 */
+		
 		return challenge;
 	}
 	
@@ -192,8 +196,8 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 	              null, null, null, 0, 0,
 	              serviceContext.getAssetPriority());
 		
-		_log.info("generated assetEntry");
-	
+		_log.info("generated assetEntry");	    
+		
 		return challenge;
 	}
 	
@@ -219,7 +223,14 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 			_log.error("An error occurred while deleting asseEntry "+assetEntryId);
 			_log.error(e,e);
 		}
-
+		
+		/*
+		 * try { ResourceLocalServiceUtil.deleteResource( challenge.getCompanyId(),
+		 * Challenge.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL,
+		 * challenge.getPrimaryKey()); } catch (PortalException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
+		
 		return challenge;
 	}
 

@@ -94,7 +94,7 @@ while(cocreationsIt.hasNext()){
 			</div><!-- w-1/2 END -->
 		</div>
    </div>
-   <aui:form id="formChallenge" name="fm" method="post" enctype="multipart/form-data" action="<%= updateChallengeURL.toString() %>">
+   <aui:form id="formChallenge" name="formChallenge" method="post" enctype="multipart/form-data" action="<%= updateChallengeURL.toString() %>">
    	   	<div class="row">
 	   	   	   <div class="col-12 col-md-12">
 		       		<div class="pb-2">     
@@ -348,7 +348,25 @@ while(cocreationsIt.hasNext()){
 		        </aui:button-row>
         	</div>
          </div>
+         
   	</aui:form>
+  	<%
+	AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
+    Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));
+    String currentURL = PortalUtil.getCurrentURL(request);
+	currentURL = currentURL + "?challengeId="+challenge.getChallengeId();
+	%>								
+   	<liferay-ui:panel-container extended="<%=false%>" id="guestbookCollaborationPanelContainer" persistState="<%=true%>">
+		<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id="guestbookCollaborationPanel" persistState="<%=true%>" title="">
+			<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
+  			<liferay-comment:discussion className="<%=Challenge.class.getName()%>"
+						classPK="<%=entry.getEntryId()%>"
+						formAction="<%=discussionURL%>" formName="fm2"
+						discussion="<%= discussion %>"
+						ratingsEnabled="<%=true%>" redirect="<%=currentURL%>"
+						userId="<%=entry.getUserId()%>" />
+		</liferay-ui:panel>
+	</liferay-ui:panel-container>
 </div>
 
 <script type="text/javascript">

@@ -183,14 +183,15 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         _log.info("active: "+active);
         
         /*Recupero di immagini e documenti dalla Document Library*/
-		Map<String, String>  allFiles = getAllFileLinks(themeDisplay, folderTitle);
+		Map<String, String> allFiles;
+		allFiles = getAllFileLinks(themeDisplay, folderTitle);
 		Iterator iterator = allFiles.entrySet().iterator();
 	    while (iterator.hasNext()) {
 	        Map.Entry pair = (Map.Entry)iterator.next();
 	        _log.info(pair.getKey() + " ====> " + pair.getValue());
 	        iterator.remove(); 
 	    }
-	    
+		
 	    try {
 	    	Challenge challenge = ChallengeLocalServiceUtil.addChallenge(title, description, desiredOutcome, startDate, endDate, active, serviceContext);
 	    	LocationLocalServiceUtil.addLocation(challenge.getChallengeId(), location, "", "", serviceContext);  
@@ -290,6 +291,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	public void deleteChallenge(ActionRequest request, ActionResponse response)
 	        throws PortalException, SystemException, ParseException {
 		
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(Challenge.class.getName(), request);
 		
 		String redirectTo = ParamUtil.getString(request, "redirectTo");
@@ -318,6 +320,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 			CocreationLocalServiceUtil.deleteCocreationsByChallengeId(challengeId);
 	    	ChallengeLocalServiceUtil.deleteChallenge(challengeId);
 	    	AssetEntryLocalServiceUtil.deleteEntry(Challenge.class.getName(), challenge.getPrimaryKey());
+	    	/*Elimino la relativa cartella dalla Document Library*/
+			deleteFolder(themeDisplay, challenge.getTitle().replaceAll("[^a-zA-Z0-9]", "_"));
 	        SessionMessages.add(request, "actionSuccess");
 	        response.sendRedirect(redirectTo);
 	    } catch (Exception e) {
@@ -755,7 +759,6 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	}
 	
 	public String extractPortalHomeURL() {
-		
 		//HTTPS SERVER PARAMETER
 		boolean secure = false; 
 		Company company;
@@ -882,16 +885,31 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 		long repositoryId = themeDisplay.getScopeGroupId();
 		try {
 			Folder folder = getFolder(themeDisplay, name);
-			List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(repositoryId, folder.getFolderId());
-			 for (FileEntry file : fileEntries) {
-				String url = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + "/" + file.getFolderId() +  "/" +file.getTitle();
-				/*urlMap.put(file.getTitle().split("\\.")[0], url);*/
-				urlMap.put(file.getTitle(), url);
-			}
+			List<FileEntry> fileEntries;
+			try {
+				fileEntries = DLAppServiceUtil.getFileEntries(repositoryId, folder.getFolderId());
+				for (FileEntry file : fileEntries) {
+					String url = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + "/" + file.getFolderId() +  "/" +file.getTitle();
+					/*urlMap.put(file.getTitle().split("\\.")[0], url);*/
+					urlMap.put(file.getTitle(), url);
+				}
+			} catch (NullPointerException npe) {} 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return urlMap;
+	}
+	
+	/*Seleziona cartella*/
+	public void deleteFolder(ThemeDisplay themeDisplay, String name){
+		
+		_log.info("CollaborativecreationPortlet - deleteFolder");
+	    _log.info("name: "+name);
+	     
+		try {
+			Folder cocreationFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), PARENT_FOLDER_ID, "CO-CREATION");
+			DLAppServiceUtil.deleteFolder(themeDisplay.getScopeGroupId(), cocreationFolder.getFolderId(), name);
+		} catch (Exception e) {}
 	}
 	
 	private static String ROOT_FOLDER_NAME = "DEMETER";

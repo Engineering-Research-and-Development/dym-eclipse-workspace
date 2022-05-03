@@ -3,7 +3,7 @@
 Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7_2_0.dtd">
 
 <resource-action-mapping>
-  <portlet-resource>
+   <portlet-resource>
     <portlet-name>it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet</portlet-name>
     <permissions>
         <supports>
@@ -18,11 +18,22 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 		<portlet-ref>
 			<portlet-name>it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet</portlet-name>
 		</portlet-ref>
-		<weight>1</weight>
 		<permissions>
 	        <supports>
-	            <action-key>ADD_CHALLENGE</action-key>
-	        </supports>
-        </permissions>
+	        	<action-key>ADD_CHALLENGE</action-key>
+	        	<action-key>ADD_DISCUSSION</action-key>
+	        	<action-key>VIEW</action-key>
+				<action-key>DELETE_DISCUSSION</action-key>
+				<action-key>UPDATE_DISCUSSION</action-key>
+				<action-key>SUBSCRIBE</action-key>
+				<action-key>FOLLOW</action-key>
+				<action-key>UNFOLLOW</action-key>
+				<action-key>UNLIKE</action-key>
+				<action-key>LIKE</action-key>
+				<action-key>RELATE_RESOURCE</action-key>
+				<action-key>NOTIFY</action-key>
+				<action-key>CATEGORIZE</action-key>
+			</supports>
+		</permissions>
    </model-resource>  	  
 </resource-action-mapping>

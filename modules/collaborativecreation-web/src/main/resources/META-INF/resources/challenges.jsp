@@ -259,39 +259,38 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 														%>
 											     	</div>
 										    	</div>
-										    	<div class="col col-lg-6 col-sm-6 col-6 col-md-6">
+										    	
+										    	<aui:button-row>
 										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
-										   		 	<a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a>
+										   		 	<!-- <a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a> -->
 										   		 	<%if (user != null){
 														if((challenge.getUserId() == user.getUserId()) || isChallengeOwner){%>
-												   		 	<div class="listDelete">
-												   		 		<aui:button name="deleteChallenge" type="button" value="Delete" onClick="<%=deleteConfirmation%>"/>
-												   		 	</div>
+												   		 	<aui:button id="deleteChallenge" name="deleteChallenge" type="button" value="Delete" onClick="<%=deleteConfirmation%>"/>
 											   		 	<%}%>
 											   		 <%}%>	
-										   		</div>	
+										   		</aui:button-row>	
 									    	</div>
 						        		</div>
 						        	</div>	
-						        	<%
-									AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
-						        	Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));
-									%>
-									<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="like" /> --%>
-									<liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="stars" />
-									<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" /> --%>
-						        	<liferay-ui:panel-container extended="<%=false%>" id='<%="guestbookCollaborationPanelContainer_" + challenge.getChallengeId()%>' persistState="<%=true%>">
+						       	</aui:form> 
+						       	<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="like" /> --%>
+								<liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="stars" />
+								<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" /> --%>
+						       	<%
+								AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
+						        Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));
+								%>
+						       	<liferay-ui:panel-container extended="<%=false%>" id='<%="guestbookCollaborationPanelContainer_" + challenge.getChallengeId()%>' persistState="<%=true%>">
   										<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id='<%="guestbookCollaborationPanel_" + challenge.getChallengeId()%>' persistState="<%=true%>" title="">
     										<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
-									    	<liferay-comment:discussion className="<%=Challenge.class.getName()%>"
-      											classPK="<%=challenge.getChallengeId()%>"
-      											formAction="<%=discussionURL%>" formName='<%="fm_" + challenge.getChallengeId()%>'
+									    	<liferay-comment:discussion className="<%=Entry.class.getName()%>"
+      											classPK="<%=entry.getEntryId()%>"
+      											formAction="<%=discussionURL%>" formName="fm2"
       											discussion="<%= discussion %>"
       											ratingsEnabled="<%=true%>" redirect="<%=PortalUtil.getCurrentURL(request)%>"
       											userId="<%=entry.getUserId()%>" />
       									</liferay-ui:panel>
-									</liferay-ui:panel-container>
-						       	</aui:form> 
+								</liferay-ui:panel-container>
 							 <%
 							 }
 							 %>
@@ -317,7 +316,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
  	var getChallenges = Liferay.PortletURL.createRenderURL();
 	getChallenges.setPortletId('it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet');
 	getChallenges.setParameter("mvcPath","/challenges.jsp");
-			
+		
  	AUI().ready('aui-base','node', 'event', function (A) {
       A.one("#<portlet:namespace/>filter").on('click',function(event){
       		getChallenges.setParameter("active", A.one('#<portlet:namespace />active').attr('checked'));	
