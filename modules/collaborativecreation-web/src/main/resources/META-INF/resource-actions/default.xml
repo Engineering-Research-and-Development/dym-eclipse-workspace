@@ -13,7 +13,7 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
         </supports>
     </permissions>
    </portlet-resource>   
-   <model-resource>
+   <!-- <model-resource>
 		<model-name>it.eng.rd.collaborativecreation.model.Challenge</model-name>
 		<portlet-ref>
 			<portlet-name>it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet</portlet-name>
@@ -35,5 +35,5 @@ Mapping 7.2.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7
 				<action-key>CATEGORIZE</action-key>
 			</supports>
 		</permissions>
-   </model-resource>  	  
+   </model-resource>  	   -->
 </resource-action-mapping>

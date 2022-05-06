@@ -710,66 +710,66 @@ public class ChallengeUtil {
 	}
 
 	/**
-	 * Returns all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns all the challenges where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @return the matching challenges
 	 */
-	public static List<Challenge> findByUserId(long groupId, long userId) {
-		return getPersistence().findByUserId(groupId, userId);
+	public static List<Challenge> findByUserId(long userId, long groupId) {
+		return getPersistence().findByUserId(userId, groupId);
 	}
 
 	/**
-	 * Returns a range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns a range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @return the range of matching challenges
 	 */
 	public static List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end) {
+		long userId, long groupId, int start, int end) {
 
-		return getPersistence().findByUserId(groupId, userId, start, end);
+		return getPersistence().findByUserId(userId, groupId, start, end);
 	}
 
 	/**
-	 * Returns an ordered range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns an ordered range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching challenges
 	 */
 	public static List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end,
+		long userId, long groupId, int start, int end,
 		OrderByComparator<Challenge> orderByComparator) {
 
 		return getPersistence().findByUserId(
-			groupId, userId, start, end, orderByComparator);
+			userId, groupId, start, end, orderByComparator);
 	}
 
 	/**
-	 * Returns an ordered range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns an ordered range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -777,123 +777,123 @@ public class ChallengeUtil {
 	 * @return the ordered range of matching challenges
 	 */
 	public static List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end,
+		long userId, long groupId, int start, int end,
 		OrderByComparator<Challenge> orderByComparator,
 		boolean useFinderCache) {
 
 		return getPersistence().findByUserId(
-			groupId, userId, start, end, orderByComparator, useFinderCache);
+			userId, groupId, start, end, orderByComparator, useFinderCache);
 	}
 
 	/**
-	 * Returns the first challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the first challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	public static Challenge findByUserId_First(
-			long groupId, long userId,
+			long userId, long groupId,
 			OrderByComparator<Challenge> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchChallengeException {
 
 		return getPersistence().findByUserId_First(
-			groupId, userId, orderByComparator);
+			userId, groupId, orderByComparator);
 	}
 
 	/**
-	 * Returns the first challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the first challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	public static Challenge fetchByUserId_First(
-		long groupId, long userId,
+		long userId, long groupId,
 		OrderByComparator<Challenge> orderByComparator) {
 
 		return getPersistence().fetchByUserId_First(
-			groupId, userId, orderByComparator);
+			userId, groupId, orderByComparator);
 	}
 
 	/**
-	 * Returns the last challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the last challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	public static Challenge findByUserId_Last(
-			long groupId, long userId,
+			long userId, long groupId,
 			OrderByComparator<Challenge> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchChallengeException {
 
 		return getPersistence().findByUserId_Last(
-			groupId, userId, orderByComparator);
+			userId, groupId, orderByComparator);
 	}
 
 	/**
-	 * Returns the last challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the last challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	public static Challenge fetchByUserId_Last(
-		long groupId, long userId,
+		long userId, long groupId,
 		OrderByComparator<Challenge> orderByComparator) {
 
 		return getPersistence().fetchByUserId_Last(
-			groupId, userId, orderByComparator);
+			userId, groupId, orderByComparator);
 	}
 
 	/**
-	 * Returns the challenges before and after the current challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the challenges before and after the current challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
 	 * @param challengeId the primary key of the current challenge
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next challenge
 	 * @throws NoSuchChallengeException if a challenge with the primary key could not be found
 	 */
 	public static Challenge[] findByUserId_PrevAndNext(
-			long challengeId, long groupId, long userId,
+			long challengeId, long userId, long groupId,
 			OrderByComparator<Challenge> orderByComparator)
 		throws it.eng.rd.collaborativecreation.exception.
 			NoSuchChallengeException {
 
 		return getPersistence().findByUserId_PrevAndNext(
-			challengeId, groupId, userId, orderByComparator);
+			challengeId, userId, groupId, orderByComparator);
 	}
 
 	/**
-	 * Removes all the challenges where groupId = &#63; and userId = &#63; from the database.
+	 * Removes all the challenges where userId = &#63; and groupId = &#63; from the database.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 */
-	public static void removeByUserId(long groupId, long userId) {
-		getPersistence().removeByUserId(groupId, userId);
+	public static void removeByUserId(long userId, long groupId) {
+		getPersistence().removeByUserId(userId, groupId);
 	}
 
 	/**
-	 * Returns the number of challenges where groupId = &#63; and userId = &#63;.
+	 * Returns the number of challenges where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @return the number of matching challenges
 	 */
-	public static int countByUserId(long groupId, long userId) {
-		return getPersistence().countByUserId(groupId, userId);
+	public static int countByUserId(long userId, long groupId) {
+		return getPersistence().countByUserId(userId, groupId);
 	}
 
 	/**

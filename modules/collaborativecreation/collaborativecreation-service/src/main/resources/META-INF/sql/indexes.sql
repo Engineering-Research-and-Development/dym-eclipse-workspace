@@ -7,6 +7,7 @@ create index IX_852DE254 on COCREATION_Challenge (active_);
 create index IX_EB48AAB4 on COCREATION_Challenge (groupId, active_);
 create index IX_ACF87B2F on COCREATION_Challenge (groupId, userId);
 create index IX_DB3B4D13 on COCREATION_Challenge (title[$COLUMN_LENGTH:75$]);
+create index IX_72E6B5FB on COCREATION_Challenge (userId, groupId);
 create index IX_1819309 on COCREATION_Challenge (uuid_[$COLUMN_LENGTH:75$], companyId);
 create unique index IX_333547CB on COCREATION_Challenge (uuid_[$COLUMN_LENGTH:75$], groupId);
 

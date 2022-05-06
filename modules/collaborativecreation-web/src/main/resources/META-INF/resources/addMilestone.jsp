@@ -6,6 +6,17 @@ long challengeId = ParamUtil.getLong(request, "challengeId");
 long cocreationId = ParamUtil.getLong(request, "cocreationId");
 List<User> users = UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId());
 User currentUser = themeDisplay.getUser();
+List<Cocreator> allCocreators = new ArrayList();
+List<Cocreator> cocreators = new ArrayList();
+if (cocreationId > 0){
+	/*Invito a partecipare ad una cocreazione : acquisisco tutti i cocreatori per la cocreazione di riferimento*/
+	cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreationId);
+	Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
+	while(cocreatorsIt.hasNext()){
+			Cocreator cocreator = cocreatorsIt.next();
+			allCocreators.add(cocreator);
+	}
+}
 %>
 
 <portlet:actionURL name="addMilestone" var="addMilestoneURL">
@@ -29,13 +40,21 @@ User currentUser = themeDisplay.getUser();
 	             	<aui:input label="Description" name="description" id="description" type="text" required='true'/>
 	             </div>
 	             <div>
-	             	<aui:select label="Invite Participants" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
+	             	<aui:select label="Assign to" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
 	             		<aui:option selected="<%=true%>" value="">Select...</aui:option>
 						<%
 						for (User groupUser : users) {
-						%>
-							<aui:option value="<%=groupUser.getUserId()%>"><%=groupUser.getFullName()%> - <%=groupUser.getEmailAddress()%></aui:option>
-						<%
+							boolean isCocreator = false;
+							for (Cocreator cocreator : allCocreators) {
+								if (groupUser.getUserId() == cocreator.getUserId()){
+									isCocreator = true;
+								}
+							}
+							if (isCocreator){
+							%>
+								<aui:option value="<%=groupUser.getUserId()%>"><%=groupUser.getFullName()%> - <%=groupUser.getEmailAddress()%></aui:option>
+							<%
+							}
 						}
 						%>
 				   </aui:select>
@@ -44,7 +63,7 @@ User currentUser = themeDisplay.getUser();
 		  			<label class="control-label">Expiration Date*</label>
 		  			<input id="expirationDate" name="expirationDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="" required='true'>
 			     </div> 
-	             <div id="fileList"></div>
+	             <%-- <div id="fileList"></div>
 			     <span style="display:block; height: 10px;"></span>
 			     <div class="btn-group">
 					<label for="uploadedFile" class="btn btn-primary pull-left">Upload documents</label>
@@ -58,7 +77,7 @@ User currentUser = themeDisplay.getUser();
 					    /> 
 				    </div>
 				    <input type="file" id="uploadedFile" name="uploadedFile" style="visibility:hidden;" multiple="multiple" accept="image/*, .xlsx, .xls, .doc, .docx, .ppt, .pptx, .txt, .pdf" onchange="javascript:updateFileList()"/>
-		         </div>    
+		         </div> --%>    
 		    </div>            
 		</aui:fieldset>
 		<aui:button-row>

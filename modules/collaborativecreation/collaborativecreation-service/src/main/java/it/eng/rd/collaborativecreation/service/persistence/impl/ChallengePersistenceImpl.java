@@ -1989,47 +1989,47 @@ public class ChallengePersistenceImpl
 	private FinderPath _finderPathCountByUserId;
 
 	/**
-	 * Returns all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns all the challenges where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @return the matching challenges
 	 */
 	@Override
-	public List<Challenge> findByUserId(long groupId, long userId) {
+	public List<Challenge> findByUserId(long userId, long groupId) {
 		return findByUserId(
-			groupId, userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+			userId, groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns a range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @return the range of matching challenges
 	 */
 	@Override
 	public List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end) {
+		long userId, long groupId, int start, int end) {
 
-		return findByUserId(groupId, userId, start, end, null);
+		return findByUserId(userId, groupId, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns an ordered range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2037,22 +2037,22 @@ public class ChallengePersistenceImpl
 	 */
 	@Override
 	public List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end,
+		long userId, long groupId, int start, int end,
 		OrderByComparator<Challenge> orderByComparator) {
 
 		return findByUserId(
-			groupId, userId, start, end, orderByComparator, true);
+			userId, groupId, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns an ordered range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2061,7 +2061,7 @@ public class ChallengePersistenceImpl
 	 */
 	@Override
 	public List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end,
+		long userId, long groupId, int start, int end,
 		OrderByComparator<Challenge> orderByComparator,
 		boolean useFinderCache) {
 
@@ -2073,13 +2073,13 @@ public class ChallengePersistenceImpl
 
 			if (useFinderCache) {
 				finderPath = _finderPathWithoutPaginationFindByUserId;
-				finderArgs = new Object[] {groupId, userId};
+				finderArgs = new Object[] {userId, groupId};
 			}
 		}
 		else if (useFinderCache) {
 			finderPath = _finderPathWithPaginationFindByUserId;
 			finderArgs = new Object[] {
-				groupId, userId, start, end, orderByComparator
+				userId, groupId, start, end, orderByComparator
 			};
 		}
 
@@ -2091,8 +2091,8 @@ public class ChallengePersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Challenge challenge : list) {
-					if ((groupId != challenge.getGroupId()) ||
-						(userId != challenge.getUserId())) {
+					if ((userId != challenge.getUserId()) ||
+						(groupId != challenge.getGroupId())) {
 
 						list = null;
 
@@ -2115,9 +2115,9 @@ public class ChallengePersistenceImpl
 
 			sb.append(_SQL_SELECT_CHALLENGE_WHERE);
 
-			sb.append(_FINDER_COLUMN_USERID_GROUPID_2);
-
 			sb.append(_FINDER_COLUMN_USERID_USERID_2);
+
+			sb.append(_FINDER_COLUMN_USERID_GROUPID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(
@@ -2138,9 +2138,9 @@ public class ChallengePersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
-				queryPos.add(groupId);
-
 				queryPos.add(userId);
+
+				queryPos.add(groupId);
 
 				list = (List<Challenge>)QueryUtil.list(
 					query, getDialect(), start, end);
@@ -2163,22 +2163,22 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the first challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the first challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	@Override
 	public Challenge findByUserId_First(
-			long groupId, long userId,
+			long userId, long groupId,
 			OrderByComparator<Challenge> orderByComparator)
 		throws NoSuchChallengeException {
 
 		Challenge challenge = fetchByUserId_First(
-			groupId, userId, orderByComparator);
+			userId, groupId, orderByComparator);
 
 		if (challenge != null) {
 			return challenge;
@@ -2188,11 +2188,11 @@ public class ChallengePersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("groupId=");
-		sb.append(groupId);
-
-		sb.append(", userId=");
+		sb.append("userId=");
 		sb.append(userId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
 
 		sb.append("}");
 
@@ -2200,20 +2200,20 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the first challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the first challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	@Override
 	public Challenge fetchByUserId_First(
-		long groupId, long userId,
+		long userId, long groupId,
 		OrderByComparator<Challenge> orderByComparator) {
 
 		List<Challenge> list = findByUserId(
-			groupId, userId, 0, 1, orderByComparator);
+			userId, groupId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -2223,22 +2223,22 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the last challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the last challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	@Override
 	public Challenge findByUserId_Last(
-			long groupId, long userId,
+			long userId, long groupId,
 			OrderByComparator<Challenge> orderByComparator)
 		throws NoSuchChallengeException {
 
 		Challenge challenge = fetchByUserId_Last(
-			groupId, userId, orderByComparator);
+			userId, groupId, orderByComparator);
 
 		if (challenge != null) {
 			return challenge;
@@ -2248,11 +2248,11 @@ public class ChallengePersistenceImpl
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		sb.append("groupId=");
-		sb.append(groupId);
-
-		sb.append(", userId=");
+		sb.append("userId=");
 		sb.append(userId);
+
+		sb.append(", groupId=");
+		sb.append(groupId);
 
 		sb.append("}");
 
@@ -2260,26 +2260,26 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the last challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the last challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	@Override
 	public Challenge fetchByUserId_Last(
-		long groupId, long userId,
+		long userId, long groupId,
 		OrderByComparator<Challenge> orderByComparator) {
 
-		int count = countByUserId(groupId, userId);
+		int count = countByUserId(userId, groupId);
 
 		if (count == 0) {
 			return null;
 		}
 
 		List<Challenge> list = findByUserId(
-			groupId, userId, count - 1, count, orderByComparator);
+			userId, groupId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -2289,18 +2289,18 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the challenges before and after the current challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the challenges before and after the current challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
 	 * @param challengeId the primary key of the current challenge
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next challenge
 	 * @throws NoSuchChallengeException if a challenge with the primary key could not be found
 	 */
 	@Override
 	public Challenge[] findByUserId_PrevAndNext(
-			long challengeId, long groupId, long userId,
+			long challengeId, long userId, long groupId,
 			OrderByComparator<Challenge> orderByComparator)
 		throws NoSuchChallengeException {
 
@@ -2314,12 +2314,12 @@ public class ChallengePersistenceImpl
 			Challenge[] array = new ChallengeImpl[3];
 
 			array[0] = getByUserId_PrevAndNext(
-				session, challenge, groupId, userId, orderByComparator, true);
+				session, challenge, userId, groupId, orderByComparator, true);
 
 			array[1] = challenge;
 
 			array[2] = getByUserId_PrevAndNext(
-				session, challenge, groupId, userId, orderByComparator, false);
+				session, challenge, userId, groupId, orderByComparator, false);
 
 			return array;
 		}
@@ -2332,7 +2332,7 @@ public class ChallengePersistenceImpl
 	}
 
 	protected Challenge getByUserId_PrevAndNext(
-		Session session, Challenge challenge, long groupId, long userId,
+		Session session, Challenge challenge, long userId, long groupId,
 		OrderByComparator<Challenge> orderByComparator, boolean previous) {
 
 		StringBundler sb = null;
@@ -2348,9 +2348,9 @@ public class ChallengePersistenceImpl
 
 		sb.append(_SQL_SELECT_CHALLENGE_WHERE);
 
-		sb.append(_FINDER_COLUMN_USERID_GROUPID_2);
-
 		sb.append(_FINDER_COLUMN_USERID_USERID_2);
+
+		sb.append(_FINDER_COLUMN_USERID_GROUPID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields =
@@ -2421,9 +2421,9 @@ public class ChallengePersistenceImpl
 
 		QueryPos queryPos = QueryPos.getInstance(query);
 
-		queryPos.add(groupId);
-
 		queryPos.add(userId);
+
+		queryPos.add(groupId);
 
 		if (orderByComparator != null) {
 			for (Object orderByConditionValue :
@@ -2444,16 +2444,16 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Removes all the challenges where groupId = &#63; and userId = &#63; from the database.
+	 * Removes all the challenges where userId = &#63; and groupId = &#63; from the database.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 */
 	@Override
-	public void removeByUserId(long groupId, long userId) {
+	public void removeByUserId(long userId, long groupId) {
 		for (Challenge challenge :
 				findByUserId(
-					groupId, userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					userId, groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
 					null)) {
 
 			remove(challenge);
@@ -2461,17 +2461,17 @@ public class ChallengePersistenceImpl
 	}
 
 	/**
-	 * Returns the number of challenges where groupId = &#63; and userId = &#63;.
+	 * Returns the number of challenges where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @return the number of matching challenges
 	 */
 	@Override
-	public int countByUserId(long groupId, long userId) {
+	public int countByUserId(long userId, long groupId) {
 		FinderPath finderPath = _finderPathCountByUserId;
 
-		Object[] finderArgs = new Object[] {groupId, userId};
+		Object[] finderArgs = new Object[] {userId, groupId};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2480,9 +2480,9 @@ public class ChallengePersistenceImpl
 
 			sb.append(_SQL_COUNT_CHALLENGE_WHERE);
 
-			sb.append(_FINDER_COLUMN_USERID_GROUPID_2);
-
 			sb.append(_FINDER_COLUMN_USERID_USERID_2);
+
+			sb.append(_FINDER_COLUMN_USERID_GROUPID_2);
 
 			String sql = sb.toString();
 
@@ -2495,9 +2495,9 @@ public class ChallengePersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
-				queryPos.add(groupId);
-
 				queryPos.add(userId);
+
+				queryPos.add(groupId);
 
 				count = (Long)query.uniqueResult();
 
@@ -2514,11 +2514,11 @@ public class ChallengePersistenceImpl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_USERID_GROUPID_2 =
-		"challenge.groupId = ? AND ";
-
 	private static final String _FINDER_COLUMN_USERID_USERID_2 =
-		"challenge.userId = ?";
+		"challenge.userId = ? AND ";
+
+	private static final String _FINDER_COLUMN_USERID_GROUPID_2 =
+		"challenge.groupId = ?";
 
 	private FinderPath _finderPathWithPaginationFindByGroupId;
 	private FinderPath _finderPathWithoutPaginationFindByGroupId;
@@ -4189,17 +4189,17 @@ public class ChallengePersistenceImpl
 				Integer.class.getName(), Integer.class.getName(),
 				OrderByComparator.class.getName()
 			},
-			new String[] {"groupId", "userId"}, true);
+			new String[] {"userId", "groupId"}, true);
 
 		_finderPathWithoutPaginationFindByUserId = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUserId",
 			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {"groupId", "userId"}, true);
+			new String[] {"userId", "groupId"}, true);
 
 		_finderPathCountByUserId = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUserId",
 			new String[] {Long.class.getName(), Long.class.getName()},
-			new String[] {"groupId", "userId"}, false);
+			new String[] {"userId", "groupId"}, false);
 
 		_finderPathWithPaginationFindByGroupId = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByGroupId",

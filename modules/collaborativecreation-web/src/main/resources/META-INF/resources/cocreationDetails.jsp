@@ -117,7 +117,12 @@ boolean isCocreator = false;
 				}
 				%>
 				<span><label class="aui-field-label"><a href="<%=userDisplay.getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
-				<%		
+				<%
+				if (cocreatorsIt.hasNext()){
+				%>
+					<span><label class="aui-field-label">,</label></span>
+				<%
+				}		
 			}	
 		    %>
 	       <div id="date" class="challengesLeft">
@@ -198,23 +203,24 @@ boolean isCocreator = false;
 		            <div class="thumbnail card">
 		                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
 		                    <h3 class="co-title">Milestones and Deadlines</h3>
-						    <div class="col-12 p0 mb-2">
-		                    </div>
 		                    <%
 					   		if (milestones.size() == 0){
 					   		%>
-					   			<h3 class="sheet-subtitle"</h3>
-					   			<h3 class="co-title">There are no Milestones and Deadlines</a></h3>
+					   			</br>
+					   			<h3 class="sheet-subtitle">There are no Milestones and Deadlines</a></h3>
+							<%
+							}else{
+							%>	
+								<h3 class="sheet-subtitle"</h3>
 							<%
 							}
 							for (Activity milestone : milestones) {
 							%>
-								<h3 class="sheet-subtitle"</h3>
+								
 								<liferay-portlet:actionURL name="deleteMilestone" var="deleteMilestoneURL">
 									<portlet:param name="activityId" value="<%=String.valueOf(milestone.getActivityId())%>"/>
 									<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 								</liferay-portlet:actionURL>	
-			                    <p id="desc-"<%=milestone.getActivityId()%> class="card-text group inner list-group-item-text resourse-card"></p>
 			                    <p>
 			                    <%
 								for (Cocreator cocreator : CocreatorLocalServiceUtil.getCocreatorsByCocreationId(milestone.getActivityId())) {
@@ -230,7 +236,7 @@ boolean isCocreator = false;
 								</p>
 						   		<br>
 						   		<p>	
-									Expire : <%=formatter.format(milestone.getExpirationDate())%>
+									Expiration Date : <%=formatter.format(milestone.getExpirationDate())%>
 						   		</p>
 						   		<br>
 						   		<%if (isCocreator){%>
@@ -257,29 +263,29 @@ boolean isCocreator = false;
 			            <div class="thumbnail card">
 			                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
 			                    <h3 class="co-title">My To-Do's</h3>
-							    <div class="col-12 p0 mb-2">
-			                    </div>
 			                    <%
 						   		if (toDos.size() == 0){
 						   		%>
-						   			<h3 class="sheet-subtitle"</h3>
-						   			<h3 class="co-title">There are no My To-Do's</a></h3>
+						   			</br>
+						   			<h3 class="sheet-subtitle">There are no My To-Do's</a></h3>
 								<%
+								}else{
+								%>
+									<h3 class="sheet-subtitle"</h3>
+								<%	
 								}
 								for (Task toDo : toDos) {
 								%>
-									<h3 class="sheet-subtitle"</h3>
 									<liferay-portlet:actionURL name="deleteToDo" var="deleteToDoURL">
 										<portlet:param name="taskId" value="<%=String.valueOf(toDo.getTaskId())%>"/>
 										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 									</liferay-portlet:actionURL>	
-				                    <p id="desc-"<%=toDo.getTaskId()%> class="card-text group inner list-group-item-text resourse-card"></p>
 				                    <p>
 				                    	<h3 class="sheet-subtitle"><%=toDo.getDescription()%>
 				                    </p>
 				                    <br>
 				                    <p>	
-				                    	Expire : <%=formatter.format(toDo.getExpirationDate())%>    
+				                    	Expiration Date : <%=formatter.format(toDo.getExpirationDate())%>    
 				                    </p>
 				                    <br>
 							   		<p>
@@ -385,7 +391,8 @@ boolean isCocreator = false;
 					constrain2view: true,					
 					modal: true,
 					resizable: false,
-					width: 500
+					width: 500,
+					height: 520
 				}
 			}
 		).plug(
@@ -407,7 +414,8 @@ boolean isCocreator = false;
 					constrain2view: true,					
 					modal: true,
 					resizable: false,
-					width: 500
+					width: 500,
+					height: 600
 				}
 			}
 		).plug(
@@ -429,7 +437,8 @@ boolean isCocreator = false;
 					constrain2view: true,					
 					modal: true,
 					resizable: false,
-					width: 500
+					width: 500,
+					height: 400
 				}
 			}
 		).plug(
@@ -451,7 +460,8 @@ boolean isCocreator = false;
 					constrain2view: true,					
 					modal: true,
 					resizable: false,
-					width: 500
+					width: 500,
+					height: 300
 				}
 			}
 		).plug(

@@ -43,8 +43,8 @@
         	<finder-column name="title"></finder-column>
         </finder>
         <finder name="UserId" return-type="Collection">
-        	<finder-column name="groupId"></finder-column>
         	<finder-column name="userId"></finder-column>
+        	<finder-column name="groupId"></finder-column>
         </finder>
 	    <finder name="GroupId" return-type="Collection">
 	       <finder-column name="groupId" />

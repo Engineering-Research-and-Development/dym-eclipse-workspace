@@ -182,6 +182,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary">Post a New Challenge</a>
 	     	     <%}%>
 			</div>
+			</br>
 			<div id="search" class="m-1 p-1">
 				<aui:form name="searchForm" action="<%=search%>" method="post">
 		    	 	<aui:input id="keywords" name="keywords" placeholder="Title, description, username" inlineLabel="left" label="" size="256" value=""/> 
@@ -189,6 +190,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 			    	<aui:button type="button" value="Clear" id="clearSearch" name="clearSearch" />
 				</aui:form>
 			</div>
+			</br>
 		    <div id="challenges" class="m-1 p-1"> 
 				<div class="co-abstract row flex-lg-row flex-sm-row flex-row flex-md-row">     	
 			            <div class="col col-lg-10 col-sm-10 col-10 col-md-12">
@@ -229,8 +231,11 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 											     	<div id="postedBy" class="challengesLeft">
 											      		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></label></span>
 					       						 	</div>
-					       						 	<div id="date" class="challengesLeft">
-														<span><b><label class="aui-field-label">Created on</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(challenge.getCreateDate()) %></label></span>
+					       						 	<div id="startDate" class="challengesLeft">
+														<span><b><label class="aui-field-label">Start</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(challenge.getStartDate()) %></label></span>
+									       			</div>
+									       			<div id="endDate" class="challengesLeft">
+														<span><b><label class="aui-field-label">End</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(challenge.getEndDate()) %></label></span>
 									       			</div>
 					     							<div id="status" class="challengesLeft">
 												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></label></span>
@@ -243,7 +248,8 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 											    	  	<%
 														for (Hashtag tag : HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId())) {
 														%>
-															<span><a href="">#<%=tag.getName()%></a></span>	
+															<%-- <span><a href="">#<%=tag.getName()%></a></span> --%>
+															<span><%=tag.getName()%></span>	
 														<% 
 														}
 														%>
@@ -253,7 +259,8 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 											    	  	<%
 														for (Category cat : CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId())) {
 														%>
-															<span><a href="">#<%=cat.getName()%></a></span>	
+															<%-- <span><a href="">#<%=cat.getName()%></a></span> --%>
+															<span><%=cat.getName()%></span>	
 														<% 
 														}
 														%>
@@ -261,10 +268,10 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 										    	</div>
 										    	
 										    	<aui:button-row>
-										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
+										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary"><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
 										   		 	<!-- <a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a> -->
 										   		 	<%if (user != null){
-														if((challenge.getUserId() == user.getUserId()) || isChallengeOwner){%>
+														if(challenge.getUserId() == user.getUserId()){%>
 												   		 	<aui:button id="deleteChallenge" name="deleteChallenge" type="button" value="Delete" onClick="<%=deleteConfirmation%>"/>
 											   		 	<%}%>
 											   		 <%}%>	
@@ -280,7 +287,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 								AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
 						        Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));
 								%>
-						       	<liferay-ui:panel-container extended="<%=false%>" id='<%="guestbookCollaborationPanelContainer_" + challenge.getChallengeId()%>' persistState="<%=true%>">
+						       	<%-- <liferay-ui:panel-container extended="<%=false%>" id='<%="guestbookCollaborationPanelContainer_" + challenge.getChallengeId()%>' persistState="<%=true%>">
   										<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id='<%="guestbookCollaborationPanel_" + challenge.getChallengeId()%>' persistState="<%=true%>" title="">
     										<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
 									    	<liferay-comment:discussion className="<%=Entry.class.getName()%>"
@@ -290,7 +297,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
       											ratingsEnabled="<%=true%>" redirect="<%=PortalUtil.getCurrentURL(request)%>"
       											userId="<%=entry.getUserId()%>" />
       									</liferay-ui:panel>
-								</liferay-ui:panel-container>
+								</liferay-ui:panel-container> --%>
 							 <%
 							 }
 							 %>

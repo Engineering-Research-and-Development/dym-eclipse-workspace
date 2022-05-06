@@ -2,23 +2,70 @@
 
 <%
 String keywords = ParamUtil.getString(request, "keywords", null);
+String challengeFilter = ParamUtil.getString(request, "challenge", null);
 List<Cocreation> myCocreations = new ArrayList();
+List<Cocreation> allMyCocreations = new ArrayList();
+List<Cocreation> allCocreations = new ArrayList();
+List<Challenge> myChallengeOwnerChallenges = new ArrayList();
+List<Challenge> filterChallenges = new ArrayList();
+List<Cocreation> filteredCocreations = new ArrayList();
 int cocreationsSize = 1;
+/*Se sono Challenge Owner acquisisco tutte le co-creazioni delle mie gare*/
 if (isChallengeOwner){
+	myChallengeOwnerChallenges = ChallengeLocalServiceUtil.getChallengesByUserId(themeDisplay.getUserId(), themeDisplay.getScopeGroupId());
 	if (keywords != null && !keywords.equalsIgnoreCase("")){        
-		myCocreations = CocreationLocalServiceUtil.getCocreationsBySearchGroupId(keywords, themeDisplay.getScopeGroupId(), false);   
+		allCocreations = CocreationLocalServiceUtil.getCocreationsBySearchGroupId(keywords, themeDisplay.getScopeGroupId(), false);   
 	}else{
-		myCocreations = CocreationLocalServiceUtil.getCocreationsByGroupId(themeDisplay.getScopeGroupId(), false);
-		cocreationsSize = myCocreations.size();
+		allCocreations = CocreationLocalServiceUtil.getCocreationsByGroupId(themeDisplay.getScopeGroupId(), false);
 	}
-}else{
-	if (keywords != null && !keywords.equalsIgnoreCase("")){        
-		myCocreations = CocreationLocalServiceUtil.getCocreationsBySearchUserId(keywords, themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId(), false);   
-	}else{
-		myCocreations = CocreationLocalServiceUtil.getCocreationsByCocreatorId(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId(), false);
-		cocreationsSize = myCocreations.size();
+	for (int i=0; i < allCocreations.size(); i++){
+		for (int l=0; l < myChallengeOwnerChallenges.size(); l++){
+			if (allCocreations.get(i).getChallengeId() == myChallengeOwnerChallenges.get(l).getChallengeId()){
+				allMyCocreations.add(allCocreations.get(i));
+				if (i > 0){
+					if (allCocreations.get(i).getChallengeId() != allCocreations.get(i-1).getChallengeId()){
+						filterChallenges.add(ChallengeLocalServiceUtil.getChallenge(allCocreations.get(i).getChallengeId()));
+					}
+				}else{
+					filterChallenges.add(ChallengeLocalServiceUtil.getChallenge(allCocreations.get(i).getChallengeId()));
+				}
+			}
+		}
 	}
 }
+/*Acquisisco tutte le co-creazioni di cui sono co-creatore e, se sono Challenge Owner, verifico in quali, fra le co-cocreazioni delle mie gare, sono co-creatore*/
+if (keywords != null && !keywords.equalsIgnoreCase("")){        
+	myCocreations = CocreationLocalServiceUtil.getCocreationsBySearchUserId(keywords, themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId(), false);   
+}else{
+	myCocreations = CocreationLocalServiceUtil.getCocreationsByCocreatorId(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId(), false);
+}
+for (int i=0; i < myCocreations.size(); i++){
+	boolean found = false;
+	for (int l=0; l < allMyCocreations.size(); l++){
+		if (myCocreations.get(i).getChallengeId() == allMyCocreations.get(l).getChallengeId()){
+			found = true;
+		}
+	}
+	if (!found){
+		allMyCocreations.add(myCocreations.get(i));
+		filterChallenges.add(ChallengeLocalServiceUtil.getChallenge(myCocreations.get(i).getChallengeId()));
+	}
+}
+/*Gestione filtro gara*/
+if (challengeFilter == null){
+	challengeFilter = "";
+}
+for (Cocreation cocreation : allMyCocreations) {
+	 if (!challengeFilter.equalsIgnoreCase("")){
+		 if (ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getChallengeId() == Long.parseLong(challengeFilter)){
+		   	filteredCocreations.add(cocreation);
+		 }	 
+	 }else{
+		 filteredCocreations.add(cocreation);
+	 }
+}
+
+cocreationsSize = filteredCocreations.size();
 %>
 
 <portlet:renderURL var="search">
@@ -75,18 +122,38 @@ if (isChallengeOwner){
 				  </aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
-   </div>
-   <div id="search" class="m-1 p-1">
-		<aui:form name="searchForm" action="<%=search%>" method="post">
-			<%if (isChallengeOwner){%>
-    	 		<aui:input id="keywords" name="keywords" placeholder="Title, description, username" inlineLabel="left" label="" size="256" value=""/> 
-    	 	<%}else{%>
-    	 		<aui:input id="keywords" name="keywords" placeholder="Title, description" inlineLabel="left" label="" size="256" value=""/>
-    	 	<%}%>
-	    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
-	    	<aui:button type="button" value="Clear" id="clearSearch" name="clearSearch" />
-		</aui:form>
-   </div>
+		<div class="row mb-4 border-bottom">
+			<div class="col col-lg-2-6 col-sm-6 col-6 col-md-6"> 
+				<aui:select label="" id="challenge" name="challenge" showEmptyOption="false">
+					    <aui:option selected="<%=true%>" value="">Select a challenge</aui:option>
+					    <%
+						for (Challenge challenge : filterChallenges) {
+						%>
+							<aui:option selected="<%=false%>" value="<%=challenge.getChallengeId()%>"><%=challenge.getTitle()%></aui:option>	
+						<% 
+						}
+						%>
+				</aui:select>
+				<div>
+					<aui:button id="filter" name="filter" type="submit" value="Filter" cssClass="btn-outline-info"></aui:button>
+					<aui:button id="clearFilter" name="clearFilter" type="button" value="Clear"/>
+				</div>
+			</div>	
+			<div class="col col-lg-2-6 col-sm-6 col-6 col-md-6">	
+				<aui:form name="searchForm" action="<%=search%>" method="post">
+					<%if (isChallengeOwner){%>
+		    	 		<aui:input id="keywords" name="keywords" placeholder="Title, description, username" inlineLabel="left" label="" size="256" value=""/> 
+		    	 	<%}else{%>
+		    	 		<aui:input id="keywords" name="keywords" placeholder="Title, description" inlineLabel="left" label="" size="256" value=""/>
+		    	 	<%}%>
+			    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
+			    	<aui:button type="button" value="Clear" id="clearSearch" name="clearSearch" />
+				</aui:form>
+			</div>
+		</div>
+   </div><!-- w-1/4  END-->
+</div>
+</br>
    <!-- <div class="container-fluid p-0 co-creation">
 	   <div id="cocreations" class="m-1 p-1"> 
 			<div class="co-abstract row flex-lg-row flex-sm-row flex-row flex-md-row"> 
@@ -99,13 +166,13 @@ if (isChallengeOwner){
 						   			<h3 class="co-title">There are no ongoing co-creations</a></h3>
 								<%
 								}else{
-							   		if (myCocreations.size() == 0){
+							   		if (filteredCocreations.size() == 0){
 							   		%>
 							   			<h3 class="co-title">You have no ongoing co-creations</a></h3>
 									<%
 									}
 								}
-								for (Cocreation cocreation : myCocreations) {
+								for (Cocreation cocreation : filteredCocreations) {
 									boolean isCocreator = false;
 									%>
 									<portlet:renderURL var="ongoingCocreationsURL" windowState="<%=LiferayWindowState.MAXIMIZED.toString()%>">
@@ -138,34 +205,42 @@ if (isChallengeOwner){
 											    	<p id="challenge" class="resource-title">
 							                        	<b><label class="aui-field-label">Challenge</label></b> : <label class="aui-field-label"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a></label>
 							                    	</p>
-							                    	<p id="postedBy" class="card-text group inner list-group-item-text">
-							                    		<b><label class="aui-field-label">Posted by</label></b> : <label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label>
+							                    	<p id="challengeInformation" class="card-text group inner list-group-item-text">
+							                    		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span></br>
+							                    		<span><b><label class="aui-field-label">Start</label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getStartDate()) %></span></br>
+							                    		<span><b><label class="aui-field-label">End</label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getEndDate()) %></span>
 							                    	</p>
-							                    	<p id="cocreators" class="card-text group inner list-group-item-text">
+							                    	<p id="cocreators" class="resource-title">
 							                    		<b><label class="aui-field-label">Co-creators</label></b> : 
-							                    	</p>	
-							                    	<%
-													List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
-													Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
-													while(cocreatorsIt.hasNext()){
-														Cocreator cocreator = cocreatorsIt.next();
-														User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId());
-														if (user.getUserId() == cocreator.getUserId()){
-															/*L'utente loggato è uno dei co-creatori*/
-															isCocreator = true;
-														}
-														%>
-										      			<label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label>
-														<%		
-													}	
-												    %>
-												    <p id="date" class="card-text group inner list-group-item-text">
-												    	<b><label class="aui-field-label">Started on</label></b> : <label class="aui-field-label"><%=formatter.format(cocreation.getCreateDate())%></label>
+								                    	<%
+														List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
+														Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
+														while(cocreatorsIt.hasNext()){
+															Cocreator cocreator = cocreatorsIt.next();
+															User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId());
+															if (user.getUserId() == cocreator.getUserId()){
+																/*L'utente loggato è uno dei co-creatori*/
+																isCocreator = true;
+															}
+															%>
+											      			<label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(cocreator.getUserId()).getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label>
+															<%
+											      			if (cocreatorsIt.hasNext()){
+											      			%>
+											      				<span><label class="aui-field-label">,</label></span>
+															<%
+											      			}		
+														}	
+													    %>
+												    </p>	
+												    <p id="cocreationDate" class="card-text group inner list-group-item-text">
+												    	<b><label class="aui-field-label">Co-creation created on</label></b> : <%=formatter.format(cocreation.getCreateDate())%>
 							                    	</p>
 							                    </div>
 							                    <p id="desc-"<%=cocreation.getCocreationId()%> class="card-text group inner list-group-item-text resourse-card">
-							                        <%=cocreation.getDescription()%></p>
-							                    <hr>
+							                        <span><b><label class="aui-field-label">Description</label></b></span> : <span><%=cocreation.getDescription()%></span>
+							                    </p>    
+							                    
 							                    <div class="row">
 							                        <div class="col-12">
 							                            <a href="<%=viewCocreationDetails%>" class="btn btn-primary "><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
@@ -205,6 +280,14 @@ if (isChallengeOwner){
 	getOngoingCocreations.setParameter("mvcPath","/ongoing-cocreations.jsp");
 			
  	AUI().ready('aui-base','node', 'event', function (A) {
+ 	  A.one("#<portlet:namespace/>filter").on('click',function(event){
+      	    getOngoingCocreations.setParameter("challenge", A.one('#<portlet:namespace />challenge').val());	
+            window.location.href=getOngoingCocreations; 
+      });
+ 	  A.one("#<portlet:namespace/>clearFilter").on('click',function(event){
+      		A.one('#<portlet:namespace />challenge').val("");	
+      	    window.location.href=getOngoingCocreations;     
+      });	
       A.one("#<portlet:namespace/>clearSearch").on('click',function(event){
       		A.one('#<portlet:namespace />keywords').val("");	
       	    window.location.href=getOngoingCocreations;     

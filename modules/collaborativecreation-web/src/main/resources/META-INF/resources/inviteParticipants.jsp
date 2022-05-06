@@ -64,7 +64,6 @@ if (cocreationId > 0){
 									if (groupUser.getUserId() == cocreator.getUserId()){
 										isCocreator = true;
 									}
-									
 								}
 								/*Disabilito gli utenti già cocreatori*/
 								if (isCocreator){
@@ -81,7 +80,7 @@ if (cocreationId > 0){
 						%>
 				   </aui:select>
 	             </div>  
-	             <aui:input label="Contribution requested" placeholder="Type a message here..." name="message" id="message" type="textarea" required='true'/>
+	             <%-- <aui:input label="Contribution requested" placeholder="Type a message here..." name="message" id="message" type="textarea" required='true'/> --%>
 		    </div>            
 		</aui:fieldset>
 		<aui:button-row>

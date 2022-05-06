@@ -532,58 +532,58 @@ public interface ChallengePersistence extends BasePersistence<Challenge> {
 	public int countByTitle(String title);
 
 	/**
-	 * Returns all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns all the challenges where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @return the matching challenges
 	 */
-	public java.util.List<Challenge> findByUserId(long groupId, long userId);
+	public java.util.List<Challenge> findByUserId(long userId, long groupId);
 
 	/**
-	 * Returns a range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns a range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @return the range of matching challenges
 	 */
 	public java.util.List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end);
+		long userId, long groupId, int start, int end);
 
 	/**
-	 * Returns an ordered range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns an ordered range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching challenges
 	 */
 	public java.util.List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end,
+		long userId, long groupId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator);
 
 	/**
-	 * Returns an ordered range of all the challenges where groupId = &#63; and userId = &#63;.
+	 * Returns an ordered range of all the challenges where userId = &#63; and groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>ChallengeModelImpl</code>.
 	 * </p>
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param start the lower bound of the range of challenges
 	 * @param end the upper bound of the range of challenges (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -591,99 +591,99 @@ public interface ChallengePersistence extends BasePersistence<Challenge> {
 	 * @return the ordered range of matching challenges
 	 */
 	public java.util.List<Challenge> findByUserId(
-		long groupId, long userId, int start, int end,
+		long userId, long groupId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator,
 		boolean useFinderCache);
 
 	/**
-	 * Returns the first challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the first challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	public Challenge findByUserId_First(
-			long groupId, long userId,
+			long userId, long groupId,
 			com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 				orderByComparator)
 		throws NoSuchChallengeException;
 
 	/**
-	 * Returns the first challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the first challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	public Challenge fetchByUserId_First(
-		long groupId, long userId,
+		long userId, long groupId,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator);
 
 	/**
-	 * Returns the last challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the last challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge
 	 * @throws NoSuchChallengeException if a matching challenge could not be found
 	 */
 	public Challenge findByUserId_Last(
-			long groupId, long userId,
+			long userId, long groupId,
 			com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 				orderByComparator)
 		throws NoSuchChallengeException;
 
 	/**
-	 * Returns the last challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the last challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching challenge, or <code>null</code> if a matching challenge could not be found
 	 */
 	public Challenge fetchByUserId_Last(
-		long groupId, long userId,
+		long userId, long groupId,
 		com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 			orderByComparator);
 
 	/**
-	 * Returns the challenges before and after the current challenge in the ordered set where groupId = &#63; and userId = &#63;.
+	 * Returns the challenges before and after the current challenge in the ordered set where userId = &#63; and groupId = &#63;.
 	 *
 	 * @param challengeId the primary key of the current challenge
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next challenge
 	 * @throws NoSuchChallengeException if a challenge with the primary key could not be found
 	 */
 	public Challenge[] findByUserId_PrevAndNext(
-			long challengeId, long groupId, long userId,
+			long challengeId, long userId, long groupId,
 			com.liferay.portal.kernel.util.OrderByComparator<Challenge>
 				orderByComparator)
 		throws NoSuchChallengeException;
 
 	/**
-	 * Removes all the challenges where groupId = &#63; and userId = &#63; from the database.
+	 * Removes all the challenges where userId = &#63; and groupId = &#63; from the database.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 */
-	public void removeByUserId(long groupId, long userId);
+	public void removeByUserId(long userId, long groupId);
 
 	/**
-	 * Returns the number of challenges where groupId = &#63; and userId = &#63;.
+	 * Returns the number of challenges where userId = &#63; and groupId = &#63;.
 	 *
-	 * @param groupId the group ID
 	 * @param userId the user ID
+	 * @param groupId the group ID
 	 * @return the number of matching challenges
 	 */
-	public int countByUserId(long groupId, long userId);
+	public int countByUserId(long userId, long groupId);
 
 	/**
 	 * Returns all the challenges where groupId = &#63;.

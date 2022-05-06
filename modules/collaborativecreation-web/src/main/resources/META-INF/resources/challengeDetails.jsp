@@ -7,6 +7,7 @@ String redirectTo = request.getParameter("redirectTo");
 String challengeId = request.getParameter("challengeId").toString();
 Challenge challenge = ChallengeLocalServiceUtil.getChallenge(Long.parseLong(challengeId));
 String participationURL = "";
+int height = 0;
 String folderTitle = challenge.getTitle().replaceAll("[^a-zA-Z0-9]", "_");
 Folder cocreationFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, "CO-CREATION");
 Folder challengeFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), cocreationFolder.getFolderId(), folderTitle);
@@ -100,7 +101,9 @@ while(cocreationsIt.hasNext()){
 		       		<div class="pb-2">     
 				       <span><b>Posted by : </b><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></span>
 				       <br>
-				       <span><b>Created on : </b><%=formatter.format(challenge.getCreateDate()) %></span>
+				       <span><b>Start : </b><%=formatter.format(challenge.getStartDate()) %></span>
+				       <br>
+				       <span><b>End : </b><%=formatter.format(challenge.getEndDate()) %></span>
 				       <p></p>    
 				    </div>
 			   </div>
@@ -327,12 +330,13 @@ while(cocreationsIt.hasNext()){
 				       			<%}else{
 				       			    if (!isCocreator){%>
 				       					<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
-				       			    <%}else{%>
-				       			    	<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
-				       			   	<%}
+				       			    <%}	
 				       			 }%>
 				   			</div>
 				   			<div id="aui_popup_content" ></div>
+				   			<%if (isCocreator){%>
+				   				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+				   			<%}%>
 						</aui:button-row>  
 					</div>
 			   </div>
@@ -383,10 +387,12 @@ while(cocreationsIt.hasNext()){
 <aui:script use="liferay-util-window">
 	A.one("#aui_popup_click").on('click',function(event){
 		
-		<%if((challenge.getUserId() == user.getUserId()) || isChallengeOwner){
+		<%if(challenge.getUserId() == user.getUserId()){
 			participationURL = inviteParticipantsURL.toString();
+			height = 520;
 		}else{
 			participationURL = requestParticipationURL.toString();
+			height = 420;
 		}%>
 	
 		var popUpWindow=Liferay.Util.Window.getWindow(
@@ -396,7 +402,8 @@ while(cocreationsIt.hasNext()){
 					constrain2view: true,					
 					modal: true,
 					resizable: false,
-					width: 500
+					width: 500,
+					height: <%=height%>
 				}
 			}
 		).plug(
