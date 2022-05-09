@@ -251,6 +251,11 @@ public class ChallengeLocalServiceWrapper
 		return _challengeLocalService.getActionableDynamicQuery();
 	}
 
+	@Override
+	public double getAverageScore(long challengeId) {
+		return _challengeLocalService.getAverageScore(challengeId);
+	}
+
 	/**
 	 * Returns the challenge with the primary key.
 	 *

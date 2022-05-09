@@ -10,7 +10,7 @@ String active = ParamUtil.getString(request, "active", null);
 String inactive = ParamUtil.getString(request, "inactive", null);
 String location = ParamUtil.getString(request, "location", null);
 String category = ParamUtil.getString(request, "category", null);
-String hot = ParamUtil.getString(request, "hot", null);
+/* String hot = ParamUtil.getString(request, "hot", null); */
 String topVoted = ParamUtil.getString(request, "topVoted", null);
 Map<Long, Double> scoreMap = new HashMap<Long, Double>();
 List<Entry<Long, Double>> scoreMapAsList = new ArrayList<Map.Entry<Long, Double>>();
@@ -62,25 +62,22 @@ for (Challenge challenge : challenges) {
 if (topVoted != null && topVoted.equalsIgnoreCase("true")){
 	if (filteredChallenges.size() > 0){
 		for (Challenge challenge : filteredChallenges) {
-			RatingsStats ratingsStats = RatingsStatsLocalServiceUtil.getStats(Challenge.class.getName(), challenge.getChallengeId());
-			scoreMap.put(challenge.getChallengeId(), ratingsStats.getAverageScore());
+			scoreMap.put(challenge.getChallengeId(), ChallengeLocalServiceUtil.getAverageScore(challenge.getChallengeId()));
 		}
-		
 		scoreMapAsList.addAll(scoreMap.entrySet());
-		
 		Collections.sort(scoreMapAsList, new Comparator<Entry<Long, Double>>(){
 		    public int compare(Entry<Long, Double> dataOne, Entry<Long, Double> dataTwo){
 		        return dataOne.getValue().compareTo(dataTwo.getValue());
 		    }
 		});
-		
 		filteredChallenges = new ArrayList();
 		filteredChallenges.add(ChallengeLocalServiceUtil.getChallenge(scoreMapAsList.get(scoreMapAsList.size()-1).getKey()));
 	}
 }
-if (hot != null && hot.equalsIgnoreCase("false")){
+/* if (hot != null && hot.equalsIgnoreCase("false")){
 	hot = "";
 }
+*/
 if (topVoted != null && topVoted.equalsIgnoreCase("false")){
 	topVoted = "";
 }
@@ -133,7 +130,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 	    <div class="col col-lg-3 col-sm-3 col-3 col-md-12">
 			<div id="trending" class="co-box mt-2 mb-4">
 		    	<label class="aui-field-label co-title">Trending</label>    
-			    <aui:input label="Hot" id="hot" name="hot" type="radio" value="<%=hot%>"></aui:input>
+			    <%-- <aui:input label="Hot" id="hot" name="hot" type="radio" value="<%=hot%>"></aui:input> --%>
 				<aui:input label="Top Voted" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
 			</div>
 			<div id="location" class="co-box mt-2 mb-4">
@@ -232,16 +229,16 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 											      		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></label></span>
 					       						 	</div>
 					       						 	<div id="startDate" class="challengesLeft">
-														<span><b><label class="aui-field-label">Start</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(challenge.getStartDate()) %></label></span>
+														<span><b><label class="aui-field-label">Start</label></b></span> : <span><%=formatter.format(challenge.getStartDate()) %></span>
 									       			</div>
 									       			<div id="endDate" class="challengesLeft">
-														<span><b><label class="aui-field-label">End</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(challenge.getEndDate()) %></label></span>
+														<span><b><label class="aui-field-label">End</label></b></span> : <span><%=formatter.format(challenge.getEndDate()) %></span>
 									       			</div>
 					     							<div id="status" class="challengesLeft">
-												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></label></span>
+												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><%=challenge.getActive() == true ?  "Active" : "Inactive"%></span>
 												    </div> 
 												    <div id="location" class="challengesLeft">
-												    	<span><b><label class="aui-field-label">Location</label></b></span> : <span><label class="aui-field-label"><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></label></span>
+												    	<span><b><label class="aui-field-label">Location</label></b></span> : <span><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></span>
 												    </div> 
 												    <div id="tags" class="challengesLeft">
 													    <span><b><label class="aui-field-label">Tags</label></b></span> : <span>	
@@ -330,7 +327,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
       	    getChallenges.setParameter("inactive", A.one('#<portlet:namespace />inactive').attr('checked'));
       	    getChallenges.setParameter("location", A.one('#<portlet:namespace />location').val());	
       	    getChallenges.setParameter("category", A.one('#<portlet:namespace />category').val());
-      	    getChallenges.setParameter("hot", A.one('#<portlet:namespace />hot').attr('checked'));
+      	    <%-- getChallenges.setParameter("hot", A.one('#<portlet:namespace />hot').attr('checked')); --%>
       	    getChallenges.setParameter("topVoted", A.one('#<portlet:namespace />topVoted').attr('checked'));
             window.location.href=getChallenges; 
       });
@@ -339,7 +336,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
       	    A.one('#<portlet:namespace />inactive').val("");
       	    A.one('#<portlet:namespace />location').val("");	
       	    A.one('#<portlet:namespace />category').val("");
-      	    A.one('#<portlet:namespace />hot').val("");
+      	    <%-- A.one('#<portlet:namespace />hot').val(""); --%>
       	    A.one('#<portlet:namespace />topVoted').val("");
       	    window.location.href=getChallenges;     
       });

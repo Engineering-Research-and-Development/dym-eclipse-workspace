@@ -217,6 +217,9 @@ public interface ChallengeLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public double getAverageScore(long challengeId);
+
 	/**
 	 * Returns the challenge with the primary key.
 	 *

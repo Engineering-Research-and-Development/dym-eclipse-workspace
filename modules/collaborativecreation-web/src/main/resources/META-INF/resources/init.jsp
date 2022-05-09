@@ -70,13 +70,15 @@
 <%@ page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 <%@ page import="com.liferay.portal.kernel.model.Role" %>
 <%@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@ page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
+<%@ page import="com.liferay.portal.kernel.repository.model.Folder"%>
 <%@ page import="com.liferay.document.library.kernel.model.DLFileEntry"%>
 <%@ page import="com.liferay.document.library.kernel.model.DLFolder"%>
 <%@ page import="com.liferay.document.library.kernel.model.DLFolderConstants"%>
 <%@ page import="com.liferay.document.library.kernel.service.DLAppServiceUtil"%>
-<%@ page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
-<%@ page import="com.liferay.portal.kernel.repository.model.Folder"%>
 <%@ page import="com.liferay.document.library.kernel.util.DLUtil"%>
+<%@ page import="com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil"%>
+<%@ page import="com.liferay.document.library.kernel.service.DLAppLocalServiceUtil"%>
 
 <%@ page import="it.eng.rd.collaborativecreation.model.*" %>
 <%@ page import="it.eng.rd.collaborativecreation.service.*" %> 
@@ -89,6 +91,7 @@
 
 <%
 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+/* SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); */
 List<Country> countries = CountryServiceUtil.getCountries();
 List<AssetTag> assetTags = AssetTagLocalServiceUtil.getAssetTags(0, 999);
 List<AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getAssetCategories(0, 999);

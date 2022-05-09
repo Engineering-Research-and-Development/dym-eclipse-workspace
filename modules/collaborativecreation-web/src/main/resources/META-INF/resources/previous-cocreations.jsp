@@ -2,7 +2,7 @@
 
 <%
 String keywords = ParamUtil.getString(request, "keywords", null);
-String challengeFilter = ParamUtil.getString(request, "challenge", null);
+String challengeFilter = ParamUtil.getString(request, "challengeFilter", null);
 List<Cocreation> myCocreations = new ArrayList();
 List<Cocreation> allMyCocreations = new ArrayList();
 List<Cocreation> allCocreations = new ArrayList();
@@ -124,7 +124,7 @@ cocreationsSize = filteredCocreations.size();
 		</div>
 		<div class="row mb-4 border-bottom">
 			<div class="col col-lg-2-6 col-sm-6 col-6 col-md-6"> 
-				<aui:select label="" id="challenge" name="challenge" showEmptyOption="false">
+				<aui:select label="" id="challengeFilter" name="challengeFilter" showEmptyOption="false">
 					    <aui:option selected="<%=true%>" value="">Select a challenge</aui:option>
 					    <%
 						for (Challenge challenge : filterChallenges) {
@@ -283,11 +283,11 @@ cocreationsSize = filteredCocreations.size();
 			
  	AUI().ready('aui-base','node', 'event', function (A) {
  	  A.one("#<portlet:namespace/>filter").on('click',function(event){
-      	    getPreviousCocreations.setParameter("challenge", A.one('#<portlet:namespace />challenge').val());	
+      	    getPreviousCocreations.setParameter("challengeFilter", A.one('#<portlet:namespace />challengeFilter').val());	
             window.location.href=getPreviousCocreations; 
       });
  	  A.one("#<portlet:namespace/>clearFilter").on('click',function(event){
-      		A.one('#<portlet:namespace />challenge').val("");	
+      		A.one('#<portlet:namespace />challengeFilter').val("");	
       	    window.location.href=getPreviousCocreations;     
       });
       A.one("#<portlet:namespace/>clearSearch").on('click',function(event){

@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.ratings.kernel.model.RatingsStats;
+import com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -325,6 +327,19 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 	public int getChallengesCountByUserId(long userId, long groupId){
 		return challengePersistence.countByUserId(userId, groupId);
 	}
+	
+	public double getAverageScore(long challengeId) {
+		_log.info("ChallengeLocalServiceImpl - getAverageScore method");
+		_log.info("challengeId "+challengeId);
+		
+		RatingsStats ratingsStats;
+		try {
+			ratingsStats = RatingsStatsLocalServiceUtil.getStats(Challenge.class.getName(), challengeId);
+		} catch (PortalException e) {
+			return 0.0;
+		}
+	    return ratingsStats.getAverageScore();
+	} 
 	
 	private static final Log _log = LogFactoryUtil.getLog(ChallengeLocalServiceImpl.class);
 }

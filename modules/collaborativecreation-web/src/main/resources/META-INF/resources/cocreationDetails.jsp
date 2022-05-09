@@ -126,7 +126,7 @@ boolean isCocreator = false;
 			}	
 		    %>
 	       <div id="date" class="challengesLeft">
-		 		<span><b><label class="aui-field-label">Started on</label></b></span> : <span><label class="aui-field-label"><%=formatter.format(cocreation.getCreateDate())%></label></span>
+		 		<span><b><label class="aui-field-label">Created on</label></b></span> : <span><%=formatter.format(cocreation.getCreateDate())%></span>
 		   </div>
 	       <p></p>    	    
 		   <h3 class="sheet-subtitle">Challenge</h3>

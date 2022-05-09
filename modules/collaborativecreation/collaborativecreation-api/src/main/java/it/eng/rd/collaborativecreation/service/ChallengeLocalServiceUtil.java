@@ -232,6 +232,10 @@ public class ChallengeLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static double getAverageScore(long challengeId) {
+		return getService().getAverageScore(challengeId);
+	}
+
 	/**
 	 * Returns the challenge with the primary key.
 	 *

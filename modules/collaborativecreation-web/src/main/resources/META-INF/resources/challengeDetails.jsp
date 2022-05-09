@@ -1,5 +1,4 @@
-<%@page import="com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil"%>
-<%@page import="com.liferay.document.library.kernel.service.DLAppLocalServiceUtil"%>
+
 <%@ include file="/init.jsp" %>
 
 <%
@@ -222,29 +221,27 @@ while(cocreationsIt.hasNext()){
 			   </div>
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">   
-			  			  <%if (readonly){%>	
-			              		<label class="control-label">Start Date</label>
-			              <%}else{%>
-			              		<label class="control-label">Start Date*</label>
-			              <%}%>
+			  			<%if (!readonly){%>	
+			            	<label class="control-label">Start Date*</label>
+			            <%}%>
 			  			<%if (readonly){%>
 			  				<aui:input name="startDate" id="startDate" type="text" value="<%=formatter.format(challenge.getStartDate())%>" readonly="true" cssClass="field disabled form-control"/>
 						<%}else{%>
-							<input id="startDate" name="startDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getStartDate())%>" required='true'>
+							<input id="startDate" name="startDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getStartDate())%>" required='true'/>
+							<%-- <input id="startDate" name="startDate" type="date" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getStartDate())%>" required='true' onchange="validateStartDate(this);"/> --%>
 						<%}%>
 					</div>
 			   </div>		 
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
-			  			  <%if (readonly){%>	
-			              		<label class="control-label">End Date</label>
-			              <%}else{%>
-			              		<label class="control-label">End Date*</label>
-			              <%}%>
+			  		    <%if (!readonly){%>	
+			            	<label class="control-label">End Date*</label>
+			            <%}%>
 			  			<%if (readonly){%>
 			  				<aui:input name="endDate" id="endDate" type="text" value="<%=formatter.format(challenge.getEndDate())%>" readonly="true" cssClass="field disabled form-control"/>
 	          	 		<%}else{%>
-	          	 			<input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getEndDate())%>" required='true'>
+	          	 			<input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getEndDate())%>" required='true'/>
+	          	 			<%-- <input id="endDate" name="endDate" type="date" placeholder="dd/mm/yyyy" value="<%=formatter.format(challenge.getEndDate())%>" required='true' onchange="validateEndDate(this);"/> --%>
 	          	 		<%}%>
 	          	  </div>
 	           </div>
@@ -430,3 +427,12 @@ while(cocreationsIt.hasNext()){
         }
     );
 </aui:script>
+
+<script>
+function validateStartDate(object){
+	alert(object.value);
+}
+function validateEndDate(object){
+	alert(object.value);
+}
+</script>
