@@ -124,8 +124,8 @@ cocreationsSize = filteredCocreations.size();
 		</div>
 		<div class="row mb-4 border-bottom">
 			<div class="col col-lg-2-6 col-sm-6 col-6 col-md-6"> 
-				<aui:select label="" id="challengeFilter" name="challengeFilter" showEmptyOption="false">
-					    <aui:option selected="<%=true%>" value="">Select a challenge</aui:option>
+				<aui:select label="Challenge" id="challengeFilter" name="challengeFilter" showEmptyOption="false">
+					    <aui:option selected="<%=true%>" value="">Select</aui:option>
 					    <%
 						for (Challenge challenge : filterChallenges) {
 						%>
@@ -142,9 +142,9 @@ cocreationsSize = filteredCocreations.size();
 			<div class="col col-lg-2-6 col-sm-6 col-6 col-md-6">	
 				<aui:form name="searchForm" action="<%=search%>" method="post">
 					<%if (isChallengeOwner){%>
-		    	 		<aui:input id="keywords" name="keywords" placeholder="Title, description, username" inlineLabel="left" label="" size="256" value=""/> 
+		    	 		<aui:input id="keywords" name="keywords" placeholder="Type title, description, username" inlineLabel="left" label="Co-creation" size="256" value=""/> 
 		    	 	<%}else{%>
-		    	 		<aui:input id="keywords" name="keywords" placeholder="Title, description" inlineLabel="left" label="" size="256" value=""/>
+		    	 		<aui:input id="keywords" name="keywords" placeholder="Type title, description" inlineLabel="left" label="Co-creation" size="256" value=""/>
 		    	 	<%}%>
 			    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
 			    	<aui:button type="button" value="Clear" id="clearSearch" name="clearSearch" />

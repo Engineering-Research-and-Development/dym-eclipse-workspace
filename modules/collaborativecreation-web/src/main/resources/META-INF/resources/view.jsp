@@ -17,14 +17,18 @@
 		        <span>In this section of the <b>SOCS Platform</b>, farmers and technology providers can collaborate</span>
 		        <span>to co-create innovative technology solutions to improve farming.</span>
 		        <p></p>
-		        <span>Under <b>challenges</b> you can find a list of contests : </span>
+		        <span>Under <b>Challenges</b> you can find a list of contests : </span>
 		        <span>they are a call for action for technology developers and farmers to <b>co-create a solution</b>.</span>
 		        <p></p>
 		        <span>You can upvote to express importance for a specific challenge.</span>
-		        <span>If you want to stay up-to-date about a challenge, you can <b>follow</b> it.</span>
-		        <span>If you are a <b>SOCS Challenge Owner</b> and you want to post your own challenge, press on <b>post new challenge</b>.</span>
+		        <span>If you want to stay up-to-date about a challenge created, you can <b>subscribe</b> to the challenges list.</span>
+		        <span>If you are a <b>SOCS Challenge Owner</b> and you want to post your own challenge, press on <b>Post a New Challenge</b>.</span>
 		        <p></p>
-		        <span>Under <b>co-creations</b> you can find all the co-creations you belong to.</span>
+		        <span>Under <b>Challenges</b> you can find all the challenges that have been created, but you can edit/delete only yours.</span>
+		        <p></p>
+		        <span>If you are interested to a particular challenge, you can request to participate and invite other users who have the relevant skills and the knowledge to carry on that specific co-creation.</span>
+		        <p></p>
+		        <span>Under <b>Co-creations</b> you can find all the co-creations you are involved in, as challenge author or co-creator.</span>
 		        <p></p>
 		    </div>
 		</div>

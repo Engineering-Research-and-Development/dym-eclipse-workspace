@@ -1,6 +1,8 @@
 <%@ include file="/init.jsp" %>
 	
 <%
+String participationURL = "";
+int height = 0;
 String redirectTo = request.getParameter("redirectTo");
 String cocreationId = request.getParameter("cocreationId").toString();
 String challengeTitle = request.getParameter("challengeTitle").toString();
@@ -27,6 +29,11 @@ boolean isCocreator = false;
 </portlet:renderURL>
 <portlet:renderURL var="addQuestionAndFeedbackURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/addQuestionAndFeedback.jsp" />
+</portlet:renderURL>
+<portlet:renderURL var="requestParticipationURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
+    <portlet:param name="jspPage" value="/requestParticipation.jsp" />
+    <portlet:param name="challengeId" value="<%=String.valueOf(ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getChallengeId())%>"/>
+    <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
 <portlet:renderURL var="inviteParticipantsURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/inviteParticipants.jsp" />
@@ -384,6 +391,15 @@ boolean isCocreator = false;
   
 <aui:script use="liferay-util-window">
 	A.one("#aui_popup_requestToCocreate_click").on('click',function(event){
+		
+		<%if(isCocreator){
+			participationURL = inviteParticipantsURL.toString();
+			height = 520;
+		}else{
+			participationURL = requestParticipationURL.toString();
+			height = 420;
+		}%>
+		
 		var popUpWindow=Liferay.Util.Window.getWindow(
 			{
 				dialog: {
@@ -399,7 +415,7 @@ boolean isCocreator = false;
 			A.Plugin.DialogIframe,
 			{
 				autoLoad: true,
-				uri:"<%=inviteParticipantsURL.toString()%>"
+				uri:"<%=participationURL%>"
 			}
 		).render();
 		popUpWindow.show(popUpWindow);

@@ -36,25 +36,21 @@ while(cocreationsIt.hasNext()){
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
     <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
-
 <portlet:renderURL var="requestParticipationURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/requestParticipation.jsp" />
     <portlet:param name="challengeId" value="<%=String.valueOf(challengeId)%>"/>
     <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
-
 <portlet:renderURL var="inviteParticipantsURL" windowState="<%=LiferayWindowState.POP_UP.toString()%>">
     <portlet:param name="jspPage" value="/inviteParticipants.jsp" />
     <portlet:param name="challengeId" value="<%=String.valueOf(challengeId)%>"/>
     <portlet:param name="cocreationId" value="0"/>
     <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 </portlet:renderURL>
-
 <portlet:actionURL name="deleteChallenge" var="deleteChallengeURL">
 	<portlet:param name="challengeId" value="<%=String.valueOf(challengeId)%>"/>
 	<portlet:param name="redirectTo" value="<%=redirectTo%>"/>
 </portlet:actionURL>
-
 <portlet:actionURL name="updateChallenge" var="updateChallengeURL">
 	<portlet:param name="challengeId" value="<%=String.valueOf(challengeId)%>"/>
 	<portlet:param name="redirectTo" value="<%=redirectTo%>"/>
@@ -331,7 +327,7 @@ while(cocreationsIt.hasNext()){
 				       			 }%>
 				   			</div>
 				   			<div id="aui_popup_content" ></div>
-				   			<%if (isCocreator){%>
+				   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
 				   				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
 				   			<%}%>
 						</aui:button-row>  

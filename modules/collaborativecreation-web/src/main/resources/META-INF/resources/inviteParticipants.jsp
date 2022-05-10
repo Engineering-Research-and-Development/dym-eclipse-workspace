@@ -68,7 +68,7 @@ if (cocreationId > 0){
 								/*Disabilito gli utenti già cocreatori*/
 								if (isCocreator){
 								%>
-									<aui:option value="<%=groupUser.getUserId()%>" disabled="true"><%=groupUser.getFullName()%> - <%=groupUser.getEmailAddress()%></aui:option>
+									<aui:option value="<%=groupUser.getUserId()%>" disabled="true" style="font-style: oblique;"><%=groupUser.getFullName()%> - Already Participates</aui:option>
 								<%	
 								}else{
 								%>
