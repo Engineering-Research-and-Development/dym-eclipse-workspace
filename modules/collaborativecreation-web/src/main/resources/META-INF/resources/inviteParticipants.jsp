@@ -51,7 +51,7 @@ if (cocreationId > 0){
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<aui:input label="Request" name="request" id="request" type="text" required='true'/>
+	             	<aui:input label="Request" name="request" id="request" type="textarea" required='true'/>
 	             </div>
 	             <div>
 	             	<aui:select label="Invite Participants" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">

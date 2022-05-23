@@ -33,7 +33,7 @@ User currentUser = themeDisplay.getUser();
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<aui:input label="Request" name="request" id="request" readonly="true" value="<%=participationRequest%>"/>
+	             	<aui:input label="Request" name="request" id="request" type="textarea" readonly="true" value="<%=participationRequest%>"/>
 	             </div>
 	             <%-- <aui:input label="Contribution requested" placeholder="Type a message here..." name="message" id="message" type="textarea" required='true'/> --%>
 		    </div>            

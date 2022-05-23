@@ -138,7 +138,7 @@ boolean isCocreator = false;
 	       <p></p>    	    
 		   <h3 class="sheet-subtitle">Challenge</h3>
 	       <aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=challengeTitle%>" cssClass="field disabled form-control"/>
-	       <aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" readonly="true" value="<%=desiredOutcome%>" cssClass="field disabled form-control"/>
+	       <aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" readonly="true" value="<%=desiredOutcome%>" cssClass="field disabled form-control"/>
 	       <%-- <h3 class="sheet-subtitle">Request</h3>      
            <aui:input label="Request" name="request" id="request" type="textarea" value="<%=cocreation.getRequest()%>" readonly="true"/>
     	   <aui:input label="Request Reply" name="message" id="message" type="textarea" value="<%=cocreation.getMessage()%>" readonly="true"/> --%>
@@ -164,7 +164,10 @@ boolean isCocreator = false;
 					String fileURL = "";
 					for (FileEntry file : fileEntries) {    
 						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-						if (file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_")){
+						if ((file.getExtension().equalsIgnoreCase("jpeg") || 
+						     file.getExtension().equalsIgnoreCase("jpg")  ||
+						     file.getExtension().equalsIgnoreCase("png")) && 	
+							 file.getFileName().startsWith("COCREATION_")){
 						%>	
 							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 					 	<%
@@ -175,15 +178,18 @@ boolean isCocreator = false;
 				<div class="pb-2">	
 					<h3 class="sheet-subtitle">Attached Documents</h3>
 					<% 
-					for (FileEntry file : fileEntries) {    
-						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-						if (!file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("COCREATION_")){
-						%>	
-							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
-					 	<%
-						}
-					 }
-					 %>
+						for (FileEntry file : fileEntries) {    
+							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
+							if ((!file.getExtension().equalsIgnoreCase("jpeg") && 
+								 !file.getExtension().equalsIgnoreCase("jpg")  &&
+								 !file.getExtension().equalsIgnoreCase("png")) && 	
+								  file.getFileName().startsWith("COCREATION_")){
+							%>	
+								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
+						 	<%
+							}
+						 }
+						 %>
 				</div>
 		   </div>
 		   <h3 class="sheet-subtitle"></h3>   	  

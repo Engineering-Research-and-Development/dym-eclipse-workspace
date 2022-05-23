@@ -14,21 +14,19 @@
 		<div id="welcome" class="m-2 p-2">
 			<div class="span4" id="first">
 		        <p></p>
-		        <span>In this section of the <b>SOCS Platform</b>, farmers and technology providers can collaborate</span>
-		        <span>to co-create innovative technology solutions to improve farming.</span>
+		        <span>Here, farmers and technology providers can collaborate to co-create innovative technology solutions to improve farming.</span>
 		        <p></p>
-		        <span>Under <b>Challenges</b> you can find a list of contests : </span>
-		        <span>they are a call for action for technology developers and farmers to <b>co-create a solution</b>.</span>
+		        <span>Under <b>'Challenges'</b> you can find a list of problems that farmers experience on their farms. You can browse through the list of posted challenges and engage in conversations with people that have experienced similar problems. </span>
 		        <p></p>
-		        <span>You can upvote to express importance for a specific challenge.</span>
-		        <span>If you want to stay up-to-date about a challenge created, you can <b>subscribe</b> to the challenges list.</span>
-		        <span>If you are a <b>SOCS Challenge Owner</b> and you want to post your own challenge, press on <b>Post a New Challenge</b>.</span>
+		        <span>You can <b>upvote</b> challenges to express its relevance. Challenges with more up-votes are listed higher than other challenges.</span>
 		        <p></p>
-		        <span>Under <b>Challenges</b> you can find all the challenges that have been created, but you can edit/delete only yours.</span>
+		        <span>You can <b>follow</b> a specific challenge to get notified about updates. </span>
 		        <p></p>
-		        <span>If you are interested to a particular challenge, you can request to participate and invite other users who have the relevant skills and the knowledge to carry on that specific co-creation.</span>
+		        <span>You can also create a new challenge id you can't find what you need by pressing on <b>'Post new challenge'</b>.</span>
 		        <p></p>
-		        <span>Under <b>Co-creations</b> you can find all the co-creations you are involved in, as challenge author or co-creator.</span>
+		        <span>If other users are interested in finding a solution for the challenge they can send a collaboration request. A challenge becomes active when at least one farmer and one technology developer agree to collaborate on it.</span>
+		        <p></p>
+		        <span>Under <b>'Co-creations'</b> you can find all the challenges that you are a part of.</span>
 		        <p></p>
 		    </div>
 		</div>

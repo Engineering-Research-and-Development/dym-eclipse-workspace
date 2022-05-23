@@ -117,13 +117,13 @@ String redirectTo = request.getParameter("redirectTo");
 		    <h3 class="sheet-subtitle"></h3>
 		    <div class="col-sm-6 col-md-6">
 	           <div class=" pb-2 borderGroup"> 
-                  <label class="control-label">Start Date</label>
+                  <label class="control-label">Start*</label>
 				  <input id="startDate" name="startDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" required='true'>
 		 	   </div>
 			</div>
 			<div class="col-sm-6 col-md-6">
 	           <div class=" pb-2 borderGroup">   
-				  <label class="control-label">End Date</label>
+				  <label class="control-label">End*</label>
 				  <input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" required='true'>
 		 	   </div>
 			</div>

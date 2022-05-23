@@ -218,7 +218,7 @@ while(cocreationsIt.hasNext()){
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">   
 			  			<%if (!readonly){%>	
-			            	<label class="control-label">Start Date*</label>
+			            	<label class="control-label">Start*</label>
 			            <%}%>
 			  			<%if (readonly){%>
 			  				<aui:input name="startDate" id="startDate" type="text" value="<%=formatter.format(challenge.getStartDate())%>" readonly="true" cssClass="field disabled form-control"/>
@@ -231,7 +231,7 @@ while(cocreationsIt.hasNext()){
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
 			  		    <%if (!readonly){%>	
-			            	<label class="control-label">End Date*</label>
+			            	<label class="control-label">End*</label>
 			            <%}%>
 			  			<%if (readonly){%>
 			  				<aui:input name="endDate" id="endDate" type="text" value="<%=formatter.format(challenge.getEndDate())%>" readonly="true" cssClass="field disabled form-control"/>
@@ -253,7 +253,10 @@ while(cocreationsIt.hasNext()){
 						String fileURL = "";
 						for (FileEntry file : fileEntries) {    
 							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if (file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("CHALLENGE_")){
+							if ((file.getExtension().equalsIgnoreCase("jpeg") || 
+								 file.getExtension().equalsIgnoreCase("jpg")  ||
+								 file.getExtension().equalsIgnoreCase("png")) && 	
+								 file.getFileName().startsWith("CHALLENGE_")){
 							%>	
 								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 						 	<%
@@ -273,7 +276,10 @@ while(cocreationsIt.hasNext()){
 						<% 
 						for (FileEntry file : fileEntries) {    
 							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if (!file.getMimeType().equalsIgnoreCase("image/jpeg") && file.getFileName().startsWith("CHALLENGE_")){
+							if ((!file.getExtension().equalsIgnoreCase("jpeg") && 
+								 !file.getExtension().equalsIgnoreCase("jpg")  &&
+								 !file.getExtension().equalsIgnoreCase("png")) && 	
+								  file.getFileName().startsWith("CHALLENGE_")){
 							%>	
 								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 						 	<%
