@@ -210,7 +210,7 @@ cocreationsSize = filteredCocreations.size();
 							                    		<span><b><label class="aui-field-label">Start</label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getStartDate()) %></span></br>
 							                    		<span><b><label class="aui-field-label">End</label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getEndDate()) %></span>
 							                    	</p>
-							                    	<p id="cocreators" class="resource-title">
+							                    	<p id="cocreators" class="resource-title-cocreators">
 							                    		<b><label class="aui-field-label">Co-creators</label></b> : 
 								                    	<%
 														List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());

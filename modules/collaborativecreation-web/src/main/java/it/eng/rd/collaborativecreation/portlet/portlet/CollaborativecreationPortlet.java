@@ -274,8 +274,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 				while(cocreatorsIt.hasNext()){
 					Cocreator cocreator = cocreatorsIt.next();
 					sendChallengeNotification("Dear user", "Have a nice day!", 
-			    			"The challenge "+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + 
-			    			" has been updated.", challengeId, cocreator.getUserId(), serviceContext.getUserId(), 
+			    			"The challenge \""+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + "\" has been updated.", 
+			    			challengeId, cocreator.getUserId(), serviceContext.getUserId(), 
 			    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), false, serviceContext);
 				}
 			}	
@@ -312,8 +312,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 					Cocreator cocreator = cocreatorsIt.next();
 					CocreatorLocalServiceUtil.deleteCocreator(cocreator);
 					sendChallengeNotification("Dear user", "Have a nice day!", 
-			    			"The challenge "+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + 
-			    			",you are co-creator of,has been deleted.", challengeId, cocreator.getUserId(), serviceContext.getUserId(), 
+			    			"The challenge \""+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + "\",you are co-creator of,has been deleted.", 
+			    			challengeId, cocreator.getUserId(), serviceContext.getUserId(), 
 			    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), false, serviceContext);
 				}
 			}	
@@ -367,8 +367,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    try {
 	    	CocreationLocalServiceUtil.updateCocreation(cocreationId, title, description, completed, serviceContext);
 	    	sendCocreationNotification("Dear user", "Have a nice day!", 
-	    			"The co-creation " + title + ",in the challenge " + ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getTitle() +
-	    			" has been updated.", ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getUserId(), serviceContext.getUserId(), 
+	    			"The co-creation \"" + title + "\",in the challenge \"" + ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getTitle() +"\" has been updated.", 
+	    			ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getUserId(), serviceContext.getUserId(), 
 	    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), cocreationId, 
 	    			ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getTitle(), 
 	    			ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getDesiredOutcome(), 
@@ -402,8 +402,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 				Cocreator cocreator = cocreatorsIt.next();
 				CocreatorLocalServiceUtil.deleteCocreator(cocreator);
 				sendCocreationNotification("Dear user", "Have a nice day!", 
-		    			"The co-creation "+ cocreation.getTitle() + 
-		    			" has been deleted.", cocreator.getUserId(), serviceContext.getUserId(), 
+		    			"The co-creation \""+ cocreation.getTitle() + "\" has been deleted.", 
+		    			cocreator.getUserId(), serviceContext.getUserId(), 
 		    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), cocreationId, "", "", serviceContext);
 			}
 			CocreationLocalServiceUtil.deleteCocreationByCocreationId(cocreationId);
@@ -455,7 +455,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 				  _log.info("participant: "+participant); 
 				  User user = UserLocalServiceUtil.getUser(Long.parseLong(participant));
 				  CocreatorLocalServiceUtil.addCocreator(activity.getActivityId(), user.getUserId(), serviceContext);  	
-				  sendCocreationNotification("Dear user", "Have a nice day!", "You have a milestone for the co-creation "+ CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle() + ": " + CocreationLocalServiceUtil.getCocreation(cocreationId).getDescription(),
+				  sendCocreationNotification("Dear user", "Have a nice day!", "You have a milestone for the co-creation \""+ CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle() + "\":" + "\"" + CocreationLocalServiceUtil.getCocreation(cocreationId).getDescription() + "\"",
 						  user.getUserId(), serviceContext.getUserId(),
 						  UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(),
 						  cocreationId, 
@@ -490,8 +490,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 				Cocreator cocreator = cocreatorsIt.next();
 				CocreatorLocalServiceUtil.deleteCocreator(cocreator);
 				sendCocreationNotification("Dear user", "Have a nice day!", 
-		    			"The milestone "+ activity.getDescription() + 
-		    			" has been deleted.", cocreator.getUserId(), serviceContext.getUserId(), 
+		    			"The milestone \""+ activity.getDescription() + "\" has been deleted.", cocreator.getUserId(), serviceContext.getUserId(), 
 		    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), activityId, "", "", serviceContext);
 			}
 			ActivityLocalServiceUtil.deleteActivity(activityId);
@@ -523,7 +522,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
         
 	    try {
 			  TaskLocalServiceUtil.addTask(cocreationId, serviceContext.getUserId(), description, expirationDate, serviceContext);   	
-			  sendCocreationNotification("Dear user", "Have a nice day!", "You have a to-do for the co-creation "+ CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle() + ": " + CocreationLocalServiceUtil.getCocreation(cocreationId).getDescription(),
+			  sendCocreationNotification("Dear user", "Have a nice day!", "You have a to-do for the co-creation \""+ CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle() + "\": " + "\"" + CocreationLocalServiceUtil.getCocreation(cocreationId).getDescription() + "\"",
 					  serviceContext.getUserId(), serviceContext.getUserId(),
 					  UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(),
 					  cocreationId, 
@@ -551,8 +550,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
       
 	    try {
 			sendCocreationNotification("Dear user", "Have a nice day!", 
-	    			"The to-do "+ task.getDescription() + 
-	    			" has been deleted.", serviceContext.getUserId(), serviceContext.getUserId(), 
+	    			"The to-do \""+ task.getDescription() + "\" has been deleted.", serviceContext.getUserId(), serviceContext.getUserId(), 
 	    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), taskId, "", "", serviceContext);
 			TaskLocalServiceUtil.deleteTask(taskId);
 	        SessionMessages.add(request, "actionSuccess");
@@ -592,8 +590,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    		User user = UserLocalServiceUtil.getUser(Long.parseLong(participant));
 	    		CocreatorLocalServiceUtil.addCocreator(cocreation.getCocreationId(), user.getUserId(), serviceContext);
 	    		sendCocreationNotification("Dear user", "Have a nice day!", 
-		    			"You became co-creator for the challenge "+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + 
-		    			": " + ChallengeLocalServiceUtil.getChallenge(challengeId).getDescription(), 
+		    			"You became co-creator for the challenge \""+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() +  "\": " + "\"" + ChallengeLocalServiceUtil.getChallenge(challengeId).getDescription() + "\"", 
 		    			user.getUserId(), serviceContext.getUserId(), 
 		    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), cocreation.getCocreationId(), 
 		    			ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle(), ChallengeLocalServiceUtil.getChallenge(challengeId).getDesiredOutcome(), serviceContext);
@@ -627,8 +624,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
        
 	    try {
 	    	sendChallengeNotification("Dear user", "Have a nice day!", 
-	    			"The user " + UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName() + " requests to participate in the challenge "+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + 
-	    			": " + req, challengeId,
+	    			"The user " + UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName() + " requests to participate in the challenge \""+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + "\": " + 
+	    	        req, challengeId,
 	    			ChallengeLocalServiceUtil.getChallenge(challengeId).getUserId(), serviceContext.getUserId(), 
 	    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), true, serviceContext);
 	        SessionMessages.add(request, "actionSuccess");
@@ -656,9 +653,8 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    try {
 	    	User user = UserLocalServiceUtil.getUser(Long.parseLong(participant));
 	    	sendChallengeNotification("Dear user", "I'm sorry to tell you that", 
-	    			"the user " + UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName() + " has rejected your request to participate in the challenge "+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle(), 
-	    			challengeId,
-	    			user.getUserId(), serviceContext.getUserId(), 
+	    			"the user " + UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName() + " has rejected your request to participate in the challenge \""+ ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle() + "\"", 
+	    			challengeId, user.getUserId(), serviceContext.getUserId(), 
 	    			UserLocalServiceUtil.getUser(serviceContext.getUserId()).getFullName(), false, serviceContext);
 	        SessionMessages.add(request, "actionSuccess");
 			/* response.sendRedirect(redirectTo); */

@@ -246,7 +246,28 @@ while(cocreationsIt.hasNext()){
 			   			<h3 class="sheet-subtitle"></h3>
 			   		</div>
 			   </div>
-		       <div class="col-12 col-md-12">
+			   <div class="col-12 col-md-12">
+	       	   		<div class="pb-2">	
+						<h3 class="sheet-subtitle">Documents and Pictures</h3>
+						<% 
+						String fileURL = "";
+						for (FileEntry file : fileEntries) {    
+							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
+							if (file.getFileName().startsWith("CHALLENGE_")){
+							%>	
+								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
+						 	<%
+							}
+						 }
+						 %>
+					</div>
+			   </div>
+			   <div class="col-12 col-md-12">
+	       	   		<div class="pb-2">	
+			   			<h3 class="sheet-subtitle"></h3>
+			   		</div>
+			   </div>
+		       <%-- <div class="col-12 col-md-12">
 	       	   		<div class="pb-2">	
 						<h3 class="sheet-subtitle">View pictures</h3>
 						<% 
@@ -292,14 +313,14 @@ while(cocreationsIt.hasNext()){
 	       	   		<div class="pb-2">	
 			   			<h3 class="sheet-subtitle"></h3>
 			   		</div>
-			   </div>
+			   </div> --%>
 			   <%if (challenge.getUserId() == user.getUserId()){%>
 				   <div class="col-sm-6 col-md-6">
 			       	   <div class="pb-2">
 			       			<div id="fileList"></div>
 							<span style="display:block; height: 10px;"></span>
 							<div class="btn-group">
-								<label for="uploadedFile" class="btn btn-primary pull-left">Upload pictures and documents</label>
+								<label for="uploadedFile" class="btn btn-primary pull-left">Upload</label>
 							    <div id="clearFileList" style="display:none">
 									<liferay-ui:icon
 											cssClass="btn-outline-info"

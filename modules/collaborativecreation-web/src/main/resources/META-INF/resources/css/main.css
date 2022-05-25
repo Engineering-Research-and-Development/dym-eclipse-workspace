@@ -140,8 +140,14 @@ p[id^="desc"] {
 
 .resource-title {
     max-height: 100px;
-    height: 70px;
-overflow:hidden;
+    height: 100px;
+    overflow:hidden;
+}
+
+.resource-title-cocreators {
+    max-height: 100px;
+    height: 250px;
+    overflow:hidden;
 }
 
 .resourse-card {
