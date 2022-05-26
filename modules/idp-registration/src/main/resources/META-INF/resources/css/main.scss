@@ -1,0 +1,8 @@
+#idpFormRegistrationContainer{
+   margin-top: 30px;
+}
+#idpFormRegistrationContainer .form-group .form-control, [id="wrapper"] #idpFormRegistrationContainer .form-group .cke, [id="wrapper"] #idpFormRegistrationContainer .form-group .table {
+   
+    border: solid var(--form-input-border-width, 1px) #aab3c5;
+    overflow: hidden;
+}

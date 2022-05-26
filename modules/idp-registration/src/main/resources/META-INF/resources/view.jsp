@@ -15,7 +15,32 @@
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script type="text/javascript">
-    function <portlet:namespace />validateFm(event){
+
+jQuery(document).ready(function(){
+	jQuery("#roleContainer").toggle();
+		         
+		    
+		});
+
+jQuery(document).on('change','#orgType',function(event){
+			 
+			    var dataValue=$(this).val();
+			    if(dataValue=="DIH"){
+				    event.preventDefault();
+				    jQuery("#roleContainer").slideToggle(200);
+				    jQuery("#roleContainer").addClass("active");
+			    }else{
+			    	
+			    	if( jQuery("#roleContainer").hasClass("active") ){
+			    		jQuery("#roleContainer").toggle();
+			    		jQuery("#roleContainer").removeClass("active")
+			    	 }
+			    }
+			    
+			
+});
+
+   function <portlet:namespace />validateFm(event){
     	
 		jQuery('#errorMessage').html('');
 		jQuery('#errorMessage').hide();
@@ -78,6 +103,24 @@
 		
  				<div class="clearfix">
  				
+ 				    <div class="row">
+		 				   <div class="col-6">
+				 				   <div class="form-group ">
+				 				      <label class="control-label" for="name"><liferay-ui:message key="name"/>*</label>
+                                        <div> <input type="text" class="form-control" placeholder id="name" maxlength="30" type="text" value="" name="name" required></input> </div>
+				                   </div>
+		 				   </div>
+ 				           <div class="col-6">
+				 				    <div class="form-group ">
+				 				      <label class="control-label" for="username"><liferay-ui:message key="surname"/>*</label>
+                                        <div> <input type="text" class="form-control" placeholder id="surname" maxlength="30" type="text" value="" name="surname" required></input> </div>
+				                   </div>
+		 				   </div>
+ 				   
+ 				   </div>
+ 				
+ 				
+ 				
                     <div class="form-group "><label class="control-label" for="username" ><liferay-ui:message key="username"/>*</label>
                         <div><input class="form-control" id="username" maxlength="30" type="text" value="" name="username" required />
                         <span><label class="control-label"><liferay-ui:message key="you-can-use-letteres-numbers"/></label></span>
@@ -96,7 +139,7 @@
                     <div class="form-group">
                     	<span class="input-icon">
                     		<label class="control-label" for="orgType"><liferay-ui:message key="organization-type-list"/>*</label>
-							<select name="orgType" class="form-control" required="true" >
+							<select name="orgType" class="form-control" required="true" id="orgType">
 								<option value="" disabled selected hidden><liferay-ui:message key="select-org-type"/></option>
 								<%
 								for (String o : organizationType_NAMES){
@@ -109,10 +152,24 @@
 							</select>
 						</span>
                     </div>
+                    
+                    
+                    <div class="form-group" id="roleContainer">
+						<span><label class="control-label" for="organization-role"><liferay-ui:message key="organization-role"/>*</label>
+                        <input class="form-control" id="organization-role" type="text" value="" name="organization-role"  /></span>
+					</div>
+                    
+                    
 					<div class="form-group">
 						<span><label class="control-label" for="organization-name"><liferay-ui:message key="organization-name"/>*</label>
                         <input class="form-control" id="organizationName" type="text" value="" name="organizationName" required/></span>
 					</div>
+					
+					<div class="form-group">
+						<span><label class="control-label" for="organization-web"><liferay-ui:message key="website"/>*</label>
+                        <input class="form-control" id="website" type="text" value="" name="organizationWeb"  /></span>
+					</div>
+					
 					
 					<div class="form-group ">
 						<input class="field" id="termsOfUseCheckbox" 
