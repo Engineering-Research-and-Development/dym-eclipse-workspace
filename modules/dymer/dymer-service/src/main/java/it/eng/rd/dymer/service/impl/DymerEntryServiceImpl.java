@@ -15,6 +15,7 @@
 package it.eng.rd.dymer.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
@@ -23,7 +24,9 @@ import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -36,6 +39,7 @@ import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.service.DymerEntryLocalServiceUtil;
 import it.eng.rd.dymer.service.DymerLocalServiceUtil;
 import it.eng.rd.dymer.service.base.DymerEntryServiceBaseImpl;
+import it.eng.rd.dymer.service.constants.DymerServicePropsKeys;
 import it.eng.rd.dymer.service.persistence.DymerEntryUtil;
 
 
@@ -47,6 +51,8 @@ import it.eng.rd.dymer.service.persistence.DymerEntryUtil;
 	service = AopService.class
 )
 public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
+	
+	String catalague_resource_email = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.CATALOGUE_RESOURCE_EMAIL));
 
 	@JSONWebService(value="update",method="POST")
 	public DymerEntry update(
@@ -66,10 +72,27 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		sc.setAttribute("dymerDomainName", dymerDomainName);
 		User user;
 		try {
-			
 			user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
 			sc.setUserId(user.getUserId());
 			sc.setScopeGroupId(groupId);
+		} catch (NoSuchUserException e) {
+			_log.error("No User with "+emailAddress+" in companyId="+companyId);
+			try {
+				emailAddress = "test@liferay.com";
+				if (Validator.isNotNull(catalague_resource_email)) {
+					emailAddress = catalague_resource_email;
+				}
+				user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
+				sc.setUserId(user.getUserId());
+				sc.setScopeGroupId(groupId);
+				_log.warn("Catalogue Resource [index:"+index+",type:"+",id:"+id+"] is related to "+emailAddress);
+				_log.info("updateDymerEntry1");
+			} catch (PortalException e1) {
+				throw new PortalException(e1);
+			}
+		} catch (Exception e2) {
+			_log.error("An error occurred while invoking remote update service "+e2.getMessage());
+		} finally {
 			sc.setUuid(UUID.randomUUID().toString());
 			Date now = new Date();
 			sc.setCreateDate(now);
@@ -77,9 +100,30 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			sc.setAssetCategoryIds(new long[] {});
 			sc.setAssetTagNames(new String[] {});
 			sc.setAssetLinkEntryIds(new long[] {});
-		} catch (PortalException e1) {
-			_log.error("An error occurred while invoking remote update service");
-			_log.error(e1,e1);
+			
+			_log.info("updateDymerEntry2");
+			
+			return updateDymerEntry(dymerDomainName, emailAddress, companyId, groupId, index, type, id, url, title, extContent, sc);
+		}
+		
+	}
+	
+	private DymerEntry updateDymerEntry(String dymerDomainName,
+			String emailAddress,
+			long companyId,
+			long groupId,
+			String index,
+			String type,
+			String id,
+			String url,
+			String title,
+			String extContent,
+			ServiceContext sc) {
+		
+		if(_log.isDebugEnabled()){
+			_log.debug("updateDymerEntry method ");
+			_log.debug("sc.userId: "+sc.getUserId());
+			_log.debug("sc.groupId: "+sc.getScopeGroupId());
 		}
 		
 		try {
@@ -176,22 +220,54 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
         try {
         	user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
 			sc.setUserId(user.getUserId());
-            
+        } catch (NoSuchUserException e) {
+			_log.error("No User with "+emailAddress+" in companyId="+companyId);
+			emailAddress = "test@liferay.com";
+			if (Validator.isNotNull(catalague_resource_email)) {
+				emailAddress = catalague_resource_email;
+			}
+			try {
+				user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
+				sc.setUserId(user.getUserId());
+				_log.warn("Catalogue Resource [index:"+index+",type:"+",id:"+id+"] is related to "+emailAddress);
+				_log.info("updateDymerEntry1");
+			} catch (PortalException e1) {
+				_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"], "+e1.getMessage());
+			}
+        } catch (Exception e2) {
+        	_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"], "+e2.getMessage());
+        }
+        finally {
             // uuid
             sc.setUuid(UUID.randomUUID().toString());
             Date now = new Date();
             sc.setCreateDate(now);
             sc.setModifiedDate(now);
-            
             sc.setAssetCategoryIds(new long[] {});
             sc.setAssetTagNames(new String[] {});
-            
             sc.setAssetLinkEntryIds(new long[] {});
-        } catch (PortalException e1) {
-            e1.printStackTrace();
+            
+            dymerEntryDelete(emailAddress, companyId, index, type, id, sc);
         }
         
-        DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, id);
+
+    }
+	
+	private void dymerEntryDelete(
+			String emailAddress,
+    		long companyId,
+            String index,
+            String type,
+            String id,
+            ServiceContext sc) {
+		
+		if(_log.isDebugEnabled()){
+			_log.debug("dymerEntryDelete method ");
+			_log.debug("sc.userId: "+sc.getUserId());
+			_log.debug("sc.groupId: "+sc.getScopeGroupId());
+		}
+		
+		DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, id);
 
         if(dymerEntry != null) {
             try {
@@ -200,11 +276,11 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
             	_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"]");
                 _log.error(e, e);
             }
-                    
         } else {
-            _log.warn("No Dymer resource found");
+            _log.warn("No Dymer resource [index:"+index+", type:"+ type+", id:"+ id+"] found");
         }
-    }
+	}
+	
 	
 	/********************************************************************************************************
 	 * Old remote services

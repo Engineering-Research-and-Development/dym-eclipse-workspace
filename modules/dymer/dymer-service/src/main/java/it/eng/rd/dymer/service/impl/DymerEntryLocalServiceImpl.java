@@ -54,10 +54,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			String extContent,
 			ServiceContext serviceContext
 	)
-		throws PortalException {
+		throws PortalException, SystemException {
 		
-		_log.info("DymerEntryLocalServiceImpl, addDymerEntry method");
-
 		long groupId = serviceContext.getScopeGroupId();
 
 		User user = userLocalService.getUserById(serviceContext.getUserId());
@@ -87,21 +85,25 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		entry.setTitle(title);
 		entry.setExtContent(extContent);
 		
-		_log.info("uuid: " +serviceContext.getUuid());
-		_log.info("userId: " +serviceContext.getUserId());
-		_log.info("groupId: " +groupId);
-		_log.info("companyId: " +user.getCompanyId());
-		_log.info("userName: " +user.getFullName());
-		_log.info("createDate: " +now.toString());
-		_log.info("modifiedDate: " +now.toString());
-		_log.info("dymerId: " +dymerId);
-		
-		_log.info("index: " +index);
-		_log.info("type: " +type);
-		_log.info("id: " +id);
-		_log.info("url: " +url);
-		_log.info("title: " +title);
-		_log.info("extContent: " +extContent);
+		if (_log.isDebugEnabled()) {
+			_log.debug("DymerEntryLocalServiceImpl, addDymerEntry method");
+			
+			_log.debug("uuid: " +serviceContext.getUuid());
+			_log.debug("userId: " +serviceContext.getUserId());
+			_log.debug("groupId: " +groupId);
+			_log.debug("companyId: " +user.getCompanyId());
+			_log.debug("userName: " +user.getFullName());
+			_log.debug("createDate: " +now.toString());
+			_log.debug("modifiedDate: " +now.toString());
+			_log.debug("dymerId: " +dymerId);
+			
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+			_log.debug("url: " +url);
+			_log.debug("title: " +title);
+			_log.debug("extContent: " +extContent);
+		}
 		
 		entry = dymerEntryPersistence.update(entry);
 		
@@ -121,19 +123,23 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
                 ContentTypes.TEXT_HTML, entry.getExtContent(), null, null, null,
                 null, 0, 0, null);
 		
-		_log.info("generated assetEntry");
+		if (_log.isDebugEnabled()) 
+			_log.debug("generated assetEntry");
 
 		assetLinkLocalService.updateLinks(serviceContext.getUserId(), assetEntry.getEntryId(),
 		                serviceContext.getAssetLinkEntryIds(),
 		                AssetLinkConstants.TYPE_RELATED);
 		
-		_log.info("generated assetLink");
+		if (_log.isDebugEnabled()) 
+			_log.debug("generated assetLink");
 		
 		//set permission
 		resourceLocalService.addResources(user.getCompanyId(), groupId, serviceContext.getUserId(),
 			    DymerEntry.class.getName(), entryId, false, true, true);
 
-		_log.info("generated permission");
+		if (_log.isDebugEnabled()) 
+			_log.debug("generated permission");
+		
 		return entry;
 	}
 	
@@ -151,7 +157,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	)
 		throws PortalException, SystemException {
 		
-		_log.info("DymerEntryLocalServiceImpl, updateDymerEntry method");
+		
 
 		Date now = new Date();
 
@@ -173,21 +179,25 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		entry.setTitle(title);
 		entry.setExtContent(extContent);
 		//entry.setExpandoBridgeAttributes(serviceContext);
-		_log.info("dymerId: " +dymerId);
-		_log.info("dymerEntryId: " +entryId);
-		_log.info("userId: " +serviceContext.getUserId());
-		_log.info("companyId: " +user.getCompanyId());
-		_log.info("userName: " +user.getFullName());
-		_log.info("createDate: " +now.toString());
-		_log.info("modifiedDate: " +now.toString());
-		_log.info("dymerId: " +dymerId);
 		
-		_log.info("index: " +index);
-		_log.info("type: " +type);
-		_log.info("id: " +id);
-		_log.info("url: " +url);
-		_log.info("title: " +title);
-		_log.info("extContent: " +extContent);
+		if (_log.isDebugEnabled()) {
+			_log.debug("DymerEntryLocalServiceImpl, updateDymerEntry method");
+			_log.debug("dymerId: " +dymerId);
+			_log.debug("dymerEntryId: " +entryId);
+			_log.debug("userId: " +serviceContext.getUserId());
+			_log.debug("companyId: " +user.getCompanyId());
+			_log.debug("userName: " +user.getFullName());
+			_log.debug("createDate: " +now.toString());
+			_log.debug("modifiedDate: " +now.toString());
+			_log.debug("dymerId: " +dymerId);
+			
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+			_log.debug("url: " +url);
+			_log.debug("title: " +title);
+			_log.debug("extContent: " +extContent);
+		}
 
 		entry = dymerEntryPersistence.update(entry);
 
@@ -202,13 +212,15 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	              null, null, null, 0, 0,
 	              serviceContext.getAssetPriority());
 		
-		_log.info("generated assetEntry");
+		if (_log.isDebugEnabled()) 
+			_log.debug("generated assetEntry");
 	
 		assetLinkLocalService.updateLinks(serviceContext.getUserId(), assetEntry.getEntryId(),
 		              serviceContext.getAssetLinkEntryIds(),
 		              AssetLinkConstants.TYPE_RELATED);
 		
-		_log.info("generated assetLink");
+		if (_log.isDebugEnabled()) 
+			_log.debug("generated assetLink");
 		
 		return entry;
 	}
@@ -230,7 +242,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			String extContent,
 			ServiceContext serviceContext
 	)
-		throws PortalException {
+		throws PortalException, SystemException {
 		
 		_log.info("DymerEntryLocalServiceImpl, addDymerEntry method");
 
@@ -393,7 +405,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	}
 	
 	@Indexable(type = IndexableType.DELETE)
-	public DymerEntry deleteDymerEntry(DymerEntry entry) {
+	public DymerEntry deleteDymerEntry(DymerEntry entry) throws PortalException, SystemException {
 		
 		_log.info("DymerEntryLocalServiceImpl, deleteDymerEntry method");
 		
@@ -423,7 +435,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	}
 	
 	@Indexable(type = IndexableType.DELETE)
-    public DymerEntry deleteDymerEntry(long entryId, long userId) throws PortalException {
+    public DymerEntry deleteDymerEntry(long entryId, long userId) throws PortalException, SystemException {
 		_log.info("deleteDymerEntry method");
 		_log.info("entryId "+entryId);
 		_log.info("userId "+userId);
@@ -433,7 +445,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
         return deleteDymerEntry(entry);
     }
 
-	public DymerEntry deleteDymerEntry(long entryId) throws PortalException {
+	public DymerEntry deleteDymerEntry(long entryId) throws PortalException, SystemException {
 
 		DymerEntry entry = dymerEntryPersistence.findByPrimaryKey(entryId);
 
@@ -445,7 +457,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	}
 
 	public List<DymerEntry> getDymerEntries(long groupId, long dymerId,
-			int start, int end) throws SystemException {
+			int start, int end) throws PortalException, SystemException {
 		return dymerEntryPersistence.findByG_D(groupId, dymerId, start, end);
 	}
 
@@ -454,7 +466,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		return dymerEntryPersistence.findByG_D(groupId, dymerId, start, end, obc);
 	}
 
-	public DymerEntry getDymerEntry(long entryId) throws PortalException {
+	public DymerEntry getDymerEntry(long entryId) throws PortalException, SystemException {
 		return dymerEntryPersistence.findByPrimaryKey(entryId);
 	}
 

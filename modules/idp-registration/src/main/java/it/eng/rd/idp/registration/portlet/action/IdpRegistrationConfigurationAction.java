@@ -45,7 +45,7 @@ public class IdpRegistrationConfigurationAction
 			HttpServletResponse httpServletResponse)
 		throws Exception {
 
-		_log.info("IdpRegistrationPortlet configuration include");
+//		_log.info("IdpRegistrationPortlet configuration include");
 
 		httpServletRequest.setAttribute(
 				IdpRegistrationConfiguration.class.getName(),
@@ -73,6 +73,10 @@ public class IdpRegistrationConfigurationAction
 		String logoLiferayPortalUrl = ParamUtil.getString(actionRequest, "logoLiferayPortalUrl");
 		String liferayPortalName = ParamUtil.getString(actionRequest, "liferayPortalName");
 		String liferayPortalUrl = ParamUtil.getString(actionRequest, "liferayPortalUrl");
+		String organizationTypelist = ParamUtil.getString(actionRequest, "organizationTypelist");
+		String termsOfUseUrl = ParamUtil.getString(actionRequest, "termsOfUseUrl");
+		String copyrightCompany = ParamUtil.getString(actionRequest, "copyrightCompany");
+		String copyrightCompanyUrl = ParamUtil.getString(actionRequest, "copyrightCompanyUrl");
 		
 		setPreference(actionRequest, "idmUrl", idmUrl);
 		setPreference(actionRequest, "idmEmailAdmin", idmEmailAdmin);
@@ -86,6 +90,10 @@ public class IdpRegistrationConfigurationAction
 		setPreference(actionRequest, "logoLiferayPortalUrl", logoLiferayPortalUrl);
 		setPreference(actionRequest, "liferayPortalName", liferayPortalName);
 		setPreference(actionRequest, "liferayPortalUrl", liferayPortalUrl);
+		setPreference(actionRequest, "organizationTypelist", organizationTypelist);
+		setPreference(actionRequest, "termsOfUseUrl", termsOfUseUrl);
+		setPreference(actionRequest, "copyrightCompany", copyrightCompany);
+		setPreference(actionRequest, "copyrightCompanyUrl", copyrightCompanyUrl);
 		
 		super.processAction(portletConfig, actionRequest, actionResponse);
 	}

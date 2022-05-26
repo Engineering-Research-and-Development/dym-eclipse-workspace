@@ -14,10 +14,6 @@
 
 package it.eng.rd.dymer.service;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.util.tracker.ServiceTracker;
-
 /**
  * Provides the remote service utility for Dymer. This utility wraps
  * <code>it.eng.rd.dymer.service.impl.DymerServiceImpl</code> and is an
@@ -43,26 +39,14 @@ public class DymerServiceUtil {
 	 *
 	 * @return the OSGi service identifier
 	 */
-	public static String getOSGiServiceIdentifier() {
+	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
 	}
 
 	public static DymerService getService() {
-		return _serviceTracker.getService();
+		return _service;
 	}
 
-	private static ServiceTracker<DymerService, DymerService> _serviceTracker;
-
-	static {
-		Bundle bundle = FrameworkUtil.getBundle(DymerService.class);
-
-		ServiceTracker<DymerService, DymerService> serviceTracker =
-			new ServiceTracker<DymerService, DymerService>(
-				bundle.getBundleContext(), DymerService.class, null);
-
-		serviceTracker.open();
-
-		_serviceTracker = serviceTracker;
-	}
+	private static volatile DymerService _service;
 
 }

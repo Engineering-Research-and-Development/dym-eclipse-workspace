@@ -24,8 +24,10 @@ import java.util.List;
  * This class is used by SOAP remote services, specifically {@link it.eng.rd.dymer.service.http.DymerServiceSoap}.
  *
  * @author ENGRD
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
  * @generated
  */
+@Deprecated
 public class DymerSoap implements Serializable {
 
 	public static DymerSoap toSoapModel(Dymer model) {

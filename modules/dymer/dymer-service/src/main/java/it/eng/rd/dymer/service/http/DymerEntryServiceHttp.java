@@ -92,7 +92,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes1);
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, emailAddress, companyId, index, type, id);
@@ -120,7 +120,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "update", _updateParameterTypes2);
+				DymerEntryServiceUtil.class, "update", _updateParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, groupId, index, type, id, url, title,
@@ -153,7 +153,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes3);
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, index, type, id);
@@ -182,14 +182,14 @@ public class DymerEntryServiceHttp {
 		String.class, String.class, long.class, long.class, String.class,
 		String.class, String.class, String.class, String.class, String.class
 	};
-	private static final Class<?>[] _deleteParameterTypes1 = new Class[] {
+	private static final Class<?>[] _deleteParameterTypes2 = new Class[] {
 		String.class, long.class, String.class, String.class, String.class
 	};
-	private static final Class<?>[] _updateParameterTypes2 = new Class[] {
+	private static final Class<?>[] _updateParameterTypes4 = new Class[] {
 		long.class, long.class, String.class, String.class, String.class,
 		String.class, String.class, String.class
 	};
-	private static final Class<?>[] _deleteParameterTypes3 = new Class[] {
+	private static final Class<?>[] _deleteParameterTypes5 = new Class[] {
 		long.class, String.class, String.class, String.class
 	};
 

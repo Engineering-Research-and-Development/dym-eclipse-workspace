@@ -5,7 +5,6 @@
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-
 <%@ page import="com.liferay.portal.kernel.util.Validator" %>
 <%@ page import="com.liferay.portal.kernel.util.Constants" %>
 <%@ page import="com.liferay.portal.kernel.util.Validator" %>
@@ -16,6 +15,8 @@
 
 <%@ page import="com.liferay.portal.kernel.model.User"%>
 <%@ page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
+<%@ page import="com.liferay.petra.string.StringPool" %>
+<%@ page import="com.liferay.portal.kernel.util.StringUtil" %>
 
 <%@ page import="it.eng.rd.idp.registration.portlet.configuration.IdpRegistrationConfiguration" %>
 
@@ -28,23 +29,23 @@
 Log _log = LogFactoryUtil.getLog("init.jsp");
 IdpRegistrationConfiguration idpUserRegistrationConfiguration =	(IdpRegistrationConfiguration)renderRequest.getAttribute(IdpRegistrationConfiguration.class.getName());
 
-String idmUrl = "";
+String idmUrl = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	idmUrl = portletPreferences.getValue("idmUrl", idpUserRegistrationConfiguration.idmUrl());
 }
-String idmEmailAdmin = "";
+String idmEmailAdmin = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	idmEmailAdmin = portletPreferences.getValue("idmEmailAdmin", idpUserRegistrationConfiguration.idmEmailAdmin());
 }
-String idmEmailAdminNotification = "";
+String idmEmailAdminNotification = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	idmEmailAdminNotification = portletPreferences.getValue("idmEmailAdminNotification", idpUserRegistrationConfiguration.idmEmailAdminNotification());
 }
-String idmPasswordAdmin = "";
+String idmPasswordAdmin = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	idmPasswordAdmin = portletPreferences.getValue("idmPasswordAdmin", idpUserRegistrationConfiguration.idmPasswordAdmin());
 }
-String idmEnable = "";
+String idmEnable = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	idmEnable = portletPreferences.getValue("idmEnable", idpUserRegistrationConfiguration.idmEnable());
 }
@@ -63,22 +64,41 @@ String from = "noreply@server.com";
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	from = portletPreferences.getValue("from", idpUserRegistrationConfiguration.from());
 }
-String projectName = "";
+String projectName = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	projectName = portletPreferences.getValue("projectName", idpUserRegistrationConfiguration.projectName());
 }
-String logoLiferayPortalUrl = "";
+String logoLiferayPortalUrl = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	logoLiferayPortalUrl = portletPreferences.getValue("logoLiferayPortalUrl", idpUserRegistrationConfiguration.logoLiferayPortalUrl());
 }
-String liferayPortalName = "";
+String liferayPortalName = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	liferayPortalName = portletPreferences.getValue("liferayPortalName", idpUserRegistrationConfiguration.liferayPortalName());
 }
-String liferayPortalUrl = "";
+String liferayPortalUrl = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	liferayPortalUrl = portletPreferences.getValue("liferayPortalUrl", idpUserRegistrationConfiguration.liferayPortalUrl());
 }
+String termsOfUseUrl = StringPool.BLANK;
+if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
+	termsOfUseUrl = portletPreferences.getValue("termsOfUseUrl", idpUserRegistrationConfiguration.termsOfUseUrl());
+}
+String organizationTypelist = StringPool.BLANK;
+if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
+	organizationTypelist = portletPreferences.getValue("organizationTypelist", idpUserRegistrationConfiguration.organizationTypelist());
+}
+String[] organizationType_NAMES = StringUtil.splitLines(organizationTypelist);
+
+String copyrightCompany = StringPool.BLANK;
+if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
+	copyrightCompany = portletPreferences.getValue("copyrightCompany", idpUserRegistrationConfiguration.copyrightCompany());
+}
+String copyrightCompanyUrl = StringPool.BLANK;
+if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
+	copyrightCompanyUrl = portletPreferences.getValue("copyrightCompanyUrl", idpUserRegistrationConfiguration.copyrightCompanyUrl());
+}
+
 %>
 <c:set var="idmEnable_" value="<%=idmEnable_ %>" />
  

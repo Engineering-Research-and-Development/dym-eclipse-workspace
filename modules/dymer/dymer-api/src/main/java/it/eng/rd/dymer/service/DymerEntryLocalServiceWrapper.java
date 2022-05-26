@@ -35,6 +35,10 @@ public class DymerEntryLocalServiceWrapper
 	/**
 	 * Adds the dymer entry to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was added
 	 */
@@ -54,7 +58,8 @@ public class DymerEntryLocalServiceWrapper
 			long dymerId, long userId, String index, String type, String id,
 			String url, String title, String extContent,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.addDymerEntry(
 			dymerId, userId, index, type, id, url, title, extContent,
@@ -66,7 +71,8 @@ public class DymerEntryLocalServiceWrapper
 			long dymerId, String index, String type, String id, String url,
 			String title, String extContent,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.addDymerEntry(
 			dymerId, index, type, id, url, title, extContent, serviceContext);
@@ -97,12 +103,20 @@ public class DymerEntryLocalServiceWrapper
 	/**
 	 * Deletes the dymer entry from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was removed
+	 * @throws PortalException
+	 * @throws SystemException
 	 */
 	@Override
 	public it.eng.rd.dymer.model.DymerEntry deleteDymerEntry(
-		it.eng.rd.dymer.model.DymerEntry dymerEntry) {
+			it.eng.rd.dymer.model.DymerEntry dymerEntry)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.deleteDymerEntry(dymerEntry);
 	}
@@ -110,13 +124,19 @@ public class DymerEntryLocalServiceWrapper
 	/**
 	 * Deletes the dymer entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param entryId the primary key of the dymer entry
 	 * @return the dymer entry that was removed
 	 * @throws PortalException if a dymer entry with the primary key could not be found
+	 * @throws SystemException
 	 */
 	@Override
 	public it.eng.rd.dymer.model.DymerEntry deleteDymerEntry(long entryId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.deleteDymerEntry(entryId);
 	}
@@ -124,7 +144,8 @@ public class DymerEntryLocalServiceWrapper
 	@Override
 	public it.eng.rd.dymer.model.DymerEntry deleteDymerEntry(
 			long entryId, long userId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.deleteDymerEntry(entryId, userId);
 	}
@@ -285,7 +306,8 @@ public class DymerEntryLocalServiceWrapper
 	@Override
 	public java.util.List<it.eng.rd.dymer.model.DymerEntry> getDymerEntries(
 			long groupId, long dymerId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.getDymerEntries(
 			groupId, dymerId, start, end);
@@ -358,10 +380,12 @@ public class DymerEntryLocalServiceWrapper
 	 * @param entryId the primary key of the dymer entry
 	 * @return the dymer entry
 	 * @throws PortalException if a dymer entry with the primary key could not be found
+	 * @throws SystemException
 	 */
 	@Override
 	public it.eng.rd.dymer.model.DymerEntry getDymerEntry(long entryId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.getDymerEntry(entryId);
 	}
@@ -373,11 +397,13 @@ public class DymerEntryLocalServiceWrapper
 	 * @param groupId the primary key of the group
 	 * @return the matching dymer entry
 	 * @throws PortalException if a matching dymer entry could not be found
+	 * @throws SystemException
 	 */
 	@Override
 	public it.eng.rd.dymer.model.DymerEntry getDymerEntryByUuidAndGroupId(
 			String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _dymerEntryLocalService.getDymerEntryByUuidAndGroupId(
 			uuid, groupId);
@@ -423,6 +449,10 @@ public class DymerEntryLocalServiceWrapper
 
 	/**
 	 * Updates the dymer entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was updated

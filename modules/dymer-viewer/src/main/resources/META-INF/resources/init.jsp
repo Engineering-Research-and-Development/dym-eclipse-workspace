@@ -68,6 +68,15 @@
 		dymerTour = portletPreferences.getValue("dymerTour", dymerViewerConfiguration.dymerTour());
 	}
 	
+	String dymerFreeHTML = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		dymerFreeHTML = portletPreferences.getValue("dymerFreeHTML", dymerViewerConfiguration.dymerFreeHTML());
+	}
+	
+	String dymerFreeJSON = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		dymerFreeJSON = portletPreferences.getValue("dymerFreeJSON", dymerViewerConfiguration.dymerFreeJSON());
+	}
 	
 
 /* *******************************************************************************************************
@@ -326,6 +335,8 @@
 <c:set var="map_configuration_" value="<%=map_configuration %>" />
 
 <c:set var="secretKey_" value="<%=secretKey %>" />
+<c:set var="dymerFreeHTML_" value="<%=dymerFreeHTML %>" />
+<c:set var="dymerFreeJSON_" value="<%=dymerFreeJSON %>" />
 
 
 <c:choose>
@@ -335,7 +346,10 @@
 	<c:when test="${dviewtype_ eq 'dymermap'}">
 		<c:set var="viewjs" value="dymer.map.js" />
 	</c:when>
-	<c:when test="${dviewtype eq 'dymersingleid'}">
+	<c:when test="${dviewtype_ eq 'dymersingleid'}">
+		<c:set var="viewjs" value="dymer.viewer.js" />
+	</c:when>
+	<c:when test="${dviewtype_ eq 'dymerfree'}">
 		<c:set var="viewjs" value="dymer.viewer.js" />
 	</c:when>
 </c:choose>

@@ -26,11 +26,15 @@ import com.liferay.portal.kernel.util.PortalUtil;
 
 import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.service.DymerEntryService;
+import it.eng.rd.dymer.service.DymerEntryServiceUtil;
 import it.eng.rd.dymer.service.persistence.DymerEntryPersistence;
 import it.eng.rd.dymer.service.persistence.DymerPersistence;
 
+import java.lang.reflect.Field;
+
 import javax.sql.DataSource;
 
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -51,8 +55,13 @@ public abstract class DymerEntryServiceBaseImpl
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Use <code>DymerEntryService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>it.eng.rd.dymer.service.DymerEntryServiceUtil</code>.
+	 * Never modify or reference this class directly. Use <code>DymerEntryService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>DymerEntryServiceUtil</code>.
 	 */
+	@Deactivate
+	protected void deactivate() {
+		_setServiceUtilService(null);
+	}
+
 	@Override
 	public Class<?>[] getAopInterfaces() {
 		return new Class<?>[] {
@@ -63,6 +72,8 @@ public abstract class DymerEntryServiceBaseImpl
 	@Override
 	public void setAopProxy(Object aopProxy) {
 		dymerEntryService = (DymerEntryService)aopProxy;
+
+		_setServiceUtilService(dymerEntryService);
 	}
 
 	/**
@@ -104,6 +115,20 @@ public abstract class DymerEntryServiceBaseImpl
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
+		}
+	}
+
+	private void _setServiceUtilService(DymerEntryService dymerEntryService) {
+		try {
+			Field field = DymerEntryServiceUtil.class.getDeclaredField(
+				"_service");
+
+			field.setAccessible(true);
+
+			field.set(null, dymerEntryService);
+		}
+		catch (ReflectiveOperationException reflectiveOperationException) {
+			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
 

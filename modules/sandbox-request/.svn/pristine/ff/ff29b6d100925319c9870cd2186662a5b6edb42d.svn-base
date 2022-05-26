@@ -1,0 +1,10 @@
+Bundle-Name: sandbox-request-api
+Bundle-SymbolicName: it.eng.rd.sandbox.request.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	it.eng.rd.sandbox.request.exception,\
+	it.eng.rd.sandbox.request.model,\
+	it.eng.rd.sandbox.request.service,\
+	it.eng.rd.sandbox.request.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../sandbox-request-service/service.xml

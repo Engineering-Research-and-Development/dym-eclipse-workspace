@@ -7,9 +7,6 @@ import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.util.ParamUtil;
 
-//import com.liferay.portal.kernel.util.GetterUtil;
-//import com.liferay.util.portlet.PortletProps;
-
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -44,8 +41,6 @@ public class DymerViewerConfigurationAction
 			HttpServletResponse httpServletResponse)
 		throws Exception {
 
-		_log.info("DymerViewerPortlet configuration include");
-
 		httpServletRequest.setAttribute(
 			DymerViewerConfiguration.class.getName(),
 			_dymerViewerConfiguration);
@@ -71,6 +66,8 @@ public class DymerViewerConfigurationAction
 		}
 		
 		String dymerTour = ParamUtil.getString(actionRequest, "dymerTour");
+		String dymerFreeHTML = ParamUtil.getString(actionRequest, "dymerFreeHTML");
+		String dymerFreeJSON = ParamUtil.getString(actionRequest, "dymerFreeJSON");
 		 
 //		renderer conditions		
 		String autostartsearch = ParamUtil.getString(actionRequest, "autostartsearch");
@@ -114,6 +111,8 @@ public class DymerViewerConfigurationAction
 
 //		Dymer tour		
 		setPreference(actionRequest, "dymerTour", dymerTour);
+		setPreference(actionRequest, "dymerFreeHTML", dymerFreeHTML);
+		setPreference(actionRequest, "dymerFreeJSON", dymerFreeJSON);
 
 //		renderer conditions
 		setPreference(actionRequest, "autostartsearch", autostartsearch);
@@ -144,7 +143,7 @@ public class DymerViewerConfigurationAction
 		setPreference(actionRequest, "map_configuration", map_configuration);
 		
 		setPreference(actionRequest, "secretKey", secretKey);
-		_log.info("secretKey "+secretKey);
+//		_log.info("secretKey "+secretKey);
 //		String[] defaultCheckedRoles = GetterUtil.getStringValues(PortletProps.get(DymerViewerPortletKeys.CHECKED_ROLES), new String[] {});
 //		String[] checkedRoles = ParamUtil.getParameterValues(actionRequest,"checkedRoles",null);
 //		setPreference(actionRequest, "checkedRoles", defaultCheckedRoles);
@@ -174,10 +173,6 @@ public class DymerViewerConfigurationAction
 		
 		*
 		*/
-		
-//		for (int i = 0; i < defaultCheckedRoles.length; i++) {
-//			_log.info(i+1 + ")" + defaultCheckedRoles[i] + "\n\n");
-//		}
 		
 		super.processAction(portletConfig, actionRequest, actionResponse);
 	}

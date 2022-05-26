@@ -40,9 +40,14 @@ public interface DymerViewerConfiguration {
 	@Meta.AD(required = false)
 	public String not_import();
 	
-	
 	@Meta.AD(required = false)
 	public String dymerTour();
+	
+	@Meta.AD(required = false)
+	public String dymerFreeJSON();
+	
+	@Meta.AD(required = false)
+	public String dymerFreeHTML();
 	
 	
 //	searchbar

@@ -51,7 +51,9 @@ package it.eng.rd.dymer.service.http;
  *
  * @author ENGRD
  * @see DymerServiceHttp
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
  * @generated
  */
+@Deprecated
 public class DymerServiceSoap {
 }

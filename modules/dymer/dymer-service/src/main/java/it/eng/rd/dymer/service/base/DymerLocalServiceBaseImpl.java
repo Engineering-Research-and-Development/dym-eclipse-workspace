@@ -54,15 +54,19 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import it.eng.rd.dymer.model.Dymer;
 import it.eng.rd.dymer.service.DymerLocalService;
+import it.eng.rd.dymer.service.DymerLocalServiceUtil;
 import it.eng.rd.dymer.service.persistence.DymerEntryPersistence;
 import it.eng.rd.dymer.service.persistence.DymerPersistence;
 
 import java.io.Serializable;
 
+import java.lang.reflect.Field;
+
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -83,11 +87,15 @@ public abstract class DymerLocalServiceBaseImpl
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Use <code>DymerLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>it.eng.rd.dymer.service.DymerLocalServiceUtil</code>.
+	 * Never modify or reference this class directly. Use <code>DymerLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>DymerLocalServiceUtil</code>.
 	 */
 
 	/**
 	 * Adds the dymer to the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was added
@@ -115,6 +123,10 @@ public abstract class DymerLocalServiceBaseImpl
 	/**
 	 * Deletes the dymer with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymerId the primary key of the dymer
 	 * @return the dymer that was removed
 	 * @throws PortalException if a dymer with the primary key could not be found
@@ -127,6 +139,10 @@ public abstract class DymerLocalServiceBaseImpl
 
 	/**
 	 * Deletes the dymer from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was removed
@@ -500,6 +516,10 @@ public abstract class DymerLocalServiceBaseImpl
 	/**
 	 * Updates the dymer in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was updated
 	 */
@@ -507,6 +527,11 @@ public abstract class DymerLocalServiceBaseImpl
 	@Override
 	public Dymer updateDymer(Dymer dymer) {
 		return dymerPersistence.update(dymer);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_setLocalServiceUtilService(null);
 	}
 
 	@Override
@@ -520,6 +545,8 @@ public abstract class DymerLocalServiceBaseImpl
 	@Override
 	public void setAopProxy(Object aopProxy) {
 		dymerLocalService = (DymerLocalService)aopProxy;
+
+		_setLocalServiceUtilService(dymerLocalService);
 	}
 
 	/**
@@ -561,6 +588,22 @@ public abstract class DymerLocalServiceBaseImpl
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
+		}
+	}
+
+	private void _setLocalServiceUtilService(
+		DymerLocalService dymerLocalService) {
+
+		try {
+			Field field = DymerLocalServiceUtil.class.getDeclaredField(
+				"_service");
+
+			field.setAccessible(true);
+
+			field.set(null, dymerLocalService);
+		}
+		catch (ReflectiveOperationException reflectiveOperationException) {
+			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
 

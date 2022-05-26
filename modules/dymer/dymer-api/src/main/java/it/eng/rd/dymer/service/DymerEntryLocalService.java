@@ -62,11 +62,15 @@ public interface DymerEntryLocalService
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this interface directly. Always use {@link DymerEntryLocalServiceUtil} to access the dymer entry local service. Add custom service methods to <code>it.eng.rd.dymer.service.impl.DymerEntryLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 * Never modify this interface directly. Add custom service methods to <code>it.eng.rd.dymer.service.impl.DymerEntryLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the dymer entry local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link DymerEntryLocalServiceUtil} if injection and service tracking are not available.
 	 */
 
 	/**
 	 * Adds the dymer entry to the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was added
@@ -83,13 +87,13 @@ public interface DymerEntryLocalService
 			long dymerId, long userId, String index, String type, String id,
 			String url, String title, String extContent,
 			ServiceContext serviceContext)
-		throws PortalException;
+		throws PortalException, SystemException;
 
 	@Indexable(type = IndexableType.REINDEX)
 	public DymerEntry addDymerEntry(
 			long dymerId, String index, String type, String id, String url,
 			String title, String extContent, ServiceContext serviceContext)
-		throws PortalException;
+		throws PortalException, SystemException;
 
 	/**
 	 * Creates a new dymer entry with the primary key. Does not add the dymer entry to the database.
@@ -109,25 +113,38 @@ public interface DymerEntryLocalService
 	/**
 	 * Deletes the dymer entry from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was removed
+	 * @throws PortalException
+	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public DymerEntry deleteDymerEntry(DymerEntry dymerEntry);
+	public DymerEntry deleteDymerEntry(DymerEntry dymerEntry)
+		throws PortalException, SystemException;
 
 	/**
 	 * Deletes the dymer entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param entryId the primary key of the dymer entry
 	 * @return the dymer entry that was removed
 	 * @throws PortalException if a dymer entry with the primary key could not be found
+	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public DymerEntry deleteDymerEntry(long entryId) throws PortalException;
+	public DymerEntry deleteDymerEntry(long entryId)
+		throws PortalException, SystemException;
 
 	@Indexable(type = IndexableType.DELETE)
 	public DymerEntry deleteDymerEntry(long entryId, long userId)
-		throws PortalException;
+		throws PortalException, SystemException;
 
 	/**
 	 * @throws PortalException
@@ -239,7 +256,7 @@ public interface DymerEntryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DymerEntry> getDymerEntries(
 			long groupId, long dymerId, int start, int end)
-		throws SystemException;
+		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DymerEntry> getDymerEntries(
@@ -289,9 +306,11 @@ public interface DymerEntryLocalService
 	 * @param entryId the primary key of the dymer entry
 	 * @return the dymer entry
 	 * @throws PortalException if a dymer entry with the primary key could not be found
+	 * @throws SystemException
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public DymerEntry getDymerEntry(long entryId) throws PortalException;
+	public DymerEntry getDymerEntry(long entryId)
+		throws PortalException, SystemException;
 
 	/**
 	 * Returns the dymer entry matching the UUID and group.
@@ -300,10 +319,11 @@ public interface DymerEntryLocalService
 	 * @param groupId the primary key of the group
 	 * @return the matching dymer entry
 	 * @throws PortalException if a matching dymer entry could not be found
+	 * @throws SystemException
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public DymerEntry getDymerEntryByUuidAndGroupId(String uuid, long groupId)
-		throws PortalException;
+		throws PortalException, SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
@@ -329,6 +349,10 @@ public interface DymerEntryLocalService
 
 	/**
 	 * Updates the dymer entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was updated

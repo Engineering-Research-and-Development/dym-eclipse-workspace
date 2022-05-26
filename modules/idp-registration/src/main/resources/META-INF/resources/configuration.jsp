@@ -32,7 +32,7 @@
 	 		<div class="panel-heading" id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_generalHeader" role="presentation">
 				<div id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_generalTitle">
 					 <a aria-controls="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_generalContent" aria-expanded="false" class="collapse-icon sheet-subtitle collapsed" data-toggle="liferay-collapse" href="#_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_generalContent" role="button">
-						General Configuration
+						<liferay-ui:message key="general-configuration"/>
 	 					<span class="collapse-icon-closed" id="gffek____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-right"></use></svg></span>
 						<span class="collapse-icon-open" id="gqcss____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-down" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-down"></use></svg></span>
 					 </a>
@@ -42,7 +42,7 @@
 			<div aria-labelledby="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_generalHeader" class="panel-collapse collapse" id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_generalContent" role="presentation" style="height: 0px;">
 				<div class="panel-body">
 					<div class="alert alert-info">
-						Use this configuration Widget to send requests to Identity Manager.
+						<liferay-ui:message key="use-this-configuration-widget-to-send-requests-to-identity-manager"/>
 					</div>
 		 			
 <!-- 		 			<div> -->
@@ -145,7 +145,7 @@
 	 		<div class="panel-heading" id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_templateHeader" role="presentation">
 				<div id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_templateTitle">
 					 <a aria-controls="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_templateContent" aria-expanded="false" class="collapse-icon sheet-subtitle collapsed" data-toggle="liferay-collapse" href="#_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_templateContent" role="button">
-						Template Configuration
+						<liferay-ui:message key="template-configuration"/>
 	 					<span class="collapse-icon-closed" id="ffek____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-right"></use></svg></span>
 						<span class="collapse-icon-open" id="qcss____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-down" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-down"></use></svg></span>
 					 </a>
@@ -155,7 +155,7 @@
 			<div aria-labelledby="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_templateHeader" class="panel-collapse collapse" id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_templateContent" role="presentation" style="height: 0px;">
 				<div class="panel-body">
 					<div class="alert alert-info">
-						Use this configuration Widget to customize a registration template.
+						<liferay-ui:message key="use-this-configuration-widget-to-customize-a-registration-template"/>
 					</div>
 		 			
 		 			<div>
@@ -283,7 +283,75 @@
 						  </div>
 					    </div>
 					</div>
+					
+					<div>
+					   <div class="position-relative row">
+						  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-12">
+							<div class="form-group input-text-wrapper">
+								<label class="control-label" for=""><liferay-ui:message key="organization-type-list"/>
+										<span class="taglib-icon-help lfr-portal-tooltip" title="Enter the default organization type names">
+									<span id="fehs____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-question-circle-full" focusable="false"><use href="http://localhost:8080/o/admin-theme/images/clay/icons.svg#question-circle-full"></use></svg></span>	
+									</span>
+								</label>
+								<textarea class="field form-control" id="<portlet:namespace />organizationTypelist" name="<portlet:namespace />organizationTypelist"><%=organizationTypelist%></textarea>
+							</div>
+						</div>
+					    </div>
+					</div>
+					
+					<div>
+					   <div class="position-relative row">
+						  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-12">
+							 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
+								<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+								<div class="ddm-drag">
+								   <div class="ddm-field" data-field-name="Field63772425">
+									  <div class="form-group"  ><label class="ddm-label" tabindex="0"><liferay-ui:message key="terms-of-use-url"/></label>
+									  <input name="<portlet:namespace />termsOfUseUrl" type="text"  value="<%=termsOfUseUrl%>"class="form-control ddm-field-text">
+									  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails"><br></span></div>
+								   </div>
+								</div>
+								<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+							 </div>
+						  </div>
+					    </div>
+					</div>
+					
+					<div>
+					   <div class="position-relative row">
+						  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-12">
+							 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
+								<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+								<div class="ddm-drag">
+								   <div class="ddm-field" data-field-name="Field63772425">
+									  <div class="form-group"  ><label class="ddm-label" tabindex="0"><liferay-ui:message key="copyright-company"/></label>
+									  <input name="<portlet:namespace />copyrightCompany" type="text"  value="<%=copyrightCompany%>"class="form-control ddm-field-text">
+									  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails"><br></span></div>
+								   </div>
+								</div>
+								<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+							 </div>
+						  </div>
+					    </div>
+					</div>
 			 		
+			 		<div>
+					   <div class="position-relative row">
+						  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-12">
+							 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
+								<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+								<div class="ddm-drag">
+								   <div class="ddm-field" data-field-name="Field63772425">
+									  <div class="form-group"  ><label class="ddm-label" tabindex="0"><liferay-ui:message key="copyright-company-url"/></label>
+									  <input name="<portlet:namespace />copyrightCompanyUrl" type="text"  value="<%=copyrightCompanyUrl%>"class="form-control ddm-field-text">
+									  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails"><br></span></div>
+								   </div>
+								</div>
+								<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+							 </div>
+						  </div>
+					    </div>
+					</div>
 						              
 		       </div>
 			</div>

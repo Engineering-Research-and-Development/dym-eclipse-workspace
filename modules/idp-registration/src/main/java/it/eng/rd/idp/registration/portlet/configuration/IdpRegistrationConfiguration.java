@@ -45,4 +45,16 @@ public interface IdpRegistrationConfiguration {
 	@Meta.AD(required = false)
 	public String from();
 	
+	@Meta.AD(required = false)
+	public String termsOfUseUrl();
+	
+	@Meta.AD(required = false)
+	public String organizationTypelist();
+	
+	@Meta.AD(required = false)
+	public String copyrightCompany();
+	
+	@Meta.AD(required = false)
+	public String copyrightCompanyUrl();
+	
 }

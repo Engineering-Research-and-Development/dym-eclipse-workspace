@@ -7,11 +7,18 @@
 
 <portlet:defineObjects />
 
+<%
+String home = portletPreferences.getValue("liferayPortalUrl", "#");
+%>
+
 <c:if test="${success}">
-		<div class="alert alert-success">
-			<liferay-ui:message key="${message}" /> 
-		</div>
+	<div class="alert alert-success">
+		<liferay-ui:message key="${message}" /> 
+	</div>
 </c:if>
 <c:if test="${error}">
 	<div class="alert alert-danger"><liferay-ui:message key="${message}" /> </div>
 </c:if>
+<a class="btn btn-outline-primary btn-back-to-home " href="<%=home %>" id="back-to-home-idp">
+	<liferay-ui:message key="back-to-home"/>
+</a>

@@ -14,9 +14,16 @@
 
 package it.eng.rd.dymer.service;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.util.tracker.ServiceTracker;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.util.OrderByComparator;
+
+import it.eng.rd.dymer.model.Dymer;
+
+import java.io.Serializable;
+
+import java.util.List;
 
 /**
  * Provides the local service utility for Dymer. This utility wraps
@@ -41,19 +48,21 @@ public class DymerLocalServiceUtil {
 	/**
 	 * Adds the dymer to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was added
 	 */
-	public static it.eng.rd.dymer.model.Dymer addDymer(
-		it.eng.rd.dymer.model.Dymer dymer) {
-
+	public static Dymer addDymer(Dymer dymer) {
 		return getService().addDymer(dymer);
 	}
 
-	public static it.eng.rd.dymer.model.Dymer addDymer(
+	public static Dymer addDymer(
 			long userId, String name,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws PortalException {
 
 		return getService().addDymer(userId, name, serviceContext);
 	}
@@ -64,16 +73,16 @@ public class DymerLocalServiceUtil {
 	 * @param dymerId the primary key for the new dymer
 	 * @return the new dymer
 	 */
-	public static it.eng.rd.dymer.model.Dymer createDymer(long dymerId) {
+	public static Dymer createDymer(long dymerId) {
 		return getService().createDymer(dymerId);
 	}
 
 	/**
 	 * @throws PortalException
 	 */
-	public static com.liferay.portal.kernel.model.PersistedModel
-			createPersistedModel(java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static PersistedModel createPersistedModel(
+			Serializable primaryKeyObj)
+		throws PortalException {
 
 		return getService().createPersistedModel(primaryKeyObj);
 	}
@@ -81,42 +90,43 @@ public class DymerLocalServiceUtil {
 	/**
 	 * Deletes the dymer from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was removed
 	 */
-	public static it.eng.rd.dymer.model.Dymer deleteDymer(
-		it.eng.rd.dymer.model.Dymer dymer) {
-
+	public static Dymer deleteDymer(Dymer dymer) {
 		return getService().deleteDymer(dymer);
 	}
 
 	/**
 	 * Deletes the dymer with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymerId the primary key of the dymer
 	 * @return the dymer that was removed
 	 * @throws PortalException if a dymer with the primary key could not be found
 	 */
-	public static it.eng.rd.dymer.model.Dymer deleteDymer(long dymerId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
+	public static Dymer deleteDymer(long dymerId) throws PortalException {
 		return getService().deleteDymer(dymerId);
 	}
 
 	/**
 	 * @throws PortalException
 	 */
-	public static com.liferay.portal.kernel.model.PersistedModel
-			deletePersistedModel(
-				com.liferay.portal.kernel.model.PersistedModel persistedModel)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static PersistedModel deletePersistedModel(
+			PersistedModel persistedModel)
+		throws PortalException {
 
 		return getService().deletePersistedModel(persistedModel);
 	}
 
-	public static com.liferay.portal.kernel.dao.orm.DynamicQuery
-		dynamicQuery() {
-
+	public static DynamicQuery dynamicQuery() {
 		return getService().dynamicQuery();
 	}
 
@@ -126,9 +136,7 @@ public class DymerLocalServiceUtil {
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
 	 */
-	public static <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
-
+	public static <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -144,9 +152,8 @@ public class DymerLocalServiceUtil {
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
 	 */
-	public static <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) {
+	public static <T> List<T> dynamicQuery(
+		DynamicQuery dynamicQuery, int start, int end) {
 
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
@@ -164,10 +171,9 @@ public class DymerLocalServiceUtil {
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
 	 */
-	public static <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end,
-		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
+	public static <T> List<T> dynamicQuery(
+		DynamicQuery dynamicQuery, int start, int end,
+		OrderByComparator<T> orderByComparator) {
 
 		return getService().dynamicQuery(
 			dynamicQuery, start, end, orderByComparator);
@@ -179,9 +185,7 @@ public class DymerLocalServiceUtil {
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows matching the dynamic query
 	 */
-	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
-
+	public static long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -193,13 +197,13 @@ public class DymerLocalServiceUtil {
 	 * @return the number of rows matching the dynamic query
 	 */
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
+		DynamicQuery dynamicQuery,
 		com.liferay.portal.kernel.dao.orm.Projection projection) {
 
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static it.eng.rd.dymer.model.Dymer fetchDymer(long dymerId) {
+	public static Dymer fetchDymer(long dymerId) {
 		return getService().fetchDymer(dymerId);
 	}
 
@@ -210,9 +214,7 @@ public class DymerLocalServiceUtil {
 	 * @param groupId the primary key of the group
 	 * @return the matching dymer, or <code>null</code> if a matching dymer could not be found
 	 */
-	public static it.eng.rd.dymer.model.Dymer fetchDymerByUuidAndGroupId(
-		String uuid, long groupId) {
-
+	public static Dymer fetchDymerByUuidAndGroupId(String uuid, long groupId) {
 		return getService().fetchDymerByUuidAndGroupId(uuid, groupId);
 	}
 
@@ -229,9 +231,7 @@ public class DymerLocalServiceUtil {
 	 * @return the dymer
 	 * @throws PortalException if a dymer with the primary key could not be found
 	 */
-	public static it.eng.rd.dymer.model.Dymer getDymer(long dymerId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
+	public static Dymer getDymer(long dymerId) throws PortalException {
 		return getService().getDymer(dymerId);
 	}
 
@@ -243,9 +243,8 @@ public class DymerLocalServiceUtil {
 	 * @return the matching dymer
 	 * @throws PortalException if a matching dymer could not be found
 	 */
-	public static it.eng.rd.dymer.model.Dymer getDymerByUuidAndGroupId(
-			String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static Dymer getDymerByUuidAndGroupId(String uuid, long groupId)
+		throws PortalException {
 
 		return getService().getDymerByUuidAndGroupId(uuid, groupId);
 	}
@@ -261,28 +260,20 @@ public class DymerLocalServiceUtil {
 	 * @param end the upper bound of the range of dymers (not inclusive)
 	 * @return the range of dymers
 	 */
-	public static java.util.List<it.eng.rd.dymer.model.Dymer> getDymers(
-		int start, int end) {
-
+	public static List<Dymer> getDymers(int start, int end) {
 		return getService().getDymers(start, end);
 	}
 
-	public static java.util.List<it.eng.rd.dymer.model.Dymer> getDymers(
-		long groupId) {
-
+	public static List<Dymer> getDymers(long groupId) {
 		return getService().getDymers(groupId);
 	}
 
-	public static java.util.List<it.eng.rd.dymer.model.Dymer> getDymers(
-		long groupId, int start, int end) {
-
+	public static List<Dymer> getDymers(long groupId, int start, int end) {
 		return getService().getDymers(groupId, start, end);
 	}
 
-	public static java.util.List<it.eng.rd.dymer.model.Dymer> getDymers(
-		long groupId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator
-			<it.eng.rd.dymer.model.Dymer> obc) {
+	public static List<Dymer> getDymers(
+		long groupId, int start, int end, OrderByComparator<Dymer> obc) {
 
 		return getService().getDymers(groupId, start, end, obc);
 	}
@@ -294,8 +285,8 @@ public class DymerLocalServiceUtil {
 	 * @param companyId the primary key of the company
 	 * @return the matching dymers, or an empty list if no matches were found
 	 */
-	public static java.util.List<it.eng.rd.dymer.model.Dymer>
-		getDymersByUuidAndCompanyId(String uuid, long companyId) {
+	public static List<Dymer> getDymersByUuidAndCompanyId(
+		String uuid, long companyId) {
 
 		return getService().getDymersByUuidAndCompanyId(uuid, companyId);
 	}
@@ -310,11 +301,9 @@ public class DymerLocalServiceUtil {
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the range of matching dymers, or an empty list if no matches were found
 	 */
-	public static java.util.List<it.eng.rd.dymer.model.Dymer>
-		getDymersByUuidAndCompanyId(
-			String uuid, long companyId, int start, int end,
-			com.liferay.portal.kernel.util.OrderByComparator
-				<it.eng.rd.dymer.model.Dymer> orderByComparator) {
+	public static List<Dymer> getDymersByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<Dymer> orderByComparator) {
 
 		return getService().getDymersByUuidAndCompanyId(
 			uuid, companyId, start, end, orderByComparator);
@@ -360,9 +349,8 @@ public class DymerLocalServiceUtil {
 	/**
 	 * @throws PortalException
 	 */
-	public static com.liferay.portal.kernel.model.PersistedModel
-			getPersistedModel(java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static PersistedModel getPersistedModel(Serializable primaryKeyObj)
+		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
 	}
@@ -370,32 +358,21 @@ public class DymerLocalServiceUtil {
 	/**
 	 * Updates the dymer in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was updated
 	 */
-	public static it.eng.rd.dymer.model.Dymer updateDymer(
-		it.eng.rd.dymer.model.Dymer dymer) {
-
+	public static Dymer updateDymer(Dymer dymer) {
 		return getService().updateDymer(dymer);
 	}
 
 	public static DymerLocalService getService() {
-		return _serviceTracker.getService();
+		return _service;
 	}
 
-	private static ServiceTracker<DymerLocalService, DymerLocalService>
-		_serviceTracker;
-
-	static {
-		Bundle bundle = FrameworkUtil.getBundle(DymerLocalService.class);
-
-		ServiceTracker<DymerLocalService, DymerLocalService> serviceTracker =
-			new ServiceTracker<DymerLocalService, DymerLocalService>(
-				bundle.getBundleContext(), DymerLocalService.class, null);
-
-		serviceTracker.open();
-
-		_serviceTracker = serviceTracker;
-	}
+	private static volatile DymerLocalService _service;
 
 }

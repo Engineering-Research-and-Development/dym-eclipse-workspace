@@ -58,8 +58,10 @@ import java.rmi.RemoteException;
  *
  * @author ENGRD
  * @see DymerEntryServiceHttp
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
  * @generated
  */
+@Deprecated
 public class DymerEntryServiceSoap {
 
 	public static it.eng.rd.dymer.model.DymerEntrySoap update(

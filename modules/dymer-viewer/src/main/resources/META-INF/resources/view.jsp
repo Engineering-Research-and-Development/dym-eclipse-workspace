@@ -61,9 +61,11 @@
 	
 	String dymerJwt = new String (Base64.getEncoder().encode(dymerToken.getBytes()));
 	String dymerExtraJwt = new String (Base64.getEncoder().encode((dymerExtraInfoJSONObject.toJSONString()).getBytes()));
+	
+/*	
 	log.info("--->dymerJwt Base64  "+dymerJwt);
 	log.info("--->dymerExtraJwt Base64  "+dymerJwt);
-	
+*/	
 // 	String showbread = portletPreferences.getValue("showbread", dymerViewerConfiguration.showbread());
 // 	boolean roleOkay = Util.isUserRoleOkay(currentUser.getUserId(), themeDisplay.getSiteGroup().getGroupId(), checkedRoles);
 
@@ -74,9 +76,11 @@
 		
 		dymerJwt = AesCrypto.encrypt(dymerToken, secretKey);
 		dymerExtraJwt = AesCrypto.encrypt(dymerExtraInfoJSONObject.toJSONString(), secretKey);
+/*		
 		log.info("--->secretKey "+secretKey);
 		log.info("--->dymerJwt crypto  "+dymerJwt);
-		log.info("--->dymerExtraJwt crypto  "+dymerExtraJwt);		
+		log.info("--->dymerExtraJwt crypto  "+dymerExtraJwt);	
+*/
 	}
 	
 %>
@@ -201,6 +205,21 @@
 					</div>
 				</div>
 			</div>
+		</c:when>
+		<c:when test="${dviewtype_ eq 'dymerfree'}">
+			
+			<script>
+			 
+			 	var str_not_import = "<%=not_import%>";
+				var ar = str_not_import.split(',');
+			
+				var dymerconf= {
+	  				notImport:ar
+	  			};
+				
+				<%=dymerFreeJSON%>
+	  	 	 </script>
+			 <%=dymerFreeHTML%>
 		</c:when>
 		<c:when test="${dviewtype_ eq 'dymerlist'}">
 		<!-- ------------------------------------------------------------------------------------------------ -->
@@ -645,7 +664,7 @@
                     		 <% 
 		                    	if(!precustomfilter.isEmpty()) { 
 		                    %>
-		                    	  <%=precustomfilter%>,
+		                    	  <%=precustomfilter%>
 		                    <% 
 		                    	} 
 		                    %>
@@ -654,7 +673,7 @@
                     			  <% 
 		                    	if(!postcustomfilter.isEmpty()) { 
 		                    %>
-		                     <%=postcustomfilter%>,
+		                     <%=postcustomfilter%>
 		                    <% 
 		                    	} 
 		                    %>

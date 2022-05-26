@@ -14,7 +14,9 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CookieKeys;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectSession;
@@ -27,10 +29,12 @@ import java.util.Map;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.osgi.service.component.annotations.Activate;
@@ -39,9 +43,8 @@ import org.osgi.service.component.annotations.Modified;
 
 import it.eng.rd.dymer.portlet.configuration.DymerViewerConfiguration;
 import it.eng.rd.dymer.portlet.constants.DymerViewerPortletKeys;
+import it.eng.rd.dymer.portlet.constants.DymerViewerPropsKeys;
 import it.eng.rd.util.crypto.AesCrypto;
-
-import javax.portlet.PortletPreferences;
 /**
  * @author Viviana Latino
  */
@@ -66,8 +69,6 @@ import javax.portlet.PortletPreferences;
 )
 public class DymerViewerPortlet extends MVCPortlet {
 	
-	
-	
 	@Override
 	public void doView(
 			RenderRequest renderRequest, RenderResponse renderResponse)
@@ -79,60 +80,79 @@ public class DymerViewerPortlet extends MVCPortlet {
 		try {
 			setCookies(renderRequest, renderResponse);
 		} catch (PortalException e) {
-			_log.error(e,e);
+			_log.error("An error occurred while setting cookies, "+e.getMessage());
 		}
-		HttpSession httpSession = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(renderRequest)).getSession();
 		
-		if (httpSession!=null) {
-			OpenIdConnectSession openIdConnectSession = (OpenIdConnectSession)httpSession.getAttribute(OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
-			if (openIdConnectSession==null) {
-				 _log.warn("OpenIdConnectSession is null");	
-			} else {
-				String accessToken = openIdConnectSession.getAccessTokenValue();
-				
-				if (_log.isDebugEnabled()) {
-					_log.debug("StateValue: "+openIdConnectSession.getStateValue());
-					_log.debug("LoginTime: "+openIdConnectSession.getLoginTime());
-					_log.debug("LoginUserId: "+openIdConnectSession.getLoginUserId());
-					_log.debug("RefreshTokenValue: "+openIdConnectSession.getRefreshTokenValue());
-					_log.debug("OpenIdProviderName: "+openIdConnectSession.getOpenIdProviderName());
-					_log.debug("NonceValue: "+openIdConnectSession.getNonceValue());
-					_log.debug("AccessToken: "+accessToken);	
-				}
+		HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
+		
+		if (httpServletRequest!=null) {
+			HttpSession httpSession = PortalUtil.getOriginalServletRequest(httpServletRequest).getSession();
+			
+			if (httpSession!=null) {
+				OpenIdConnectSession openIdConnectSession = (OpenIdConnectSession)httpSession.getAttribute(OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
+				if (openIdConnectSession==null) {
+					 _log.warn("no OPEN_ID_CONNECT_SESSION data");	
+				} else {
+					String accessToken = "";
+					try {
+						accessToken = openIdConnectSession.getAccessTokenValue();
 
-//				HttpServletRequest servletRequest = (HttpServletRequest) PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(renderRequest));
-				
-				PortletPreferences _portletPreferences = renderRequest.getPreferences();
-				
-				String secretKey = "";
-				if (Validator.isNotNull(_dymerViewerConfiguration)) {
-					secretKey = _portletPreferences.getValue("secretKey", _dymerViewerConfiguration.secreKey());
-					
-					if(Validator.isNotNull(secretKey) && !secretKey.equalsIgnoreCase("")) {
-						accessToken = AesCrypto.encrypt(accessToken, secretKey);
-						_log.debug("secretKey "+secretKey);
-						_log.debug("crypted accessToken "+accessToken);
+						if (_log.isDebugEnabled()) {
+							_log.debug("StateValue: "+openIdConnectSession.getStateValue());
+							_log.debug("LoginTime: "+openIdConnectSession.getLoginTime());
+							_log.debug("LoginUserId: "+openIdConnectSession.getLoginUserId());
+							_log.debug("RefreshTokenValue: "+openIdConnectSession.getRefreshTokenValue());
+							_log.debug("OpenIdProviderName: "+openIdConnectSession.getOpenIdProviderName());
+							_log.debug("NonceValue: "+openIdConnectSession.getNonceValue());
+//							_log.debug("AccessToken: "+accessToken);	
+						}
+
+						PortletPreferences _portletPreferences = renderRequest.getPreferences();
+						
+						String secretKey = "";
+//						if (Validator.isNotNull(_dymerViewerConfiguration)) {
+//							secretKey = _portletPreferences.getValue("secretKey", _dymerViewerConfiguration.secreKey());
+							secretKey = GetterUtil.getString(PropsUtil.get(DymerViewerPropsKeys.AES_SECRET_KEY));
+							if(Validator.isNotNull(secretKey) && !secretKey.equalsIgnoreCase("")) {
+								accessToken = AesCrypto.encrypt(accessToken, secretKey);
+								if (_log.isDebugEnabled()) {
+									_log.debug("-->secretKey "+secretKey);
+									_log.debug("-->crypted accessToken "+accessToken);
+								}
+							}
+//							_log.info("---->"+AesCrypto.encrypt("a2a81aae2781d5286731b650ed9f44ff230a947b", "xxxxxxxxxxxxxxx"));
+//						}
+						
+						Cookie cookie = new Cookie("DYMAT", accessToken);
+						cookie.setMaxAge(CookieKeys.MAX_AGE);
+						cookie.setPath("/");
+						
+						CookieKeys.addCookie(PortalUtil.getHttpServletRequest(renderRequest), PortalUtil.getHttpServletResponse(renderResponse), cookie);	  
+						renderRequest.setAttribute("DYMATattribute", accessToken);
+						HttpServletRequest convertRes = PortalUtil.getHttpServletRequest(renderRequest);
+						HttpServletRequest originalRequest = (HttpServletRequest) ((HttpServletRequestWrapper) convertRes).getRequest();
+					    Cookie DYMATNEW = new Cookie("LODYMAT", accessToken);
+					    DYMATNEW.setMaxAge(CookieKeys.MAX_AGE);
+					    DYMATNEW.setPath("/");
+
+						CookieKeys.addCookie(originalRequest, PortalUtil.getHttpServletResponse(renderResponse), DYMATNEW);
+						
+					  //---------------new session attribute
+						
+					} catch (Exception e) {
+						 _log.warn("no accessTokenValue, "+e.getMessage());	
 					}
 					
-//					_log.info("---->"+AesCrypto.encrypt("a2a81aae2781d5286731b650ed9f44ff230a947b", "xxxxxxxxxxxxxxx"));
-				}
-				
-				Cookie cookie = new Cookie("DYMAT", accessToken);
-				cookie.setMaxAge(CookieKeys.MAX_AGE);
-				cookie.setPath("/");
-				
-				CookieKeys.addCookie(PortalUtil.getHttpServletRequest(renderRequest), PortalUtil.getHttpServletResponse(renderResponse), cookie);	  
-				renderRequest.setAttribute("DYMATattribute", accessToken);
-			}
-		} else {
-			 _log.warn("HttpSession is null");	
-		}	
+				}//openIdConnectSession
+			} 
+			
+		}
 		
 		super.doView(renderRequest, renderResponse);
 	}
 	
-	/*
-	protected boolean hasValidAccessToken(accessToken, tokenLifetime) {
+	
+	/*protected boolean hasValidAccessToken(accessToken, tokenLifetime) {
 
 			AccessToken accessToken = openIdConnectSessionImpl.getAccessToken();
 
@@ -140,16 +160,16 @@ public class DymerViewerPortlet extends MVCPortlet {
 				return false;
 			}
 
-			long currentTime = System.currentTimeMillis();
-			long lifetime = accessToken.getLifetime() * Time.SECOND;
-			long loginTime = openIdConnectSessionImpl.getLoginTime();
+			long currentTime = System.currentTimeMillis();--> data corrente
+			long lifetime = accessToken.getLifetime() * Time.SECOND; -->dalla config di idm per default 60min
+			long loginTime = openIdConnectSessionImpl.getLoginTime();--> quando accede alle dymer-viewer
 
 			if ((currentTime - loginTime) < lifetime) {
 				return true;
 			}
 
 			return false;
-	}  */
+	}*/
 	
 	private void setCookies(RenderRequest renderRequest, RenderResponse renderResponse) throws PortalException {
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);

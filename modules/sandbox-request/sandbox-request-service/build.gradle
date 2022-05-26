@@ -1,0 +1,15 @@
+dependencies {
+	compile project(":modules:sandbox-request:sandbox-request-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	
+	compileOnly group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.11"
+	compileOnly group: "org.apache.httpcomponents", name: "httpcore", version: "4.4.13"
+	
+}
+
+buildService {
+	apiDir = "../sandbox-request-api/src/main/java"
+}
+
+group = "it.eng.rd.sandbox.request"

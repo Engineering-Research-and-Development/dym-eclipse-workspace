@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.exception.NoSuchUserException"%>
+<%@page import="com.liferay.portal.kernel.service.UserLocalServiceUtil"%>
 <%@ include file="../init.jsp" %>
 
 <%
@@ -11,8 +13,6 @@ if (dymers!=null && dymers.size()>0){
 }
 
 %>
-
-
 	
 <liferay-ui:search-container total="<%=DymerEntryLocalServiceUtil.getDymerEntriesCount()%>">
 <liferay-ui:search-container-results
@@ -29,7 +29,8 @@ if (dymers!=null && dymers.size()>0){
 		<liferay-ui:search-container-column-text property="title" />
 		<liferay-ui:search-container-column-text property="extContent" />
 		<liferay-ui:search-container-column-text property="url" />
-	
+		<liferay-ui:search-container-column-text property="userId" />
+		<liferay-ui:search-container-column-text property="userName" />
 	</liferay-ui:search-container-row>
 	
 	<liferay-ui:search-iterator />

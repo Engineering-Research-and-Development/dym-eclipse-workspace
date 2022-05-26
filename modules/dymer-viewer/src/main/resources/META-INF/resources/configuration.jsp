@@ -53,60 +53,69 @@
 		</div>
 		<div>
 		   <div class="position-relative row">
-			  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-4">
-				 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
-					<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
-					<div class="ddm-drag">
-					   <div class="ddm-field" data-field-name="Field63772425">
-						  <div class="form-group"  ><label class="ddm-label" tabindex="0">DymerURL</label>
-						  <input name="<portlet:namespace />dymerIp" type="text"  value="<%=dymerIp%>"class="form-control ddm-field-text">
-						  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails">DymerURL<br></span></div>
-					   </div>
+				  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-6">
+					 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
+						<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+						<div class="ddm-drag">
+						   <div class="ddm-field" data-field-name="Field63772425">
+							  <div class="form-group"  ><label class="ddm-label" tabindex="0">DymerURL</label>
+							  <input name="<portlet:namespace />dymerIp" type="text"  value="<%=dymerIp%>"class="form-control ddm-field-text">
+							  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails">DymerURL<br></span></div>
+						   </div>
+						</div>
+						<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+					 </div>
+				  </div>
+			  
+				  <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-6">
+					 <div class="ddm-field-container ddm-target h-100" data-field-name="Field41787856">
+						<aui:select label="label-dymer-view-as" name="dviewtype" id="dviewtype" value="<%=dviewtype%>" >
+							    <aui:option  value="dymerlist" selected="${dviewtype_ eq 'dymerlist'}">
+				                   	<liferay-ui:message key="openness.dymer.label.dymerlist" />
+			                   	</aui:option>
+			                   	<aui:option  value="dymermap"  selected="${dviewtype_ eq 'dymermap'}">
+			                   		<liferay-ui:message key="openness.dymer.label.dymermap" />
+			                   	</aui:option>
+			                   	<aui:option  value="dymersingleid"  selected="${dviewtype_ eq 'dymersingleid'}" >
+			                  		<liferay-ui:message key="openness.dymer.label.dymersinglebyid" />
+			                  	</aui:option>
+			                  	<aui:option  value="dymerfree"  selected="${dviewtype_ eq 'dymerfree'}" >
+			                  		<liferay-ui:message key="openness.dymer.label.dymerfree" />
+			                  	</aui:option>
+						 </aui:select>
 					</div>
-					<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
-				 </div>
+				  </div>
 			  </div>
-			  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-4">
-				 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
-					<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
-					<div class="ddm-drag">
-					   <div class="ddm-field" data-field-name="Field63772425">
-						  <div class="form-group"  ><label class="ddm-label" tabindex="0">SecretKey</label>
-						  <input name="<portlet:namespace />secretKey" type="text"  value="<%=secretKey%>"class="form-control ddm-field-text">
-						  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails">SecretKey<br></span></div>
-					   </div>
-					</div>
-					<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
-				 </div>
-			  </div>
-			  <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-4">
-				 <div class="ddm-field-container ddm-target h-100" data-field-name="Field41787856">
-					<aui:select label="label-dymer-view-as" name="dviewtype" id="dviewtype" value="<%=dviewtype%>" onChange="changedviewtype($(this).val())" >
-						    <aui:option  value="dymerlist" selected="${dviewtype_ eq 'dymerlist'}">
-			                   	<liferay-ui:message key="openness.dymer.label.dymerlist" />
-		                   	</aui:option>
-		                   	<aui:option  value="dymermap"  selected="${dviewtype_ eq 'dymermap'}">
-		                   		<liferay-ui:message key="openness.dymer.label.dymermap" />
-		                   	</aui:option>
-		                   	<aui:option  value="dymersingleid"  selected="${dviewtype_ eq 'dymersingleid'}" >
-		                  		<liferay-ui:message key="openness.dymer.label.dymersinglebyid" />
-		                  	</aui:option>
-					 </aui:select>
-				</div>
-			  </div>
-			  <div data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-4">
-				 <div class="ddm-field-container ddm-target h-100" data-field-name="Field65143131">
-					<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1">
-					</div>
-					<div class="ddm-drag">
-					   <div class="ddm-field" data-field-name="Field65143131">
-						  <div class="form-group" data-field-name="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field65143131$hD5ehXcu$0$$en_US"><label aria-describedby="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field65143131$hD5ehXcu$0$$en_US_fieldDetails" class="ddm-label" tabindex="0">Model to Add</label>
-						  <input  name="<portlet:namespace />addModel" type="text" value="<%=addModel%>" class="form-control ddm-field-text"><span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field65143131$hD5ehXcu$0$$en_US_fieldDetails">Model to Add<br></span></div>
-					   </div>
-					</div>
-					<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1"></div>
-				 </div>
-			  </div>
+			  
+			  <div class="position-relative row">
+				  <div data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-6">
+					 <div class="ddm-field-container ddm-target h-100" data-field-name="Field65143131">
+						<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1">
+						</div>
+						<div class="ddm-drag">
+						   <div class="ddm-field" data-field-name="Field65143131">
+							  <div class="form-group" data-field-name="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field65143131$hD5ehXcu$0$$en_US"><label aria-describedby="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field65143131$hD5ehXcu$0$$en_US_fieldDetails" class="ddm-label" tabindex="0">Model to Add</label>
+							  <input  name="<portlet:namespace />addModel" type="text" value="<%=addModel%>" class="form-control ddm-field-text"><span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field65143131$hD5ehXcu$0$$en_US_fieldDetails">Model to Add<br></span></div>
+						   </div>
+						</div>
+						<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+					 </div>
+				  </div>
+			  
+				  <div data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-6">
+					 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
+						<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+						<div class="ddm-drag">
+						   <div class="ddm-field" data-field-name="Field63772425">
+							  <div class="form-group"  ><label class="ddm-label" tabindex="0">SecretKey</label>
+							  <input name="<portlet:namespace />secretKey" type="text"  value="<%=secretKey%>"class="form-control ddm-field-text">
+							  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails">SecretKey<br></span></div>
+						   </div>
+						</div>
+						<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
+					 </div>
+				  </div>
+			  
 		   </div>
 		   <div class="placeholder row">
 			  <div data-ddm-field-page="0" data-ddm-field-row="2" class="col col-ddm col-empty col-md-12">
@@ -213,7 +222,7 @@
 			  </div>
 		   </div>
 		   <div class="placeholder row">
-		  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-6">
+		  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
 			  	 <div class="container_keyget bordercont row">
 					<div class="col-12 span12">
 						<label><liferay-ui:message key="label-dymer-keyget" /></label>
@@ -223,19 +232,38 @@
 		  	 </div>
 		   </div>
 		   
-		   <div class="lfr-ddm-field-group field-wrapper">
-						<span class="control-label">
-							Dymer Bootstrap Tour
-					 	</span>
-					  
-				 		<textarea class="field form-control lfr-textarea" 
-				 			id="<portlet:namespace />dymerTour"  
-				 			name="<portlet:namespace />dymerTour"><%=dymerTour%>
-				 		</textarea>
-					</div>
-		   
-		   
-		   
+		   <div class="lfr-ddm-field-group field-wrapper" class="col-ddm col-md-12">
+				<span class="control-label" >
+					<label>Dymer Bootstrap Tour</label>
+			 	</span>
+			  
+		 		<textarea class="field form-control lfr-textarea" 
+		 			id="<portlet:namespace />dymerTour"  
+		 			name="<portlet:namespace />dymerTour"><%=dymerTour%>
+		 		</textarea>
+			</div>
+			
+			<div class="lfr-ddm-field-group field-wrapper" class="col-ddm col-md-12">
+				<span class="control-label" >
+					<label>Free Config JSON</label>
+			 	</span>
+			  
+		 		<textarea class="field form-control lfr-textarea" 
+		 			id="<portlet:namespace />dymerFreeJSON"  
+		 			name="<portlet:namespace />dymerFreeJSON"><%=dymerFreeJSON%>
+		 		</textarea>
+			</div>
+			
+			<div class="lfr-ddm-field-group field-wrapper" class="col-ddm col-md-12">
+				<span class="control-label" >
+					<label>Free Config HTML</label>
+			 	</span>
+			  
+		 		<textarea class="field form-control lfr-textarea" 
+		 			id="<portlet:namespace />dymerFreeHTML"  
+		 			name="<portlet:namespace />dymerFreeHTML"><%=dymerFreeHTML%>
+		 		</textarea>
+			</div>
 		   
 		   <div class="placeholder row">
 			  <div data-ddm-field-page="0" data-ddm-field-row="4" class="col col-ddm col-empty col-md-12">
@@ -245,6 +273,81 @@
 		</div>
 		 
 		<div>
+			<!------------------------------------------------------------ new search bar ------------------------------------------------------------->
+			
+			<fieldset aria-labelledby="newsearchbar" class="panel " id="newSearchbar" role="group">
+		 		<div class="panel-heading" id="newSearchbarHeader" role="presentation">
+					<div id="newSearchbarTitle">
+						 <a aria-controls="newSearchbarContent" aria-expanded="false" class="collapse-icon sheet-subtitle collapsed" data-toggle="liferay-collapse" href="#VsearchbarContent" role="button">
+							Vertical Search bar Configuration
+		 					<span class="collapse-icon-closed" id="ffek____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-right"></use></svg></span>
+							<span class="collapse-icon-open" id="qcss____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-down" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-down"></use></svg></span>
+						 </a>
+					</div>
+				</div>
+
+			<div aria-labelledby="newSearchbarHeader" class="panel-collapse collapse" id="VsearchbarContent" role="presentation" style="height: 0px;">
+				<div class="panel-body">
+					<div class="alert alert-info">
+						Use the searchbar Vertical Widget URL to create a searchbar Widget.
+					</div>
+		 			<div class="form-group form-inline input-checkbox-wrapper">
+						<label for="showfilter">
+							<input class="field" 
+								id="<portlet:namespace />showVerticalfilter" 
+								name="<portlet:namespace />showVerticalfilter" 
+								onclick="" 
+								type="checkbox" <c:if test="${showVerticalfilter_}">checked="checked"</c:if>>
+						 
+								<span class="">
+							 	Show search bar
+					 	</span>
+						</label>
+			 		</div>
+			 		
+			 		<div class="lfr-ddm-field-group field-wrapper">
+						<span class="control-label">
+							PRE-CustomFilter
+					 	</span>
+			 			<textarea class="field form-control lfr-textarea" 
+			 				id="<portlet:namespace />precustomfilter"  
+			 				name="<portlet:namespace />precustomfilter"><%=precustomfilter%>
+			 			</textarea>
+					</div>	
+			 		
+			 		<div class="lfr-ddm-field-group field-wrapper">
+						<span class="control-label">
+							DymerSearch JSON Config
+					 	</span>
+					  
+				 		<textarea class="field form-control lfr-textarea" 
+				 			id="<portlet:namespace />dymerSearch"  
+				 			name="<portlet:namespace />dymerSearch"><%=dymerSearch%>
+				 		</textarea>
+					</div>
+			 		
+			 		<div class="lfr-ddm-field-group field-wrapper">
+						<span class="control-label">
+							POST-CustomFilter
+					 	</span>
+			 			<textarea class="field form-control lfr-textarea" 
+			 				id="<portlet:namespace />postcustomfilter"  
+			 				name="<portlet:namespace />postcustomfilter"><%=postcustomfilter%>
+			 			</textarea>
+					</div>
+			 		 
+			 		               
+		       </div>
+			</div>
+			</fieldset>
+			<!------------------------------------------------------------ *End new search bar --------------------------------------------------------->
+			
+		 	
+		
+		
+		
+		
+		
 			<!------------------------------------------------------------ start tab search ------------------------------------------------------------>
 			<fieldset aria-labelledby="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarTitle" class="panel " id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbar" role="group">
 		 		<div class="panel-heading" id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarHeader" role="presentation">
@@ -363,75 +466,6 @@
 		 	<br>
 			<!------------------------------------------------------------ end tab search ------------------------------------------------------------>
 		 
-		 	<!------------------------------------------------------------ new search bar ------------------------------------------------------------->
-			
-			<fieldset aria-labelledby="newsearchbar" class="panel " id="newSearchbar" role="group">
-		 		<div class="panel-heading" id="newSearchbarHeader" role="presentation">
-					<div id="newSearchbarTitle">
-						 <a aria-controls="newSearchbarContent" aria-expanded="false" class="collapse-icon sheet-subtitle collapsed" data-toggle="liferay-collapse" href="#VsearchbarContent" role="button">
-							Vertical Search bar Configuration
-		 					<span class="collapse-icon-closed" id="ffek____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-right"></use></svg></span>
-							<span class="collapse-icon-open" id="qcss____"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-down" focusable="false"><use href="/o/dihiware-theme/images/clay/icons.svg#angle-down"></use></svg></span>
-						 </a>
-					</div>
-				</div>
-
-			<div aria-labelledby="newSearchbarHeader" class="panel-collapse collapse" id="VsearchbarContent" role="presentation" style="height: 0px;">
-				<div class="panel-body">
-					<div class="alert alert-info">
-						Use the searchbar Vertical Widget URL to create a searchbar Widget.
-					</div>
-		 			<div class="form-group form-inline input-checkbox-wrapper">
-						<label for="showfilter">
-							<input class="field" 
-								id="<portlet:namespace />showVerticalfilter" 
-								name="<portlet:namespace />showVerticalfilter" 
-								onclick="" 
-								type="checkbox" <c:if test="${showVerticalfilter_}">checked="checked"</c:if>>
-						 
-								<span class="">
-							 	Show search bar
-					 	</span>
-						</label>
-			 		</div>
-			 		
-			 		<div class="lfr-ddm-field-group field-wrapper">
-						<span class="control-label">
-							PRE-CustomFilter
-					 	</span>
-			 			<textarea class="field form-control lfr-textarea" 
-			 				id="<portlet:namespace />precustomfilter"  
-			 				name="<portlet:namespace />precustomfilter"><%=precustomfilter%>
-			 			</textarea>
-					</div>	
-			 		
-			 		<div class="lfr-ddm-field-group field-wrapper">
-						<span class="control-label">
-							DymerSearch JSON Config
-					 	</span>
-					  
-				 		<textarea class="field form-control lfr-textarea" 
-				 			id="<portlet:namespace />dymerSearch"  
-				 			name="<portlet:namespace />dymerSearch"><%=dymerSearch%>
-				 		</textarea>
-					</div>
-			 		
-			 		<div class="lfr-ddm-field-group field-wrapper">
-						<span class="control-label">
-							POST-CustomFilter
-					 	</span>
-			 			<textarea class="field form-control lfr-textarea" 
-			 				id="<portlet:namespace />postcustomfilter"  
-			 				name="<portlet:namespace />postcustomfilter"><%=postcustomfilter%>
-			 			</textarea>
-					</div>
-			 		 
-			 		               
-		       </div>
-			</div>
-			</fieldset>
-			<!------------------------------------------------------------ End new search bar --------------------------------------------------------->
-			
 		 	
 		 	
 		 	

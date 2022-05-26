@@ -54,15 +54,19 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.service.DymerEntryLocalService;
+import it.eng.rd.dymer.service.DymerEntryLocalServiceUtil;
 import it.eng.rd.dymer.service.persistence.DymerEntryPersistence;
 import it.eng.rd.dymer.service.persistence.DymerPersistence;
 
 import java.io.Serializable;
 
+import java.lang.reflect.Field;
+
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -83,11 +87,15 @@ public abstract class DymerEntryLocalServiceBaseImpl
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Use <code>DymerEntryLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>it.eng.rd.dymer.service.DymerEntryLocalServiceUtil</code>.
+	 * Never modify or reference this class directly. Use <code>DymerEntryLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>DymerEntryLocalServiceUtil</code>.
 	 */
 
 	/**
 	 * Adds the dymer entry to the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was added
@@ -115,25 +123,40 @@ public abstract class DymerEntryLocalServiceBaseImpl
 	/**
 	 * Deletes the dymer entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param entryId the primary key of the dymer entry
 	 * @return the dymer entry that was removed
 	 * @throws PortalException if a dymer entry with the primary key could not be found
+	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public DymerEntry deleteDymerEntry(long entryId) throws PortalException {
+	public DymerEntry deleteDymerEntry(long entryId)
+		throws PortalException, SystemException {
+
 		return dymerEntryPersistence.remove(entryId);
 	}
 
 	/**
 	 * Deletes the dymer entry from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was removed
+	 * @throws PortalException
+	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public DymerEntry deleteDymerEntry(DymerEntry dymerEntry) {
+	public DymerEntry deleteDymerEntry(DymerEntry dymerEntry)
+		throws PortalException, SystemException {
+
 		return dymerEntryPersistence.remove(dymerEntry);
 	}
 
@@ -249,9 +272,12 @@ public abstract class DymerEntryLocalServiceBaseImpl
 	 * @param entryId the primary key of the dymer entry
 	 * @return the dymer entry
 	 * @throws PortalException if a dymer entry with the primary key could not be found
+	 * @throws SystemException
 	 */
 	@Override
-	public DymerEntry getDymerEntry(long entryId) throws PortalException {
+	public DymerEntry getDymerEntry(long entryId)
+		throws PortalException, SystemException {
+
 		return dymerEntryPersistence.findByPrimaryKey(entryId);
 	}
 
@@ -471,10 +497,11 @@ public abstract class DymerEntryLocalServiceBaseImpl
 	 * @param groupId the primary key of the group
 	 * @return the matching dymer entry
 	 * @throws PortalException if a matching dymer entry could not be found
+	 * @throws SystemException
 	 */
 	@Override
 	public DymerEntry getDymerEntryByUuidAndGroupId(String uuid, long groupId)
-		throws PortalException {
+		throws PortalException, SystemException {
 
 		return dymerEntryPersistence.findByUUID_G(uuid, groupId);
 	}
@@ -508,6 +535,10 @@ public abstract class DymerEntryLocalServiceBaseImpl
 	/**
 	 * Updates the dymer entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymerEntry the dymer entry
 	 * @return the dymer entry that was updated
 	 */
@@ -515,6 +546,11 @@ public abstract class DymerEntryLocalServiceBaseImpl
 	@Override
 	public DymerEntry updateDymerEntry(DymerEntry dymerEntry) {
 		return dymerEntryPersistence.update(dymerEntry);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_setLocalServiceUtilService(null);
 	}
 
 	@Override
@@ -528,6 +564,8 @@ public abstract class DymerEntryLocalServiceBaseImpl
 	@Override
 	public void setAopProxy(Object aopProxy) {
 		dymerEntryLocalService = (DymerEntryLocalService)aopProxy;
+
+		_setLocalServiceUtilService(dymerEntryLocalService);
 	}
 
 	/**
@@ -569,6 +607,22 @@ public abstract class DymerEntryLocalServiceBaseImpl
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
+		}
+	}
+
+	private void _setLocalServiceUtilService(
+		DymerEntryLocalService dymerEntryLocalService) {
+
+		try {
+			Field field = DymerEntryLocalServiceUtil.class.getDeclaredField(
+				"_service");
+
+			field.setAccessible(true);
+
+			field.set(null, dymerEntryLocalService);
+		}
+		catch (ReflectiveOperationException reflectiveOperationException) {
+			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
 

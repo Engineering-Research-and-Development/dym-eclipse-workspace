@@ -1,3 +1,7 @@
 Bundle-Name: idp-logout
 Bundle-SymbolicName: it.eng.rd.events.idp.logout
 Bundle-Version: 1.0.0
+-includeresource: \
+  lib/httpclient.jar=httpclient-4.5.11.jar;lib:=true,\
+  lib/httpcore.jar=httpcore-4.4.13.jar;lib:=true,\
+  lib/commons-codec.jar=commons-codec-1.13.jar;lib:=true

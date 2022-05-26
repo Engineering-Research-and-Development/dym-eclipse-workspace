@@ -14,9 +14,7 @@
 
 package it.eng.rd.dymer.service;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.util.tracker.ServiceTracker;
+import it.eng.rd.dymer.model.DymerEntry;
 
 /**
  * Provides the remote service utility for DymerEntry. This utility wraps
@@ -64,7 +62,7 @@ public class DymerEntryServiceUtil {
 	 * Old remote services
 	 */
 	@Deprecated
-	public static it.eng.rd.dymer.model.DymerEntry update(
+	public static DymerEntry update(
 		long userId, long groupId, String index, String type, String id,
 		String url, String title, String extContent) {
 
@@ -72,7 +70,7 @@ public class DymerEntryServiceUtil {
 			userId, groupId, index, type, id, url, title, extContent);
 	}
 
-	public static it.eng.rd.dymer.model.DymerEntry update(
+	public static DymerEntry update(
 		String dymerDomainName, String emailAddress, long companyId,
 		long groupId, String index, String type, String id, String url,
 		String title, String extContent) {
@@ -83,22 +81,9 @@ public class DymerEntryServiceUtil {
 	}
 
 	public static DymerEntryService getService() {
-		return _serviceTracker.getService();
+		return _service;
 	}
 
-	private static ServiceTracker<DymerEntryService, DymerEntryService>
-		_serviceTracker;
-
-	static {
-		Bundle bundle = FrameworkUtil.getBundle(DymerEntryService.class);
-
-		ServiceTracker<DymerEntryService, DymerEntryService> serviceTracker =
-			new ServiceTracker<DymerEntryService, DymerEntryService>(
-				bundle.getBundleContext(), DymerEntryService.class, null);
-
-		serviceTracker.open();
-
-		_serviceTracker = serviceTracker;
-	}
+	private static volatile DymerEntryService _service;
 
 }

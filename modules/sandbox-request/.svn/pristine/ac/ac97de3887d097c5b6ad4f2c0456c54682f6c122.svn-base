@@ -1,0 +1,11 @@
+Bundle-Name: sandbox-request-service
+Bundle-SymbolicName: it.eng.rd.sandbox.request.service
+Bundle-Version: 1.0.0
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true
+-dsannotations-options: inherit
+-includeresource: \
+  lib/httpclient.jar=httpclient-4.5.11.jar;lib:=true,\
+  lib/httpcore.jar=httpcore-4.4.13.jar;lib:=true,\
+  lib/commons-codec.jar=commons-codec-1.13.jar;lib:=true
+

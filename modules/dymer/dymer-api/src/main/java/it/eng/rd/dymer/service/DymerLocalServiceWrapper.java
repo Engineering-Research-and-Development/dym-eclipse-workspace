@@ -33,6 +33,10 @@ public class DymerLocalServiceWrapper
 	/**
 	 * Adds the dymer to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was added
 	 */
@@ -77,6 +81,10 @@ public class DymerLocalServiceWrapper
 	/**
 	 * Deletes the dymer from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was removed
 	 */
@@ -89,6 +97,10 @@ public class DymerLocalServiceWrapper
 
 	/**
 	 * Deletes the dymer with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymerId the primary key of the dymer
 	 * @return the dymer that was removed
@@ -386,6 +398,10 @@ public class DymerLocalServiceWrapper
 
 	/**
 	 * Updates the dymer in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DymerLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dymer the dymer
 	 * @return the dymer that was updated
