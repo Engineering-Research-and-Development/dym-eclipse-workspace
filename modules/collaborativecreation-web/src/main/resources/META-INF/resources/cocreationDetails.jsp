@@ -163,7 +163,7 @@ boolean isCocreator = false;
 					String fileURL = "";
 					for (FileEntry file : fileEntries) {    
 						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-						if (file.getFileName().startsWith("COCREATION_")){
+						if (file.getFileName().startsWith(cocreation.getTitle().replaceAll("[^a-zA-Z0-9]", "_"))){
 						%>	
 							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 					 	<%

@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationDeliveryConstants;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -72,7 +73,6 @@ import it.eng.rd.collaborativecreation.model.Cocreation;
 import it.eng.rd.collaborativecreation.model.Cocreator;
 import it.eng.rd.collaborativecreation.model.Task;
 import it.eng.rd.collaborativecreation.portlet.constants.CollaborativecreationPortletKeys;
-import it.eng.rd.collaborativecreation.service.ActivityLocalService;
 import it.eng.rd.collaborativecreation.service.ActivityLocalServiceUtil;
 import it.eng.rd.collaborativecreation.service.CategoryLocalServiceUtil;
 import it.eng.rd.collaborativecreation.service.ChallengeLocalService;
@@ -132,7 +132,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 		    renderRequest.setAttribute("active", active);
 		    renderRequest.setAttribute("inactive", inactive);
 		    
-	        _log.info("CollaborativecreationPortlet - Render Method");
+	        _log.info("CollaborativecreationPortlet - render Method");
 	        _log.info("groupId: "+groupId);
 	        _log.info("userId: "+userId);
 	        _log.info("challengeId: "+challengeId);
@@ -147,6 +147,15 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 
 	    super.render(renderRequest, renderResponse);
 	}
+	
+	@Override
+	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws IOException, PortletException {
+		
+		_log.info("CollaborativecreationPortlet - processAction Method");
+		
+		super.processAction(actionRequest, actionResponse);
+    }
 	
 	@ProcessAction(name = "addChallenge")
 	public void addChallenge(ActionRequest request, ActionResponse response)
@@ -172,7 +181,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = title.replaceAll("[^a-zA-Z0-9]", "_");
     	Folder folder = createFolder(request, themeDisplay, folderTitle);
-		fileUpload(themeDisplay, request, files, "CHALLENGE_", "uploadedFile", folder);
+		fileUpload(themeDisplay, request, files, folderTitle, "uploadedFile", folder);
     	
 	    _log.info("CollaborativecreationPortlet - addChallenge");
         _log.info("title: "+title);
@@ -234,7 +243,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = title.replaceAll("[^a-zA-Z0-9]", "_");
     	Folder folder = createFolder(request, themeDisplay, folderTitle);
-		fileUpload(themeDisplay, request, files, "CHALLENGE_", "uploadedFile", folder);
+		fileUpload(themeDisplay, request, files, folderTitle, "uploadedFile", folder);
 		
 	    _log.info("CollaborativecreationPortlet - updateChallenge");
 	    _log.info("challengeId: "+challengeId);
@@ -347,7 +356,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, serviceContext.getScopeGroupId()).getTitle().replaceAll("[^a-zA-Z0-9]", "_");
     	Folder folder = createFolder(request, themeDisplay, folderTitle);
-		fileUpload(themeDisplay, request, files, "COCREATION_", "uploadedFile", folder);
+		fileUpload(themeDisplay, request, files, title.replaceAll("[^a-zA-Z0-9]", "_"), "uploadedFile", folder);
 		
 	    _log.info("CollaborativecreationPortlet - updateCocreation");
 	    _log.info("cocreationId: "+cocreationId);
@@ -434,7 +443,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    Map<String, FileItem[]> files = uploadRequest.getMultipartParameterMap();
 	    String folderTitle = ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle().replaceAll("[^a-zA-Z0-9]", "_");
     	Folder folder = createFolder(request, themeDisplay, folderTitle);
-		fileUpload(themeDisplay, request, files, "CHALLENGE_", "uploadedFile", folder);
+		fileUpload(themeDisplay, request, files, folderTitle, "uploadedFile", folder);
     	
 	    _log.info("CollaborativecreationPortlet - addMilestone");
         _log.info("description: "+description);
@@ -861,7 +870,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 					if (!title.equalsIgnoreCase("") && fileItem.getFieldName().equalsIgnoreCase(field)){
 				    	try {
 							ServiceContext serviceContext = ServiceContextFactory.getInstance(DLFileEntry.class.getName(), actionRequest);
-							DLAppServiceUtil.addFileEntry(repositoryId, folder.getFolderId(), title, mimeType, prefix+title, description, "", is, file.getTotalSpace(), serviceContext);
+							DLAppServiceUtil.addFileEntry(repositoryId, folder.getFolderId(), title, mimeType, prefix+"_"+title, description, "", is, file.getTotalSpace(), serviceContext);
 				    	} catch (PortalException e) {
 							e.printStackTrace();
 						} catch (SystemException e) {
