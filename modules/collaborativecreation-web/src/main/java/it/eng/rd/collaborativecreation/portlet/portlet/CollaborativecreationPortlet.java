@@ -870,7 +870,7 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 					if (!title.equalsIgnoreCase("") && fileItem.getFieldName().equalsIgnoreCase(field)){
 				    	try {
 							ServiceContext serviceContext = ServiceContextFactory.getInstance(DLFileEntry.class.getName(), actionRequest);
-							DLAppServiceUtil.addFileEntry(repositoryId, folder.getFolderId(), title, mimeType, prefix+"_"+title, description, "", is, file.getTotalSpace(), serviceContext);
+							DLAppServiceUtil.addFileEntry(repositoryId, folder.getFolderId(), title, mimeType, prefix+"_"+title, description, "", is, fileItem.getSize(), serviceContext);
 				    	} catch (PortalException e) {
 							e.printStackTrace();
 						} catch (SystemException e) {
