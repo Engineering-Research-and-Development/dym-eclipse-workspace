@@ -1,17 +1,3 @@
-/**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- */
-
 package it.eng.rd.sandbox.request.service.impl;
 
 import com.liferay.petra.string.StringPool;
@@ -85,7 +71,7 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 	
 	String sandboxAccessService = GetterUtil.getString(PropsUtil.get(SandboxConstants.SANDBOX_ACCESS_SERVICE));
 	
-	String sandboxPopulateService = GetterUtil.getString(PropsUtil.get(SandboxConstants.SANDBOX_ACCESS_SERVICE));
+	String sandboxPopulateService = GetterUtil.getString(PropsUtil.get(SandboxConstants.SANDBOX_POPULATE_SERVICE));
 	
 	@SuppressWarnings("null")
 	@AccessControlled(guestAccessEnabled=true)
@@ -138,15 +124,10 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 				 
 		if( !(teams != null && teams.isEmpty() )){
 					 
-			/*POST*/
 			HttpPost post = new HttpPost(sandboxAccessService);
 			post.addHeader("Content-Type","application/json");
 			String json = "{\"screenname\":\""+screenname+"\"}";
 			
-			/*GET check TODO*/
-//			HttpGet get = new HttpGet(sandboxURL);	 
-//			get.addHeader("Content-Type","application/json");
-				 
 			try {
 				StringEntity se = new StringEntity(json);
 				post.setEntity(se);
@@ -249,9 +230,7 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 			
 		DefaultHttpClient client = new DefaultHttpClient();
 		
-//		String  sandboxURL =  "http://sboxmanager.local/sandboxfromportal/cart/populateSandboxCart";
-//		String  sandboxURL =  "http://195.201.83.104/api/dservice/api/v1/import/populateSandboxCart";
-		
+
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("screenname: "+screenname);
 			LOG.debug("sandboxURL: "+sandboxPopulateService);
@@ -262,7 +241,6 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 			
 			if(!(m_id.isEmpty()) && !(t_id.isEmpty())) 
 			{	
-				/*POST*/
 				HttpPost post = new HttpPost(sandboxPopulateService);
 				post.addHeader("Content-Type","application/json");
 				String json = "{\"screen_name\":\""+screenname+"\",\"model_id\":\""+m_id+"\",\"tool_id\":\""+t_id+"\"}";
@@ -382,8 +360,6 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 		JSONArray stateArray = JSONFactoryUtil.createJSONArray();	
 		DefaultHttpClient client = new DefaultHttpClient();
 		
-//		String sandboxURL = "http://sboxmanager.local/sandboxfromportal/cart/populateSandboxCart";
-//		String  sandboxURL =  "http://195.201.83.104/api/dservice/api/v1/import/populateSandboxCart";
 		
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("screenname: "+screenname);
@@ -465,10 +441,6 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 	}
 	
 	
-	/*IDM endpoint to get IDM user roles*/
-	
-	
-	
 	private List<String> getUserInfo(String idm_host, String access_token) throws PortalException {
 		LOG.info("Invoking IDM user endpoint: "+idm_host+SandboxConstants.IDM_USER_INFO);
 		
@@ -530,169 +502,6 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
         
         return roles;
 	}
-
-/*	private String getXsubjectToken(String idmUrl) throws PortalException {
-		String xSubjectToken = StringPool.BLANK;
-		
-		try (CloseableHttpClient client = HttpClients.createDefault()) {
-			HttpPost post = new HttpPost(idmUrl+SandboxConstants.IDM_API_AUTH_TOKENS);
-			post.addHeader("Content-Type","application/json");
-			
-			String idmEmailAdmin = GetterUtil.getString(PropsUtil.get(SandboxConstants.IDM_EMAIL_ADMIN));
-			String idmPasswordAdmin = GetterUtil.getString(PropsUtil.get(SandboxConstants.IDM_PWD_ADMIN));
-			 
-			JSONObject adminInfo = (new JSONFactoryUtil().createJSONObject());
-			adminInfo.put("name", idmEmailAdmin);
-			adminInfo.put("password", idmPasswordAdmin);
-			StringEntity se = new StringEntity(adminInfo.toString());
-			post.setEntity(se);
-			HttpResponse  httpResponse = client.execute(post);
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			
-			HttpEntity entityToken = httpResponse.getEntity();
-			String getTokenResponse = EntityUtils.toString(entityToken);
-			JSONObject jsonObjectToken = JSONFactoryUtil.createJSONObject(getTokenResponse);
-	
-			if (statusCode == HttpStatus.SC_CREATED) {
-			    
-				xSubjectToken = httpResponse.getFirstHeader("X-Subject-Token").getValue();
-				
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("xSubjectToken: " + xSubjectToken);
-					LOG.debug("Success Case, X-Auth-token response " + jsonObjectToken);
-				}
-				    
-				if (Validator.isNotNull(xSubjectToken)) {
-					return xSubjectToken;
-				} else {
-					throw new PortalException("token is null!");
-				}
-
-			} else {
-				LOG.error("Failed Case, X-Auth-token response: " + jsonObjectToken);
-				JSONObject responseMessage = jsonObjectToken.getJSONObject ("error");
-				String message = responseMessage.getString("message");
-				throw new PortalException(message);
-			}
-			
-		} catch (PortalException | IOException e) {
-			throw new PortalException("error "+e.getMessage());
-		}
-		
-		
-	}
- 
- 	private Object[] getUserInfo(String idm_host, String access_token) throws PortalException {
-		LOG.info("Invoking IDM user endpoint: "+idm_host+SandboxConstants.IDM_USER_INFO);
-		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("idm_host: "+idm_host);
-	        LOG.debug("access_token: "+access_token);
-		}
-		
-		String idApplication = StringPool.BLANK;
-		String idUser = StringPool.BLANK;
-		try (CloseableHttpClient client = HttpClients.createDefault()) {
-			HttpGet getUserInfo = new HttpGet(idm_host+SandboxConstants.IDM_USER_INFO);
-			getUserInfo.addHeader(SandboxConstants.CONTENT_TYPE,SandboxConstants.APPLICATION_JSON);
-			getUserInfo.addHeader(SandboxConstants.AUTHORIZATION,SandboxConstants.BEARER +" " + access_token);
-    		
-			HttpResponse  httpUserInfoResponse = client.execute(getUserInfo);
-			int statusUserInfo = httpUserInfoResponse.getStatusLine().getStatusCode();
-			
-			if (statusUserInfo == HttpStatus.SC_OK) {
-				HttpEntity userInfoEntity = httpUserInfoResponse.getEntity();
-				String userInfoResponse = EntityUtils.toString(userInfoEntity);
-				JSONObject userInfoJSON = JSONFactoryUtil.createJSONObject(userInfoResponse);
-				
-				idApplication = userInfoJSON.getString("app_id");
-				idUser = userInfoJSON.getString("id");
-				
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("userInfo response: "+userInfoJSON.toJSONString());
-					LOG.debug("idApplication: "+idApplication);
-					LOG.debug("idUser: "+idUser);
-				}
-				
-			}
-			return new Object[] {idApplication, idUser};
-			
-		} catch (Exception e) {
-			return new Object[] {"", ""};
-		}
-	}*/
-	
-	/*
-	private List<String> getUserRole(String idm_host, String id_app, String id, String x_auth_token) throws PortalException {
-		String uri = idm_host + SandboxConstants.IDM_APPLICATIONS + id_app + SandboxConstants.IDM_USERS + id +SandboxConstants.IDM_ROLES;
-		
-		LOG.info("Invoking IDM user roles: "+uri);
-		
-		List<String> roles = new ArrayList<String>();
-		try (CloseableHttpClient client = HttpClients.createDefault()) {
-			HttpGet getIdmUserRoles = new HttpGet(uri);
-			getIdmUserRoles.addHeader(SandboxConstants.CONTENT_TYPE,SandboxConstants.APPLICATION_JSON);
-			getIdmUserRoles.addHeader(SandboxConstants.X_AUTH_TOKEN, x_auth_token);
-    		
-			HttpResponse  httpIdmUserRolesResponse = client.execute(getIdmUserRoles);
-			int statusCode = httpIdmUserRolesResponse.getStatusLine().getStatusCode();
-			
-			if (statusCode == HttpStatus.SC_OK) {
-				HttpEntity idmUserRolesEntity = httpIdmUserRolesResponse.getEntity();
-				String idmUserRolesResponse = EntityUtils.toString(idmUserRolesEntity);
-				JSONObject idmUserRolesJSON = JSONFactoryUtil.createJSONObject(idmUserRolesResponse);
-				if (LOG.isDebugEnabled())
-					LOG.debug("IDM user roles response: "+idmUserRolesJSON.toJSONString());
-				
-				JSONArray idmUserRoles = idmUserRolesJSON.getJSONArray("role_user_assignments");
-				
-				idmUserRoles.forEach(item -> {
-				    JSONObject obj = (JSONObject) item;
-				    
-				    if (Validator.isNotNull(obj.getString("role_id"))) {
-				    	if (obj.getString("role_id").equals("provider") | obj.getString("role_id").equals("consumer")) {
-				    		roles.add(obj.getString("role_id"));
-				    	}
-				    }
-				});
-			}
-			
-			if (statusCode == HttpStatus.SC_NOT_FOUND) {
-				 throw new PortalException("An error occurred while invoking IDM user roles, statusCode: 404");
-			}
-			
-			return roles;
-			
-		} catch (PortalException | IOException e) {
-			throw new PortalException(e);
-		}
-				
-	}*/
-	
-	/*private List<String> getTeams(HttpServletRequest httpServletRequest) throws PortalException {
-		String id = StringPool.BLANK;
-		String id_app = StringPool.BLANK;
-		String idm_host = GetterUtil.getString(PropsUtil.get(SandboxConstants.IDM_HOST));
-		
-		HttpServletRequest originalRequest = PortalUtil.getOriginalServletRequest(httpServletRequest);
-		String logoutDYMAT = CookieKeys.getCookie(originalRequest, "LODYMAT");
-        String xSubjectToken = getXsubjectToken(idm_host);
-        if (LOG.isDebugEnabled()) {
-        	LOG.debug("logoutDYMAT "+logoutDYMAT);
-            LOG.debug("xSubjectToken "+xSubjectToken);
-        }
-        
-        Object[] userInfo = new Object[] {id_app, id};
-        if (!xSubjectToken.startsWith("error")) {
-        	userInfo = getUserInfo(idm_host, logoutDYMAT);
-        	id_app = (String)userInfo[0]; 
-        	id = (String)userInfo[1];
-        }
-        
-        List<String> roles = new ArrayList<String>();
-        roles =	getUserRole(idm_host, id_app, id, xSubjectToken);
-        return roles;
-	}*/
 	
 	
 }
