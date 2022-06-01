@@ -253,7 +253,7 @@ while(cocreationsIt.hasNext()){
 						String fileURL = "";
 						for (FileEntry file : fileEntries) {    
 							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if (file.getFileName().startsWith("CHALLENGE_")){
+							if (file.getFileName().startsWith(challenge.getTitle().replaceAll("[^a-zA-Z0-9]", "_"))){
 							%>	
 								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 						 	<%
