@@ -364,22 +364,40 @@ boolean isCocreator = false;
 				    </aui:button-row>             
 		         </div>   
 		   </div>					   				   
-		   <h3 class="sheet-subtitle"></h3>	
-		   <div class="col-12 col-md-12">
-			 	<div class="pb-2">
-			 		<aui:button-row>
-			  			<div id="aui_popup_requestToCocreate_click">
-			  				<%if (isCocreator){%>
-			       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
-			       			<%}else{%>
-			       				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
-			       			<%}%>
-			   			</div>
-			   			<div id="aui_popup_requestToCocreate_content" ></div>
-					</aui:button-row>  
+		   <h3 class="sheet-subtitle"></h3>
+		   <%if (ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getEndDate().after(nowDate) == true && !cocreation.getCompleted()){%>	
+			   <div class="col-12 col-md-12">
+				 	<div class="pb-2">
+				 		<aui:button-row>
+				  			<div id="aui_popup_requestToCocreate_click">
+				  				<%if (isCocreator){%>
+				       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
+				       			<%}else{%>
+				       				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
+				       			<%}%>
+				   			</div>
+				   			<div id="aui_popup_requestToCocreate_content" ></div>
+						</aui:button-row>  
+					</div>
 				</div>
-			</div>
-			<h3 class="sheet-subtitle"></h3>	
+				<h3 class="sheet-subtitle"></h3>	
+			<%}else{%>
+				<div class="col-12 col-md-12">
+				 	<div class="pb-2">
+				 		<aui:button-row>
+				  			<div id="aui_popup_requestToCocreate_click">
+				  				<%if (isCocreator){%>
+				       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info" disabled="true"></aui:button>
+				       			<%}else{%>
+				       				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+				       			<%}%>
+				   			</div>
+				   			<div id="aui_popup_requestToCocreate_content" ></div>
+						</aui:button-row>  
+					</div>
+				</div>
+				<h3 class="sheet-subtitle"></h3>
+			<%}%>		
        </aui:fieldset>
 	   <aui:button-row>
 	   		<%if (isCocreator){%>
@@ -429,35 +447,36 @@ boolean isCocreator = false;
   
 <aui:script use="liferay-util-window">
 	A.one("#aui_popup_requestToCocreate_click").on('click',function(event){
-		
-		<%if(isCocreator){
-			participationURL = inviteParticipantsURL.toString();
-			height = 520;
-		}else{
-			participationURL = requestParticipationURL.toString();
-			height = 420;
-		}%>
-		
-		var popUpWindow=Liferay.Util.Window.getWindow(
-			{
-				dialog: {
-					centered: true,
-					constrain2view: true,					
-					modal: true,
-					resizable: false,
-					width: 500,
-					height: 520
+		<%if (ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getEndDate().after(nowDate) == true &&  !cocreation.getCompleted()){%>	
+			<%if(isCocreator){
+				participationURL = inviteParticipantsURL.toString();
+				height = 520;
+			}else{
+				participationURL = requestParticipationURL.toString();
+				height = 420;
+			}%>
+			
+			var popUpWindow=Liferay.Util.Window.getWindow(
+				{
+					dialog: {
+						centered: true,
+						constrain2view: true,					
+						modal: true,
+						resizable: false,
+						width: 500,
+						height: 520
+					}
 				}
-			}
-		).plug(
-			A.Plugin.DialogIframe,
-			{
-				autoLoad: true,
-				uri:"<%=participationURL%>"
-			}
-		).render();
-		popUpWindow.show(popUpWindow);
-		popUpWindow.titleNode.html("Request to Co-Create");
+			).plug(
+				A.Plugin.DialogIframe,
+				{
+					autoLoad: true,
+					uri:"<%=participationURL%>"
+				}
+			).render();
+			popUpWindow.show(popUpWindow);
+			popUpWindow.titleNode.html("Request to Co-Create");
+		<%}%>
 	});
 	
 	A.one("#aui_popup_milestonesAndDeadlines_click").on('click',function(event){

@@ -33,6 +33,7 @@ import com.liferay.ratings.kernel.model.RatingsStats;
 import com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -299,7 +300,17 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		_log.info("groupId "+groupId);
 		_log.info("active "+active);
 		
-	    return challengePersistence.findByActive(groupId, active);
+		Calendar calendar = Calendar.getInstance();
+		Date nowDate = calendar.getTime();
+	    List<Challenge> challengesList = new ArrayList<Challenge>();
+	    for (int i = 0; i < challengePersistence.findByGroupId(groupId).size(); i++){
+	    	if (challengePersistence.findByGroupId(groupId).get(i).getEndDate().after(nowDate) == active){
+	    		challengesList.add(challengePersistence.findByGroupId(groupId).get(i));
+	    	}
+	    }
+	    
+	    /* return challengePersistence.findByActive(groupId, active); */
+	    return challengesList;
 	} 
 	
 	public List<Challenge> getChallengesByGroupId(long groupId) {

@@ -18,6 +18,7 @@
 <%@ taglib uri="http://liferay.com/tld/comment" prefix="liferay-comment" %>
 
 <%@ page import="java.util.Calendar"%>
+<%@ page import="java.util.Date"%>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
@@ -92,6 +93,8 @@
 <%
 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 /* SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); */
+Calendar calendar = Calendar.getInstance();
+Date nowDate = calendar.getTime();
 List<Country> countries = CountryServiceUtil.getCountries();
 List<AssetTag> assetTags = AssetTagLocalServiceUtil.getAssetTags(0, 999);
 List<AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getAssetCategories(0, 999);

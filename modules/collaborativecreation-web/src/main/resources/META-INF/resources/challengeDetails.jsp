@@ -153,7 +153,7 @@ while(cocreationsIt.hasNext()){
 				  <%}%>
 				  </div>
 			   </div>
-			   <div class="col-sm-6 col-md-6">
+			   <%-- <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
 		           <%if (readonly){%>
 		           		  <aui:input label="Status" name="status" id="status" type="text" value="<%=challenge.getActive()%>" readonly="true" cssClass="field disabled form-control"/>
@@ -164,6 +164,11 @@ while(cocreationsIt.hasNext()){
 							    <aui:option selected="<%=false%>" value="false">Inactive</aui:option>
 						  </aui:select>
 		           <%}%>
+				  </div>
+			   </div> --%>
+			   <div class="col-sm-6 col-md-6">
+		           <div class=" pb-2 borderGroup">
+		           		  <aui:input label="Status" name="status" id="status" type="text" value="<%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%>" readonly="true" cssClass="field disabled form-control"/>
 				  </div>
 			   </div>
 			   <h3 class="sheet-subtitle"></h3>
@@ -341,25 +346,47 @@ while(cocreationsIt.hasNext()){
 			   		</div>
 			   </div>
 			   <%}%>
-			   <div class="col-12 col-md-12">
-				 	<div class="pb-2">
-				 		<aui:button-row>
-				  			<div id="aui_popup_click">
-				  				<%if (challenge.getUserId() == user.getUserId()){%>
-				       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
-				       			<%}else{
-				       			    if (!isCocreator){%>
-				       					<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
-				       			    <%}	
-				       			 }%>
-				   			</div>
-				   			<div id="aui_popup_content" ></div>
-				   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
-				   				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
-				   			<%}%>
-						</aui:button-row>  
-					</div>
-			   </div>
+			   <%if (challenge.getEndDate().after(nowDate) == true) {%>
+				   <div class="col-12 col-md-12">
+					 	<div class="pb-2">
+					 		<aui:button-row>
+					  			<div id="aui_popup_click">
+					  				<%if (challenge.getUserId() == user.getUserId()){%>
+					       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
+					       			<%}else{
+					       			    if (!isCocreator){%>
+					       					<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
+					       			    <%}	
+					       			 }%>
+					   			</div>
+					   			<div id="aui_popup_content" ></div>
+					   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
+					   				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+					   			<%}%>
+							</aui:button-row>  
+						</div>
+				   </div>
+			   <%}else{%>
+			   		<div class="col-12 col-md-12">
+					 	<div class="pb-2">
+					 		<aui:button-row>
+					  			<div id="aui_popup_click">
+					  				<%if (challenge.getUserId() == user.getUserId()){%>
+					       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info" disabled="true"></aui:button>
+					       			<%}else{
+					       			    if (!isCocreator){%>
+					       					<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+					       			    <%}	
+					       			 }%>
+					   			</div>
+					   			<div id="aui_popup_content" ></div>
+					   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
+					   				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+					   			<%}%>
+							</aui:button-row>  
+						</div>
+				   </div>
+				<%}%>		   
 		 </div> 
          <div class="row">
        		<div class="col-12 col-md-12">
@@ -406,35 +433,36 @@ while(cocreationsIt.hasNext()){
  
 <aui:script use="liferay-util-window">
 	A.one("#aui_popup_click").on('click',function(event){
+		<%if (challenge.getEndDate().after(nowDate) == true) {%>
+			<%if(challenge.getUserId() == user.getUserId()){
+				participationURL = inviteParticipantsURL.toString();
+				height = 520;
+			}else{
+				participationURL = requestParticipationURL.toString();
+				height = 420;
+			}%>
 		
-		<%if(challenge.getUserId() == user.getUserId()){
-			participationURL = inviteParticipantsURL.toString();
-			height = 520;
-		}else{
-			participationURL = requestParticipationURL.toString();
-			height = 420;
-		}%>
-	
-		var popUpWindow=Liferay.Util.Window.getWindow(
-			{
-				dialog: {
-					centered: true,
-					constrain2view: true,					
-					modal: true,
-					resizable: false,
-					width: 500,
-					height: <%=height%>
+			var popUpWindow=Liferay.Util.Window.getWindow(
+				{
+					dialog: {
+						centered: true,
+						constrain2view: true,					
+						modal: true,
+						resizable: false,
+						width: 500,
+						height: <%=height%>
+					}
 				}
-			}
-		).plug(
-			A.Plugin.DialogIframe,
-			{
-				autoLoad: true,
-				uri:"<%=participationURL%>"
-			}
-		).render();
-		popUpWindow.show(popUpWindow);
-		popUpWindow.titleNode.html("Request to Co-Create");
+			).plug(
+				A.Plugin.DialogIframe,
+				{
+					autoLoad: true,
+					uri:"<%=participationURL%>"
+				}
+			).render();
+			popUpWindow.show(popUpWindow);
+			popUpWindow.titleNode.html("Request to Co-Create");
+		<%}%>
 	});
 	
 	AUI().use(

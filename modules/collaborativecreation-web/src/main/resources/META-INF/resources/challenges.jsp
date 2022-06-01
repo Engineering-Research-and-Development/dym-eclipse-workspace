@@ -71,13 +71,13 @@ if (topVoted != null && topVoted.equalsIgnoreCase("true")){
 		    }
 		});
 		filteredChallenges = new ArrayList();
-		filteredChallenges.add(ChallengeLocalServiceUtil.getChallenge(scoreMapAsList.get(scoreMapAsList.size()-1).getKey()));
+		/* filteredChallenges.add(ChallengeLocalServiceUtil.getChallenge(scoreMapAsList.get(scoreMapAsList.size()-1).getKey())); */
+		for(int i=1; i < scoreMapAsList.size() + 1; i++){	
+			filteredChallenges.add(ChallengeLocalServiceUtil.getChallenge(scoreMapAsList.get(scoreMapAsList.size()-i).getKey()));
+		}
 	}
 }
-/* if (hot != null && hot.equalsIgnoreCase("false")){
-	hot = "";
-}
-*/
+
 if (topVoted != null && topVoted.equalsIgnoreCase("false")){
 	topVoted = "";
 }
@@ -130,8 +130,8 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 	    <div class="col col-lg-3 col-sm-3 col-3 col-md-12">
 			<div id="trending" class="co-box mt-2 mb-4">
 		    	<label class="aui-field-label co-title">Trending</label>    
-			    <%-- <aui:input label="Hot" id="hot" name="hot" type="radio" value="<%=hot%>"></aui:input> --%>
-				<aui:input label="Top Voted" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
+				<%-- <aui:input label="Top Voted" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input> --%>
+				<aui:input label="Sort by vote" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
 			</div>
 			<div id="location" class="co-box mt-2 mb-4">
 				<label class="aui-field-label co-title">Location</label> 
@@ -234,8 +234,11 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 									       			<div id="endDate" class="challengesLeft">
 														<span><b><label class="aui-field-label">End</label></b></span> : <span><%=formatter.format(challenge.getEndDate()) %></span>
 									       			</div>
-					     							<div id="status" class="challengesLeft">
+					     							<%-- <div id="status" class="challengesLeft">
 												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><%=challenge.getActive() == true ?  "Active" : "Inactive"%></span>
+												    </div>  --%>
+												    <div id="status" class="challengesLeft">
+												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label"><%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%></label></span>
 												    </div> 
 												    <div id="location" class="challengesLeft">
 												    	<span><b><label class="aui-field-label">Location</label></b></span> : <span><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></span>
