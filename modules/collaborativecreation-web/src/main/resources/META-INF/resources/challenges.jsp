@@ -1,7 +1,3 @@
-<%@page import="com.liferay.ratings.kernel.model.RatingsStats"%>
-<%@page import="com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil"%>
-<%@page import="com.liferay.ratings.kernel.service.RatingsStatsLocalService"%>
-<%@page import="com.liferay.ratings.kernel.service.RatingsEntryLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 
 <%
@@ -131,12 +127,12 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 			<div id="trending" class="co-box mt-2 mb-4">
 		    	<label class="aui-field-label co-title">Trending</label>    
 				<%-- <aui:input label="Top Voted" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input> --%>
-				<aui:input label="Sort by vote" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
+				<aui:input label="sortByVote" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
 			</div>
 			<div id="location" class="co-box mt-2 mb-4">
-				<label class="aui-field-label co-title">Location</label> 
+				<label class="aui-field-label co-title"><liferay-ui:message key="location"/></label> 
 				<aui:select label="" id="location" name="location" showEmptyOption="false">
-				    <aui:option selected="<%=true%>" value="">Select a country</aui:option>
+				    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="selectCountry"/></aui:option>
 				    <%
 					for (Country country : countries) {
 					%>
@@ -147,9 +143,9 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 			  </aui:select>
 			</div>
 			<div id="category" class="co-box mt-2 mb-4">
-			  <label class="aui-field-label co-title">Category</label> 
+			  <label class="aui-field-label co-title"><liferay-ui:message key="category"/></label> 
 	          <aui:select label="" id="category" name="category" showEmptyOption="false">
-				    <aui:option selected="<%=true%>" value="">Select a category</aui:option>
+				    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="selectCategory"/></aui:option>
 				    <%
 					for (AssetCategory assetCategory : assetCategories) {
 					%>
@@ -160,13 +156,13 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 			  </aui:select>
 		    </div>
 			<div id="challengeStatus" class="co-box mt-2 mb-4">
-		    	<label class="aui-field-label co-title">Status</label>
-		    	<aui:input id="active" name="active" label="Active" type="checkbox" value="<%=active%>"></aui:input>
-		    	<aui:input id="inactive" name="inactive" label="Inactive" type="checkbox" value="<%=inactive%>"></aui:input>
+		    	<label class="aui-field-label co-title"><liferay-ui:message key="status"/></label>
+		    	<aui:input id="active" name="active" label="active" type="checkbox" value="<%=active%>"></aui:input>
+		    	<aui:input id="inactive" name="inactive" label="inactive" type="checkbox" value="<%=inactive%>"></aui:input>
 			</div> 
 			<div>
-				<aui:button id="filter" name="filter" type="submit" value="Filter" cssClass="btn-outline-info"></aui:button>
-				<aui:button id="clearFilter" name="clearFilter" type="button" value="Clear"/>
+				<aui:button id="filter" name="filter" type="submit" value="filter" cssClass="btn-outline-info"></aui:button>
+				<aui:button id="clearFilter" name="clearFilter" type="button" value="clear"/>
 			</div>
 		</div><!-- w-1/4  END-->
 		<div class="col col-lg-9 col-sm-9 col-9 col-md-12">    
@@ -176,15 +172,15 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 						<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 				 </portlet:renderURL>
 				 <%if(isChallengeOwner){%>
-	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary">Post a New Challenge</a>
+	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary"><liferay-ui:message key="postNewChallenge"/></a>
 	     	     <%}%>
 			</div>
 			</br>
 			<div id="search" class="m-1 p-1">
 				<aui:form name="searchForm" action="<%=search%>" method="post">
-		    	 	<aui:input id="keywords" name="keywords" placeholder="Title, description, username" inlineLabel="left" label="" size="256" value=""/> 
+		    	 	<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left" label="" size="256" value=""/> 
 			    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
-			    	<aui:button type="button" value="Clear" id="clearSearch" name="clearSearch" />
+			    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
 				</aui:form>
 			</div>
 			</br>
@@ -226,22 +222,22 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 										    <div class="row mt-2">
 											     <div class="col col-lg-6 col-sm-6 col-6 col-md-6">
 											     	<div id="postedBy" class="challengesLeft">
-											      		<span><b><label class="aui-field-label">Posted by</label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></label></span>
+											      		<span><b><label class="aui-field-label"><liferay-ui:message key="postedBy"/></label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></label></span>
 					       						 	</div>
 					       						 	<div id="startDate" class="challengesLeft">
-														<span><b><label class="aui-field-label">Start</label></b></span> : <span><%=formatter.format(challenge.getStartDate()) %></span>
+														<span><b><label class="aui-field-label"><liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(challenge.getStartDate()) %></span>
 									       			</div>
 									       			<div id="endDate" class="challengesLeft">
-														<span><b><label class="aui-field-label">End</label></b></span> : <span><%=formatter.format(challenge.getEndDate()) %></span>
+														<span><b><label class="aui-field-label"><liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(challenge.getEndDate()) %></span>
 									       			</div>
 					     							<%-- <div id="status" class="challengesLeft">
-												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><%=challenge.getActive() == true ?  "Active" : "Inactive"%></span>
+												    	<span><b><label class="aui-field-label"><liferay-ui:message key="status"/></label></b></span> : <span><%=challenge.getActive() == true ?  "Active" : "Inactive"%></span>
 												    </div>  --%>
 												    <div id="status" class="challengesLeft">
-												    	<span><b><label class="aui-field-label">Status</label></b></span> : <span><label class="aui-field-label"><%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%></label></span>
+												    	<span><b><label class="aui-field-label"><liferay-ui:message key="status"/></label></b></span> : <span><label class="aui-field-label"><%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%></label></span>
 												    </div> 
 												    <div id="location" class="challengesLeft">
-												    	<span><b><label class="aui-field-label">Location</label></b></span> : <span><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></span>
+												    	<span><b><label class="aui-field-label"><liferay-ui:message key="location"/></label></b></span> : <span><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></span>
 												    </div> 
 												    <div id="tags" class="challengesLeft">
 													    <span><b><label class="aui-field-label">Tags</label></b></span> : <span>	
@@ -255,7 +251,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 														%>
 													</div> 
 													<div id="categories" class="challengesLeft">
-														<span><b><label class="aui-field-label">Categories</label></b></span> : <span>	
+														<span><b><label class="aui-field-label"><liferay-ui:message key="categories"/></label></b></span> : <span>	
 											    	  	<%
 														for (Category cat : CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId())) {
 														%>
@@ -268,11 +264,11 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 										    	</div>
 										    	
 										    	<aui:button-row>
-										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary"><i class="fa fa-info-circle" aria-hidden="true"></i>Details</a>
+										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary"><i class="fa fa-info-circle" aria-hidden="true"></i><liferay-ui:message key="details"/></a>
 										   		 	<!-- <a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a> -->
 										   		 	<%if (user != null){
 														if(challenge.getUserId() == user.getUserId()){%>
-												   		 	<aui:button id="deleteChallenge" name="deleteChallenge" type="button" value="Delete" onClick="<%=deleteConfirmation%>"/>
+												   		 	<aui:button id="deleteChallenge" name="deleteChallenge" type="button" value="delete" onClick="<%=deleteConfirmation%>"/>
 											   		 	<%}%>
 											   		 <%}%>	
 										   		</aui:button-row>	

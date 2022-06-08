@@ -1,14 +1,3 @@
-<%@page import="com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionUtil"%>
-<%@page import="com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission"%>
-<%@page import="com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.security.permission.ResourcePermissionCheckerUtil"%>
-<%@page import="com.liferay.portal.kernel.security.permission.PermissionChecker"%>
-<%@page import="com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil"%>
-<%@page import="com.liferay.portal.kernel.service.ResourceLocalServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.service.PermissionServiceUtil"%>
-<%@page import="com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil"%>
-<%@page import="com.liferay.asset.kernel.model.AssetCategory"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
@@ -40,6 +29,17 @@
 <%@ page import="javax.portlet.WindowState"%>
 <%@ page import="javax.servlet.http.HttpServletRequest"%>
 
+<%@ page import="com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionUtil"%>
+<%@ page import="com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission"%>
+<%@ page import="com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil"%>
+<%@ page import="com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil"%>
+<%@ page import="com.liferay.portal.kernel.security.permission.ResourcePermissionCheckerUtil"%>
+<%@ page import="com.liferay.portal.kernel.security.permission.PermissionChecker"%>
+<%@ page import="com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil"%>
+<%@ page import="com.liferay.portal.kernel.service.ResourceLocalServiceUtil"%>
+<%@ page import="com.liferay.portal.kernel.service.PermissionServiceUtil"%>
+<%@ page import="com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil"%>
+<%@ page import="com.liferay.asset.kernel.model.AssetCategory"%>
 <%@ page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@ page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@ page import="com.liferay.portal.kernel.util.*"%>

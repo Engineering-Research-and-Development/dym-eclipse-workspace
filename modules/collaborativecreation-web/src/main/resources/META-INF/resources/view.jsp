@@ -33,6 +33,6 @@
 		<portlet:renderURL var="challengesURL">
 				<portlet:param name="jspPage" value="/challenges.jsp"/>
 		</portlet:renderURL>
- 		<a href="<%=challengesURL%>" class="btn btn-primary">Get Started!</a>
+ 		<a href="<%=challengesURL%>" class="btn btn-primary"><liferay-ui:message key="getStarted"/></a>
  	</div>
 </div>
