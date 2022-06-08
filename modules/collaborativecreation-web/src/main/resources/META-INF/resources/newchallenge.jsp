@@ -6,6 +6,7 @@ String redirectTo = request.getParameter("redirectTo");
 
 <portlet:actionURL name="addChallenge" var="addChallengeURL">
 	<portlet:param name="redirectTo" value="<%=redirectTo%>"/>
+	<portlet:param name="active" value="true"/>
 </portlet:actionURL>
 
 <div id="challengeFormContainer" class="container">
@@ -62,7 +63,7 @@ String redirectTo = request.getParameter("redirectTo");
                        <div><aui:input class="form-control col-12 span12 " label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" required='true'/></div>
                 </div>
 			</div>
-			<div class="col-sm-6 col-md-6">
+			<div class="col-sm-6 col-md-12">
 		        <div class=" pb-2 borderGroup">
 			          <aui:select label="Location" id="location" name="location" showEmptyOption="false" required="true">
 						    <aui:option selected="<%=true%>" value="">Select...</aui:option>
@@ -76,7 +77,7 @@ String redirectTo = request.getParameter("redirectTo");
 					  </aui:select>
 				</div>
 		   </div>
-		   <div class="col-sm-6 col-md-6">
+		   <%-- <div class="col-sm-6 col-md-6">
 	           <div class=" pb-2 borderGroup">
 					<aui:select label="Status" id="active" name="active" showEmptyOption="true" required="true">
 						<aui:option selected="<%=true%>" value="">Select...</aui:option>
@@ -84,7 +85,7 @@ String redirectTo = request.getParameter("redirectTo");
 					    <aui:option selected="<%=false%>" value="false">Inactive</aui:option>
 				    </aui:select>
 		  		</div>
-			</div>
+			</div> --%>
 			<h3 class="sheet-subtitle"></h3>
 			<div class="col-sm-6 col-md-6">
 		        <div class=" pb-2 borderGroup">
