@@ -190,12 +190,12 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 	            			 <%
 					   		 if (challengesSize == 0){
 					   		 %>
-					   			<h3 class="co-title">There are no challenges</a></h3>
+					   			<h3 class="co-title"><liferay-ui:message key="thereAreNoChallenges"/></a></h3>
 							 <%
 							 }else{
 						   		 if (filteredChallenges.size() == 0){
 						   		 %>
-						   			<h3 class="co-title">You have no challenges</a></h3>
+						   			<h3 class="co-title"><liferay-ui:message key="youHaveNoChallenges"/></a></h3>
 								 <%
 								 }
 							 }
@@ -306,7 +306,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 
 <script type="text/javascript">
 	function deleteConfirmation(url) {
-		msg = "Are you sure you want to proceed with the delete operation?";
+		msg = "<%=deleteOperationConfirmation%>";
 		if(confirm(msg)) {
 			window.location.href = url;
 		}else{

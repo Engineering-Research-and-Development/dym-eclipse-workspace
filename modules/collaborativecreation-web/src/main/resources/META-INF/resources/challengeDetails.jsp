@@ -68,7 +68,7 @@ while(cocreationsIt.hasNext()){
 				<portlet:renderURL var="cocreationsURL">
 					<portlet:param name="redirectTo" value="<%=redirectTo%>"></portlet:param>
 				</portlet:renderURL>
-				<span class="co-title">Challenge details</span>
+				<span class="co-title"><liferay-ui:message key="challengeDetails"/></span>
 			</div><!-- w-1/2  END-->
 			<div class="col col-lg-6 col-sm-6 col-6 col-md-12"> 
 				  <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">	
@@ -94,11 +94,11 @@ while(cocreationsIt.hasNext()){
    	   	<div class="row">
 	   	   	   <div class="col-12 col-md-12">
 		       		<div class="pb-2">     
-				       <span><b>Posted by : </b><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></span>
+				       <span><b><liferay-ui:message key="postedBy"/> : </b><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></span>
 				       <br>
-				       <span><b>Start : </b><%=formatter.format(challenge.getStartDate()) %></span>
+				       <span><b><liferay-ui:message key="start"/> : </b><%=formatter.format(challenge.getStartDate()) %></span>
 				       <br>
-				       <span><b>End : </b><%=formatter.format(challenge.getEndDate()) %></span>
+				       <span><b><liferay-ui:message key="end"/> : </b><%=formatter.format(challenge.getEndDate()) %></span>
 				       <p></p>    
 				    </div>
 			   </div>
@@ -110,24 +110,24 @@ while(cocreationsIt.hasNext()){
 		       <div class="col-12 col-md-12">
 		       		<div class="pb-2">   
 		       			<%if (readonly){%>  
-	           				<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" readonly="true" cssClass="field disabled form-control"/>   			
+	           				<aui:input label="title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" readonly="true" cssClass="field disabled form-control"/>   			
 	           			<%}else{%>
-	           				<aui:input label="Title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" required="true" />
+	           				<aui:input label="title" name="title" id="title" type="text" value="<%=challenge.getTitle()%>" required="true" />
 	           			<%}%>
 	           		</div>
 			   </div>	
 			   <div class="col-12 col-md-12"> 
 			   <%if (readonly){%> 		
-	    	   		<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" readonly="true" cssClass="field disabled form-control"/>
+	    	   		<aui:input label="description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" readonly="true" cssClass="field disabled form-control"/>
 	    	   <%}else{%> 
-	    	   		<aui:input label="Description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" required="true"/>
+	    	   		<aui:input label="description" name="description" id="description" type="textarea" value="<%=challenge.getDescription()%>" required="true"/>
 	    	   <%}%> 
 			   </div>
 			   <div class="col-12 col-md-12">
 			   		<%if (readonly){%>
-	    	   			<aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" readonly="true" cssClass="field disabled form-control"/>
+	    	   			<aui:input label="desiredOutcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" readonly="true" cssClass="field disabled form-control"/>
 	    	   		<%}else{%>
-	    	   			<aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" required="true"/>
+	    	   			<aui:input label="desiredOutcome" name="desiredOutcome" id="desiredOutcome" type="textarea" value="<%=challenge.getDesiredOutcome()%>" required="true"/>
 	    	   		<%}%>
 			   </div>
 			   <div class="col-12 col-md-12">
@@ -138,9 +138,9 @@ while(cocreationsIt.hasNext()){
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
 		           <%if (readonly){%>
-		           		  <aui:input label="Location" name="location" id="location" type="text" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>" readonly="true" cssClass="field disabled form-control"/>
+		           		  <aui:input label="location" name="location" id="location" type="text" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>" readonly="true" cssClass="field disabled form-control"/>
 		           <%}else{%>
-			          <aui:select label="Location" id="location" name="location" showEmptyOption="false" required="true">
+			          <aui:select label="location" id="location" name="location" showEmptyOption="false" required="true">
 			          		<aui:option selected="<%=true%>" value="<%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%>"><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></aui:option>
 						    <%
 							for (Country country : countries) {
@@ -156,7 +156,7 @@ while(cocreationsIt.hasNext()){
 			   <%-- <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
 		           <%if (readonly){%>
-		           		  <aui:input label="Status" name="status" id="status" type="text" value="<%=challenge.getActive()%>" readonly="true" cssClass="field disabled form-control"/>
+		           		  <aui:input label="status" name="status" id="status" type="text" value="<%=challenge.getActive()%>" readonly="true" cssClass="field disabled form-control"/>
 		           <%}else{%>
 			           	  <aui:select label="Status" id="active" name="active" showEmptyOption="false" required="true">
 							    <aui:option selected="<%=true%>" value="<%=challenge.getActive()%>"><%=challenge.getActive() == true ?  "Active" : "Inactive"%></aui:option>
@@ -168,7 +168,7 @@ while(cocreationsIt.hasNext()){
 			   </div> --%>
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
-		           		  <aui:input label="Status" name="status" id="status" type="text" value="<%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%>" readonly="true" cssClass="field disabled form-control"/>
+		           		  <aui:input label="status" name="status" id="status" type="text" value="<%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%>" readonly="true" cssClass="field disabled form-control"/>
 				  </div>
 			   </div>
 			   <h3 class="sheet-subtitle"></h3>
@@ -199,11 +199,11 @@ while(cocreationsIt.hasNext()){
 				<div class="col-sm-6 col-md-6">
 			        <div class=" pb-2 borderGroup">
 			        	  <%if (readonly){%>	
-			              		<label class="control-label">Categories</label>
+			              		<label class="control-label"><liferay-ui:message key="categories"/></label>
 			              <%}else{%>
-			              		<label class="control-label">Categories*</label>
+			              		<label class="control-label"><liferay-ui:message key="categories"/>*</label>
 			              <%}%>
-				          <select label="Categories*" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
+				          <select label="" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 							    <%
 								for (AssetCategory assetCategory : assetCategories) {
 									if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), assetCategory.getName()) == null){
@@ -223,7 +223,7 @@ while(cocreationsIt.hasNext()){
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">   
 			  			<%if (!readonly){%>	
-			            	<label class="control-label">Start*</label>
+			            	<label class="control-label"><liferay-ui:message key="start"/>*</label>
 			            <%}%>
 			  			<%if (readonly){%>
 			  				<aui:input name="startDate" id="startDate" type="text" value="<%=formatter.format(challenge.getStartDate())%>" readonly="true" cssClass="field disabled form-control"/>
@@ -236,7 +236,7 @@ while(cocreationsIt.hasNext()){
 			   <div class="col-sm-6 col-md-6">
 		           <div class=" pb-2 borderGroup">
 			  		    <%if (!readonly){%>	
-			            	<label class="control-label">End*</label>
+			            	<label class="control-label"><liferay-ui:message key="end"/>*</label>
 			            <%}%>
 			  			<%if (readonly){%>
 			  				<aui:input name="endDate" id="endDate" type="text" value="<%=formatter.format(challenge.getEndDate())%>" readonly="true" cssClass="field disabled form-control"/>
@@ -253,7 +253,7 @@ while(cocreationsIt.hasNext()){
 			   </div>
 			   <div class="col-12 col-md-12">
 	       	   		<div class="pb-2">	
-						<h3 class="sheet-subtitle">Documents and Pictures</h3>
+						<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures"/></h3>
 						<% 
 						String fileURL = "";
 						for (FileEntry file : fileEntries) {    
@@ -325,7 +325,7 @@ while(cocreationsIt.hasNext()){
 			       			<div id="fileList"></div>
 							<span style="display:block; height: 10px;"></span>
 							<div class="btn-group">
-								<label for="uploadedFile" class="btn btn-primary pull-left">Upload</label>
+								<label for="uploadedFile" class="btn btn-primary pull-left"><liferay-ui:message key="upload"/></label>
 							    <div id="clearFileList" style="display:none">
 									<liferay-ui:icon
 											cssClass="btn-outline-info"
@@ -352,16 +352,16 @@ while(cocreationsIt.hasNext()){
 					 		<aui:button-row>
 					  			<div id="aui_popup_click">
 					  				<%if (challenge.getUserId() == user.getUserId()){%>
-					       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
+					       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info"></aui:button>
 					       			<%}else{
 					       			    if (!isCocreator){%>
-					       					<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
+					       					<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info"></aui:button>
 					       			    <%}	
 					       			 }%>
 					   			</div>
 					   			<div id="aui_popup_content" ></div>
 					   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
-					   				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+					   				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
 					   			<%}%>
 							</aui:button-row>  
 						</div>
@@ -372,16 +372,16 @@ while(cocreationsIt.hasNext()){
 					 		<aui:button-row>
 					  			<div id="aui_popup_click">
 					  				<%if (challenge.getUserId() == user.getUserId()){%>
-					       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info" disabled="true"></aui:button>
+					       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info" disabled="true"></aui:button>
 					       			<%}else{
 					       			    if (!isCocreator){%>
-					       					<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+					       					<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
 					       			    <%}	
 					       			 }%>
 					   			</div>
 					   			<div id="aui_popup_content" ></div>
 					   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
-					   				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+					   				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
 					   			<%}%>
 							</aui:button-row>  
 						</div>
@@ -392,10 +392,10 @@ while(cocreationsIt.hasNext()){
        		<div class="col-12 col-md-12">
 		       <aui:button-row>
 		       		<%if (challenge.getUserId() == user.getUserId()){%>
-			        	<aui:button type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
-			        	<aui:button name="deleteChallenge" type="button" value="Delete" onClick="javascript:deleteConfirmation();"/>
+			        	<aui:button type="submit" value="publish" cssClass="btn-outline-info"></aui:button>
+			        	<aui:button name="deleteChallenge" type="button" value="delete" onClick="javascript:deleteConfirmation();"/>
 		        	<%}%>
-		        	<aui:button name="cancel" type="button" value="Cancel" onClick="<%=challengesURL%>"/>
+		        	<aui:button name="cancel" type="button" value="cancel" onClick="<%=challengesURL%>"/>
 		        </aui:button-row>
         	</div>
          </div>
@@ -422,7 +422,7 @@ while(cocreationsIt.hasNext()){
 
 <script type="text/javascript">
 	function deleteConfirmation() {
-		msg = "Are you sure you want to proceed with the delete operation?";
+		msg = "<%=deleteOperationConfirmation%>";
 		if(confirm(msg)) {
 			window.location.href = '<%=deleteChallengeURL.toString()%>';
 		}else{

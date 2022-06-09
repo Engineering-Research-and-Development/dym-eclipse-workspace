@@ -17,6 +17,8 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Map.Entry" %>
 <%@ page import="java.util.Base64" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.util.ResourceBundle" %>
 
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
@@ -91,6 +93,12 @@
 <portlet:defineObjects />
 
 <%
+/*Impostazione properties di linguaggio*/
+String propertiesLanguage = locale.getLanguage();
+String propertiesCountry = locale.getCountry();
+ResourceBundle languages = ResourceBundle.getBundle("content/Language", new Locale(propertiesLanguage, propertiesCountry));
+String deleteOperationConfirmation = languages.getString("deleteConfirmation");
+
 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 /* SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); */
 Calendar calendar = Calendar.getInstance();
