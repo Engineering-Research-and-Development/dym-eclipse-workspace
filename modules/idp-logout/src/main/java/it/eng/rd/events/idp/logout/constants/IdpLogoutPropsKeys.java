@@ -6,9 +6,11 @@ public class IdpLogoutPropsKeys implements PropsKeys {
 
 	public static final String IDM_HOST = "idm.host";
 	
-	public static final String IDM_CLIENT_ID = "idm.client_id";
+//	public static final String IDM_CLIENT_ID = "idm.client_id";
 	
-	public static final String IDM_SECRET_ID = "idm.secret_id";
+//	public static final String IDM_SECRET_ID = "idm.secret_id";
+	
+	public static final String OIDC_PROVIDER_NAME = "oidc.provider.name";
 	
 	public static final String REVOKE_URL = "/oauth2/revoke";
 	

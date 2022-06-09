@@ -6,7 +6,6 @@ import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;
 import com.liferay.portal.kernel.events.LifecycleEvent;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -19,15 +18,20 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry;
+import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
+import com.nimbusds.openid.connect.sdk.rp.OIDCClientMetadata;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -35,9 +39,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -45,14 +47,8 @@ import org.apache.http.util.EntityUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-
 import it.eng.rd.events.idp.logout.constants.IdpLogoutPropsKeys;
 import it.eng.rd.events.idp.util.crypto.AesCrypto;
-
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.config.CookieSpecs;
-
-import javax.servlet.http.*;
 
 @Component(
         immediate = true,
@@ -62,8 +58,18 @@ public class IdpLogout implements LifecycleAction {
 	
     @Override    
     public void processLifecycleEvent(LifecycleEvent lifecycleEvent) throws ActionException {
+    	
+    	/*
+    	Collection<String> openIdConnectProviderNames =	_openIdConnectProviderRegistry.getOpenIdConnectProviderNames(_portal.getCompanyId(httpServletRequest));  
+    	
+    	for (String provider : openIdConnectProviderNames) {
+    		_log.info("--->providerName: "+provider);
+    	}
+    	*/
+    	
     	HttpServletRequest request = lifecycleEvent.getRequest();
         HttpServletResponse response = lifecycleEvent.getResponse();
+        
         User user = null;
         try {
 			user = PortalUtil.getUser(request);
@@ -76,28 +82,42 @@ public class IdpLogout implements LifecycleAction {
 		if (!containsName(roles, "Administrator")) {
 				
 	        String idm_host = GetterUtil.getString(PropsUtil.get(IdpLogoutPropsKeys.IDM_HOST));
-	        String idm_client_id = GetterUtil.getString(PropsUtil.get(IdpLogoutPropsKeys.IDM_CLIENT_ID));
-	        String idm_secret_id = GetterUtil.getString(PropsUtil.get(IdpLogoutPropsKeys.IDM_SECRET_ID));
+	        String providerName = GetterUtil.getString(PropsUtil.get(IdpLogoutPropsKeys.OIDC_PROVIDER_NAME));
 	        String secretKey = "";
     		secretKey = GetterUtil.getString(PropsUtil.get(IdpLogoutPropsKeys.SECRET_KEY));
-    		String idm_without_custom_logout = idm_without_custom_logout = GetterUtil.getString(PropsUtil.get(IdpLogoutPropsKeys.IDM_WITHOUT_CUSTOM_LOGOUT));
-    		 _log.info("props idm_without_custom_logout "+idm_without_custom_logout);
-    		if (Validator.isNull(idm_without_custom_logout)) {
-    			 _log.info("isNotNull ");
+    		String idm_without_custom_logout = GetterUtil.getString(PropsUtil.get(IdpLogoutPropsKeys.IDM_WITHOUT_CUSTOM_LOGOUT));
+    		if (Validator.isNull(idm_host)) {
+ 	        	_log.error("Set idm.host in portal-ext.properties.");
+ 	        }
+ 	        if (Validator.isNull(providerName)) {
+ 	        	_log.error("Set oidc.provider.name in portal-ext.properties.");
+ 	        }
+    		 if (Validator.isNull(idm_without_custom_logout)) {
+    			 _log.warn("If you want invoke the native IDM endpoint logout set idm.without.custom.logout=true in portal-ext.properties.");
+    			 //otherwise if you want invoke the custom IDM endpoint logout2 don't set that property
     			 idm_without_custom_logout = "false";
     		}
     		
 	        if (_log.isDebugEnabled()) {
 	        	_log.debug("idm_host: "+idm_host);
-		        _log.debug("idm_client_id: "+idm_client_id);
-		        _log.debug("idm_secret_id: "+idm_secret_id);
-		        _log.debug("secretKey "+secretKey);
-		        _log.debug("idm_without_custom_logout "+idm_without_custom_logout);
+	        	_log.debug("idm_without_custom_logout: "+idm_without_custom_logout);
+		        _log.debug("secretKey: "+secretKey);
+		        _log.debug("providerName: "+providerName);
 	        }
-	        _log.info("idm_without_custom_logout "+idm_without_custom_logout);
-	        if (Validator.isNotNull(idm_host) && user!=null) {
+	        if (Validator.isNotNull(idm_host) && user!=null && Validator.isNotNull(providerName)) {
 	        	
 	        	try (CloseableHttpClient client = HttpClients.createDefault()) {
+	        		
+	        		long companyId =  _portal.getCompanyId(request);
+	            	OpenIdConnectProvider<OIDCClientMetadata, OIDCProviderMetadata>	openIdConnectProvider =  _openIdConnectProviderRegistry.getOpenIdConnectProvider(companyId, providerName);
+	            	String idm_client_id = openIdConnectProvider.getClientId();
+	            	String idm_secret_id = openIdConnectProvider.getClientSecret();
+	            	if (_log.isDebugEnabled()) {
+	    	        	_log.debug("companyId: "+companyId);
+	    		        _log.debug("idm_client_id: "+idm_client_id);
+	    		        _log.debug("idm_secret_id: "+idm_secret_id);
+	    	        }
+	        		
 	        		HttpServletRequest originalRequest = PortalUtil.getOriginalServletRequest(request);
 	        		String logoutDYMAT = CookieKeys.getCookie(originalRequest, "LODYMAT");
 
@@ -187,6 +207,9 @@ public class IdpLogout implements LifecycleAction {
 
     @Reference    
     private Portal _portal;
+    
+	@Reference
+	private OpenIdConnectProviderRegistry _openIdConnectProviderRegistry;
     
     private static Log _log = LogFactoryUtil.getLog(IdpLogout.class);
 }
