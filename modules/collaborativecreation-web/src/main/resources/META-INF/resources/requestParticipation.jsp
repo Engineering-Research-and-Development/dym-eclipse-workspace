@@ -21,12 +21,12 @@ long challengeId = ParamUtil.getLong(request, "challengeId");
 	             <div>
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
-	             <aui:input label="Request" placeholder="Type a message here..." name="request" id="request" type="textarea" required='true'/>
+	             <aui:input label="request" placeholder="Type a message here..." name="request" id="request" type="textarea" required='true'/>
 		    </div>            
 		</aui:fieldset>
 		<aui:button-row>
 		  	<div id="aui_popup_click">
-		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Send Request" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="saveForm" name="saveForm" type="submit" value="sendRequest" cssClass="btn-outline-info"></aui:button>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>

@@ -51,11 +51,11 @@ if (cocreationId > 0){
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<aui:input label="Request" name="request" id="request" type="textarea" required='true'/>
+	             	<aui:input label="request" name="request" id="request" type="textarea" required='true'/>
 	             </div>
 	             <div>
-	             	<aui:select label="Invite Participants" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
-	             		<aui:option selected="<%=true%>" value="">Select...</aui:option>
+	             	<aui:select label="inviteParticipants" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
+	             		<aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/>...</aui:option>
 						<%
 						for (User groupUser : users) {
 							boolean isCocreator = false;
@@ -85,7 +85,7 @@ if (cocreationId > 0){
 		</aui:fieldset>
 		<aui:button-row>
 		  	<div id="aui_popup_click">
-		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Send Request" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="saveForm" name="saveForm" type="submit" value="sendRequest" cssClass="btn-outline-info"></aui:button>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>

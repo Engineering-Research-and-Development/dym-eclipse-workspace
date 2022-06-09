@@ -98,6 +98,9 @@ String propertiesLanguage = locale.getLanguage();
 String propertiesCountry = locale.getCountry();
 ResourceBundle languages = ResourceBundle.getBundle("content/Language", new Locale(propertiesLanguage, propertiesCountry));
 String deleteOperationConfirmation = languages.getString("deleteConfirmation");
+String addMilestone = languages.getString("addMilestone");
+String addToDo = languages.getString("addToDo");
+String requestToCoCreate = languages.getString("requestToCoCreate");
 
 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 /* SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); */

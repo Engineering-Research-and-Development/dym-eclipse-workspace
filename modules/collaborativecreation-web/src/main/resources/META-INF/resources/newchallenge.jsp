@@ -17,7 +17,7 @@ String redirectTo = request.getParameter("redirectTo");
 					<portlet:param name="jspPage" value="/challenges.jsp"/>
 				</portlet:renderURL>
 				<%-- <a href="<%=challengesURL%>"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></a><span class="co-title">Post a new challenge</span> --%>
-				<span class="co-title">Post a new challenge</span>
+				<span class="co-title"><liferay-ui:message key="postNewChallenge"/></span>
 			</div><!-- w-1/2  END-->
 			<div class="col col-lg-6 col-sm-6 col-6 col-md-12"> 
 				  <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
@@ -50,23 +50,23 @@ String redirectTo = request.getParameter("redirectTo");
          <div class="row">
 		    <div class="col-12 col-md-12">
 	        	<div class="pb-2">
-                       <div><aui:input label="Title" name="title" id="title" type="text" required='true'/></div>
+                       <div><aui:input label="title" name="title" id="title" type="text" required='true'/></div>
                 </div>
 			</div>
 			<div class="col-12 col-md-12">
                 <div class="pb-2">
-                       <div><aui:input class="form-control col-12 span12 " label="Description" name="description" id="description" type="textarea" required='true'/></div>
+                       <div><aui:input class="form-control col-12 span12 " label="description" name="description" id="description" type="textarea" required='true'/></div>
                 </div>
 			</div>
 			<div class="col-12 col-md-12">
                 <div class="pb-2">
-                       <div><aui:input class="form-control col-12 span12 " label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" required='true'/></div>
+                       <div><aui:input class="form-control col-12 span12 " label="desiredOutcome" name="desiredOutcome" id="desiredOutcome" type="textarea" required='true'/></div>
                 </div>
 			</div>
 			<div class="col-sm-6 col-md-12">
 		        <div class=" pb-2 borderGroup">
-			          <aui:select label="Location" id="location" name="location" showEmptyOption="false" required="true">
-						    <aui:option selected="<%=true%>" value="">Select...</aui:option>
+			          <aui:select label="location" id="location" name="location" showEmptyOption="false" required="true">
+						    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/>...</aui:option>
 						    <%
 							for (Country country : countries) {
 							%>
@@ -89,7 +89,7 @@ String redirectTo = request.getParameter("redirectTo");
 			<h3 class="sheet-subtitle"></h3>
 			<div class="col-sm-6 col-md-6">
 		        <div class=" pb-2 borderGroup">
-		        	  <label class="control-label">Tags</label>
+		        	  <label class="control-label">Tags*</label>
 			          <select label="Tags" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 						    <%
 							for (AssetTag assetTag : assetTags) {
@@ -103,8 +103,8 @@ String redirectTo = request.getParameter("redirectTo");
 		    </div>
 			<div class="col-sm-6 col-md-6">
 		        <div class=" pb-2 borderGroup">
-		        	  <label class="control-label">Categories</label>
-			          <select label="Categories" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
+		        	  <label class="control-label"><liferay-ui:message key="categories"/>*</label>
+			          <select label="categories" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 						    <%
 							for (AssetCategory assetCategory : assetCategories) {
 							%>
@@ -118,13 +118,13 @@ String redirectTo = request.getParameter("redirectTo");
 		    <h3 class="sheet-subtitle"></h3>
 		    <div class="col-sm-6 col-md-6">
 	           <div class=" pb-2 borderGroup"> 
-                  <label class="control-label">Start*</label>
+                  <label class="control-label"><liferay-ui:message key="start"/>*</label>
 				  <input id="startDate" name="startDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" required='true'>
 		 	   </div>
 			</div>
 			<div class="col-sm-6 col-md-6">
 	           <div class=" pb-2 borderGroup">   
-				  <label class="control-label">End*</label>
+				  <label class="control-label"><liferay-ui:message key="end"/>*</label>
 				  <input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" required='true'>
 		 	   </div>
 			</div>
@@ -134,7 +134,7 @@ String redirectTo = request.getParameter("redirectTo");
 		       			<div id="fileList"></div>
 						<span style="display:block; height: 10px;"></span>
 						<div class="btn-group">
-							<label for="uploadedFile" class="btn btn-primary pull-left">Upload pictures and documents</label>
+							<label for="uploadedFile" class="btn btn-primary pull-left"><liferay-ui:message key="upload"/> <liferay-ui:message key="documentsPictures"/></label>
 						    <div id="clearFileList" style="display:none">
 								<liferay-ui:icon
 										cssClass="btn-outline-info"
@@ -152,8 +152,8 @@ String redirectTo = request.getParameter("redirectTo");
          <div class="row">
 		    <div class="col-12 col-md-12">
 	           <aui:button-row>
-		        	<aui:button type="submit" value="Publish" cssClass="btn-outline-info"></aui:button> 
-		        	<aui:button name="cancel" type="button" value="Cancel" onClick="<%=challengesURL%>"/>	 
+		        	<aui:button type="submit" value="publish" cssClass="btn-outline-info"></aui:button> 
+		        	<aui:button name="cancel" type="button" value="cancel" onClick="<%=challengesURL%>"/>	 
 		        </aui:button-row>  		 
 			</div>
 		</div>

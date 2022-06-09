@@ -85,7 +85,7 @@ boolean isCocreator = false;
 					<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 				</portlet:renderURL>
 				<%-- <a href="<%=ongoingCcocreationsURL%>"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></a><span class="co-title">Co-creation details</span> --%>
-				<span class="co-title">Co-creation details</span>
+				<span class="co-title"><liferay-ui:message key="cocreationDetails"/></span>
 			</div><!-- w-1/2  END-->
 			<div class="col col-lg-6 col-sm-6 col-6 col-md-12"> 
 				  <aui:nav cssClass="nav-tabs nav-co-tabs">	
@@ -133,24 +133,24 @@ boolean isCocreator = false;
 			}	
 		    %>
 	       <div id="date" class="challengesLeft">
-		 		<span><b><label class="aui-field-label">Created on</label></b></span> : <span><%=formatter.format(cocreation.getCreateDate())%></span>
+		 		<span><b><label class="aui-field-label"><liferay-ui:message key="createdOn"/></label></b></span> : <span><%=formatter.format(cocreation.getCreateDate())%></span>
 		   </div>
 	       <p></p>    	    
 		   <h3 class="sheet-subtitle">Challenge</h3>
 	       <aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=challengeTitle%>" cssClass="field disabled form-control"/>
-	       <aui:input label="Desired Outcome" name="desiredOutcome" id="desiredOutcome" type="textarea" readonly="true" value="<%=desiredOutcome%>" cssClass="field disabled form-control"/>
+	       <aui:input label="desiredOutcome" name="desiredOutcome" id="desiredOutcome" type="textarea" readonly="true" value="<%=desiredOutcome%>" cssClass="field disabled form-control"/>
 	       <%-- <h3 class="sheet-subtitle">Request</h3>      
            <aui:input label="Request" name="request" id="request" type="textarea" value="<%=cocreation.getRequest()%>" readonly="true"/>
     	   <aui:input label="Request Reply" name="message" id="message" type="textarea" value="<%=cocreation.getMessage()%>" readonly="true"/> --%>
     	   <h3 class="sheet-subtitle">Co-creation</h3>
     	   <%if (!isCocreator){%>
-	    	   <aui:input label="Title" name="title" id="title" type="textarea" value="<%=cocreation.getTitle()%>" readonly="true" cssClass="field disabled form-control"/>
-	    	   <aui:input label="Description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" readonly="true" cssClass="field disabled form-control"/>
-	    	   <aui:input label="Status" name="status" id="status" type="text" value='<%=cocreation.getCompleted() == true ?  "Completed" : "To complete"%>' readonly="true" cssClass="field disabled form-control"/>
+	    	   <aui:input label="title" name="title" id="title" type="textarea" value="<%=cocreation.getTitle()%>" readonly="true" cssClass="field disabled form-control"/>
+	    	   <aui:input label="description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" readonly="true" cssClass="field disabled form-control"/>
+	    	   <aui:input label="status" name="status" id="status" type="text" value='<%=cocreation.getCompleted() == true ?  "Completed" : "To complete"%>' readonly="true" cssClass="field disabled form-control"/>
 		   <%}else{%>
-		   		<aui:input label="Title" name="title" id="title" type="textarea" value="<%=cocreation.getTitle()%>" required="true"/>
-	    	    <aui:input label="Description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" required="true"/>
-	            <aui:select label="Status" id="completed" name="completed" showEmptyOption="false" required="true">
+		   		<aui:input label="title" name="title" id="title" type="textarea" value="<%=cocreation.getTitle()%>" required="true"/>
+	    	    <aui:input label="description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" required="true"/>
+	            <aui:select label="status" id="completed" name="completed" showEmptyOption="false" required="true">
 				    <aui:option selected="<%=true%>" value="<%=cocreation.getCompleted()%>"><%=cocreation.getCompleted() == true ?  "Completed" : "To complete"%></aui:option>
 				    <aui:option selected="<%=false%>" value="true">Completed</aui:option>
 				    <aui:option selected="<%=false%>" value="false">To complete</aui:option>
@@ -158,7 +158,7 @@ boolean isCocreator = false;
 		   <%}%>
 		   <div class="col-12 col-md-12">
        	   		<div class="pb-2">	
-					<h3 class="sheet-subtitle">Documents and Pictures</h3>
+					<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures"/></h3>
 					<% 
 					String fileURL = "";
 					for (FileEntry file : fileEntries) {    
@@ -212,7 +212,7 @@ boolean isCocreator = false;
 		   <span style="display:block; height: 10px;"></span>
 		   <div class="btn-group">
 		   		<%if (isCocreator){%>
-					<label for="uploadedFile" class="btn btn-primary pull-left">Upload</label>
+					<label for="uploadedFile" class="btn btn-primary pull-left"><liferay-ui:message key="upload"/></label>
 				<%}%>
 			    <div id="clearFileList" style="display:none">
 					<liferay-ui:icon
@@ -230,12 +230,12 @@ boolean isCocreator = false;
 		        <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 		            <div class="thumbnail card">
 		                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
-		                    <h3 class="co-title">Milestones and Deadlines</h3>
+		                    <h3 class="co-title"><liferay-ui:message key="milestonesDeadlines"/></h3>
 		                    <%
 					   		if (milestones.size() == 0){
 					   		%>
 					   			</br>
-					   			<h3 class="sheet-subtitle">There are no Milestones and Deadlines</a></h3>
+					   			<h3 class="sheet-subtitle"><liferay-ui:message key="thereAreNoMilestonesDeadlines"/></a></h3>
 							<%
 							}else{
 							%>	
@@ -264,12 +264,12 @@ boolean isCocreator = false;
 								</p>
 						   		<br>
 						   		<p>	
-									Expiration Date : <%=formatter.format(milestone.getExpirationDate())%>
+									<liferay-ui:message key="expirationDate"/> : <%=formatter.format(milestone.getExpirationDate())%>
 						   		</p>
 						   		<br>
 						   		<%if (isCocreator){%>
 							   		<p>
-							   			<aui:button name="deleteMilestone" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteMilestoneURL.toString() +\"'\"%>"/></h3>
+							   			<aui:button name="deleteMilestone" type="button" value="delete"  onClick="<%=\"window.location.href='\"+deleteMilestoneURL.toString() +\"'\"%>"/></h3>
 				                    </p>
 			                    <%}%>	 	
 			                <% 
@@ -280,7 +280,7 @@ boolean isCocreator = false;
 		            <%if (isCocreator){%>
                         <aui:button-row>
 				  			<div id="aui_popup_milestonesAndDeadlines_click">
-				       			<aui:button type="button" value="Add Milestone" cssClass="btn-outline-info"></aui:button>
+				       			<aui:button type="button" value="addMilestone" cssClass="btn-outline-info"></aui:button>
 				   			</div>
 				   			<div id="aui_popup_milestonesAndDeadlines_content" ></div>
 						</aui:button-row>             
@@ -290,12 +290,12 @@ boolean isCocreator = false;
 			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 			            <div class="thumbnail card">
 			                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
-			                    <h3 class="co-title">My To-Do's</h3>
+			                    <h3 class="co-title"><liferay-ui:message key="myToDos"/></h3>
 			                    <%
 						   		if (toDos.size() == 0){
 						   		%>
 						   			</br>
-						   			<h3 class="sheet-subtitle">There are no My To-Do's</a></h3>
+						   			<h3 class="sheet-subtitle"><liferay-ui:message key="thereAreNoMyToDos"/></a></h3>
 								<%
 								}else{
 								%>
@@ -313,11 +313,11 @@ boolean isCocreator = false;
 				                    </p>
 				                    <br>
 				                    <p>	
-				                    	Expiration Date : <%=formatter.format(toDo.getExpirationDate())%>    
+				                    	<liferay-ui:message key="expirationDate"/> : <%=formatter.format(toDo.getExpirationDate())%>    
 				                    </p>
 				                    <br>
 							   		<p>
-							   			<aui:button name="deleteToDo" type="button" value="Delete"  onClick="<%=\"window.location.href='\"+deleteToDoURL.toString() +\"'\"%>"/></h3>	
+							   			<aui:button name="deleteToDo" type="button" value="delete"  onClick="<%=\"window.location.href='\"+deleteToDoURL.toString() +\"'\"%>"/></h3>	
 				                    </p>
 				                <% 
 								}
@@ -326,13 +326,13 @@ boolean isCocreator = false;
 			            </div> 
                            <aui:button-row>
 				  			<div id="aui_popup_mytodos_click">
-				       			<aui:button type="button" value="Add To-Do" cssClass="btn-outline-info"></aui:button>
+				       			<aui:button type="button" value="addToDo" cssClass="btn-outline-info"></aui:button>
 				   			</div>
 				   			<div id="aui_popup_mytodos_content" ></div>
 						</aui:button-row>              
 			         </div>   
 		         <%}%>
-		         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
+		         <%-- <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
 		            <div class="thumbnail card">
 		                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
 		                    <h3 class="co-title">Questions and Feedback</h3>
@@ -362,7 +362,7 @@ boolean isCocreator = false;
 			   			</div>
 			   			<div id="aui_popup_questionsFeedbacks_content" ></div>
 				    </aui:button-row>             
-		         </div>   
+		         </div>    --%>
 		   </div>					   				   
 		   <h3 class="sheet-subtitle"></h3>
 		   <%if (ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getEndDate().after(nowDate) == true && !cocreation.getCompleted()){%>	
@@ -371,9 +371,9 @@ boolean isCocreator = false;
 				 		<aui:button-row>
 				  			<div id="aui_popup_requestToCocreate_click">
 				  				<%if (isCocreator){%>
-				       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info"></aui:button>
+				       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info"></aui:button>
 				       			<%}else{%>
-				       				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info"></aui:button>
+				       				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info"></aui:button>
 				       			<%}%>
 				   			</div>
 				   			<div id="aui_popup_requestToCocreate_content" ></div>
@@ -387,9 +387,9 @@ boolean isCocreator = false;
 				 		<aui:button-row>
 				  			<div id="aui_popup_requestToCocreate_click">
 				  				<%if (isCocreator){%>
-				       				<aui:button type="button" value="Invite Participants" cssClass="btn-outline-info" disabled="true"></aui:button>
+				       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info" disabled="true"></aui:button>
 				       			<%}else{%>
-				       				<aui:button type="button" value="Request to Co-Create" cssClass="btn-outline-info" disabled="true"></aui:button>
+				       				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
 				       			<%}%>
 				   			</div>
 				   			<div id="aui_popup_requestToCocreate_content" ></div>
@@ -401,10 +401,10 @@ boolean isCocreator = false;
        </aui:fieldset>
 	   <aui:button-row>
 	   		<%if (isCocreator){%>
-	   			<aui:button type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
-	   			<aui:button name="deleteCocreation" type="button" value="Delete" onClick="javascript:deleteConfirmation();"/>
+	   			<aui:button type="submit" value="publish" cssClass="btn-outline-info"></aui:button>
+	   			<aui:button name="deleteCocreation" type="button" value="delete" onClick="javascript:deleteConfirmation();"/>
 	   		<%}%>
-	   		<aui:button name="cancel" type="button" value="Cancel" onClick="<%=ongoingCocreationsURL%>"/>
+	   		<aui:button name="cancel" type="button" value="cancel" onClick="<%=ongoingCocreationsURL%>"/>
 	   </aui:button-row>
   </aui:form>
   <%
@@ -428,7 +428,7 @@ boolean isCocreator = false;
 
 <script type="text/javascript">
 	function deleteConfirmation() {
-		msg = "Are you sure you want to proceed with the delete operation?";
+		msg = "<%=deleteOperationConfirmation%>";
 		if(confirm(msg)) {
 			window.location.href = '<%=deleteCocreationURL.toString()%>';
 		}else{
@@ -475,7 +475,7 @@ boolean isCocreator = false;
 				}
 			).render();
 			popUpWindow.show(popUpWindow);
-			popUpWindow.titleNode.html("Request to Co-Create");
+			popUpWindow.titleNode.html("<%=requestToCoCreate%>");
 		<%}%>
 	});
 	
@@ -499,7 +499,7 @@ boolean isCocreator = false;
 			}
 		).render();
 		popUpWindow.show(popUpWindow);
-		popUpWindow.titleNode.html("Add Milestone");
+		popUpWindow.titleNode.html("<%=addMilestone%>");
 	});
 	
 	A.one("#aui_popup_mytodos_click").on('click',function(event){
@@ -522,10 +522,10 @@ boolean isCocreator = false;
 			}
 		).render();
 		popUpWindow.show(popUpWindow);
-		popUpWindow.titleNode.html("Add To-Do");
+		popUpWindow.titleNode.html("<%=addToDo%>");
 	});
 	
-	A.one("#aui_popup_questionsFeedbacks_click").on('click',function(event){
+	<%-- A.one("#aui_popup_questionsFeedbacks_click").on('click',function(event){
 		var popUpWindow=Liferay.Util.Window.getWindow(
 			{
 				dialog: {
@@ -546,5 +546,5 @@ boolean isCocreator = false;
 		).render();
 		popUpWindow.show(popUpWindow);
 		popUpWindow.titleNode.html("Add Question or Feedback");
-	});
+	}); --%>
 </aui:script>

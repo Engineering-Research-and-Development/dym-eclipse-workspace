@@ -26,18 +26,18 @@ User currentUser = themeDisplay.getUser();
 	             	<aui:input label="Cocreation" name="cocreation" id="cocreation" readonly="true" value="<%=CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<aui:input label="Description" name="description" id="description" type="text" required='true'/>
+	             	<aui:input label="description" name="description" id="description" type="text" required='true'/>
 	             </div>
 	             <div>  
-		  			<label class="control-label">Expiration Date*</label>
+		  			<label class="control-label"><liferay-ui:message key="expirationDate"/>*</label>
 		  			<input id="expirationDate" name="expirationDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="" required='true'>
 			     </div> 
 		    </div>            
 		</aui:fieldset>
 		<aui:button-row>
 		  	<div id="aui_popup_click">
-		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
-		       	<aui:button id="closePopup" name="closePopup" type="button" value="Close" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="saveForm" name="saveForm" type="submit" value="publish" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="closePopup" name="closePopup" type="button" value="close" cssClass="btn-outline-info"></aui:button>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>

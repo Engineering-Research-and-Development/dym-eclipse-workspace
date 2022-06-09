@@ -37,11 +37,11 @@ if (cocreationId > 0){
 	             	<aui:input label="Co-creation" name="cocreation" id="cocreation" readonly="true" value="<%=CocreationLocalServiceUtil.getCocreation(cocreationId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<aui:input label="Description" name="description" id="description" type="text" required='true'/>
+	             	<aui:input label="description" name="description" id="description" type="text" required='true'/>
 	             </div>
 	             <div>
-	             	<aui:select label="Assign to" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
-	             		<aui:option selected="<%=true%>" value="">Select...</aui:option>
+	             	<aui:select label="assignTo" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
+	             		<aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/>...</aui:option>
 						<%
 						for (User groupUser : users) {
 							boolean isCocreator = false;
@@ -60,7 +60,7 @@ if (cocreationId > 0){
 				   </aui:select>
 	             </div> 
 	             <div>  
-		  			<label class="control-label">Expiration Date*</label>
+		  			<label class="control-label"><liferay-ui:message key="expirationDate"/>*</label>
 		  			<input id="expirationDate" name="expirationDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="" required='true'>
 			     </div> 
 	             <%-- <div id="fileList"></div>
@@ -82,8 +82,8 @@ if (cocreationId > 0){
 		</aui:fieldset>
 		<aui:button-row>
 		  	<div id="aui_popup_click">
-		       	<aui:button id="saveForm" name="saveForm" type="submit" value="Publish" cssClass="btn-outline-info"></aui:button>
-		       	<aui:button id="closePopup" name="closePopup" type="button" value="Close" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="saveForm" name="saveForm" type="submit" value="publish" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="closePopup" name="closePopup" type="button" value="close" cssClass="btn-outline-info"></aui:button>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>

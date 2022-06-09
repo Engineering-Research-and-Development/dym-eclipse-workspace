@@ -33,15 +33,15 @@ User currentUser = themeDisplay.getUser();
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<aui:input label="Request" name="request" id="request" type="textarea" readonly="true" value="<%=participationRequest%>"/>
+	             	<aui:input label="request" name="request" id="request" type="textarea" readonly="true" value="<%=participationRequest%>"/>
 	             </div>
 	             <%-- <aui:input label="Contribution requested" placeholder="Type a message here..." name="message" id="message" type="textarea" required='true'/> --%>
 		    </div>            
 		</aui:fieldset>
 		<aui:button-row>
 		  	<div id="aui_popup_click">
-		       	<aui:button id="accept" name="accept" type="submit" value="Accept" cssClass="btn-outline-info"></aui:button>
-		       	<aui:button id="decline" name="decline" type="button" value="Decline"  onClick="<%=\"window.location.href='\"+declineRequestURL.toString() +\"'\"%>"/>
+		       	<aui:button id="accept" name="accept" type="submit" value="accept" cssClass="btn-outline-info"></aui:button>
+		       	<aui:button id="decline" name="decline" type="button" value="decline"  onClick="<%=\"window.location.href='\"+declineRequestURL.toString() +\"'\"%>"/>
 		   	</div>
 		   	<div id="aui_popup_content" ></div>
 		</aui:button-row>

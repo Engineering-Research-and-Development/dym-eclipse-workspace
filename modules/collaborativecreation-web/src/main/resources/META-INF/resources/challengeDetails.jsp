@@ -461,7 +461,7 @@ while(cocreationsIt.hasNext()){
 				}
 			).render();
 			popUpWindow.show(popUpWindow);
-			popUpWindow.titleNode.html("Request to Co-Create");
+			popUpWindow.titleNode.html("<%=requestToCoCreate%>");
 		<%}%>
 	});
 	
