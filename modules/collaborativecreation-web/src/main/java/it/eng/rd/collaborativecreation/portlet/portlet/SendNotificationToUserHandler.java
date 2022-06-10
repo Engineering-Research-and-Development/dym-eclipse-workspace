@@ -11,6 +11,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
@@ -34,6 +37,11 @@ public class SendNotificationToUserHandler extends BaseUserNotificationHandler {
 		setPortletId(SendNotificationToUserHandler.PORTLET_ID);
 	}
 	
+	ResourceBundle resourceBundle = ResourceBundle.getBundle("content/Language", new Locale(Locale.getDefault().toString(), Locale.getDefault().getDisplayCountry()));
+	private String title = resourceBundle.getString("title");
+	private String sender = resourceBundle.getString("sender");
+	private String notification = resourceBundle.getString("notification");
+	
 	@Override
 	protected String getBody(UserNotificationEvent userNotificationEvent, ServiceContext serviceContext) throws Exception{
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
@@ -46,8 +54,8 @@ public class SendNotificationToUserHandler extends BaseUserNotificationHandler {
 	
 	protected String getBodyTemplate() {
 		StringBundler sb = new StringBundler(5);
-		sb.append("<div class=\"title\">Title : [$TITLES]</div><div>");
-		sb.append("Sender : [$SENDERNAMES] <br>Notification : [$BODY TEXTS]</div>");
+		sb.append("<div class=\"title\">" + title + ": [$TITLES]</div><div>");
+		sb.append(sender + " : [$SENDERNAMES] <br>" + notification + " : [$BODY TEXTS]</div>");
 		return sb.toString();
 	}
 	
