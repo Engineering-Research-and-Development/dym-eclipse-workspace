@@ -122,43 +122,54 @@ cocreationsSize = filteredCocreations.size();
 				  </aui:nav>
 			</div><!-- w-1/2 END -->
 		</div>
-		<div class="row mb-4 border-bottom">
-			<div class="col col-lg-2-6 col-sm-6 col-6 col-md-6"> 
-				<aui:select label="Challenge" id="challengeFilter" name="challengeFilter" showEmptyOption="false">
-					    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/></aui:option>
-					    <%
-						for (Challenge challenge : filterChallenges) {
-						%>
-							<aui:option selected="<%=false%>" value="<%=challenge.getChallengeId()%>"><%=challenge.getTitle()%></aui:option>	
-						<% 
-						}
-						%>
-				</aui:select>
-				<div>
-					<aui:button id="filter" name="filter" type="submit" value="filter" cssClass="btn-outline-info"></aui:button>
-					<aui:button id="clearFilter" name="clearFilter" type="button" value="clear"/>
-				</div>
-			</div>	
-			<div class="col col-lg-2-6 col-sm-6 col-6 col-md-6">	
-				<aui:form name="searchForm" action="<%=search%>" method="post">
-					<%if (isChallengeOwner){%>
-		    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left" label="Co-creation" size="256" value=""/> 
-		    	 	<%}else{%>
-		    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescription" inlineLabel="left" label="Co-creation" size="256" value=""/>
-		    	 	<%}%>
-			    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
-			    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
-				</aui:form>
-			</div>
-		</div>
-	</div>
-</div>		
-</br>
-   <!-- <div class="container-fluid p-0 co-creation">
-	   <div id="cocreations" class="m-1 p-1"> 
-			<div class="co-abstract row flex-lg-row flex-sm-row flex-row flex-md-row"> 
-			   <div class="col col-lg-10 col-sm-10 col-10 col-md-12"> -->
-				   		<aui:form action="" name="<portlet:namespace />fm">
+		
+		
+		
+		<div class="container">
+		  <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+		  <div class="row">
+		     <!-- Colonna ricerca -->
+		    <div class="col-12 col-md-3">
+		   			  <div class="col col-lg-12 col-sm-12 col-12  col-md-12"> 
+				      <div class="co-box mt-2 mb-4 card-1">
+								<label class="aui-field-label co-title">Challenge</label> 
+				     		 <aui:select label="" id="challengeFilter" name="challengeFilter" showEmptyOption="false">
+								    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/></aui:option>
+								    <%
+									for (Challenge challenge : filterChallenges) {
+									%>
+										<aui:option selected="<%=false%>" value="<%=challenge.getChallengeId()%>"><%=challenge.getTitle()%></aui:option>	
+									<% 
+									}
+									%>
+							</aui:select>
+							<div>
+								<aui:button id="filter" name="filter" type="submit" value="filter" cssClass="btn-outline-info"></aui:button>
+								<aui:button id="clearFilter" name="clearFilter" type="button" value="clear"/>
+						 </div>	
+						</div>
+			       </div>	
+					  <div class="col col-lg-12 col-sm-12 col-12  col-md-12"> 
+										  <div class="co-box mt-2 mb-4 card-1">
+															<label class="aui-field-label co-title">Co-creation</label> 
+													  <aui:form name="searchForm" action="<%=search%>" method="post">
+															<%if (isChallengeOwner){%>
+												    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left" label="" size="256" value=""/> 
+												    	 	<%}else{%>
+												    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescription" inlineLabel="left" label="" size="256" value=""/>
+												    	 	<%}%>
+													    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
+													    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
+														</aui:form>
+										  
+										  </div>
+					 </div>
+			
+		      </div>
+		     <div class="col-12 col-md-9">
+		     
+		     
+		     <aui:form action="" name="<portlet:namespace />fm">
 					   		<div id="products" class="row view-group">
 						   		<%
 						   		if (cocreationsSize == 0){
@@ -259,13 +270,8 @@ cocreationsSize = filteredCocreations.size();
 							   %>
 					   	</div>
 				   </aui:form> 
-			   <!-- </div>
-	   		</div>
-		</div>
-	</div>	 -->
-</div>
-
-<script type="text/javascript">
+		     
+		     <script type="text/javascript">
 	function deleteConfirmation(url) {
 		msg = "<%=deleteOperationConfirmation%>";
 		if(confirm(msg)) {
@@ -296,3 +302,19 @@ cocreationsSize = filteredCocreations.size();
       });
  	});
 </aui:script>
+		     
+		     
+		     
+		     
+		     </div>
+		  </div>   <!-- row -->
+		</div>
+		
+		
+		
+		 
+	</div>
+</div>		
+ 
+
+ 
