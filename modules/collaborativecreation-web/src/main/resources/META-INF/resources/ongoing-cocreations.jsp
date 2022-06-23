@@ -122,58 +122,49 @@ cocreationsSize = filteredCocreations.size();
 				  </aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
-		
 		<div class="container">
-		  <!-- Stack the columns on mobile by making one full-width and the other half-width -->
-		  <div class="row">
-		     <!-- Colonna ricerca -->
-		    <div class="col-12 col-md-3">
-						    <div class="col col-lg-12 col-sm-12 col-12  col-md-12"> 
-								<div class="co-box mt-2 mb-4 card-1">
-								<label class="aui-field-label co-title">Challenge</label> 
-								<aui:select id="challengeFilter" name="challengeFilter" showEmptyOption="false" label="">
-									    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/></aui:option>
-									    <%
-										for (Challenge challenge : filterChallenges) {
-										%>
-											<aui:option selected="<%=false%>" value="<%=challenge.getChallengeId()%>"><%=challenge.getTitle()%></aui:option>	
-										<% 
-										}
-										%>
-								</aui:select>
-								<div>
-									<aui:button id="filter" name="filter" type="submit" value="filter" cssClass="btn-outline-info"></aui:button>
-									<aui:button id="clearFilter" name="clearFilter" type="button" value="clear"/>
-								</div>
-								
-								</div>
-								 
-							</div>	
-							
-							<div class="col col-lg-12 col-sm-12 col-12 col-md-12">	
-								<div class="co-box mt-2 mb-4 card-1">
-								<label class="aui-field-label co-title">Co-creation</label> 
-								<aui:form name="searchForm" action="<%=search%>" method="post">
-									
-									
-									<%if (isChallengeOwner){%>
-						    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left"  label="" size="256" value=""/> 
-						    	 	<%}else{%>
-						    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescription" inlineLabel="left" label=""  size="256" value=""/>
-						    	 	<%}%>
-							    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
-							    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
-								</aui:form>
-								</div>
-								 
-							</div>
-		    
-		    </div>
+		    <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+		  	<div class="row">
+		     	<!-- Colonna ricerca -->
+		    	<div class="col-12 col-md-3">
+			    	<div class="col col-lg-12 col-sm-12 col-12  col-md-12"> 
+						<div class="co-box mt-2 mb-4 card-1">
+							<label class="aui-field-label co-title">Challenge</label> 
+							<aui:select id="challengeFilter" name="challengeFilter" showEmptyOption="false" label="">
+							    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/></aui:option>
+							    <%
+								for (Challenge challenge : filterChallenges) {
+								%>
+									<aui:option selected="<%=false%>" value="<%=challenge.getChallengeId()%>"><%=challenge.getTitle()%></aui:option>	
+								<% 
+								}
+								%>
+						   </aui:select>
+					       <div>
+								<aui:button id="filter" name="filter" type="submit" value="filter" cssClass="btn-outline-info"></aui:button>
+								<aui:button id="clearFilter" name="clearFilter" type="button" value="clear"/>
+							</div>		
+						</div>					 
+					</div>	
+					<div class="col col-lg-12 col-sm-12 col-12 col-md-12">	
+						<div class="co-box mt-2 mb-4 card-1">
+							<label class="aui-field-label co-title">Co-creation</label> 
+							<aui:form name="searchForm" action="<%=search%>" method="post">
+								<%if (isChallengeOwner){%>
+					    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left"  label="" size="256" value=""/> 
+					    	 	<%}else{%>
+					    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescription" inlineLabel="left" label=""  size="256" value=""/>
+					    	 	<%}%>
+						    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
+						    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
+							</aui:form>
+						</div>	 
+					</div>
+		    	</div>
 		     <!-- Colonna contenuto -->
 		     <div class="col-12 col-md-9">
-		     
 		           <aui:form action="" name="<portlet:namespace />fm">
-					   		<div id="products" class="row  ">
+					 	<div id="products" class="row">
 					   		<ul class="cards">
 						   		<%
 						   		if (cocreationsSize == 0){
@@ -187,7 +178,7 @@ cocreationsSize = filteredCocreations.size();
 									<%
 									}
 								}
-								for (Cocreation cocreation : filteredCocreations) {
+								for (Cocreation cocreation : filteredCocreations){
 									boolean isCocreator = false;
 									%>
 									<portlet:renderURL var="ongoingCocreationsURL" windowState="<%=LiferayWindowState.MAXIMIZED.toString()%>">
@@ -210,33 +201,27 @@ cocreationsSize = filteredCocreations.size();
 										<portlet:param name="challengeId" value="<%=String.valueOf(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getChallengeId())%>" />
 										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 									</portlet:renderURL>
-							      
-							      
-							      
-							      <li class="user-card-item" d-pagegroup="1">
-							        
-							         <div class="user-card">
-								      <div class="user-card-pb card__image--fence"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><img class="userProfilePicture" src="https://eu.ui-avatars.com/api/?name=<%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %>&amp;background=222e5a&amp;color=fff"></a></div>
-								     			 	 
-								      <div class="user-card-img"></div>
-								      <div class="user-card-cont">
-								        <div class="user-card-title"> 
-								        <label class="aui-field-label">
-								        
-								        <i class="fa fa-edit" aria-hidden="true"></i> <a href="<%=viewCocreationDetails%>"><%=cocreation.getTitle() != "" ?  cocreation.getTitle() : "To be developed"%></a>     
-								        
-								         </label>
-								          </div>
-								        <p class="user-id" style="font-size: 1rem;"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a>  </p>
-								        <div id="startDate" class="challengesLeft">
-														<span><b><label class="aui-field-label"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> <liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getStartDate()) %></span>
-									       			</div>
-									       			<div id="endDate" class="challengesLeft">
-														<span><b><label class="aui-field-label"><i class="fa fa-calendar-times-o" aria-hidden="true"></i> <liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getEndDate()) %></span>
-									       			</div>
-					     						 
-												    
-												  <div id="cocreators" class="  challengesLeft">
+							        <li class="user-card-item" d-pagegroup="1">
+							        	<div class="user-card">
+								      		<div class="user-card-pb card__image--fence"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><img class="userProfilePicture" src="https://eu.ui-avatars.com/api/?name=<%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %>&amp;background=222e5a&amp;color=fff"></a></div>	 	 
+								      		<div class="user-card-img"></div>
+								      		<div class="user-card-cont">
+								        		<div class="user-card-title"> 
+									        		<label class="aui-field-label">
+									        			<i class="fa fa-edit" aria-hidden="true"></i><a href="<%=viewCocreationDetails%>"><%=cocreation.getTitle() != "" ?  cocreation.getTitle() : "To be developed"%></a>     
+									         		</label>
+								          		</div>
+								        		<p class="user-id" style="font-size: 1rem;"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a>  </p>
+								        		<div id="postedBy" class="challengesLeft">
+													<span><b><label class="aui-field-label"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> <liferay-ui:message key="postedBy"/></label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span>
+									       		</div>
+								        		<div id="startDate" class="challengesLeft">
+													<span><b><label class="aui-field-label"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> <liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getStartDate()) %></span>
+									       		</div>
+									       		<div id="endDate" class="challengesLeft">
+													<span><b><label class="aui-field-label"><i class="fa fa-calendar-times-o" aria-hidden="true"></i> <liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getEndDate()) %></span>
+									       		</div>
+											    <div id="cocreators" class="challengesLeft">
 							                    		<b><i class="fa fa-user" aria-hidden="true"></i> <label class="aui-field-label">Co-creators</label></b>: 
 								                    	<%
 														List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(cocreation.getCocreationId());
@@ -258,99 +243,65 @@ cocreationsSize = filteredCocreations.size();
 											      			}		
 														}	
 													    %>
-												    </div>
-												    <div id="cocreationDate" class="card-text group inner list-group-item-text challengesLeft">
-												    	<b><i class="fa fa-calendar" aria-hidden="true"></i> <label class="aui-field-label"> Co-creation <liferay-ui:message key="createdOn"/></label></b>: <%=formatter.format(cocreation.getCreateDate())%>
-							                    	</div>
-							                    	
-							                    	<div id="desc-"<%=cocreation.getCocreationId()%> class="card-text group inner list-group-item-text  ">
-							                            <span><b><i class="fa fa-align-justify" aria-hidden="true"></i> <label class="aui-field-label"><liferay-ui:message key="description"/></label></b></span> : <span><%=cocreation.getDescription()%></span>
-							                        </div>  
-													 
-									  </div>
-								      
-								     
-								         <div class="btn-row">
-								           <button onClick="<%=viewCocreationDetails%>" class="blue"><i class="fa fa-info-circle" aria-hidden="true"></i> <liferay-ui:message key="details"/></button>   
-								           <%if (isCocreator){%>
-									   		 				 
-									   		 				<button id="deleteCocreation" name="deleteCocreation" class="red" onClick="<%=deleteConfirmation%>"> <i class="fas fa-trash-alt edit-btn red"></i> Delete
-												   		 	</button>
-							                        	<%}%>
-								         </div>
-								    </div>   
-							    
-							     	 
-							     	
-							  </li>
-							      
-							      
-							      
-							      
-							      
-							      
-							       
-							      
-							         				   
+									    	    </div>
+											    <div id="cocreationDate" class="card-text group inner list-group-item-text challengesLeft">
+											    	<b><i class="fa fa-calendar" aria-hidden="true"></i> <label class="aui-field-label"> Co-creation <liferay-ui:message key="createdOn"/></label></b>: <%=formatter.format(cocreation.getCreateDate())%>
+						                    	</div>
+						                    	<div id="desc-"<%=cocreation.getCocreationId()%> class="card-text group inner list-group-item-text  ">
+						                            <span><b><i class="fa fa-align-justify" aria-hidden="true"></i> <label class="aui-field-label"><liferay-ui:message key="description"/></label></b></span> : <span><%=cocreation.getDescription()%></span>
+						                        </div>  	 
+									  		</div>
+								         	<div class="btn-row">
+								           		<%-- <button onClick="<%=viewCocreationDetails%>" class="blue"><i class="fa fa-info-circle" aria-hidden="true"></i> <liferay-ui:message key="details"/></button> --%>   
+								           		<a href="<%=viewCocreationDetails%>" class="btn btn-primary"><i class="fa fa-info-circle" aria-hidden="true"></i><liferay-ui:message key="details"/></a>
+								           		<%if (isCocreator){%>			 
+									   				<button id="deleteCocreation" name="deleteCocreation" class="red" onClick="<%=deleteConfirmation%>"> <i class="fas fa-trash-alt edit-btn red"></i> Delete</button>
+							                   	<%}%>
+								         	</div>
+								    	</div>   
+							  		</li>							         				   
 							   <%
 							   }
 							   %>
-							   </ul>
+						   </ul>
 					   	</div>
 				   </aui:form>
-				   
-				   <script type="text/javascript">
-							function deleteConfirmation(url) {
-								msg = "<%=deleteOperationConfirmation%>";
-								if(confirm(msg)) {
-									window.location.href = url;
-								}else{
-									return false;
-								}
-							}
-						</script>
-						
-						<aui:script use="liferay-portlet-url,aui-io,aui-io-plugin-deprecated,liferay-util-window,aui-base">
-						 	var getOngoingCocreations = Liferay.PortletURL.createRenderURL();
-							getOngoingCocreations.setPortletId('it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet');
-							getOngoingCocreations.setParameter("mvcPath","/ongoing-cocreations.jsp");
-									
-						 	AUI().ready('aui-base','node', 'event', function (A) {
-						 	  A.one("#<portlet:namespace/>filter").on('click',function(event){
-						      	    getOngoingCocreations.setParameter("challengeFilter", A.one('#<portlet:namespace />challengeFilter').val());	
-						            window.location.href=getOngoingCocreations; 
-						      });
-						 	  A.one("#<portlet:namespace/>clearFilter").on('click',function(event){
-						      		A.one('#<portlet:namespace />challengeFilter').val("");	
-						      	    window.location.href=getOngoingCocreations;     
-						      });	
-						      A.one("#<portlet:namespace/>clearSearch").on('click',function(event){
-						      		A.one('#<portlet:namespace />keywords').val("");	
-						      	    window.location.href=getOngoingCocreations;     
-						      });
-						 	});
-						</aui:script>
-				   
-				   
-				   
-		    </div>
-		    
-	    </div>
-				
-		
-		
-		
-		
-		
-		
-		
-		 
-   </div><!-- w-1/4  END-->
+	   			</div>
+	    	</div>	 
+   		</div><!-- w-1/4  END-->
+	</div>		   
 </div>
- 
-    
-				   		  
-			   
-</div>
+				   
+<script type="text/javascript">
+	function deleteConfirmation(url) {
+		msg = "<%=deleteOperationConfirmation%>";
+		if(confirm(msg)) {
+			window.location.href = url;
+		}else{
+			return false;
+		}
+	}
+</script>
 
- 
+<aui:script use="liferay-portlet-url,aui-io,aui-io-plugin-deprecated,liferay-util-window,aui-base">
+ 	var getOngoingCocreations = Liferay.PortletURL.createRenderURL();
+	getOngoingCocreations.setPortletId('it_eng_rd_collaborativecreation_portlet_CollaborativecreationPortlet');
+	getOngoingCocreations.setParameter("mvcPath","/ongoing-cocreations.jsp");
+			
+ 	AUI().ready('aui-base','node', 'event', function (A) {
+ 	  A.one("#<portlet:namespace/>filter").on('click',function(event){
+      	    getOngoingCocreations.setParameter("challengeFilter", A.one('#<portlet:namespace />challengeFilter').val());	
+            window.location.href=getOngoingCocreations; 
+      });
+ 	  A.one("#<portlet:namespace/>clearFilter").on('click',function(event){
+      		A.one('#<portlet:namespace />challengeFilter').val("");	
+      	    window.location.href=getOngoingCocreations;     
+      });	
+      A.one("#<portlet:namespace/>clearSearch").on('click',function(event){
+      		A.one('#<portlet:namespace />keywords').val("");	
+      	    window.location.href=getOngoingCocreations;     
+      });
+ 	});
+</aui:script>
+				   
+	
