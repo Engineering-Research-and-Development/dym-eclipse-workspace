@@ -281,15 +281,15 @@ boolean isCocreator = false;
 							}
 							%>
 		                </div>
-		            </div>
-		            <%if (isCocreator){%>
-                        <aui:button-row>
-				  			<div id="aui_popup_milestonesAndDeadlines_click">
-				       			<aui:button type="button" value="addMilestone" cssClass="btn-outline-info"></aui:button>
-				   			</div>
-				   			<div id="aui_popup_milestonesAndDeadlines_content" ></div>
-						</aui:button-row>             
-		            <%}%>
+		            </div> 
+                    <aui:button-row>
+			  			<div id="aui_popup_milestonesAndDeadlines_click">
+			  			<%if (isCocreator){%>
+			       			<aui:button type="button" value="addMilestone" cssClass="btn-outline-info"></aui:button>
+			       		<%}%>
+			   			</div>
+			   			<div id="aui_popup_milestonesAndDeadlines_content" ></div>
+					</aui:button-row>             
 		         </div>   
 		         <%if (isCocreator){%>
 			         <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
@@ -336,38 +336,12 @@ boolean isCocreator = false;
 				   			<div id="aui_popup_mytodos_content" ></div>
 						</aui:button-row>              
 			         </div>   
+		         <%}else{%>
+		         	<aui:button-row>
+				  		<div id="aui_popup_mytodos_click"></div>
+				   		<div id="aui_popup_mytodos_content"></div>
+					</aui:button-row>          
 		         <%}%>
-		         <%-- <div class="item col-xs-4 col-lg-4" d-pagegroup="1">   
-		            <div class="thumbnail card">
-		                <div class="caption card-body" style="overflow-y:Auto;height:400px;width:100%;overflow-x:hidden">
-		                    <h3 class="co-title">Questions and Feedback</h3>
-						    <div class="col-12 p0 mb-2">
-		          			</div>
-		                    <h3 class="sheet-subtitle"</h3>
-		                    <p id="desc-1" class="card-text group inner list-group-item-text resourse-card">
-		                        <h3 class="sheet-subtitle">Would it be possible to have some clarification ?
-		                    </p>
-		                    <br>
-						   	<p>
-						   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
-			                </p>
-			                <br>
-		                    <p id="desc-2" class="card-text group inner list-group-item-text resourse-card">
-		                        <h3 class="sheet-subtitle">We'll arrange a call as soon as possible.
-		                    </p>
-		                    <br>
-						   	<p>
-						   		<aui:button name="deleteQuestionFeedback" type="button" value="Delete" onClick=""/></h3>	
-			                </p>
-		                </div>
-		            </div>
-                       <aui:button-row>
-			  			<div id="aui_popup_questionsFeedbacks_click">
-			       			<aui:button type="button" value="Add Question or Feedback" cssClass="btn-outline-info"></aui:button>
-			   			</div>
-			   			<div id="aui_popup_questionsFeedbacks_content" ></div>
-				    </aui:button-row>             
-		         </div>    --%>
 		   </div>					   				   
 		   <h3 class="sheet-subtitle"></h3>
 		   <%if (ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getEndDate().after(nowDate) == true && !cocreation.getCompleted()){%>	
