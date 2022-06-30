@@ -20,7 +20,7 @@
 		        <p></p>
 		        <span>° You can <b>upvote</b> challenges to express its relevance. Challenges with more up-votes are listed higher than other challenges.</span></br>
 		        <span>° You can <b>subscribe</b> a specific challenge to get notified about updates. </span></br>
-		        <span>° If you have the role of Challenge author, you can also create a new challenge if you can't find what you need by pressing on <b>'Post new challenge'</b>.</span></br>
+		        <span>° If you have the role of Challenge author and you can't find what you need, you can also create a new challenge by pressing on <b>'Post new challenge'</b>.</span></br>
 		        <p></p>
 		        <span>If you are interested in finding a solution for the challenge, you can send a collaboration request.</span>
 		        <p></p>
