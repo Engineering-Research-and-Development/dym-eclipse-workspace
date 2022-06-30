@@ -175,7 +175,6 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 				 <%if(isChallengeOwner){%>
 	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary btn-hover"><i class="fa fa-plus" aria-hidden="true"></i> <liferay-ui:message key="postNewChallenge"/></a>
 	     	     <%}%>
-	     	     <a href="#" id="filterbutton" class="btn btn-primary btn-hover"> <i class="fa fa-search" aria-hidden="true"></i> Search</a>
 			 	</div>
 		 	</div> 
 			<div id="search" class="m-1 p-1">
@@ -234,22 +233,32 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 											<div id="tags" class="challengesLeft">
 											    <span><b><label class="aui-field-label"><i class="fa fa-tag" aria-hidden="true"></i> Tags</label></b></span> : <span>	
 											  	<%
-												for (Hashtag tag : HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId())) {
+											  	Iterator<Hashtag> hashtagsIt = HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId()).iterator();
+											  	while(hashtagsIt.hasNext()){
 												%>
-													<%-- <span><a href="">#<%=tag.getName()%></a></span> --%>
-													<span><%=tag.getName()%></span>	
-												<% 
+													<span><%=hashtagsIt.next().getName()%></span>	
+													<%
+											      	if (hashtagsIt.hasNext()){
+											      	%>
+									      				<span><label class="aui-field-label">,</label></span>
+													<%
+											      	}		
 												}
 												%>
 											</div> 
 											<div id="categories" class="challengesLeft">
 												<span><b><label class="aui-field-label"><i class="fa fa-cog" aria-hidden="true"></i> <liferay-ui:message key="categories"/></label></b></span> : <span>	
 									    	  	<%
-												for (Category cat : CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId())) {
+									    	  	Iterator<Category> categoriesIt = CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId()).iterator();
+									    	  	while(categoriesIt.hasNext()){
 												%>
-													<%-- <span><a href="">#<%=cat.getName()%></a></span> --%>
-													<span><%=cat.getName()%></span>	
-												<% 
+													<span><%=categoriesIt.next().getName()%></span>	
+													<%
+											      	if (categoriesIt.hasNext()){
+											      	%>
+									      				<span><label class="aui-field-label">,</label></span>
+													<%
+											      	}		
 												}
 												%>
 									     	</div>

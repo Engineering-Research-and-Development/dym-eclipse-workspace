@@ -146,7 +146,7 @@ cocreationsSize = filteredCocreations.size();
 							</div>		
 						</div>					 
 					</div>	
-					<div class="col col-lg-12 col-sm-12 col-12 col-md-12">	
+					<%-- <div class="col col-lg-12 col-sm-12 col-12 col-md-12">	
 						<div class="co-box mt-2 mb-4 card-1">
 							<label class="aui-field-label co-title">Co-creation</label> 
 							<aui:form name="searchForm" action="<%=search%>" method="post">
@@ -159,11 +159,22 @@ cocreationsSize = filteredCocreations.size();
 						    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
 							</aui:form>
 						</div>	 
-					</div>
+					</div> --%>
 		    	</div>
-		     <!-- Colonna contenuto -->
-		     <div class="col-12 col-md-9">
-		           <aui:form action="" name="<portlet:namespace />fm">
+		    	<div class="col col-lg-9 col-sm-9 col-9 col-md-12"> 
+				  	<div class="m-1 p-1"">
+				  		<label class="aui-field-label co-title">Co-creation</label> 
+					    <aui:form name="searchForm" action="<%=search%>" method="post">
+							<%if (isChallengeOwner){%>
+				    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left" label="" size="256" value=""/> 
+				    	 	<%}else{%>
+				    	 		<aui:input id="keywords" name="keywords" placeholder="titleDescription" inlineLabel="left" label="" size="256" value=""/>
+				    	 	<%}%>
+					    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
+					    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
+						</aui:form>
+				 	</div>
+			        <aui:form action="" name="<portlet:namespace />fm">
 					 	<div id="products" class="row">
 					   		<ul class="cards">
 						   		<%
@@ -212,14 +223,15 @@ cocreationsSize = filteredCocreations.size();
 									         		</label>
 								          		</div>
 								        		<p class="user-id" style="font-size: 1rem;"><a href="<%=viewChallengeDetails%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getTitle() %></a>  </p>
+								        		<b><i class="fa fa-calendar" aria-hidden="true"></i> <label class="aui-field-label">Challenge</label></b>
 								        		<div id="postedBy" class="challengesLeft">
-													<span><b><label class="aui-field-label"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> <liferay-ui:message key="postedBy"/></label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span>
+													<span><b><label class="aui-field-label"><!-- <i class="fa fa-calendar-check-o" aria-hidden="true"></i> --> <liferay-ui:message key="postedBy"/></label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %></a></label></span>
 									       		</div>
 								        		<div id="startDate" class="challengesLeft">
-													<span><b><label class="aui-field-label"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> <liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getStartDate()) %></span>
+													<span><b><label class="aui-field-label"><!-- <i class="fa fa-calendar-check-o" aria-hidden="true"></i> --> <liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getStartDate()) %></span>
 									       		</div>
 									       		<div id="endDate" class="challengesLeft">
-													<span><b><label class="aui-field-label"><i class="fa fa-calendar-times-o" aria-hidden="true"></i> <liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getEndDate()) %></span>
+													<span><b><label class="aui-field-label"><!-- <i class="fa fa-calendar-times-o" aria-hidden="true"></i> --> <liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getEndDate()) %></span>
 									       		</div>
 											    <div id="cocreators" class="challengesLeft">
 							                    		<b><i class="fa fa-user" aria-hidden="true"></i> <label class="aui-field-label">Co-creators</label></b>: 
@@ -247,9 +259,9 @@ cocreationsSize = filteredCocreations.size();
 											    <div id="cocreationDate" class="card-text group inner list-group-item-text challengesLeft">
 											    	<b><i class="fa fa-calendar" aria-hidden="true"></i> <label class="aui-field-label"> Co-creation <liferay-ui:message key="createdOn"/></label></b>: <%=formatter.format(cocreation.getCreateDate())%>
 						                    	</div>
-						                    	<div id="desc-"<%=cocreation.getCocreationId()%> class="card-text group inner list-group-item-text  ">
+						                    	<%-- <div id="desc-"<%=cocreation.getCocreationId()%> class="card-text group inner list-group-item-text  ">
 						                            <span><b><i class="fa fa-align-justify" aria-hidden="true"></i> <label class="aui-field-label"><liferay-ui:message key="description"/></label></b></span> : <span><%=cocreation.getDescription()%></span>
-						                        </div>  	 
+						                        </div>   --%>	 
 									  		</div>
 								         	<div class="btn-row">
 								           		<%-- <button onClick="<%=viewCocreationDetails%>" class="blue"><i class="fa fa-info-circle" aria-hidden="true"></i> <liferay-ui:message key="details"/></button> --%>   

@@ -109,6 +109,8 @@ boolean isCocreator = false;
    </div>
    <aui:form id="formCocreation" name="fm" method="post" enctype="multipart/form-data" action="<%= updateCocreationURL.toString() %>">
    	   <aui:fieldset> 
+   	   	   <span><b>Challenge Owner : </b><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getUserName()%></a></span>
+		   <br>	
 	       <div id="cocreators" class="challengesLeft">
 				<span><b><label class="aui-field-label">Co-creators : </label></b></span>
 		   </div>
@@ -152,8 +154,11 @@ boolean isCocreator = false;
 	    	    <aui:input label="description" name="description" id="description" type="textarea" value="<%=cocreation.getDescription()%>" required="true"/>
 	            <aui:select label="status" id="completed" name="completed" showEmptyOption="false" required="true">
 				    <aui:option selected="<%=true%>" value="<%=cocreation.getCompleted()%>"><%=cocreation.getCompleted() == true ?  "Completed" : "To complete"%></aui:option>
-				    <aui:option selected="<%=false%>" value="true">Completed</aui:option>
-				    <aui:option selected="<%=false%>" value="false">To complete</aui:option>
+				    <%if (!cocreation.getCompleted()){%>
+				    	<aui:option selected="<%=false%>" value="true">Completed</aui:option>
+				    <%}else{%>
+				    	<aui:option selected="<%=false%>" value="false">To complete</aui:option>
+				    <%}%>
 			    </aui:select>
 		   <%}%>
 		   <div class="col-12 col-md-12">
@@ -386,11 +391,11 @@ boolean isCocreator = false;
 				 	<div class="pb-2">
 				 		<aui:button-row>
 				  			<div id="aui_popup_requestToCocreate_click">
-				  				<%if (isCocreator){%>
+				  				<%-- <%if (isCocreator){%>
 				       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info" disabled="true"></aui:button>
 				       			<%}else{%>
 				       				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
-				       			<%}%>
+				       			<%}%> --%>
 				   			</div>
 				   			<div id="aui_popup_requestToCocreate_content" ></div>
 						</aui:button-row>  
@@ -415,10 +420,9 @@ boolean isCocreator = false;
   %>								
   <liferay-ui:panel-container extended="<%=false%>" id="guestbookCollaborationPanelContainer" persistState="<%=true%>">
 		<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id="guestbookCollaborationPanel" persistState="<%=true%>" title="">
-			<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
   			<liferay-comment:discussion className="<%=Cocreation.class.getName()%>"
-						classPK="<%=entry.getEntryId()%>"
-						formAction="<%=discussionURL%>" formName="fm2"
+						classPK="<%=entry.getClassPK()%>"
+						formName="fm2"
 						discussion="<%= discussion %>"
 						ratingsEnabled="<%=true%>" redirect="<%=currentURL%>"
 						userId="<%=entry.getUserId()%>" />

@@ -167,15 +167,6 @@ public class CollaborativecreationPortlet extends MVCPortlet {
 	    super.render(renderRequest, renderResponse);
 	}
 	
-	@Override
-	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
-			throws IOException, PortletException {
-		
-		_log.info("CollaborativecreationPortlet - processAction Method");
-		
-		super.processAction(actionRequest, actionResponse);
-    }
-	
 	@ProcessAction(name = "addChallenge")
 	public void addChallenge(ActionRequest request, ActionResponse response)
 	        throws PortalException, SystemException, ParseException {
