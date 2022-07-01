@@ -339,9 +339,9 @@ while(cocreationsIt.hasNext()){
 					       			 }%>
 					   			</div>
 					   			<div id="aui_popup_content" ></div>
-					   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
+					   			<%-- <%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
 					   				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
-					   			<%}%>
+					   			<%}%> --%>
 							</aui:button-row>  
 						</div>
 				   </div>
