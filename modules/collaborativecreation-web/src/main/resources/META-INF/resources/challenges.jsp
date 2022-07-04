@@ -177,7 +177,7 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 	     	     <%}%>
 			 	</div>
 		 	</div> 
-			<div id="search" class="m-1 p-1">
+			<div id="challengesSearch" class="m-1 p-1">
 				<aui:form name="searchForm" action="<%=search%>" method="post">
 		    	 	<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left" label="" size="256" value=""/> 
 			    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
