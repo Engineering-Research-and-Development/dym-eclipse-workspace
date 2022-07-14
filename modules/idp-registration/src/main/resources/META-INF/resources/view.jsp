@@ -16,29 +16,25 @@
 
 <script type="text/javascript">
 
-jQuery(document).ready(function(){
-	jQuery("#roleContainer").toggle();
-		         
-		    
-		});
-
-jQuery(document).on('change','#orgType',function(event){
-			 
-			    var dataValue=$(this).val();
-			    if(dataValue=="DIH"){
-				    event.preventDefault();
-				    jQuery("#roleContainer").slideToggle(200);
-				    jQuery("#roleContainer").addClass("active");
-			    }else{
-			    	
-			    	if( jQuery("#roleContainer").hasClass("active") ){
-			    		jQuery("#roleContainer").toggle();
-			    		jQuery("#roleContainer").removeClass("active")
-			    	 }
-			    }
-			    
-			
-});
+	jQuery(document).ready(function(){
+		jQuery("#questionAddContentContainer").toggle();
+	});
+	
+	jQuery(document).on('change','#orgType',function(event){
+	    var dataValue=$(this).val();
+	    
+	    if(dataValue=="DIH"){
+		    event.preventDefault();
+		    jQuery("#questionAddContentContainer").slideToggle(200);
+		    jQuery("#questionAddContentContainer").addClass("active");
+	    }else{
+	    	
+	    	if( jQuery("#questionAddContentContainer").hasClass("active") ){
+	    		jQuery("#questionAddContentContainer").toggle();
+	    		jQuery("#questionAddContentContainer").removeClass("active")
+	    	 }
+	    }
+	});
 
    function <portlet:namespace />validateFm(event){
     	
@@ -46,22 +42,55 @@ jQuery(document).on('change','#orgType',function(event){
 		jQuery('#errorMessage').hide();
 		let isValid = true;
 		let msg = '';
+		var lettersspaces = /^[a-zA-Z\s]+$/;
+		var lettersNumbersSpaces = /^[a-zA-Z0-9._-\s]+$/;
 		
-		if (matchRegex(jQuery('#username').val(),'[^A-Za-z0-9,._-]')){
-			msg += ' <%=LanguageUtil.get(request, "the-username-must-contain")%><br/>';
+		if (isOver30('name')){
+			msg += ' <%=LanguageUtil.get(request, "name-has-more-than-x-characters")%><br/>';
 			isValid = false;
 		}
-			
+		if (isOver30('surname')){
+			msg += ' <%=LanguageUtil.get(request, "surname-has-more-than-x-characters")%><br/>';
+			isValid = false;
+		}
+		if (!matchRegex(jQuery('#name').val(),lettersspaces)){
+			msg += ' <%=LanguageUtil.get(request, "the-name-must-contain")%><br/>';
+			isValid = false;
+		}
+		if (!matchRegex(jQuery('#surname').val(),lettersspaces)){
+			msg += ' <%=LanguageUtil.get(request, "the-surname-must-contain")%><br/>';
+			isValid = false;
+		}
+		if (!matchRegex(jQuery('#organizationName').val(),lettersNumbersSpaces)){
+			msg += ' <%=LanguageUtil.get(request, "the-organization-name-must-contain")%><br/>';
+			isValid = false;
+		}
+		if (!isNull('organization-role')){
+			if (!matchRegex(jQuery('#organization-role').val(),lettersNumbersSpaces)){
+				msg += ' <%=LanguageUtil.get(request, "the-organization-role-must-contain")%><br/>';
+				isValid = false;
+			}
+		}
+// 		if (matchRegex(jQuery('#username').val(),'[^A-Za-z0-9,._-]')){
+<%-- 			msg += ' <%=LanguageUtil.get(request, "the-username-must-contain")%><br/>'; --%>
+// 			isValid = false;
+// 		}
 		if (!jQuery('#termsOfUseCheckbox').is(":checked")){
 			msg += ' <%=LanguageUtil.get(request, "you-must-accept-terms-of-use")%><br/>';
 			isValid = false;
 		} 
-		
 		if (jQuery('#password1').val() != jQuery('#password2').val()) {
 			msg += ' <%=LanguageUtil.get(request, "you-have-to-enter-the-same-password")%><br/>';
 			isValid = false;
-		} 
-
+		}
+		
+		if (!isNull('website')){
+			if(!isValidURL('website')){
+				msg += ' <%=LanguageUtil.get(request, "please-enter-a-valid-url")%><br/>';
+				isValid = false;
+			}
+		}
+		
 		if (!isValid){
 			event.preventDefault();
 			jQuery('#errorMessage').html(msg);
@@ -70,26 +99,44 @@ jQuery(document).on('change','#orgType',function(event){
 // 		isValid=false;
 // 		console.log('isValid');
 		return isValid;	
+
     }
-    
+   
+   function isValidURL(id) {
+		  var value = jQuery('#'+id).val();
+		  var result = value.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+		  console.log('isValidURL ',result);
+		  if(result == null)
+		        return false;
+		    else
+		        return true;
+   };
+   
     function matchRegex(val, pattern) {
-		var pattern = new RegExp(pattern);
-		if (val.match(pattern)) {
+		if (pattern.test(val)) {
 			return true;
 		}
 		return false;
 	}
     
-    function isNull(val){
-    	if(!$.trim(this.val).length) {
-    		return false;
+    function isNull(id){
+    	if (jQuery('#'+id).val().length === 0) {
+    		return true
     	}
-    	return true;
+    	return false
+    }
+    
+    function isOver30(id){
+    	if (jQuery('#'+id).val().length > 30) {
+    		return true
+    	}
+    	return false
     }
 </script>
 
 <portlet:actionURL name="addUser" var="addUserURL"></portlet:actionURL>
 <div id="idpFormRegistrationContainer">
+
 <aui:form action="<%= addUserURL.toString() %>" name="signUpFm" id="<portlet:namespace/>registration" method="post" enctype='multipart/form-data' onSubmit='<%= "return " + renderResponse.getNamespace() + "validateFm(event);" %>'>
 		
 
@@ -121,11 +168,11 @@ jQuery(document).on('change','#orgType',function(event){
  				
  				
  				
-                    <div class="form-group "><label class="control-label" for="username" ><liferay-ui:message key="username"/>*</label>
-                        <div><input class="form-control" id="username" maxlength="30" type="text" value="" name="username" required />
-                        <span><label class="control-label"><liferay-ui:message key="you-can-use-letteres-numbers"/></label></span>
-                        </div>
-                    </div>
+<!--                     <div class="form-group "><label class="control-label" for="username" ><liferay-ui:message key="username"/>*</label> -->
+<!--                         <div><input class="form-control" id="username" maxlength="30" type="text" value="" name="username" required /> -->
+<!--                         <span><label class="control-label"><liferay-ui:message key="you-can-use-letteres-numbers"/></label></span> -->
+<!--                         </div> -->
+<!--                     </div> -->
                     <div class="form-group "><label class="control-label" for="email"><liferay-ui:message key="e-mail"/>*</label>
                         <div><input class="form-control" id="email" type="email" value="" name="email"  required /></div>
                     </div>
@@ -153,12 +200,29 @@ jQuery(document).on('change','#orgType',function(event){
 						</span>
                     </div>
                     
-                    
-                    <div class="form-group" id="roleContainer">
-						<span><label class="control-label" for="organization-role"><liferay-ui:message key="organization-role"/>*</label>
-                        <input class="form-control" id="organization-role" type="text" value="" name="organization-role"  /></span>
-					</div>
-                    
+                    <div class="form-group" id="questionAddContentContainer">
+<!-- 					<span><label class="control-label" for="organization-role"><liferay-ui:message key="organization-role"/>*</label> -->
+<!--                    <input class="form-control" id="organization-role" type="text" value="" name="organization-role"  /></span> -->
+						    
+						<div class="row userAddContent">
+							<div class="col-4 userAddContentLabel">  
+								<span>
+									<label class="control-label" for="organization-role">
+										<liferay-ui:message key="would-you-like-to-be-enabled-to-insert-content-into-the-portal"/>
+									</label>
+								</span> 
+							</div>
+							<div class="col-8">
+								<label class="switch2">
+									<input type="checkbox" 
+										d="<portlet:namespace />addContent" 
+										name="<portlet:namespace />addContent" >
+								  <span class="slider2"></span>
+								</label>
+							</div>
+							
+						</div>
+					</div>                   
                     
 					<div class="form-group">
 						<span><label class="control-label" for="organization-name"><liferay-ui:message key="organization-name"/>*</label>
@@ -166,7 +230,7 @@ jQuery(document).on('change','#orgType',function(event){
 					</div>
 					
 					<div class="form-group">
-						<span><label class="control-label" for="organization-web"><liferay-ui:message key="website"/>*</label>
+						<span><label class="control-label" for="organization-web"><liferay-ui:message key="website"/></label>
                         <input class="form-control" id="website" type="text" value="" name="organizationWeb"  /></span>
 					</div>
 					

@@ -1,5 +1,7 @@
 package it.eng.rd.dymer.search;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -29,9 +31,17 @@ public class DymerEntryKeywordQueryContributor implements KeywordQueryContributo
     booleanQuery, searchContext, Field.TITLE, false);
         queryHelper.addSearchLocalizedTerm(
     booleanQuery, searchContext, Field.CONTENT, false);
+       /* queryHelper.addSearchLocalizedTerm(
+        	    booleanQuery, searchContext, "type", false);*/
+        
     }
 
     @Reference
     protected QueryHelper queryHelper;
 
 }
+
+
+
+
+

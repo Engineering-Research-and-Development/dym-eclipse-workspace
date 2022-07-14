@@ -1,6 +1,7 @@
 package it.eng.rd.idp.registration.portlet;
 
 import com.liferay.captcha.util.CaptchaUtil;
+import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.captcha.CaptchaException;
@@ -19,6 +20,8 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -41,6 +44,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -158,7 +162,13 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 		if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 			organizationTypelist = StringUtil.trim(portletPreferences.getValue("organizationTypelist", _idpRegistrationConfiguration.organizationTypelist()));
 		}
-
+		
+		boolean addContentEnabled = false;	
+		String addContent = ParamUtil.getString(request, "addContent");
+		if (addContent.equalsIgnoreCase("on")) {
+			addContentEnabled = true;
+		}
+		
 		try{
 		    CaptchaUtil.check(request);
 		    if (_log.isDebugEnabled()) {
@@ -166,19 +176,66 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 		    }
 		    
 		    UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(request);
-			String email = StringUtil.trim(uploadRequest.getParameter("email"));
-			String username = StringUtil.trim(uploadRequest.getParameter("username"));
+			String email =  uploadRequest.getParameter("email");
+			if (Validator.isNotNull(email)) {
+				email = StringUtil.trim(email);
+			}
+/*			String username = uploadRequest.getParameter("username");
+			if (Validator.isNotNull(username)) {
+				username = StringUtil.trim(username);
+			}*/
 			String password = uploadRequest.getParameter("password1");
 			String password2 = uploadRequest.getParameter("password2");
-			String organizationType = StringUtil.trim(ParamUtil.getString(uploadRequest, "orgType"));
-			String organizationName = StringUtil.trim(uploadRequest.getParameter("organizationName"));
+			String organizationType = ParamUtil.getString(uploadRequest, "orgType");
+			if (Validator.isNotNull(organizationType)) {
+				organizationType =	StringUtil.trim(organizationType);
+				organizationType = HtmlUtil.escape(organizationType);
+			}
+			String organizationName = uploadRequest.getParameter("organizationName");
+			if (Validator.isNotNull(organizationType)) {
+				organizationName = StringUtil.trim(organizationName);
+				organizationName =  HtmlUtil.escape(organizationName);
+			}
 			String termsOfUseEnable = uploadRequest.getParameter("termsOfUseCheckbox");
 			
-			username = HtmlUtil.escape(username);
-			organizationName =  HtmlUtil.escape(organizationName);
-			organizationType = HtmlUtil.escape(organizationType);
+			String name = uploadRequest.getParameter("name");
+			if (Validator.isNotNull(name)) {
+				name = StringUtil.trim(name);
+				name = HtmlUtil.escape(name);
+			}
+			String surname = uploadRequest.getParameter("surname");
+			if (Validator.isNotNull(surname)) {
+				surname = StringUtil.trim(surname);
+				surname = HtmlUtil.escape(surname);
+			}
+			String username = StringPool.BLANK;
+			String dName = StringPool.BLANK;
+			String dSurname = StringPool.BLANK;
 			
-			validate(request, username, email, password, password2, organizationName, organizationType, organizationTypelist, termsOfUseEnable);
+			if (Validator.isNotNull(name) && Validator.isNotNull(surname)) {
+				dName = name;
+				dSurname = surname;
+				
+				name = name.replaceAll("\\s+","");
+				surname = surname.replaceAll("\\s+","");
+				username = name.toLowerCase() +StringPool.PERIOD + surname.toLowerCase();
+			}
+			int usernameMaxLenght = 30;
+			if (username.length() > usernameMaxLenght) {
+				username = username.substring(0, usernameMaxLenght);
+				_log.info("The username has been truncated to thirty characters: "+username);
+			}
+			
+			/*String organizationRole = StringPool.BLANK;
+			if (Validator.isNotNull(uploadRequest.getParameter("organization-role"))) {
+				organizationRole = StringUtil.trim(uploadRequest.getParameter("organization-role"));
+			}*/
+			String website = uploadRequest.getParameter("organizationWeb");
+			if (Validator.isNotNull(website)) {
+				website = StringUtil.trim(website);
+			}
+			
+			validate(request, username, email, password, password2, organizationName, organizationType, organizationTypelist, termsOfUseEnable, name, surname, website);
 			
 			if (_log.isDebugEnabled()) {
 				_log.debug("------------------Configuration Info----------------");
@@ -187,6 +244,12 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 				_log.debug("idmEmailAdminNotification: "+idmEmailAdminNotification);
 //				_log.debug("idmPasswordAdmin: "+idmPasswordAdmin);	
 				_log.debug("idmUserEnabled: "+idmUserEnabled);
+				_log.debug("name: "+name);
+				_log.debug("surname: "+surname);
+				_log.debug("username: "+username);
+				_log.debug("dName: "+dName);
+				_log.debug("dSurname: "+dSurname);
+				_log.debug("----------------------------------------------------");
 			}
 			
 			try (CloseableHttpClient client = HttpClients.createDefault()) {
@@ -225,6 +288,7 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 						childData.put("password", password);
 						childData.put("domain_id", "default");
 						childData.put("extra", visible_attributes);
+						childData.put("description", dName+StringPool.PIPE+dSurname);
 						parentData.put("user", childData);
 						    
 						HttpPost postAddUser = new HttpPost(idmUrl+IdpRegistrationPortletKeys.IDM_API_USERS);
@@ -260,40 +324,29 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 							if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 								from = portletPreferences.getValue("from", _idpRegistrationConfiguration.from());
 							}
-							String projectName = "";
+							String projectName = StringPool.BLANK;
 							if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 								projectName = portletPreferences.getValue("projectName", _idpRegistrationConfiguration.projectName());
 							}
-							String logoLiferayPortalUrl = "";
+							String logoLiferayPortalUrl = StringPool.BLANK;
 							if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 								logoLiferayPortalUrl = portletPreferences.getValue("logoLiferayPortalUrl", _idpRegistrationConfiguration.logoLiferayPortalUrl());
 							}
-							String liferayPortalName = "";
+							String liferayPortalName = StringPool.BLANK;
 							if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 								liferayPortalName = portletPreferences.getValue("liferayPortalName", _idpRegistrationConfiguration.liferayPortalName());
 							}
-							String liferayPortalUrl = "";
+							String liferayPortalUrl = StringPool.BLANK;
 							if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 								liferayPortalUrl = portletPreferences.getValue("liferayPortalUrl", _idpRegistrationConfiguration.liferayPortalUrl());
 							}
-							String copyrightCompany = "";
+							String copyrightCompany = StringPool.BLANK;
 							if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 								copyrightCompany = portletPreferences.getValue("copyrightCompany", _idpRegistrationConfiguration.copyrightCompany());
 							}
-							String copyrightCompanyUrl = "#";
+							String copyrightCompanyUrl = StringPool.POUND;
 							if (Validator.isNotNull(_idpRegistrationConfiguration)) {
 								copyrightCompanyUrl = portletPreferences.getValue("copyrightCompanyUrl", _idpRegistrationConfiguration.copyrightCompanyUrl());
-							}
-							
-							if (_log.isDebugEnabled()) {
-								_log.debug("subject: "+mailSubject);
-								_log.debug("from: "+from);
-								_log.debug("projectName: "+projectName);
-								_log.debug("logoLiferayPortalUrl: "+logoLiferayPortalUrl);
-								_log.debug("liferayPortalName: "+liferayPortalName);
-								_log.debug("liferayPortalUrl: "+liferayPortalUrl);
-								_log.debug("copyrightCompany: "+copyrightCompany);
-								_log.debug("copyrightCompanyUrl: "+copyrightCompanyUrl);
 							}
 							
 							Mailer mailer = new Mailer();
@@ -304,10 +357,22 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 							if (locale.getLanguage().equalsIgnoreCase("it")) {
 								msgNewAccount = " Nuovo Account";
 							}
-							//send mail to IDM admin
-							mailer.sentMail(projectName + msgNewAccount, from, projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, idmEmailAdminNotification, email, password, idmUrl, true, idmUserEnabled, organizationType, organizationName, copyrightCompany, copyrightCompanyUrl);
-							//send mail to user registered
-							mailer.sentMail(mailSubject, from, projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, email, email, password, idmUrl, false, idmUserEnabled, organizationType, organizationName, copyrightCompany, copyrightCompanyUrl);
+							String question = StringPool.BLANK;
+							String reply = StringPool.BLANK;
+							_log.info("sending mail to IDM admin");
+							
+							if (organizationType.equalsIgnoreCase("DIH")) {
+								question = "Would you like to be enabled to insert content into the portal?";
+								if (addContentEnabled) {
+									reply = "Yes.";
+								} else {
+									reply = "No.";
+								}
+							}
+							
+							mailer.sentMail(projectName + msgNewAccount, from, projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, idmEmailAdminNotification, email, password, idmUrl, true, idmUserEnabled, organizationType, organizationName, copyrightCompany, copyrightCompanyUrl, dName, dSurname, question, reply, website);
+							_log.info("send mail to registered user");
+							mailer.sentMail(mailSubject, from, projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, email, email, password, idmUrl, false, idmUserEnabled, organizationType, organizationName, copyrightCompany, copyrightCompanyUrl, dName, dSurname, question, reply, website);
 						} else {
 							JSONObject responseMessage = jsonObjectAddUser.getJSONObject ("error");
 							String message = responseMessage.getString("message");
@@ -361,17 +426,22 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 	}
 	
 	private void validate(ActionRequest request,
-			 String username, String email, String password1, String password2, String organizationName, String organizationType, String organizationTypelist, String termsOfUseEnable)
+			 String username, String email, String password1, String password2, String organizationName, String organizationType, String organizationTypelist, String termsOfUseEnable,
+			 String name, String surname, String website)
 		throws PortalException, PortletException {
 		
 		if (_log.isDebugEnabled()) {
 			_log.debug("------------------New user Info---------------------");
-			_log.debug("username escaped: "+username);
+//			_log.debug("username escaped: "+username);
+			_log.debug("name: "+name);
+			_log.debug("surname: "+surname);
 			_log.debug("email: "+email);
 //			_log.debug("password: "+password);
 			_log.debug("organizationName (escaped): "+organizationName);
 			_log.debug("organizationType (escaped): "+organizationType);
 			_log.debug("termsOfUseEnable: "+termsOfUseEnable);
+			_log.debug("website: "+website);
+			_log.debug("----------------------------------------------------");
 		}
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -380,14 +450,20 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 		
 		HttpServletRequest httpRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(request));
 		
-		int usernameMaxLenght = 30;
+		int maxLenght = 30;
 		
 		/*
 		 *  fields required
 		 */
 		
-		if (Validator.isNull(username)) {
+/*		if (Validator.isNull(username)) {
 			throw new PortalException("username-is-required");
+		}*/
+		if (Validator.isNull(name)) {
+			throw new PortalException("name-is-required");
+		}
+		if (Validator.isNull(surname)) {
+			throw new PortalException("surname-is-required");
 		}
 		if (Validator.isNull(email)) {
 			throw new PortalException("email-is-required");
@@ -404,6 +480,9 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 		if (Validator.isNull(organizationType)) {
 			throw new PortalException("organization-type-is-required");
 		}
+		/*if (organizationType.equalsIgnoreCase("DIH") && Validator.isNull(organizationRole)) {
+			throw new PortalException("organization-role-is-required");
+		}*/
 		if (Validator.isNull(termsOfUseEnable)) {
 			throw new PortalException("you-must-accept-terms-of-use");
 		}
@@ -418,18 +497,27 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 		/*
 		 * fields valid
 		 */
-		
 		// username
 		DefaultScreenNameValidator defaultScreenNameValidator = new DefaultScreenNameValidator();
 		if (!defaultScreenNameValidator.validate(themeDisplay.getCompanyId(), username)) {
-			throw new PortletException(defaultScreenNameValidator.getDescription(locale));
+			_log.error("Invalid username: "+username);
+			throw new PortletException("check-the-characters-of-name-or-surname");
+//			throw new PortletException(defaultScreenNameValidator.getDescription(locale));
 		}
-		if (username.length() > usernameMaxLenght) {
+		/*if (username.length() > usernameMaxLenght) {
 			String message = LanguageUtil.format(
 					httpRequest, "username-has-more-than-x-characters", usernameMaxLenght,
 					true);
 			throw new PortalException(message);
+		}*/
+		
+		if (name.length() > maxLenght) {
+			throw new PortalException("name-has-more-than-x-characters");
 		}
+		if (surname.length() > maxLenght) {
+			throw new PortalException("surname-has-more-than-x-characters");
+		}
+		
 		// email
 		if (!Validator.isEmailAddress(email)) {
 			throw new PortalException("invalid-email");
@@ -438,6 +526,18 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 		if (!password1.equals(password2)) {
 			throw new PortalException("you-have-to-enter-the-same-password");
 		}
+		Pattern pattern = Pattern.compile("[^a-zA-Z0-9._-]");
+		// organizationName
+		if(matchRegex(organizationName, pattern)) {
+			_log.error("Invalid organization name:"+organizationName);
+			throw new PortalException("the-organization-name-must-contain");
+		};
+		
+		// organizationRole
+		/*if (Validator.isNotNull(organizationRole) && matchRegex(organizationRole, pattern)) {
+			_log.error("Invalid organization role:"+organizationRole);
+			throw new PortalException("the-organization-role-must-contain");
+		}*/
 		// organizationType
 		if (Validator.isNotNull(organizationType)) {
 			String[] organizationType_NAMES = StringUtil.splitLines(organizationTypelist);
@@ -447,15 +547,18 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 				throw new PortalException("organization-type-is-not-valid");
 			}
 		}
-		// organizationName
-		Pattern pattern = Pattern.compile("[^a-zA-Z0-9,._-]");
-		if(matchRegex(organizationName, pattern)) {
-			throw new PortalException("organization-name-is-not-valid");
-		};
-		
+		// website
+		if (Validator.isNotNull(website) && (!Validator.isUrl(website))) {
+			_log.error("Invalid web organization url:"+website);
+			throw new PortalException("please-enter-a-valid-url");
+		}
 	}
 	
 	private boolean matchRegex(String value, Pattern pattern){
+		if (_log.isDebugEnabled()) {
+			_log.debug("Value: " +value);
+			_log.debug("Pattern: " +pattern);
+		}
 		boolean match = false;
         String valueParts =  HtmlUtil.escape(value);
         if (!"".equals(valueParts)) {
@@ -464,7 +567,7 @@ public class IdpRegistrationPortlet extends MVCPortlet {
             	Matcher matcher = pattern.matcher(StringUtil.trim(part));
             	if(matcher.find()) {
             		if (_log.isDebugEnabled())
-                		_log.debug("matchRegex part: " +part);
+                		_log.debug("MatchRegex part: " +part);
             		match = true;
     			}
             }

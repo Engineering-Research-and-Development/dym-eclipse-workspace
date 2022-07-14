@@ -7,9 +7,6 @@ import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.util.ParamUtil;
 
-//import com.liferay.portal.kernel.util.GetterUtil;
-//import com.liferay.util.portlet.PortletProps;
-
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -23,9 +20,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Modified;
 
-import aQute.bnd.annotation.metatype.Meta;
-import it.eng.rd.idp.registration.portlet.configuration.IdpRegistrationConfiguration;
 import it.eng.rd.idp.registration.constants.IdpRegistrationPortletKeys;
+import it.eng.rd.idp.registration.portlet.configuration.IdpRegistrationConfiguration;
 
 /**
  * @author ENGRD

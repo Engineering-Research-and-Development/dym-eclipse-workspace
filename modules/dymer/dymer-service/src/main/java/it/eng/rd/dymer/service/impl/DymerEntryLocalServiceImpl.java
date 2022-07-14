@@ -73,7 +73,6 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		entry.setUserName(user.getFullName());
 		entry.setCreateDate(serviceContext.getCreateDate(now));
 		entry.setModifiedDate(serviceContext.getModifiedDate(now));
-		// entry.setExpandoBridgeAttributes(serviceContext);
 		entry.setDymerId(dymerId);
 		entry.setIndex(index);
 		entry.setType(type);
@@ -86,7 +85,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		entry.setExtContent(extContent);
 		
 		if (_log.isDebugEnabled()) {
-			_log.debug("DymerEntryLocalServiceImpl, addDymerEntry method");
+			_log.debug("DymerEntryLocalServiceImpl, addDymerEntry method-----------------------------");
 			
 			_log.debug("uuid: " +serviceContext.getUuid());
 			_log.debug("userId: " +serviceContext.getUserId());
@@ -101,8 +100,6 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			_log.debug("type: " +type);
 			_log.debug("id: " +id);
 			_log.debug("url: " +url);
-			_log.debug("title: " +title);
-			_log.debug("extContent: " +extContent);
 		}
 		
 		entry = dymerEntryPersistence.update(entry);
@@ -120,7 +117,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
                 DymerEntry.class.getName(), entryId, entry.getUuid(), 0,
                 serviceContext.getAssetCategoryIds(),
                 serviceContext.getAssetTagNames(), true, true, null, null, null, null,
-                ContentTypes.TEXT_HTML, entry.getExtContent(), null, null, null,
+                ContentTypes.TEXT_HTML, entry.getTitle(), entry.getExtContent(), entry.getTitle(), null,
                 null, 0, 0, null);
 		
 		if (_log.isDebugEnabled()) 
@@ -133,7 +130,6 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		if (_log.isDebugEnabled()) 
 			_log.debug("generated assetLink");
 		
-		//set permission
 		resourceLocalService.addResources(user.getCompanyId(), groupId, serviceContext.getUserId(),
 			    DymerEntry.class.getName(), entryId, false, true, true);
 
@@ -181,7 +177,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		//entry.setExpandoBridgeAttributes(serviceContext);
 		
 		if (_log.isDebugEnabled()) {
-			_log.debug("DymerEntryLocalServiceImpl, updateDymerEntry method");
+			_log.debug("DymerEntryLocalServiceImpl, updateDymerEntry method-----------------------------");
 			_log.debug("dymerId: " +dymerId);
 			_log.debug("dymerEntryId: " +entryId);
 			_log.debug("userId: " +serviceContext.getUserId());
@@ -195,8 +191,6 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			_log.debug("type: " +type);
 			_log.debug("id: " +id);
 			_log.debug("url: " +url);
-			_log.debug("title: " +title);
-			_log.debug("extContent: " +extContent);
 		}
 
 		entry = dymerEntryPersistence.update(entry);
@@ -208,8 +202,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	              0, serviceContext.getAssetCategoryIds(),
 	              serviceContext.getAssetTagNames(), true, true,
 	              entry.getCreateDate(), null, null, null,
-	              ContentTypes.TEXT_HTML, entry.getExtContent(), null,
-	              null, null, null, 0, 0,
+	              ContentTypes.TEXT_HTML, entry.getTitle(), entry.getExtContent(),
+	              entry.getTitle(), null, null, 0, 0,
 	              serviceContext.getAssetPriority());
 		
 		if (_log.isDebugEnabled()) 
@@ -263,7 +257,6 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		entry.setUserName(user.getFullName());
 		entry.setCreateDate(serviceContext.getCreateDate(now));
 		entry.setModifiedDate(serviceContext.getModifiedDate(now));
-		// entry.setExpandoBridgeAttributes(serviceContext);
 		entry.setDymerId(dymerId);
 		
 		entry.setIndex(index);
@@ -276,21 +269,21 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		entry.setTitle(title);
 		entry.setExtContent(extContent);
 		
-		_log.info("uuid: " +serviceContext.getUuid());
-		_log.info("userId: " +userId);
-		_log.info("groupId: " +groupId);
-		_log.info("companyId: " +user.getCompanyId());
-		_log.info("userName: " +user.getFullName());
-		_log.info("createDate: " +now.toString());
-		_log.info("modifiedDate: " +now.toString());
-		_log.info("dymerId: " +dymerId);
+		if (_log.isDebugEnabled()) {
+			_log.debug("uuid: " +serviceContext.getUuid());
+			_log.debug("userId: " +userId);
+			_log.debug("groupId: " +groupId);
+			_log.debug("companyId: " +user.getCompanyId());
+			_log.debug("userName: " +user.getFullName());
+			_log.debug("createDate: " +now.toString());
+			_log.debug("modifiedDate: " +now.toString());
+			_log.debug("dymerId: " +dymerId);
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+			_log.debug("url: " +url);
+		}
 		
-		_log.info("index: " +index);
-		_log.info("type: " +type);
-		_log.info("id: " +id);
-		_log.info("url: " +url);
-		_log.info("title: " +title);
-		_log.info("extContent: " +extContent);
 		
 		dymerEntryPersistence.update(entry);
 
@@ -302,19 +295,20 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
                 ContentTypes.TEXT_HTML, entry.getExtContent(), null, null, null,
                 null, 0, 0, null);
 		
-		_log.info("generated assetEntry");
+		if (_log.isDebugEnabled())
+			_log.debug("generated assetEntry");
 
 		assetLinkLocalService.updateLinks(userId, assetEntry.getEntryId(),
 		                serviceContext.getAssetLinkEntryIds(),
 		                AssetLinkConstants.TYPE_RELATED);
+		if (_log.isDebugEnabled())
+			_log.debug("generated assetLink");
 		
-		_log.info("generated assetLink");
-		
-		//set permission
 		resourceLocalService.addResources(user.getCompanyId(), groupId, userId,
 			    DymerEntry.class.getName(), entryId, false, true, true);
 
-		_log.info("generated permission");
+		if (_log.isDebugEnabled())
+			_log.debug("generated permission");
 		return entry;
 	}
 	
@@ -355,22 +349,21 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		entry.setUrl(url);
 		entry.setTitle(title);
 		entry.setExtContent(extContent);
-		//entry.setExpandoBridgeAttributes(serviceContext);
-		_log.info("dymerId: " +dymerId);
-		_log.info("dymerEntryId: " +entryId);
-		_log.info("userId: " +userId);
-		_log.info("companyId: " +user.getCompanyId());
-		_log.info("userName: " +user.getFullName());
-		_log.info("createDate: " +now.toString());
-		_log.info("modifiedDate: " +now.toString());
-		_log.info("dymerId: " +dymerId);
 		
-		_log.info("index: " +index);
-		_log.info("type: " +type);
-		_log.info("id: " +id);
-		_log.info("url: " +url);
-		_log.info("title: " +title);
-		_log.info("extContent: " +extContent);
+		if (_log.isDebugEnabled()) {
+			_log.debug("dymerId: " +dymerId);
+			_log.debug("dymerEntryId: " +entryId);
+			_log.debug("userId: " +userId);
+			_log.debug("companyId: " +user.getCompanyId());
+			_log.debug("userName: " +user.getFullName());
+			_log.debug("createDate: " +now.toString());
+			_log.debug("modifiedDate: " +now.toString());
+			_log.debug("dymerId: " +dymerId);
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+			_log.debug("url: " +url);
+		}
 
 		dymerEntryPersistence.update(entry);
 
@@ -385,21 +378,15 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	              null, null, null, 0, 0,
 	              serviceContext.getAssetPriority());
 		
-		_log.info("generated assetEntry");
+		if (_log.isDebugEnabled())
+			_log.debug("generated assetEntry");
 	
 		assetLinkLocalService.updateLinks(userId, assetEntry.getEntryId(),
 		              serviceContext.getAssetLinkEntryIds(),
 		              AssetLinkConstants.TYPE_RELATED);
 		
-		_log.info("generated assetLink");
-		
-//		serviceContext non valorizzato
-//		https://docs.liferay.com/portal/7.0/javadocs/portal-kernel/com/liferay/portal/kernel/service/permission/ModelPermissions.html
-//		resourceLocalService.updateResources(
-//			      user.getCompanyId(), serviceContext.getScopeGroupId(), 
-//			      DymerEntry.class.getName(), entryId, 
-//			      serviceContext.getModelPermissions());
-		
+		if (_log.isDebugEnabled())
+			_log.debug("generated assetLink");
 		
 		return entry;
 	}
@@ -407,18 +394,23 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	@Indexable(type = IndexableType.DELETE)
 	public DymerEntry deleteDymerEntry(DymerEntry entry) throws PortalException, SystemException {
 		
-		_log.info("DymerEntryLocalServiceImpl, deleteDymerEntry method");
-		
+		if (_log.isDebugEnabled()) {
+			_log.debug("DymerEntryLocalServiceImpl, deleteDymerEntry method");
+			_log.debug("entryId "+entry.getEntryId());
+		}
+			
 		dymerEntryPersistence.remove(entry);
 		
 		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
                 DymerEntry.class.getName(), entry.getEntryId());
 		
-		_log.info("removed assetEntry");
+		if (_log.isDebugEnabled())
+			_log.debug("removed assetEntry");
 		
 		assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
 		
-		_log.info("removed assetLink");
+		if (_log.isDebugEnabled())
+			_log.debug("removed assetLink");
 		
 		try {
 			assetEntryLocalService.deleteEntry(assetEntry);
@@ -436,10 +428,6 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	
 	@Indexable(type = IndexableType.DELETE)
     public DymerEntry deleteDymerEntry(long entryId, long userId) throws PortalException, SystemException {
-		_log.info("deleteDymerEntry method");
-		_log.info("entryId "+entryId);
-		_log.info("userId "+userId);
-		
 		DymerEntry entry = dymerEntryPersistence.findByPrimaryKey(entryId);
 
         return deleteDymerEntry(entry);

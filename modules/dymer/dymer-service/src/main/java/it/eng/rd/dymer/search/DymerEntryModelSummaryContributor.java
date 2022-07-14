@@ -1,6 +1,8 @@
 package it.eng.rd.dymer.search;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Summary;
@@ -39,9 +41,18 @@ public class DymerEntryModelSummaryContributor implements ModelSummaryContributo
 		Summary summary = new Summary(
 			document.get(prefix + titleField, titleField),
 			document.get(prefix + contentField, contentField));
+		
+		if (_log.isDebugEnabled()) {
+			_log.debug("titleField: "+titleField);
+			_log.debug("contentField: "+contentField);
+			_log.debug("summary.getTitle: "+summary.getTitle());
+			_log.debug("summary.getContent: "+summary.getContent());
+		}
 
 		summary.setMaxContentLength(200);
 
 		return summary;
 	}
+	
+	private static final Log _log = LogFactoryUtil.getLog(DymerEntryModelSummaryContributor.class);
 }

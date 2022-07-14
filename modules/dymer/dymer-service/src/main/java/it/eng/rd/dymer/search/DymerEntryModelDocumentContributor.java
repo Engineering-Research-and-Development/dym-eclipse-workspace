@@ -37,9 +37,12 @@ public class DymerEntryModelDocumentContributor
     Field.TITLE, defaultLocale.toString());
             String localizedContent = LocalizationUtil.getLocalizedName(
     Field.CONTENT, defaultLocale.toString());
+           /* String localizedType = LocalizationUtil.getLocalizedName(
+            	    "type", defaultLocale.toString());*/
 
             document.addText(localizedTitle, entry.getTitle());
             document.addText(localizedContent, entry.getExtContent());
+           /* document.addText(localizedType, entry.getType());*/
 
             long dymerId = entry.getDymerId();
 

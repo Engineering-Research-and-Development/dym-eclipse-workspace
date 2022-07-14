@@ -1,11 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
-taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
-taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
-taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
+<%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %>
+<%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
+<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+<%@ taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %>
 
 <%@ page import="java.util.List" %>
 <%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
@@ -34,8 +33,6 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ page import="com.liferay.portal.kernel.util.WebKeys" %>
 <%@ page import="com.liferay.portal.kernel.security.permission.ActionKeys" %>
 
-<!-- TODO delete after dymer cookies implementation -->
-
 <%@ page import="com.liferay.portal.kernel.json.JSONFactoryUtil" %>
 <%@ page import="com.liferay.portal.kernel.json.JSONObject" %>
 <%@ page import="com.liferay.portal.kernel.json.JSONArray" %>
@@ -51,6 +48,11 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ page import="com.liferay.portal.kernel.service.CompanyLocalServiceUtil" %>
 
 <%@ page import="com.liferay.portal.kernel.model.User"%>
+<%@page import="com.liferay.portal.kernel.util.Validator" %>
+
+
+<%@ page import="com.liferay.portal.kernel.dao.search.SearchEntry" %>
+<%@ page import="com.liferay.portal.kernel.dao.search.ResultRow" %>
 
 <liferay-theme:defineObjects />
 <portlet:defineObjects />
@@ -61,9 +63,13 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 	JSONObject userInfoJSONObject = JSONFactoryUtil.createJSONObject();
 	JSONArray roleArray = JSONFactoryUtil.createJSONArray();
 	List<Role> roles = currentUser.getRoles();
+	Boolean isAdmin = false;
 	for (Role role : roles) {
 		JSONObject userRole = JSONFactoryUtil.createJSONObject();
 		userRole.put("id", role.getRoleId());
+		if (Validator.isNotNull(role.getName()) && role.getName().equalsIgnoreCase("Administrator")){
+			isAdmin = true;
+		}
 		userRole.put("role", role.getName());
 		roleArray.put(userRole);
 	}

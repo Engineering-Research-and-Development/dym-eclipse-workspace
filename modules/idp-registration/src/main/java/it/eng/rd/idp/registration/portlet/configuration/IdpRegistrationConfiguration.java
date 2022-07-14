@@ -57,4 +57,16 @@ public interface IdpRegistrationConfiguration {
 	@Meta.AD(required = false)
 	public String copyrightCompanyUrl();
 	
+	@Meta.AD(required = false)
+	public String name();
+	
+	@Meta.AD(required = false)
+	public String surname();
+	
+//	@Meta.AD(required = false)
+//	public String organizationRole();
+	
+	@Meta.AD(required = false)
+	public String website();
+	
 }

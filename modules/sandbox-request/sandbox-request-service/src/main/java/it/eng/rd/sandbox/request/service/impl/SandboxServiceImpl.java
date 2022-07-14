@@ -45,19 +45,7 @@ import it.eng.rd.hubcap.sandbox.request.constants.SandboxConstants;
 import it.eng.rd.hubcap.sandbox.request.model.JSONResponse;
 import it.eng.rd.sandbox.request.service.base.SandboxServiceBaseImpl;
 
-/**
- * The implementation of the sandbox remote service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the <code>it.eng.rd.sandbox.request.service.SandboxService</code> interface.
- *
- * <p>
- * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see SandboxServiceBaseImpl
- */
+
 @Component(
 	property = {
 		"json.web.service.context.name=sandbox",	
@@ -89,38 +77,22 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 		JSONObject article;
 		String message = null;
 			
-		long uid2 = ServiceContextThreadLocal.getServiceContext().getUserId();
-		if (LOG.isDebugEnabled())
-			LOG.debug("current user, uid2: "+uid2);
-		long uid = serviceContext.getUserId();
-		User uu = UserServiceUtil.getUserById(uid2);
-		String screenname = uu.getScreenName();
-		 
 		JSONResponse jResponse = new JSONResponse();
-		
-//		List<Team> teams = TeamLocalServiceUtil.getUserTeams(uu.getUserId());	
 		
 		HttpServletRequest httpServletRequest = ServiceContextThreadLocal.getServiceContext().getRequest();
 		
-		List<String> teams = getTeams(httpServletRequest);
-		
-//		if (LOG.isDebugEnabled())
-//			LOG.debug("teams of user: "+teams.toString());		 
+		Object[] obj = getTeamsScreenName(httpServletRequest);
+		List<String> teams = (List<String>) obj[0];
+		String screenname = (String) obj[1];
 					 
 		JSONArray stateArray = JSONFactoryUtil.createJSONArray();	
 			
 		DefaultHttpClient client = new DefaultHttpClient();
-
-		//String sandboxURL = "http://sboxmanager.local/sandboxfromportal/users/accessSandbox";
-		/*test url*/
-		//String sandboxURL = "http://195.201.83.104/api/dservice/api/v1/import/accessSandbox";
 		
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("screenname "+screenname);
 			LOG.debug("sandboxURL "+sandboxAccessService);
 		}
-		
-		
 				 
 		if( !(teams != null && teams.isEmpty() )){
 					 
@@ -205,23 +177,15 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 		JSONObject article;
 		String message = null;
 		
-		long uid2 = ServiceContextThreadLocal.getServiceContext().getUserId();
-		if (LOG.isDebugEnabled())
-			LOG.debug("current user, uid2: "+uid2);
-		long uid = serviceContext.getUserId();
-		 
-		User uu = UserServiceUtil.getUserById(uid2);
-		String screenname = uu.getScreenName();
-		 
 		JSONResponse jResponse = new JSONResponse();
 		 
-//		List<Team> tt= TeamLocalServiceUtil.getUserTeams(uu.getUserId());
 		HttpServletRequest httpServletRequest = ServiceContextThreadLocal.getServiceContext().getRequest();
 		
-		List<String> tt = getTeams(httpServletRequest);
+		Object[] obj = getTeamsScreenName(httpServletRequest);
+		List<String> tt = (List<String>) obj[0];
+		String screenname = (String) obj[1];
 		
 		if (LOG.isDebugEnabled()) {
-//			LOG.debug("teams of user: "+tt.toString());		 
 			LOG.debug("model_id: "+m_id.toString());	
 			LOG.debug("tool_id: "+t_id.toString());
 		}
@@ -335,25 +299,15 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 		JSONObject article;
 		String message = null;
 			
-		long uid2 = ServiceContextThreadLocal.getServiceContext().getUserId();
-		if (LOG.isDebugEnabled())
-			LOG.debug("current user, uid2: "+uid2);
-		long uid= serviceContext.getUserId();
-			 
-		User uu = UserServiceUtil.getUserById(uid2);
-		 
-		String screenname = uu.getScreenName();
-		 
 		JSONResponse jResponse = new JSONResponse();
 		 
-//		List<Team> tt = TeamLocalServiceUtil.getUserTeams(uu.getUserId());	 
-		
 		HttpServletRequest httpServletRequest = ServiceContextThreadLocal.getServiceContext().getRequest();
 		
-		List<String> tt = getTeams(httpServletRequest);
+		Object[] obj = getTeamsScreenName(httpServletRequest);
+		List<String> tt = (List<String>) obj[0];
+		String screenname = (String) obj[1];
 		
 		if (LOG.isDebugEnabled()) {
-//			LOG.debug("teams of user: "+tt.toString());
 			LOG.debug("tool_id "+t_id.toString());
 		}
 			
@@ -441,7 +395,7 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 	}
 	
 	
-	private List<String> getUserInfo(String idm_host, String access_token) throws PortalException {
+	private Object[] getUserInfo(String idm_host, String access_token) throws PortalException {
 		LOG.info("Invoking IDM user endpoint: "+idm_host+SandboxConstants.IDM_USER_INFO);
 		
 		if (LOG.isDebugEnabled()) {
@@ -449,6 +403,7 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 	        LOG.debug("access_token: "+access_token);
 		}
 		List<String> roles = new ArrayList<String>();
+		String username = StringPool.BLANK;
 		try (CloseableHttpClient client = HttpClients.createDefault()) {
 			HttpGet getUserInfo = new HttpGet(idm_host+SandboxConstants.IDM_USER_INFO);
 			getUserInfo.addHeader(SandboxConstants.CONTENT_TYPE,SandboxConstants.APPLICATION_JSON);
@@ -462,8 +417,12 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 				String userInfoResponse = EntityUtils.toString(userInfoEntity);
 				JSONObject userInfoJSON = JSONFactoryUtil.createJSONObject(userInfoResponse);
 				
-				if (LOG.isDebugEnabled())
+				username = userInfoJSON.getString("username");
+				
+				if (LOG.isDebugEnabled()) {
 					LOG.debug("IDM User Info response: "+userInfoJSON.toJSONString());
+					LOG.debug("username: "+username);
+				}
 				
 				JSONArray idmUserRoles = userInfoJSON.getJSONArray("roles");
 				
@@ -479,14 +438,14 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
 				});
 				
 			}
-			return roles;
+			return new Object[]{roles, username};
 			
 		} catch (PortalException | IOException e) {
 			throw new PortalException("An error occurred while invoking IDM user endpoint: " + e.getMessage());
 		}
 	}
 	
-	private List<String> getTeams(HttpServletRequest httpServletRequest) throws PortalException {
+	private Object[] getTeamsScreenName(HttpServletRequest httpServletRequest) throws PortalException {
 		String id = StringPool.BLANK;
 		String id_app = StringPool.BLANK;
 		String idm_host = GetterUtil.getString(PropsUtil.get(SandboxConstants.IDM_HOST));
@@ -498,9 +457,12 @@ public class SandboxServiceImpl extends SandboxServiceBaseImpl {
         }
         
         List<String> roles = new ArrayList<String>();
-        roles = getUserInfo(idm_host, logoutDYMAT);
+        String screenName = StringPool.BLANK;
+        Object[] obj = getUserInfo(idm_host, logoutDYMAT);
+        roles = (List<String>) obj[0];
+        screenName =  (String) obj[1];
         
-        return roles;
+        return new Object[]{roles, screenName};
 	}
 	
 	

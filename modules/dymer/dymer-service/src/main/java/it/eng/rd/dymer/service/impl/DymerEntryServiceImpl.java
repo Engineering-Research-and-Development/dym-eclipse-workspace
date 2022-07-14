@@ -53,7 +53,7 @@ import it.eng.rd.dymer.service.persistence.DymerEntryUtil;
 public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 	
 	String catalague_resource_email = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.CATALOGUE_RESOURCE_EMAIL));
-
+	
 	@JSONWebService(value="update",method="POST")
 	public DymerEntry update(
 			String dymerDomainName,
@@ -68,6 +68,21 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			String extContent
 	) {
 		
+		if (_log.isDebugEnabled()) {
+			_log.debug("DymerEntryServiceImpl, update method---------------------------------------------");
+			
+			_log.debug("dymerDomainName: " +dymerDomainName);
+			_log.debug("emailAddress: " +emailAddress);
+			_log.debug("companyId: " +companyId);
+			_log.debug("groupId: " +groupId);
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+			_log.debug("url: " +url);
+			_log.debug("title: " +title);
+			_log.debug("extContent: " +extContent);
+		}
+		
 		ServiceContext sc = new ServiceContext();
 		sc.setAttribute("dymerDomainName", dymerDomainName);
 		User user;
@@ -78,15 +93,17 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		} catch (NoSuchUserException e) {
 			_log.error("No User with "+emailAddress+" in companyId="+companyId);
 			try {
-				emailAddress = "test@liferay.com";
+				
+				emailAddress = DymerServicePropsKeys.DEFAULT_CATALOGUE_RESOURCE_OWNER;
+				
 				if (Validator.isNotNull(catalague_resource_email)) {
 					emailAddress = catalague_resource_email;
 				}
+				
 				user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
 				sc.setUserId(user.getUserId());
 				sc.setScopeGroupId(groupId);
 				_log.warn("Catalogue Resource [index:"+index+",type:"+",id:"+id+"] is related to "+emailAddress);
-				_log.info("updateDymerEntry1");
 			} catch (PortalException e1) {
 				throw new PortalException(e1);
 			}
@@ -100,8 +117,6 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			sc.setAssetCategoryIds(new long[] {});
 			sc.setAssetTagNames(new String[] {});
 			sc.setAssetLinkEntryIds(new long[] {});
-			
-			_log.info("updateDymerEntry2");
 			
 			return updateDymerEntry(dymerDomainName, emailAddress, companyId, groupId, index, type, id, url, title, extContent, sc);
 		}
@@ -121,7 +136,6 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			ServiceContext sc) {
 		
 		if(_log.isDebugEnabled()){
-			_log.debug("updateDymerEntry method ");
 			_log.debug("sc.userId: "+sc.getUserId());
 			_log.debug("sc.groupId: "+sc.getScopeGroupId());
 		}
@@ -135,38 +149,35 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 				dymerId = DymerLocalServiceUtil.getDymers(groupId).get(0).getDymerId();
 			}
 			
-			// check title and content
-			
 			if (Validator.isNotNull(title)) {
 				int titleMaxLength = ModelHintsUtil.getMaxLength(
 					DymerEntry.class.getName(), "title");
-
-				if (title.length() > titleMaxLength) {
-					title = HtmlUtil.extractText(
-							StringUtil.shorten(title, titleMaxLength));
-				}
 				
-				_log.info("titleMaxLength: "+titleMaxLength);
-				_log.info("title extracted: "+title);
-				if (Validator.isNotNull(title)) {
-					_log.info("title extracted length: "+title.length());
+				title = HtmlUtil.extractText(title);
+				
+				if (_log.isDebugEnabled())
+					_log.debug("title extracted: "+title);
+				
+				if (title.length() > titleMaxLength) {
+					title = StringUtil.shorten(title, titleMaxLength);
+					if (_log.isDebugEnabled()) {
+						_log.debug("titleMaxLength: "+titleMaxLength);
+						_log.debug("shorten title: "+title);
+					}
 				}
 			}
-
+			
 			if (Validator.isNotNull(extContent)) {
-//				int contentMaxLength = ModelHintsUtil.getMaxLength(
-//						DymerEntry.class.getName(), "extContent");
-
-				if (extContent.length() > 32766) {
-					extContent = HtmlUtil.extractText(
-							StringUtil.shorten(extContent, 32700));
-				}
-				_log.info("contentMaxLength: "+32700);
-				_log.info("extContent extracted: "+extContent);
-				if (Validator.isNotNull(extContent)) {
-					_log.info("extContent extracted length: "+extContent.length());
-				}
+				extContent = HtmlUtil.extractText(extContent);
 				
+				if (_log.isDebugEnabled())
+					_log.debug("extContent extracted: "+extContent);
+				
+				if (extContent.length() > DymerServicePropsKeys.MAX_LENGTH) {
+					extContent = StringUtil.shorten(extContent, DymerServicePropsKeys.MAX_LENGTH);
+					if (_log.isDebugEnabled()) 
+						_log.debug("shorten extContent: "+extContent);
+				}
 			}
 			
 			
@@ -213,6 +224,50 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
             String type,
             String id
     ) {
+		if (_log.isDebugEnabled()) {
+			_log.debug("DymerEntryServiceImpl, delete method---------------------------------------------");
+			
+			_log.debug("emailAddress: " +emailAddress);
+			_log.debug("companyId: " +companyId);
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+		}
+        
+        ServiceContext sc = new ServiceContext();
+        
+        DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, id);
+
+        if(dymerEntry != null) {
+            try {
+            	DymerEntryLocalServiceUtil.deleteDymerEntry(dymerEntry.getEntryId());
+            } catch (PortalException e) {
+            	_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"]");
+                _log.error(e, e);
+            }
+        } else {
+            _log.warn("No Dymer resource [index:"+index+", type:"+ type+", id:"+ id+"] found");
+        }
+    }
+	
+	@Deprecated
+	@JSONWebService(value="deleteOLD",method="POST")
+    public void deleteOLD(
+    		String emailAddress,
+    		long companyId,
+            String index,
+            String type,
+            String id
+    ) {
+		if (_log.isDebugEnabled()) {
+			_log.debug("Deprecated DymerEntryServiceImpl, delete method---------------------------------------------");
+			
+			_log.debug("emailAddress: " +emailAddress);
+			_log.debug("companyId: " +companyId);
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+		}
         
         ServiceContext sc = new ServiceContext();
     
@@ -222,7 +277,9 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			sc.setUserId(user.getUserId());
         } catch (NoSuchUserException e) {
 			_log.error("No User with "+emailAddress+" in companyId="+companyId);
-			emailAddress = "test@liferay.com";
+			
+			emailAddress = DymerServicePropsKeys.DEFAULT_CATALOGUE_RESOURCE_OWNER;
+			
 			if (Validator.isNotNull(catalague_resource_email)) {
 				emailAddress = catalague_resource_email;
 			}
@@ -230,7 +287,6 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 				user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
 				sc.setUserId(user.getUserId());
 				_log.warn("Catalogue Resource [index:"+index+",type:"+",id:"+id+"] is related to "+emailAddress);
-				_log.info("updateDymerEntry1");
 			} catch (PortalException e1) {
 				_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"], "+e1.getMessage());
 			}
@@ -238,7 +294,6 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
         	_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"], "+e2.getMessage());
         }
         finally {
-            // uuid
             sc.setUuid(UUID.randomUUID().toString());
             Date now = new Date();
             sc.setCreateDate(now);
@@ -253,6 +308,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 
     }
 	
+	@Deprecated
 	private void dymerEntryDelete(
 			String emailAddress,
     		long companyId,
@@ -262,7 +318,6 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
             ServiceContext sc) {
 		
 		if(_log.isDebugEnabled()){
-			_log.debug("dymerEntryDelete method ");
 			_log.debug("sc.userId: "+sc.getUserId());
 			_log.debug("sc.groupId: "+sc.getScopeGroupId());
 		}
@@ -298,7 +353,9 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			String title,
 			String extContent
 	) {
-		
+		 
+		_log.warn("Invoked deprecated update method ");
+		 
 		ServiceContext sc = new ServiceContext();
 		
 		User user;
@@ -329,25 +386,45 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 				dymerId = DymerLocalServiceUtil.getDymers(groupId).get(0).getDymerId();
 			}
 			
-			// check title and content
-			
 			if (Validator.isNotNull(title)) {
 				int titleMaxLength = ModelHintsUtil.getMaxLength(
 					DymerEntry.class.getName(), "title");
-
-				if (title.length() > titleMaxLength) {
-					title = HtmlUtil.extractText(
-							StringUtil.shorten(title, titleMaxLength));
+				
+				if (Validator.isNotNull(title)) {
+					
+					if (_log.isDebugEnabled()) 
+						_log.debug("title: "+title);
+					
+					title = HtmlUtil.extractText(title);
+					
+					if (_log.isDebugEnabled()) 
+						_log.debug("extracted title: "+title);
+					
+					if (title.length() > titleMaxLength) {
+						title = StringUtil.shorten(title, titleMaxLength);
+						
+						if (_log.isDebugEnabled()) 
+							_log.debug("shorten title: "+title);
+					}
+					
 				}
 			}
 
 			if (Validator.isNotNull(extContent)) {
-				int contentMaxLength = ModelHintsUtil.getMaxLength(
-						DymerEntry.class.getName(), "extContent");
-
-				if (extContent.length() > contentMaxLength) {
-					extContent = HtmlUtil.extractText(
-							StringUtil.shorten(extContent, contentMaxLength));
+				
+				if (_log.isDebugEnabled()) 
+					_log.debug("extContent: "+extContent);
+				
+				extContent = HtmlUtil.extractText(extContent);
+				
+				if (_log.isDebugEnabled()) 
+					_log.debug("extracted extContent: "+extContent);
+				
+				if (extContent.length() > DymerServicePropsKeys.MAX_LENGTH) {
+					extContent = StringUtil.shorten(extContent, DymerServicePropsKeys.MAX_LENGTH);
+					
+					if (_log.isDebugEnabled()) 
+						_log.debug("shorten extContent: "+extContent);
 				}
 			}
 			
@@ -382,7 +459,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			}
 
 		} catch (PortalException e) {
-			_log.error("An error occurred while invoking remote update service");
+			_log.error("An error occurred while invoking update service");
 			_log.error(e,e);
 		}
 		return null;
@@ -398,6 +475,8 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
             String id
     ) {
         
+		 _log.warn("Invoked deprecated delete method ");
+		
         ServiceContext sc = new ServiceContext();
     
         User user;
@@ -422,7 +501,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
             try {
                 DymerEntryLocalServiceUtil.deleteDymerEntry(dymerEntry.getEntryId(), userId);
             } catch (PortalException e) {
-            	_log.error("An error occurred while invoking delete update service");
+            	_log.error("An error occurred while invoking delete service");
     			_log.error(e,e);
             }
                     

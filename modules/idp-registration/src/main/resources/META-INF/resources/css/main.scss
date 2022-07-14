@@ -2,7 +2,59 @@
    margin-top: 30px;
 }
 #idpFormRegistrationContainer .form-group .form-control, [id="wrapper"] #idpFormRegistrationContainer .form-group .cke, [id="wrapper"] #idpFormRegistrationContainer .form-group .table {
-   
-    border: solid var(--form-input-border-width, 1px) #aab3c5;
-    overflow: hidden;
+  border: solid var(--form-input-border-width, 1px) #aab3c5;
+  overflow: hidden;
+}
+
+.userAddContentLabel{
+  margin: auto; 
+  padding: 10px;
+}
+.userAddContent{
+	margin: auto; 
+	border: 3px solid #333798;  
+	padding: 10px;
+}
+.switch2 {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  margin: 16px;
+}
+.switch2 input{
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider2{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #909090;
+  box-shadow: inset 2px 3px 2px rgba(0, 0, 0, 0.2), inset -2px -3px 2px rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  border-radius: 34px;
+  transition: 0.4s;
+}
+.slider2::before{
+  content:'';
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  height: 20px;
+  width: 20px;
+  background-color: #dedede;
+  box-shadow: inset 2px 3px 2px rgba(255, 255, 255, 0.1), inset -2px -3px 2px rgba(0, 0, 0, 0.2), 2px 3px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  transition: 0.4s;
+}
+input:checked + .slider2{
+  background-color: #287d3c;
+}
+input:checked + .slider2::before{
+  transform: translatex(25px);
+  background-color: #5aca75;
 }

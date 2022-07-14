@@ -1,5 +1,6 @@
 package it.eng.rd.dymer.portlet.portlet;
 
+import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -17,6 +18,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
@@ -25,6 +27,8 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -35,6 +39,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import it.eng.rd.dymer.model.Dymer;
+import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.portlet.constants.DymerPortletKeys;
 import it.eng.rd.dymer.service.DymerEntryLocalService;
 import it.eng.rd.dymer.service.DymerLocalService;
@@ -62,7 +67,6 @@ import it.eng.rd.dymer.service.DymerLocalService;
 
 //TODO 
 //baseUrl+"/api/dservice/api/v1/configtool/renderdetail/+_id
-//baseUrl
 
 public class DymerPortlet extends MVCPortlet {
 	
@@ -84,16 +88,6 @@ public class DymerPortlet extends MVCPortlet {
 
 	        List<Dymer> dymers = _dymerLocalService.getDymers(groupId);
 	        
-//	        DynamicQuery queryDymer= DynamicQueryFactoryUtil.forClass(Dymer.class);
-//	        queryDymer.add(PropertyFactoryUtil.forName("groupId").eq(groupId));
-//			List<Dymer> dymersByGroupId = castList(Dymer.class, DymerLocalServiceUtil.dynamicQuery(queryDymer));
-//			if (dymersByGroupId!=null && dymersByGroupId.size()>0){
-//				_log.info("dymersByGroupId!=null && dymersByGroupId.size()>0 ");
-//				_log.info("dymersByGroupId.get(0).dymerId "+dymersByGroupId.get(0).getDymerId());
-//			} else {
-//				_log.info("dymersByGroupId else");
-//			}
-
 	        if (dymers.isEmpty()) {
 	        	_log.info("dymers.isEmpty");
 	        	
@@ -118,21 +112,10 @@ public class DymerPortlet extends MVCPortlet {
 				_log.error(e,e);
 			}
 	        
-	     /*   TEST PERMISSION
-	        User currentUser = PortalUtil.getUser(renderRequest);
-			String currentUserId = String.valueOf(currentUser.getUserId());
-			
-	        PermissionChecker currentUserPermissionChecker = PermissionCheckerFactoryUtil.create(UserLocalServiceUtil.getUser(currentUser.getUserId()));
-	        _log.info("entryId 37558 userId"+currentUser.getUserId()+" "+ DymerEntryPermission.contains(currentUserPermissionChecker, DymerEntryLocalServiceUtil.getDymerEntry(new Long(37558)), ActionKeys.VIEW));
-	        _log.info("entryId 37560 userId"+currentUser.getUserId()+" "+ DymerEntryPermission.contains(currentUserPermissionChecker, DymerEntryLocalServiceUtil.getDymerEntry(new Long(37560)), ActionKeys.VIEW));
-	        _log.info("entryId 37562 userId"+currentUser.getUserId()+" "+ DymerEntryPermission.contains(currentUserPermissionChecker, DymerEntryLocalServiceUtil.getDymerEntry(new Long(37562)), ActionKeys.VIEW));
-	        _log.info("entryId 37701 userId"+currentUser.getUserId()+" "+ DymerEntryPermission.contains(currentUserPermissionChecker, DymerEntryLocalServiceUtil.getDymerEntry(new Long(37701)), ActionKeys.VIEW));
-	        */
 	    }
 	    catch (Exception e) {
 	        throw new PortletException(e);
 	    }
-	    
 
 	    super.render(renderRequest, renderResponse);
 	}
@@ -170,7 +153,6 @@ public class DymerPortlet extends MVCPortlet {
 		JSONObject dymerExtraInfoJSONObject = JSONFactoryUtil.createJSONObject();
 		dymerExtraInfoJSONObject.put("extrainfo", extraInfoJSONObject);
 
-
 		String dymerToken = userInfoJSONObject.toJSONString();
 		String dymerJwt = new String (Base64.getEncoder().encode(dymerToken.getBytes()));
 		
@@ -197,6 +179,38 @@ public class DymerPortlet extends MVCPortlet {
 	    	r.add(clazz.cast(o));
 	    }
 	    return r;
+	}
+	
+	public void deleteEntry(ActionRequest request, ActionResponse response) throws PortalException {
+		long entryId = ParamUtil.getLong(request, "entryId");
+		deleteEntryId(entryId);
+	}
+	
+	public void deleteByAdminAllEntries(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException {
+		long[] dymerEntryIds = ParamUtil.getLongValues(
+				actionRequest, "deleteDymerEntryIds");
+			
+		for (long dymerEntryId : dymerEntryIds) {
+			_log.info("dymerEntryId: "+dymerEntryId);
+			deleteEntryId(dymerEntryId);
+		}
+	}
+	
+	private void deleteEntryId(long entryId) throws PortalException {
+		try {
+			DymerEntry dymerEntry = _dymerEntryLocalService.fetchDymerEntry(entryId);
+
+			if (dymerEntry!=null) {
+				
+				_log.info("Deleting the following catalogue resource: "+dymerEntry.getTitle());
+				_dymerEntryLocalService.deleteDymerEntry(dymerEntry);
+			}
+			_log.info("Deleted entryId: "+entryId +" catalogue resource.");
+
+		}
+		catch (Exception e) {
+			_log.error("An error occurred while deleting entryId: "+entryId+", "+e.getMessage());
+		}
 	}
 	
 	private static final Log _log = LogFactoryUtil.getLog(
