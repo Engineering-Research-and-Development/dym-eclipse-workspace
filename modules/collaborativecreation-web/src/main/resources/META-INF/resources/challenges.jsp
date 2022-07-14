@@ -124,12 +124,12 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 	</div>
     <div class="row">
 	    <div class="col col-lg-3 col-sm-3 col-3 col-md-12">
-			<div id="trending" class="co-box mt-2 mb-4">
+			<div id="trending" class="co-box mt-2 mb-4  card-1">
 		    	<label class="aui-field-label co-title">Trending</label>    
 				<%-- <aui:input label="Top Voted" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input> --%>
 				<aui:input label="sortByVote" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
 			</div>
-			<div id="location" class="co-box mt-2 mb-4">
+			<div id="location" class="co-box mt-2 mb-4 card-1">
 				<label class="aui-field-label co-title"><liferay-ui:message key="location"/></label> 
 				<aui:select label="" id="location" name="location" showEmptyOption="false">
 				    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="selectCountry"/></aui:option>
@@ -142,8 +142,8 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 					%>
 			  </aui:select>
 			</div>
-			<div id="category" class="co-box mt-2 mb-4">
-			  <label class="aui-field-label co-title"><liferay-ui:message key="category"/></label> 
+			<div id="category" class="co-box mt-2 mb-4 card-1">
+			<label class="aui-field-label co-title"><liferay-ui:message key="category"/></label> 
 	          <aui:select label="" id="category" name="category" showEmptyOption="false">
 				    <aui:option selected="<%=true%>" value=""><liferay-ui:message key="selectCategory"/></aui:option>
 				    <%
@@ -154,8 +154,8 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 					}
 					%>
 			  </aui:select>
-		    </div>
-			<div id="challengeStatus" class="co-box mt-2 mb-4">
+		   </div>
+		   <div id="challengeStatus" class="co-box mt-2 mb-4 card-1">
 		    	<label class="aui-field-label co-title"><liferay-ui:message key="status"/></label>
 		    	<aui:input id="active" name="active" label="active" type="checkbox" value="<%=active%>"></aui:input>
 		    	<aui:input id="inactive" name="inactive" label="inactive" type="checkbox" value="<%=inactive%>"></aui:input>
@@ -167,41 +167,40 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 		</div><!-- w-1/4  END-->
 		<div class="col col-lg-9 col-sm-9 col-9 col-md-12">    
 		    <div id="newChallenge" class="m-1 p-1" >
+			 	<div class="rightContent">
 			 	 <portlet:renderURL var="newchallengeURL">
 						<portlet:param name="jspPage" value="/newchallenge.jsp"/>
 						<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
 				 </portlet:renderURL>
 				 <%if(isChallengeOwner){%>
-	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary"><liferay-ui:message key="postNewChallenge"/></a>
+	     	     	<a href="<%=newchallengeURL%>" class="btn btn-primary btn-hover"><i class="fa fa-plus" aria-hidden="true"></i> <liferay-ui:message key="postNewChallenge"/></a>
 	     	     <%}%>
-			</div>
-			</br>
-			<div id="search" class="m-1 p-1">
+			 	</div>
+		 	</div> 
+			<div id="challengesSearch" class="m-1 p-1">
 				<aui:form name="searchForm" action="<%=search%>" method="post">
 		    	 	<aui:input id="keywords" name="keywords" placeholder="titleDescriptionUsername" inlineLabel="left" label="" size="256" value=""/> 
 			    	<aui:button type="submit" value="search" cssClass="append-input-btn"/>
 			    	<aui:button type="button" value="clear" id="clearSearch" name="clearSearch" />
 				</aui:form>
 			</div>
-			</br>
-		    <div id="challenges" class="m-1 p-1"> 
-				<div class="co-abstract row flex-lg-row flex-sm-row flex-row flex-md-row">     	
-			            <div class="col col-lg-10 col-sm-10 col-10 col-md-12">
-	            			 <%
-					   		 if (challengesSize == 0){
-					   		 %>
-					   			<h3 class="co-title"><liferay-ui:message key="thereAreNoChallenges"/></a></h3>
-							 <%
-							 }else{
-						   		 if (filteredChallenges.size() == 0){
-						   		 %>
-						   			<h3 class="co-title"><liferay-ui:message key="youHaveNoChallenges"/></a></h3>
-								 <%
-								 }
-							 }
-							 for (Challenge challenge : filteredChallenges) {
-							 %>
-								<aui:form action="" name="<portlet:namespace />fm">
+			<aui:form action="" name="<portlet:namespace />fm">
+		    		<div id="challenges" class="row"> 
+			             <ul class="cards">
+			            			<%
+							   		if (challengesSize == 0){
+							   		%>
+							   			<h3 class="co-title"><liferay-ui:message key="thereAreNoChallenges"/></a></h3>
+									<%
+									}else{
+								   		 if (filteredChallenges.size() == 0){
+								   		 %>
+								   			<h3 class="co-title"><liferay-ui:message key="youHaveNoChallenges"/></a></h3>
+										 <%
+										 }
+									}
+									for (Challenge challenge : filteredChallenges) {
+									%>
 									<liferay-portlet:actionURL name="deleteChallenge" var="deleteChallengeURL">
 											<portlet:param name="challengeId" value="<%=String.valueOf(challenge.getChallengeId())%>"/>
 											<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
@@ -212,107 +211,101 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 										<portlet:param name="challengeId" value="<%=String.valueOf(challenge.getChallengeId())%>"/>
 										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request)%>"></portlet:param>
 									</portlet:renderURL>
-									<h3 class="sheet-subtitle"></h3>
-			          			    <h3 class="co-title"><a href="<%=viewChallengeDetails%>"><%=challenge.getTitle() %></a></h3>
-						  		    <div class="co-content">
-								    	<%-- <div class="co-summary mb-2">
-								           <%=challenge.getDescription() %>					  
-										</div> --%>
-										<div class="co-info ">
-										    <div class="row mt-2">
-											     <div class="col col-lg-6 col-sm-6 col-6 col-md-6">
-											     	<div id="postedBy" class="challengesLeft">
-											      		<span><b><label class="aui-field-label"><liferay-ui:message key="postedBy"/></label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></label></span>
-					       						 	</div>
-					       						 	<div id="startDate" class="challengesLeft">
-														<span><b><label class="aui-field-label"><liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(challenge.getStartDate()) %></span>
-									       			</div>
-									       			<div id="endDate" class="challengesLeft">
-														<span><b><label class="aui-field-label"><liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(challenge.getEndDate()) %></span>
-									       			</div>
-					     							<%-- <div id="status" class="challengesLeft">
-												    	<span><b><label class="aui-field-label"><liferay-ui:message key="status"/></label></b></span> : <span><%=challenge.getActive() == true ?  "Active" : "Inactive"%></span>
-												    </div>  --%>
-												    <div id="status" class="challengesLeft">
-												    	<span><b><label class="aui-field-label"><liferay-ui:message key="status"/></label></b></span> : <span><label class="aui-field-label"><%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%></label></span>
-												    </div> 
-												    <div id="location" class="challengesLeft">
-												    	<span><b><label class="aui-field-label"><liferay-ui:message key="location"/></label></b></span> : <span><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></span>
-												    </div> 
-												    <div id="tags" class="challengesLeft">
-													    <span><b><label class="aui-field-label">Tags</label></b></span> : <span>	
-											    	  	<%
-														for (Hashtag tag : HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId())) {
-														%>
-															<%-- <span><a href="">#<%=tag.getName()%></a></span> --%>
-															<span><%=tag.getName()%></span>	
-														<% 
-														}
-														%>
-													</div> 
-													<div id="categories" class="challengesLeft">
-														<span><b><label class="aui-field-label"><liferay-ui:message key="categories"/></label></b></span> : <span>	
-											    	  	<%
-														for (Category cat : CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId())) {
-														%>
-															<%-- <span><a href="">#<%=cat.getName()%></a></span> --%>
-															<span><%=cat.getName()%></span>	
-														<% 
-														}
-														%>
-											     	</div>
-										    	</div>
-										    	
-										    	<aui:button-row>
-										         	<a href="<%=viewChallengeDetails%>" class="btn btn-primary"><i class="fa fa-info-circle" aria-hidden="true"></i><liferay-ui:message key="details"/></a>
-										   		 	<!-- <a href="#" class="btn btn-primary "> <i class="fa fa-bell-o" aria-hidden="true"></i> Follow</a> -->
-										   		 	<%if (user != null){
-														if(challenge.getUserId() == user.getUserId()){%>
-												   		 	<aui:button id="deleteChallenge" name="deleteChallenge" type="button" value="delete" onClick="<%=deleteConfirmation%>"/>
-											   		 	<%}%>
-											   		 <%}%>	
-										   		</aui:button-row>	
-									    	</div>
-						        		</div>
-						        	</div>	
-						       	</aui:form> 
-						       	<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="like" /> --%>
-								<%-- <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="stars" /> --%>
-								<liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" />
-						       	<%
-								AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
-						        Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));
-								%>
-						       	<%-- <liferay-ui:panel-container extended="<%=false%>" id='<%="guestbookCollaborationPanelContainer_" + challenge.getChallengeId()%>' persistState="<%=true%>">
-  										<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id='<%="guestbookCollaborationPanel_" + challenge.getChallengeId()%>' persistState="<%=true%>" title="">
-    										<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
-									    	<liferay-comment:discussion className="<%=Entry.class.getName()%>"
-      											classPK="<%=entry.getEntryId()%>"
-      											formAction="<%=discussionURL%>" formName="fm2"
-      											discussion="<%= discussion %>"
-      											ratingsEnabled="<%=true%>" redirect="<%=PortalUtil.getCurrentURL(request)%>"
-      											userId="<%=entry.getUserId()%>" />
-      									</liferay-ui:panel>
-								</liferay-ui:panel-container> --%>
-							 <%
-							 }
-							 %>
-			           	</div>    
-			  		</div>	    
-				</div>
-	  	</div><!-- w-3/4 END -->
-	</div> 
-</div><!-- container -->
+									<li class="user-card-item" d-pagegroup="1">
+									    <div class="user-card">
+									      <div class="user-card-pb card__image--fence"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><img class="userProfilePicture" src="https://eu.ui-avatars.com/api/?name=<%=challenge.getUserName()%>&amp;background=222e5a&amp;color=fff"></a></div>			 	 
+									      <div class="user-card-img"></div>
+									      <div class="user-card-cont">
+									        <div class="user-card-title"><a href="<%=viewChallengeDetails%>"><%=challenge.getTitle() %></a></div>
+									        <p class="user-id"><i class="fa fa-map-marker" aria-hidden="true"></i> <liferay-ui:message key="location"/></label> : <span><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></span></p>
+									        <div id="startDate" class="challengesLeft">
+												<span><b><label class="aui-field-label"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> <liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(challenge.getStartDate()) %></span>
+										    </div>
+										    <div id="endDate" class="challengesLeft">
+												<span><b><label class="aui-field-label"><i class="fa fa-calendar-times-o" aria-hidden="true"></i> <liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(challenge.getEndDate()) %></span>
+										    </div>
+						     				<%-- <div id="status" class="challengesLeft">
+											   	<span><b><label class="aui-field-label"><liferay-ui:message key="status"/></label></b></span> : <span><%=challenge.getActive() == true ?  "Active" : "Inactive"%></span>
+											</div>  --%>
+											<div id="status" class="challengesLeft">
+											   	<span><b><label class="aui-field-label"><i class="fa fa-lightbulb-o" aria-hidden="true"></i> <liferay-ui:message key="status"/></label></b></span> : <span><label class="aui-field-label"><%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%></label></span>
+											</div> 
+											<div id="tags" class="challengesLeft">
+											    <span><b><label class="aui-field-label"><i class="fa fa-tag" aria-hidden="true"></i> Tags</label></b></span> : <span>	
+											  	<%
+											  	Iterator<Hashtag> hashtagsIt = HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId()).iterator();
+											  	while(hashtagsIt.hasNext()){
+												%>
+													<span><%=hashtagsIt.next().getName()%></span>	
+													<%
+											      	if (hashtagsIt.hasNext()){
+											      	%>
+									      				<span><label class="aui-field-label">,</label></span>
+													<%
+											      	}		
+												}
+												%>
+											</div> 
+											<div id="categories" class="challengesLeft">
+												<span><b><label class="aui-field-label"><i class="fa fa-cog" aria-hidden="true"></i> <liferay-ui:message key="categories"/></label></b></span> : <span>	
+									    	  	<%
+									    	  	Iterator<Category> categoriesIt = CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId()).iterator();
+									    	  	while(categoriesIt.hasNext()){
+												%>
+													<span><%=categoriesIt.next().getName()%></span>	
+													<%
+											      	if (categoriesIt.hasNext()){
+											      	%>
+									      				<span><label class="aui-field-label">,</label></span>
+													<%
+											      	}		
+												}
+												%>
+									     	</div>
+										  </div>
+									      <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" />
+									      <%
+										  AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Challenge.class.getName(), challenge.getChallengeId());
+									      Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scopeGroupId, Challenge.class.getName(), entry.getEntryId(), new ServiceContextFunction(request));
+										  %>
+										  <div class="btn-row">
+											  <%-- <div class="btn-row"><button onClick="<%=viewChallengeDetails%>" class="blue"><i class="fa fa-info-circle" aria-hidden="true"></i> <liferay-ui:message key="details"/></button> --%>
+											  <a href="<%=viewChallengeDetails%>" class="btn btn-primary"><i class="fa fa-info-circle" aria-hidden="true"></i><liferay-ui:message key="details"/></a>
+											  <%if (user != null){
+													if(challenge.getUserId() == user.getUserId()){%>
+											   		 	<button id="deleteChallenge" name="deleteChallenge"  class="red" onClick="<%=deleteConfirmation%>"> <i class="fas fa-trash-alt edit-btn red"></i> Delete</button>
+										   		 	<%}%>
+										   	  <%}%>
+									   	  </div>
+									    </div>
+								    </li>
+								 <%
+			 					 }
+			 					%>	
+						   </ul>
+					  </div>
+			  </aui:form>  	 	 
+	   	 </div>    	  		    
+	</div>
+</div><!-- w-3/4 END -->
+	
+<script>
+$(document).ready(function(){
+     $("#search").toggle();
+     $("#filterbutton").click(function(event){
+          event.preventDefault();
+     	  $("#search").slideToggle(200);
+  	});
+});
 
-<script type="text/javascript">
-	function deleteConfirmation(url) {
-		msg = "<%=deleteOperationConfirmation%>";
-		if(confirm(msg)) {
-			window.location.href = url;
-		}else{
-			return false;
-		}
+function deleteConfirmation(url) {
+	msg = "<%=deleteOperationConfirmation%>";
+	if(confirm(msg)) {
+		window.location.href = url;
+	}else{
+		return false;
 	}
+}
 </script>
 
 <aui:script use="liferay-portlet-url,aui-io,aui-io-plugin-deprecated,liferay-util-window,aui-base">

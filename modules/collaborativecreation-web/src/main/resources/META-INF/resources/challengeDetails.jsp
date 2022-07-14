@@ -75,11 +75,6 @@ while(cocreationsIt.hasNext()){
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
-					<%if (isChallengeOwner){%>
-						<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
-					<%}else{%>
-						<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
-					<%}%>
 				</aui:nav>	
 				<aui:nav cssClass="nav-tabs nav-co-tabs">
 					<portlet:renderURL var="challengesURL">
@@ -176,48 +171,79 @@ while(cocreationsIt.hasNext()){
 			        <div class=" pb-2 borderGroup">
 			        	  <%if (readonly){%>	
 			              		<label class="control-label">Tags</label>
+			              		<select label="Tags*" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" disabled="true">
+								    <%
+									for (AssetTag assetTag : assetTags) {
+										if (HashtagLocalServiceUtil.getHashtag(challenge.getChallengeId(), assetTag.getName()) == null){
+										%>
+											<option value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
+										<% 
+										}else{
+										%>
+											<option selected value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
+										<%
+										}
+									}
+									%>
+						  		</select>
 			              <%}else{%>
 			              		<label class="control-label">Tags*</label>
-			              <%}%>
-				          <select label="Tags*" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" required>
-							    <%
-								for (AssetTag assetTag : assetTags) {
-									if (HashtagLocalServiceUtil.getHashtag(challenge.getChallengeId(), assetTag.getName()) == null){
-									%>
-										<option value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
-									<% 
-									}else{
-									%>
-										<option selected value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
-									<%
+			              		<select label="Tags*" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" required>
+								    <%
+									for (AssetTag assetTag : assetTags) {
+										if (HashtagLocalServiceUtil.getHashtag(challenge.getChallengeId(), assetTag.getName()) == null){
+										%>
+											<option value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
+										<% 
+										}else{
+										%>
+											<option selected value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
+										<%
+										}
 									}
-								}
-								%>
-						  </select>
+									%>
+						  		</select>
+			              <%}%>
+				          
 					</div>
 			    </div>
 				<div class="col-sm-6 col-md-6">
 			        <div class=" pb-2 borderGroup">
 			        	  <%if (readonly){%>	
 			              		<label class="control-label"><liferay-ui:message key="categories"/></label>
+			              		<select label="" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" disabled="true">
+								    <%
+									for (AssetCategory assetCategory : assetCategories) {
+										if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), assetCategory.getName()) == null){
+										%>
+											<option value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
+										<%
+										}else{
+										%>
+											<option selected value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
+										<%
+										}
+									}
+									%>
+							  </select>
 			              <%}else{%>
 			              		<label class="control-label"><liferay-ui:message key="categories"/>*</label>
-			              <%}%>
-				          <select label="" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
-							    <%
-								for (AssetCategory assetCategory : assetCategories) {
-									if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), assetCategory.getName()) == null){
-									%>
-										<option value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
-									<%
-									}else{
-									%>
-										<option selected value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
-									<%
+			              		<select label="" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
+								    <%
+									for (AssetCategory assetCategory : assetCategories) {
+										if (CategoryLocalServiceUtil.getCategory(challenge.getChallengeId(), assetCategory.getName()) == null){
+										%>
+											<option value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
+										<%
+										}else{
+										%>
+											<option selected value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
+										<%
+										}
 									}
-								}
-								%>
-						  </select>
+									%>
+							  </select>
+			              <%}%>
 					</div>
 			   </div>
 			   <div class="col-sm-6 col-md-6">
@@ -272,53 +298,6 @@ while(cocreationsIt.hasNext()){
 			   			<h3 class="sheet-subtitle"></h3>
 			   		</div>
 			   </div>
-		       <%-- <div class="col-12 col-md-12">
-	       	   		<div class="pb-2">	
-						<h3 class="sheet-subtitle">View pictures</h3>
-						<% 
-						String fileURL = "";
-						for (FileEntry file : fileEntries) {    
-							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if ((file.getExtension().equalsIgnoreCase("jpeg") || 
-								 file.getExtension().equalsIgnoreCase("jpg")  ||
-								 file.getExtension().equalsIgnoreCase("png")) && 	
-								 file.getFileName().startsWith("CHALLENGE_")){
-							%>	
-								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
-						 	<%
-							}
-						 }
-						 %>
-					</div>
-			   </div>
-			   <div class="col-12 col-md-12">
-	       	   		<div class="pb-2">	
-			   			<h3 class="sheet-subtitle"></h3>
-			   		</div>
-			   </div>
-			   <div class="col-12 col-md-12">
-	       	   		<div class="pb-2">	
-						<h3 class="sheet-subtitle">Attached Documents</h3>
-						<% 
-						for (FileEntry file : fileEntries) {    
-							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if ((!file.getExtension().equalsIgnoreCase("jpeg") && 
-								 !file.getExtension().equalsIgnoreCase("jpg")  &&
-								 !file.getExtension().equalsIgnoreCase("png")) && 	
-								  file.getFileName().startsWith("CHALLENGE_")){
-							%>	
-								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
-						 	<%
-							}
-						 }
-						 %>
-					</div>
-			   </div>
-			   <div class="col-12 col-md-12">
-	       	   		<div class="pb-2">	
-			   			<h3 class="sheet-subtitle"></h3>
-			   		</div>
-			   </div> --%>
 			   <%if (challenge.getUserId() == user.getUserId()){%>
 				   <div class="col-sm-6 col-md-6">
 			       	   <div class="pb-2">
@@ -360,9 +339,9 @@ while(cocreationsIt.hasNext()){
 					       			 }%>
 					   			</div>
 					   			<div id="aui_popup_content" ></div>
-					   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
+					   			<%-- <%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
 					   				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
-					   			<%}%>
+					   			<%}%> --%>
 							</aui:button-row>  
 						</div>
 				   </div>
@@ -371,18 +350,18 @@ while(cocreationsIt.hasNext()){
 					 	<div class="pb-2">
 					 		<aui:button-row>
 					  			<div id="aui_popup_click">
-					  				<%if (challenge.getUserId() == user.getUserId()){%>
+					  				<%-- <%if (challenge.getUserId() == user.getUserId()){%>
 					       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info" disabled="true"></aui:button>
 					       			<%}else{
 					       			    if (!isCocreator){%>
 					       					<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
 					       			    <%}	
-					       			 }%>
+					       			 }%> --%>
 					   			</div>
 					   			<div id="aui_popup_content" ></div>
-					   			<%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
+					   			<%-- <%if (challenge.getUserId() != user.getUserId() && isCocreator){%>
 					   				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
-					   			<%}%>
+					   			<%}%> --%>
 							</aui:button-row>  
 						</div>
 				   </div>
@@ -409,10 +388,9 @@ while(cocreationsIt.hasNext()){
 	%>								
    	<liferay-ui:panel-container extended="<%=false%>" id="guestbookCollaborationPanelContainer" persistState="<%=true%>">
 		<liferay-ui:panel collapsible="<%=true%>" extended="<%=true%>" id="guestbookCollaborationPanel" persistState="<%=true%>" title="">
-			<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
   			<liferay-comment:discussion className="<%=Challenge.class.getName()%>"
-						classPK="<%=entry.getEntryId()%>"
-						formAction="<%=discussionURL%>" formName="fm2"
+						classPK="<%=entry.getClassPK()%>" 
+						formName="fm2"
 						discussion="<%= discussion %>"
 						ratingsEnabled="<%=true%>" redirect="<%=currentURL%>"
 						userId="<%=entry.getUserId()%>" />
