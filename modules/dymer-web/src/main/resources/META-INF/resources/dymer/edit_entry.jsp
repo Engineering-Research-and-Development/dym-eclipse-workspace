@@ -1,3 +1,1 @@
 <%@ include file="../init.jsp"%>
-
-

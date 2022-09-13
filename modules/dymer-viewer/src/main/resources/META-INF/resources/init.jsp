@@ -5,7 +5,6 @@
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-
 <%@ page import="it.eng.rd.dymer.portlet.configuration.DymerViewerConfiguration" %>
 <%@ page import="it.eng.rd.dymer.portlet.constants.DymerViewerPortletKeys" %>
 
@@ -16,10 +15,8 @@
 <%@ page import="com.liferay.portal.kernel.util.GetterUtil" %>
 <%@ page import="com.liferay.portal.kernel.log.Log" %>
 <%@ page import="com.liferay.portal.kernel.log.LogFactoryUtil" %>
-
 <%@ page import="com.liferay.portal.kernel.model.User"%>
 <%@ page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
-
 <%@ page import="java.util.Arrays"%>
 <%@ page import="java.util.List"%>
 
@@ -30,6 +27,7 @@
 <%
 
 	Log _log = LogFactoryUtil.getLog("init.jsp");
+
 	DymerViewerConfiguration dymerViewerConfiguration =	(DymerViewerConfiguration)renderRequest.getAttribute(DymerViewerConfiguration.class.getName());
 	
 	String dymerIp = "";
@@ -139,7 +137,9 @@
 		} 
 	}
 	
-	/* ******************************************* Vertical searchbar ***************************/	
+/* *******************************************************************************************************
+	 Vertical searchbar
+*/	
 	String showVerticalfilter = "";
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		showVerticalfilter = portletPreferences.getValue("showVerticalfilter", dymerViewerConfiguration.showVerticalfilter());
@@ -176,7 +176,9 @@
 	}
 	
 	
-	/********************* end vertical searchbar************************/
+/* *******************************************************************************************************
+	end vertical searchbar
+*/
 	
 	boolean showfilter_ = false;
 	if (showfilter!=null && !showfilter.isEmpty()){
@@ -219,11 +221,7 @@
 			showVerticalfilter_=true;
 		}
 	}
-	
-	
-	
-	
-	
+
 /* *******************************************************************************************************
 	map
 */
@@ -249,10 +247,6 @@
 		map_configuration = portletPreferences.getValue("map_configuration", dymerViewerConfiguration.map_configuration());
 	}
 	
-	String secretKey = "";
-	if (Validator.isNotNull(dymerViewerConfiguration)) {
-		secretKey = portletPreferences.getValue("secretKey", dymerViewerConfiguration.secreKey());
-	}
 // 	String[] checkedRoles = portletPreferences.getValues("checkedRoles", dymerViewerConfiguration.checkedRoles());
 	
 /*	_log.info("[DymerViewerPortlet][init.jsp] dymerIp: "+dymerIp);
@@ -334,7 +328,6 @@
 <c:set var="map_markers_" value="<%=map_markers %>" />
 <c:set var="map_configuration_" value="<%=map_configuration %>" />
 
-<c:set var="secretKey_" value="<%=secretKey %>" />
 <c:set var="dymerFreeHTML_" value="<%=dymerFreeHTML %>" />
 <c:set var="dymerFreeJSON_" value="<%=dymerFreeJSON %>" />
 
@@ -358,3 +351,6 @@
 <script id="dymerurl" src="${dymerIp_}/public/cdn/js/${viewjs}" data-senna-off="true"></script>
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.12.0/css/bootstrap-tour.min.css" rel="stylesheet"> -->
 <!-- <script id="dymertour" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.12.0/js/bootstrap-tour.min.js" data-senna-off="true"></script> -->
+
+
+<!-- upgrade 300822 -->

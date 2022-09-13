@@ -19,6 +19,7 @@
 <%@ page import="com.liferay.portal.kernel.util.StringUtil" %>
 
 <%@ page import="it.eng.rd.idp.registration.portlet.configuration.IdpRegistrationConfiguration" %>
+<%@ page import="it.eng.rd.idp.registration.constants.IdpRegistrationPortletKeys" %>
 
 <liferay-theme:defineObjects />
 <portlet:defineObjects />
@@ -28,6 +29,9 @@
 
 Log _log = LogFactoryUtil.getLog("init.jsp");
 IdpRegistrationConfiguration idpUserRegistrationConfiguration =	(IdpRegistrationConfiguration)renderRequest.getAttribute(IdpRegistrationConfiguration.class.getName());
+
+
+
 
 String idmUrl = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
@@ -55,12 +59,11 @@ if (idmEnable!=null && !idmEnable.isEmpty()){
 		idmEnable_=true;
 	}
 }
-
-String mailSubject = "Collaboration Portal Registration";
+String mailSubject = IdpRegistrationPortletKeys.MAIL_SUBJECT_DEFAULT;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	mailSubject = portletPreferences.getValue("mailSubject", idpUserRegistrationConfiguration.mailSubject());
 }
-String from = "noreply@server.com";
+String from = IdpRegistrationPortletKeys.FROM_DEFAULT;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	from = portletPreferences.getValue("from", idpUserRegistrationConfiguration.from());
 }
@@ -98,7 +101,10 @@ String copyrightCompanyUrl = StringPool.BLANK;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	copyrightCompanyUrl = portletPreferences.getValue("copyrightCompanyUrl", idpUserRegistrationConfiguration.copyrightCompanyUrl());
 }
-
+String templateID = StringPool.BLANK;
+if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
+	templateID = portletPreferences.getValue("templateID", idpUserRegistrationConfiguration.templateID());
+}
 %>
 <c:set var="idmEnable_" value="<%=idmEnable_ %>" />
- 
+ <!-- 050922 -->

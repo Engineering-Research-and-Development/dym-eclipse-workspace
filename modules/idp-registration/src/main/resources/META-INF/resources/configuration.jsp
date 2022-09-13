@@ -22,8 +22,6 @@
 		type="hidden"
 		value="<%= configurationRenderURL %>"
 	/>
-
-
 	<div class="sheet sheet-lg active ddm-form-page lfr-ddm-form-page" data-ddm-page="0">
     
     	<!-- accordion start -->
@@ -114,13 +112,19 @@
 						  	 </div>
 					  	 </div>
 					   </div>
-					   <div class="placeholder row">
-					  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
-						  	 <div class="container_keyget bordercont row">
-								<div class="col-12 span12">
-									<label><liferay-ui:message key="enable-self-registering-users-on-identity-manager"/></label>
-									
-									<input class="field" 
+					   
+					   <div class="placeholder" >
+							<div class="row ">
+								<div class="col-10 idmEnableContentLabel">  
+									<span>
+										<label class="control-label" >
+											<liferay-ui:message key="enable-self-registering-users-on-identity-manager"/>
+										</label>
+									</span> 
+								</div>
+								<div class="col-2">
+									<label class="switch2">
+										<input 
 											id="<portlet:namespace />idmEnable" 
 											name="<portlet:namespace />idmEnable" 
 											onclick="" 
@@ -130,10 +134,27 @@
 											%>
 											checked="checked"
 											<% } %>>
-								    <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails"><br></span></div>
+									  <span class="slider2"></span>
+									</label>
 								</div>
-						  	 </div>
-					   </div>
+							</div>
+						</div>
+					   
+					   
+					   <div class="placeholder row">
+						 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
+							 <div class="container_keyget bordercont row">
+								<div class="col-12 span12">
+									<label><liferay-ui:message key="template-id"/></label>
+									<input class="form-control form-text lfr-input-resource " 
+										id="<portlet:namespace />templateID" 
+										name="<portlet:namespace />templateID" 
+										type="text" 
+										value="<%= templateID %>">
+								</div>
+							 </div>
+						 </div>
+					   
 					</div>
 			 		
 						              
@@ -375,4 +396,4 @@
 		<aui:button type="submit"></aui:button>
 	</aui:button-row>
 </aui:form>
-
+ <!-- 050922 -->

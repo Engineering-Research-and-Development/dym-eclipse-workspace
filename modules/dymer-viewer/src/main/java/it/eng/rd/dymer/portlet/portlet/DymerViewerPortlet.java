@@ -2,29 +2,19 @@ package it.eng.rd.dymer.portlet.portlet;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Company;
-import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CookieKeys;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectSession;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectWebKeys;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.List;
 import java.util.Map;
 
 import javax.portlet.Portlet;
@@ -43,12 +33,11 @@ import org.osgi.service.component.annotations.Modified;
 
 import it.eng.rd.dymer.portlet.configuration.DymerViewerConfiguration;
 import it.eng.rd.dymer.portlet.constants.DymerViewerPortletKeys;
-import it.eng.rd.dymer.portlet.constants.DymerViewerPropsKeys;
-import it.eng.rd.util.crypto.AesCrypto;
-/**
- * @author Viviana Latino
- */
+import it.eng.rd.dymer.portlet.util.crypto.AesCrypto;
 
+/**
+ * @author ENGRD
+ */
 
 @Component(
 	configurationPid = "it.eng.rd.dymer.configuration.DymerViewerConfiguration",
@@ -104,24 +93,9 @@ public class DymerViewerPortlet extends MVCPortlet {
 							_log.debug("RefreshTokenValue: "+openIdConnectSession.getRefreshTokenValue());
 							_log.debug("OpenIdProviderName: "+openIdConnectSession.getOpenIdProviderName());
 							_log.debug("NonceValue: "+openIdConnectSession.getNonceValue());
-//							_log.debug("AccessToken: "+accessToken);	
 						}
 
 						PortletPreferences _portletPreferences = renderRequest.getPreferences();
-						
-						String secretKey = "";
-//						if (Validator.isNotNull(_dymerViewerConfiguration)) {
-//							secretKey = _portletPreferences.getValue("secretKey", _dymerViewerConfiguration.secreKey());
-							secretKey = GetterUtil.getString(PropsUtil.get(DymerViewerPropsKeys.AES_SECRET_KEY));
-							if(Validator.isNotNull(secretKey) && !secretKey.equalsIgnoreCase("")) {
-								accessToken = AesCrypto.encrypt(accessToken, secretKey);
-								if (_log.isDebugEnabled()) {
-									_log.debug("-->secretKey "+secretKey);
-									_log.debug("-->crypted accessToken "+accessToken);
-								}
-							}
-//							_log.info("---->"+AesCrypto.encrypt("a2a81aae2781d5286731b650ed9f44ff230a947b", "xxxxxxxxxxxxxxx"));
-//						}
 						
 						Cookie cookie = new Cookie("DYMAT", accessToken);
 						cookie.setMaxAge(CookieKeys.MAX_AGE);
@@ -137,8 +111,6 @@ public class DymerViewerPortlet extends MVCPortlet {
 
 						CookieKeys.addCookie(originalRequest, PortalUtil.getHttpServletResponse(renderResponse), DYMATNEW);
 						
-					  //---------------new session attribute
-						
 					} catch (Exception e) {
 						 _log.warn("no accessTokenValue, "+e.getMessage());	
 					}
@@ -151,63 +123,20 @@ public class DymerViewerPortlet extends MVCPortlet {
 		super.doView(renderRequest, renderResponse);
 	}
 	
-	
-	/*protected boolean hasValidAccessToken(accessToken, tokenLifetime) {
-
-			AccessToken accessToken = openIdConnectSessionImpl.getAccessToken();
-
-			if (accessToken == null) {
-				return false;
-			}
-
-			long currentTime = System.currentTimeMillis();--> data corrente
-			long lifetime = accessToken.getLifetime() * Time.SECOND; -->dalla config di idm per default 60min
-			long loginTime = openIdConnectSessionImpl.getLoginTime();--> quando accede alle dymer-viewer
-
-			if ((currentTime - loginTime) < lifetime) {
-				return true;
-			}
-
-			return false;
-	}*/
-	
 	private void setCookies(RenderRequest renderRequest, RenderResponse renderResponse) throws PortalException {
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User currentUser = themeDisplay.getUser();
 		
-		JSONObject userInfoJSONObject = JSONFactoryUtil.createJSONObject();
-		JSONArray roleArray = JSONFactoryUtil.createJSONArray();
-		List<Role> roles = currentUser.getRoles();
-		for (Role role : roles) {
-			JSONObject userRole = JSONFactoryUtil.createJSONObject();
-			userRole.put("id", role.getRoleId());
-			userRole.put("role", role.getName());
-			roleArray.put(userRole);
+		String[] jwts = AesCrypto.dymerJwts(currentUser, themeDisplay.getScopeGroupId());
+		
+		String dymerJwt = AesCrypto.encrypting(jwts[0]);
+		if (dymerJwt.equalsIgnoreCase(jwts[0])){	
+			dymerJwt = new String (Base64.getEncoder().encode(dymerJwt.getBytes()));
+			if (_log.isDebugEnabled())
+				_log.debug(" dymerJwt base64: "+dymerJwt);
 		}
-		userInfoJSONObject.put("username", currentUser.getFullName());
-		userInfoJSONObject.put("app_azf_domain", "");
-		userInfoJSONObject.put("authorization_decision", "");
-		userInfoJSONObject.put("id", "");
-		userInfoJSONObject.put("email", currentUser.getEmailAddress());
-		userInfoJSONObject.put("isGravatarEnabled", false);
-		userInfoJSONObject.put("app_id", "");
-		userInfoJSONObject.put("roles", roleArray);
-		JSONObject extraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-		extraInfoJSONObject.put("userId", currentUser.getUserId());
-		extraInfoJSONObject.put("groupId", themeDisplay.getScopeGroupId());
-		extraInfoJSONObject.put("companyId", currentUser.getCompanyId());
-		extraInfoJSONObject.put("cms", "lfr");
-		Company company = CompanyLocalServiceUtil.getCompany(currentUser.getCompanyId());
-	 	extraInfoJSONObject.put("virtualhost", company.getVirtualHostname());
-		userInfoJSONObject.put("extrainfo", extraInfoJSONObject);
 		
-		JSONObject dymerExtraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-		dymerExtraInfoJSONObject.put("extrainfo", extraInfoJSONObject);
-		
-		String dymerToken = userInfoJSONObject.toJSONString();
-		String dymerJwt = new String (Base64.getEncoder().encode(dymerToken.getBytes()));
-		
-		String dymerExtraJwt = new String (Base64.getEncoder().encode((dymerExtraInfoJSONObject.toJSONString()).getBytes()));
+		String dymerExtraJwt = new String (Base64.getEncoder().encode((jwts[1]).getBytes()));
 		
 		Cookie cookie = new Cookie("DYM", dymerJwt);
 		cookie.setMaxAge(CookieKeys.MAX_AGE);

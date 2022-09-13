@@ -1,72 +1,71 @@
 package it.eng.rd.idp.registration.portlet.configuration;
 
-import com.liferay.portal.kernel.util.Validator;
-
 import aQute.bnd.annotation.metatype.Meta;
+import it.eng.rd.idp.registration.constants.IdpRegistrationPortletKeys;
 
 /**
- * @author Liferay
+ * @author ENGRD
  */
 @Meta.OCD(
 	id = "it.eng.rd.idp.registration.portlet.configuration.IdpRegistrationConfiguration"
 )
 public interface IdpRegistrationConfiguration {
-
-	@Meta.AD(required = false)
+	
+	@Meta.AD(deflt = "", required = false)
 	public String idmUrl();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = IdpRegistrationPortletKeys.IDM_ADMIN_DEFAULT, required = false)
 	public String idmEmailAdmin();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = IdpRegistrationPortletKeys.IDM_ADMIN_DEFAULT, required = false)
 	public String idmEmailAdminNotification();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String idmPasswordAdmin();
 	
 	@Meta.AD(required = false)
 	public String idmEnable();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String projectName();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String logoLiferayPortalUrl();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String liferayPortalName();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String liferayPortalUrl();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String mailSubject();
-	
-	@Meta.AD(required = false)
+
+	@Meta.AD(deflt = IdpRegistrationPortletKeys.FROM_DEFAULT, required = false)
 	public String from();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String termsOfUseUrl();
-	
-	@Meta.AD(required = false)
+		
+	@Meta.AD(deflt = IdpRegistrationPortletKeys.DEFAULT_ORGANIZATIONS, required = false)
 	public String organizationTypelist();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = IdpRegistrationPortletKeys.COPYRIGHT_COMPANY_DEFAULT, required = false)
 	public String copyrightCompany();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = IdpRegistrationPortletKeys.COPYRIGHT_COMPANY_URL_DEFAULT, required = false)
 	public String copyrightCompanyUrl();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String name();
 	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String surname();
 	
-//	@Meta.AD(required = false)
-//	public String organizationRole();
-	
-	@Meta.AD(required = false)
+	@Meta.AD(deflt = "", required = false)
 	public String website();
+	
+	@Meta.AD(deflt = "", required = false)
+	public String templateID();
 	
 }

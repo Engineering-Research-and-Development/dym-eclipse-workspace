@@ -6,9 +6,7 @@
 <%@page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil"%>
 <%@ include file="../init.jsp" %>
 
-
 <%
-
 List<Dymer> dymers = DymerLocalServiceUtil.getDymers(themeDisplay.getScopeGroupId());
 
 long dymerId = 0;
@@ -17,8 +15,6 @@ if (dymers!=null && dymers.size()>0){
 	dymerId = dymers.get(0).getDymerId();
 }
 %>
-
-
 
 <c:if test="<%= themeDisplay.isSignedIn() && isAdmin%>">
 <aui:form method="post" name="fm">
@@ -78,11 +74,3 @@ if (dymers!=null && dymers.size()>0){
 	};
 </aui:script>
 </c:if>
-
-
-
-
-
-					
-
-

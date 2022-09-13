@@ -1,24 +1,16 @@
 package it.eng.rd.dymer.portlet.portlet;
 
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Company;
-import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
@@ -43,6 +35,7 @@ import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.portlet.constants.DymerPortletKeys;
 import it.eng.rd.dymer.service.DymerEntryLocalService;
 import it.eng.rd.dymer.service.DymerLocalService;
+import it.eng.rd.dymer.web.util.crypto.AesCrypto;
 
 /**
  * @author ENGRD
@@ -64,9 +57,6 @@ import it.eng.rd.dymer.service.DymerLocalService;
 	},
 	service = Portlet.class
 )
-
-//TODO 
-//baseUrl+"/api/dservice/api/v1/configtool/renderdetail/+_id
 
 public class DymerPortlet extends MVCPortlet {
 	
@@ -124,45 +114,23 @@ public class DymerPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User currentUser = themeDisplay.getUser();
 		
-		JSONObject userInfoJSONObject = JSONFactoryUtil.createJSONObject();
-		JSONArray roleArray = JSONFactoryUtil.createJSONArray();
-		List<Role> roles = currentUser.getRoles();
-		for (Role role : roles) {
-			JSONObject userRole = JSONFactoryUtil.createJSONObject();
-			userRole.put("id", role.getRoleId());
-			userRole.put("role", role.getName());
-			roleArray.put(userRole);
+		String[] jwts = AesCrypto.dymerJwts(currentUser, themeDisplay.getScopeGroupId());
+		
+		String dymerJwt = AesCrypto.encrypting(jwts[0]);
+		if (dymerJwt.equalsIgnoreCase(jwts[0])){	
+			dymerJwt = new String (Base64.getEncoder().encode(dymerJwt.getBytes()));
+			if (_log.isDebugEnabled())
+				_log.debug(" dymerJwt base64: "+dymerJwt);
 		}
-		userInfoJSONObject.put("username", currentUser.getFullName());
-		userInfoJSONObject.put("app_azf_domain", "");
-		userInfoJSONObject.put("authorization_decision", "");
-		userInfoJSONObject.put("id", "");
-		userInfoJSONObject.put("email", currentUser.getEmailAddress());
-		userInfoJSONObject.put("isGravatarEnabled", false);
-		userInfoJSONObject.put("app_id", "");
-		userInfoJSONObject.put("roles", roleArray);
-		JSONObject extraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-		extraInfoJSONObject.put("userId", currentUser.getUserId());
-		extraInfoJSONObject.put("groupId", themeDisplay.getScopeGroupId());
-		extraInfoJSONObject.put("companyId", currentUser.getCompanyId());
-		extraInfoJSONObject.put("cms", "lfr");
-		Company company = CompanyLocalServiceUtil.getCompany(currentUser.getCompanyId());
-	 	extraInfoJSONObject.put("virtualhost", company.getVirtualHostname());
-		userInfoJSONObject.put("extrainfo", extraInfoJSONObject);
 		
-		JSONObject dymerExtraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-		dymerExtraInfoJSONObject.put("extrainfo", extraInfoJSONObject);
-
-		String dymerToken = userInfoJSONObject.toJSONString();
-		String dymerJwt = new String (Base64.getEncoder().encode(dymerToken.getBytes()));
+		String dymerExtraJwt = new String (Base64.getEncoder().encode((jwts[1]).getBytes()));
 		
-		String dymerExtraJwt = new String (Base64.getEncoder().encode((dymerExtraInfoJSONObject.toJSONString()).getBytes()));
 		
 		Cookie cookie = new Cookie("DYM", dymerJwt);
 		cookie.setMaxAge(CookieKeys.MAX_AGE);
 		cookie.setPath("/");
 		
-		Cookie cookieExtra = new Cookie("DYM_EXTRA", dymerJwt);
+		Cookie cookieExtra = new Cookie("DYM_EXTRA", dymerExtraJwt);
 		cookieExtra.setMaxAge(CookieKeys.MAX_AGE);
 		cookieExtra.setPath("/");
 

@@ -102,20 +102,6 @@
 					 </div>
 				  </div>
 			  
-				  <div data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-6">
-					 <div class="ddm-field-container ddm-target h-100" data-field-name="Field63772425">
-						<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
-						<div class="ddm-drag">
-						   <div class="ddm-field" data-field-name="Field63772425">
-							  <div class="form-group"  ><label class="ddm-label" tabindex="0">SecretKey</label>
-							  <input name="<portlet:namespace />secretKey" type="text"  value="<%=secretKey%>"class="form-control ddm-field-text">
-							  <span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field63772425$kUjcTyrP$0$$en_US_fieldDetails">SecretKey<br></span></div>
-						   </div>
-						</div>
-						<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="1"></div>
-					 </div>
-				  </div>
-			  
 		   </div>
 		   <div class="placeholder row">
 			  <div data-ddm-field-page="0" data-ddm-field-row="2" class="col col-ddm col-empty col-md-12">

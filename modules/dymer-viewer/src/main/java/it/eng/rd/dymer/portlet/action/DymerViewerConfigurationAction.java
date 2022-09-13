@@ -26,9 +26,11 @@ import it.eng.rd.dymer.portlet.constants.DymerViewerPortletKeys;
 /**
  * @author ENGRD
  */
+
 @Component(
 	configurationPid = "it.eng.rd.dymer.portlet.configuration.DymerViewerConfiguration",
-	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
+	configurationPolicy = ConfigurationPolicy.OPTIONAL, 
+	immediate = true,
 	property = "javax.portlet.name=" + DymerViewerPortletKeys.DYMERVIEWER,
 	service = ConfigurationAction.class
 )
@@ -89,15 +91,12 @@ public class DymerViewerConfigurationAction
 		String dymerSearch = ParamUtil.getString(actionRequest, "dymerSearch");
 		String postcustomfilter = ParamUtil.getString(actionRequest, "postcustomfilter");
 		
-		
 //		map
 		String typemapdt = ParamUtil.getString(actionRequest, "typemapdt");
 		String dataTable = ParamUtil.getString(actionRequest, "dataTable");
 		String dmapstyle = ParamUtil.getString(actionRequest, "dmapstyle");
 		String map_markers = ParamUtil.getString(actionRequest, "map_markers");
 		String map_configuration = ParamUtil.getString(actionRequest, "map_configuration");
-		
-		String secretKey = ParamUtil.getString(actionRequest, "secretKey");
 		
 		setPreference(actionRequest, "dymerIp", dymerIp);
 		setPreference(actionRequest, "dviewtype", dviewtype);
@@ -120,7 +119,6 @@ public class DymerViewerConfigurationAction
 		setPreference(actionRequest, "showfilter", showfilter);
 		setPreference(actionRequest, "expandedFilter", expandedFilter);
 		setPreference(actionRequest, "placeHolderFilter", placeHolderFilter);
-
 		
 //		search
 		setPreference(actionRequest, "dsearchtype", dsearchtype);
@@ -128,7 +126,6 @@ public class DymerViewerConfigurationAction
 		setPreference(actionRequest, "filtermodel", filtermodel);
 		setPreference(actionRequest, "basefilter", basefilter);
 		setPreference(actionRequest, "customfilter", customfilter);
-		
 		
 //		vertical search
 		setPreference(actionRequest, "showVerticalfilter", showVerticalfilter);
@@ -141,38 +138,6 @@ public class DymerViewerConfigurationAction
 		setPreference(actionRequest, "dmapstyle", dmapstyle);
 		setPreference(actionRequest, "map_markers", map_markers);
 		setPreference(actionRequest, "map_configuration", map_configuration);
-		
-		setPreference(actionRequest, "secretKey", secretKey);
-//		_log.info("secretKey "+secretKey);
-//		String[] defaultCheckedRoles = GetterUtil.getStringValues(PortletProps.get(DymerViewerPortletKeys.CHECKED_ROLES), new String[] {});
-//		String[] checkedRoles = ParamUtil.getParameterValues(actionRequest,"checkedRoles",null);
-//		setPreference(actionRequest, "checkedRoles", defaultCheckedRoles);
-		
-		/*_log.info("dymerIp: " + dymerIp);
-		_log.info("dviewtype: " + dviewtype);
-		_log.info("addModel: " + addModel);
-		_log.info("keyget: " + keyget);
-		_log.info("query: " + query);
-		_log.info("label: " + label);
-		
-		_log.info("autostartsearch: " + autostartsearch);
-		_log.info("showbread: " + showbread);
-		_log.info("showfilter: " + showfilter);
-		
-		_log.info("dsearchtype: " + dsearchtype);
-		_log.info("keyurlget: " + keyurlget);
-		_log.info("filtermodel: " + filtermodel);
-		_log.info("basefilter: " + basefilter);
-		_log.info("customfilter: " + customfilter);
-		
-		_log.info("typemapdt: " + typemapdt);
-		_log.info("dataTable: " + dataTable);
-		_log.info("dmapstyle: " + dmapstyle);
-		_log.info("map_markers: " + map_markers);
-		_log.info("map_configuration: " + map_configuration);
-		
-		*
-		*/
 		
 		super.processAction(portletConfig, actionRequest, actionResponse);
 	}

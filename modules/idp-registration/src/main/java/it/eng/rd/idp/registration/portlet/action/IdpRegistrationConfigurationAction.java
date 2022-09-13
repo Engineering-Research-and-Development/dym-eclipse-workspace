@@ -41,8 +41,6 @@ public class IdpRegistrationConfigurationAction
 			HttpServletResponse httpServletResponse)
 		throws Exception {
 
-//		_log.info("IdpRegistrationPortlet configuration include");
-
 		httpServletRequest.setAttribute(
 				IdpRegistrationConfiguration.class.getName(),
 				_idpRegistrationConfiguration);
@@ -55,11 +53,10 @@ public class IdpRegistrationConfigurationAction
 			PortletConfig portletConfig, ActionRequest actionRequest,
 			ActionResponse actionResponse)
 		throws Exception {
-
+		
 		String idmUrl = ParamUtil.getString(actionRequest, "idmUrl");
 		String idmEmailAdmin = ParamUtil.getString(actionRequest, "idmEmailAdmin");
 		String idmEmailAdminNotification = ParamUtil.getString(actionRequest, "idmEmailAdminNotification");
-		
 		String idmPasswordAdmin = ParamUtil.getString(actionRequest, "idmPasswordAdmin");
 		String idmEnable = ParamUtil.getString(actionRequest, "idmEnable");
 		
@@ -73,13 +70,14 @@ public class IdpRegistrationConfigurationAction
 		String termsOfUseUrl = ParamUtil.getString(actionRequest, "termsOfUseUrl");
 		String copyrightCompany = ParamUtil.getString(actionRequest, "copyrightCompany");
 		String copyrightCompanyUrl = ParamUtil.getString(actionRequest, "copyrightCompanyUrl");
+		String templateID = ParamUtil.getString(actionRequest, "templateID");
 		
 		setPreference(actionRequest, "idmUrl", idmUrl);
 		setPreference(actionRequest, "idmEmailAdmin", idmEmailAdmin);
 		setPreference(actionRequest, "idmEmailAdminNotification", idmEmailAdminNotification);
 		setPreference(actionRequest, "idmPasswordAdmin", idmPasswordAdmin);
 		setPreference(actionRequest, "idmEnable", idmEnable);
-		
+
 		setPreference(actionRequest, "mailSubject", mailSubject);
 		setPreference(actionRequest, "from", from);
 		setPreference(actionRequest, "projectName", projectName);
@@ -90,6 +88,7 @@ public class IdpRegistrationConfigurationAction
 		setPreference(actionRequest, "termsOfUseUrl", termsOfUseUrl);
 		setPreference(actionRequest, "copyrightCompany", copyrightCompany);
 		setPreference(actionRequest, "copyrightCompanyUrl", copyrightCompanyUrl);
+		setPreference(actionRequest, "templateID", templateID);
 		
 		super.processAction(portletConfig, actionRequest, actionResponse);
 	}

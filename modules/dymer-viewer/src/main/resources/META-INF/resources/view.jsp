@@ -6,83 +6,40 @@
 <%@ page import="com.liferay.portal.kernel.json.JSONArray" %>
 <%@ page import="com.liferay.portal.kernel.theme.ThemeDisplay"%>
 <%@ page import="com.liferay.portal.kernel.model.Role" %>
+<%@ page import="com.liferay.portal.kernel.model.Company" %>
+<%@ page import="com.liferay.portal.kernel.service.CompanyLocalServiceUtil" %>
+<%@ page import="com.liferay.portal.kernel.util.CookieKeys" %>
+<%@ page import="com.liferay.portal.kernel.util.PortalUtil" %>
+<%@ page import="com.liferay.portal.kernel.util.Validator" %>
+<%@ page import="com.liferay.portal.kernel.util.GetterUtil" %>
+<%@ page import="com.liferay.portal.kernel.util.PropsUtil" %>
 <%@ page import="java.util.List" %>
-
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Base64" %>
-
-<%@ page import="com.liferay.portal.kernel.model.Company" %>
-<%@ page import="com.liferay.portal.kernel.service.CompanyLocalServiceUtil" %>
-
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
-<%@ page import="com.liferay.portal.kernel.util.CookieKeys" %>
-<%@ page import="com.liferay.portal.kernel.util.PortalUtil" %>
-
 <%@ page import="it.eng.rd.dymer.portlet.configuration.DymerViewerConfiguration" %>
-<%@ page import="it.eng.rd.util.crypto.AesCrypto"%>
+<%@ page import="it.eng.rd.dymer.portlet.util.crypto.AesCrypto"%>
+<%@ page import="it.eng.rd.dymer.portlet.util.Util" %>
 
 <%  
+
+	Log log = LogFactoryUtil.getLog("view.jsp");
+
 	String fglobalsearch = "";
-	fglobalsearch=(fglobalsearch==null)?"":fglobalsearch;
+	fglobalsearch=(fglobalsearch==null) ? "" : fglobalsearch;
 	User currentUser = themeDisplay.getUser();
 	
-	JSONObject userInfoJSONObject = JSONFactoryUtil.createJSONObject();
-	JSONArray roleArray = JSONFactoryUtil.createJSONArray();
-	List<Role> roles = currentUser.getRoles();
-	for (Role role : roles) {
-		JSONObject userRole = JSONFactoryUtil.createJSONObject();
-		userRole.put("id", role.getRoleId());
-		userRole.put("role", role.getName());
-		roleArray.put(userRole);
+	String[] jwts = AesCrypto.dymerJwts(currentUser, themeDisplay.getScopeGroupId());
+	
+	String dymerJwt = AesCrypto.encrypting(jwts[0]);
+	if (dymerJwt.equalsIgnoreCase(jwts[0])){	
+		dymerJwt = new String (Base64.getEncoder().encode(dymerJwt.getBytes()));
+		if (log.isDebugEnabled())
+			log.debug("[dymer-viewer] dymerJwt base64: "+dymerJwt);
 	}
-	userInfoJSONObject.put("username", currentUser.getFullName());
-	userInfoJSONObject.put("app_azf_domain", "");
-	userInfoJSONObject.put("authorization_decision", "");
-	userInfoJSONObject.put("id", "");
-	userInfoJSONObject.put("email", currentUser.getEmailAddress());
-	userInfoJSONObject.put("isGravatarEnabled", false);
-	userInfoJSONObject.put("app_id", "");
-	userInfoJSONObject.put("roles", roleArray);
-	JSONObject extraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-	extraInfoJSONObject.put("userId", currentUser.getUserId());
-	extraInfoJSONObject.put("groupId", themeDisplay.getScopeGroupId());
-	extraInfoJSONObject.put("companyId", currentUser.getCompanyId());
-	extraInfoJSONObject.put("cms", "lfr");
- 	extraInfoJSONObject.put("virtualhost", company.getVirtualHostname());
-	userInfoJSONObject.put("extrainfo", extraInfoJSONObject);
-	
-	JSONObject dymerExtraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-	dymerExtraInfoJSONObject.put("extrainfo", extraInfoJSONObject);
-
-	String dymerToken = userInfoJSONObject.toJSONString();
-	
-	Log log = LogFactoryUtil.getLog("view.jsp");
-	
-	String dymerJwt = new String (Base64.getEncoder().encode(dymerToken.getBytes()));
-	String dymerExtraJwt = new String (Base64.getEncoder().encode((dymerExtraInfoJSONObject.toJSONString()).getBytes()));
-	
-/*	
-	log.info("--->dymerJwt Base64  "+dymerJwt);
-	log.info("--->dymerExtraJwt Base64  "+dymerJwt);
-*/	
-// 	String showbread = portletPreferences.getValue("showbread", dymerViewerConfiguration.showbread());
-// 	boolean roleOkay = Util.isUserRoleOkay(currentUser.getUserId(), themeDisplay.getSiteGroup().getGroupId(), checkedRoles);
-
+	String dymerExtraJwt = new String (Base64.getEncoder().encode((jwts[1]).getBytes()));
 	String dymAT = (String) request.getAttribute("DYMATattribute");
-	
-	if (Validator.isNotNull(secretKey) && !secretKey.equalsIgnoreCase("")) {
-// 		secretKey = portletPreferences.getValue("secretKey", dymerViewerConfiguration.secreKey());
-		
-		dymerJwt = AesCrypto.encrypt(dymerToken, secretKey);
-		dymerExtraJwt = AesCrypto.encrypt(dymerExtraInfoJSONObject.toJSONString(), secretKey);
-/*		
-		log.info("--->secretKey "+secretKey);
-		log.info("--->dymerJwt crypto  "+dymerJwt);
-		log.info("--->dymerExtraJwt crypto  "+dymerExtraJwt);	
-*/
-	}
-	
 %>
 
 <script type="text/javascript">
@@ -233,11 +190,6 @@
 // 				 tour.init();
 
 // 				 tour.start();
-				
-			
-			
-			
-			
 				var str_not_import = "<%=not_import%>";
 				var ar = str_not_import.split(',');
 			
@@ -287,14 +239,6 @@
 			          dsearch = new dymerSearch(<%=  dymerSearch  %> );
 
             <%  }%>
-				
-				
-				
-				
-				
-				
-				
-				
 				
 				
 				//TODO check
@@ -477,8 +421,6 @@
 
        			 <%  }%>
 				
-				
-				
 				//query: { 'query': { 'query' : dymerQueries[0]}},
 				
 				//query: { 'instance': dymerQueries[0] },
@@ -644,11 +586,6 @@
 					</div>
 				</div>
 			</div>
-			
-			
-			
-			
-			
 			
 			
 			<div class="container_" >

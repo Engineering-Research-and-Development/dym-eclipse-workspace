@@ -32,6 +32,6 @@ public class IdpLogoutPropsKeys implements PropsKeys {
 	
 	public static final String IDM_WITHOUT_CUSTOM_LOGOUT ="idm.without.custom.logout";
 	
-	
+	public static final String AES_SECRET_KEY = "aes.secret.key";
 
 }

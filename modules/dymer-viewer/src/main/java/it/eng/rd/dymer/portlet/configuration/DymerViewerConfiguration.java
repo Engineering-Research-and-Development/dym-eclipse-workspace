@@ -3,16 +3,14 @@ package it.eng.rd.dymer.portlet.configuration;
 import aQute.bnd.annotation.metatype.Meta;
 
 /**
- * @author Liferay
+ * @author ENGRD
  */
+
 @Meta.OCD(
 	id = "it.eng.rd.dymer.portlet.configuration.DymerViewerConfiguration"
 )
 public interface DymerViewerConfiguration {
 
-	@Meta.AD(required = false)
-	public String fontColor();
-	
 	@Meta.AD(required = false)
 	public String dymerIp();
 	
@@ -49,7 +47,6 @@ public interface DymerViewerConfiguration {
 	@Meta.AD(required = false)
 	public String dymerFreeHTML();
 	
-	
 //	searchbar
 	@Meta.AD(required = false)
 	public String showfilter();
@@ -75,8 +72,7 @@ public interface DymerViewerConfiguration {
 	@Meta.AD(required = false)
 	public String customfilter();
 	
-	
-	//vertical search
+//vertical search
 	@Meta.AD(required = false)
 	public String showVerticalfilter();
 	
@@ -105,8 +101,4 @@ public interface DymerViewerConfiguration {
 	@Meta.AD(required = false)
 	public String map_configuration();
 	
-//crypto
-	@Meta.AD(required = false)
-	public String secreKey();
-		
 }

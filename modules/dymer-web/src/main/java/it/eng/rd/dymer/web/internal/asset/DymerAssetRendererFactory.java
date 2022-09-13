@@ -39,7 +39,6 @@ public class DymerAssetRendererFactory extends
 	  setSelectable(true); 
 	}         
 	
-	// Add the other methods here
 	@Override
 	public AssetRenderer<Dymer> getAssetRenderer(long classPK, int type) 
 	throws PortalException {

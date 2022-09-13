@@ -1,151 +1,44 @@
 package it.eng.rd.idp.registration.mailer;
 
+import com.liferay.petra.content.ContentUtil;
+import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.exception.NoSuchGroupException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.YearMonth;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Locale;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import it.eng.rd.idp.registration.constants.IdpRegistrationPortletKeys;
+
 
 public class Mailer {
 	
-	private String TMPL = ".tmpl";
-	
-
-	public void sentMail(String mailSubject, String from, String projectName, String logoLiferayPortalUrl, String liferayPortalName, String liferayPortalUrl, String to, String registeredUserEmail, String password, String idmUrl, boolean adminNotification, boolean idmEnabled, String organizationType, String organization, String copyrightCompany, String copyrightCompanyUrl, String name, String surname, String question, String reply, String website) throws AddressException {
-		
-		String ID = StringPool.BLANK; 
-//		if (Validator.isNotNull(GetterUtil.getString(PropsUtil.get("registration.template.id")) {
-			ID = GetterUtil.getString(PropsUtil.get("registration.template.id"));
-//		}
-				
-		String LIFERAY_HOME = PropsUtil.get(PropsKeys.LIFERAY_HOME);
-		
-		MailMessage mailMessage = new MailMessage();
-		int year = YearMonth.now().getYear();
-		String copyrightYear = String.valueOf(year);
-		
-		String body = StringPool.BLANK;
-		Locale locale = LocaleUtil.getDefault();
-		
-		
-		String IT=StringPool.BLANK;
-		if (locale.getLanguage().equalsIgnoreCase("it")) {
-			IT = StringPool.UNDERLINE+locale.getLanguage();
-		}
-//		String IT = StringPool.UNDERLINE+"it";
-		String IDM_ADMIN_NOTIFICATION_TO_ENABLE_REGISTERED_USER = "notification"+ID+IT+TMPL;
-		String IDM_ADMIN_NOTIFICATION_ENABLED_USER = "notification"+ID+"e"+IT+TMPL;
-		String USER_NOTIFICATION_DISABLED_IDM_REGISTRATION = "registration"+ID+IT+TMPL;
-		String USER_NOTIFICATION_ENABLED_REGISTRATION = "registration"+ID+"e"+IT+TMPL;
-		
-		
-		if (_log.isDebugEnabled()) {
-			_log.debug("------------------Configuration Template----------------");
-			_log.debug("LIFERAY_HOME: "+LIFERAY_HOME);
-			_log.debug("ID (ex. _portalName_DDMMYYYY): "+ID);
-			_log.debug("default language: "+locale.getLanguage());
-			
-			_log.debug("template IDM_ADMIN_NOTIFICATION_TO_ENABLE_REGISTERED_USER: "+IDM_ADMIN_NOTIFICATION_TO_ENABLE_REGISTERED_USER);
-			_log.debug("template USER_NOTIFICATION_DISABLED_IDM_REGISTRATION: "+USER_NOTIFICATION_DISABLED_IDM_REGISTRATION);
-			_log.debug("template USER_NOTIFICATION_ENABLED_REGISTRATION: "+USER_NOTIFICATION_ENABLED_REGISTRATION);
-			_log.debug("template USER_NOTIFICATION_ENABLED_REGISTRATION: "+USER_NOTIFICATION_ENABLED_REGISTRATION);
-			
-			_log.debug("------------------Template Info----------------");
-			
-			_log.debug("mailSubject: "+mailSubject);
-			_log.debug("from: "+from);
-			_log.debug("projectName: "+projectName);
-			_log.debug("logoLiferayPortalUrl: "+logoLiferayPortalUrl);
-			_log.debug("liferayPortalName: "+liferayPortalName);
-			_log.debug("liferayPortalUrl: "+liferayPortalUrl);
-			_log.debug("to: "+to);
-			_log.debug("registeredUserEmail: "+registeredUserEmail);
-			_log.debug("password: "+password);
-			_log.debug("idmUrl: "+idmUrl);
-			_log.debug("adminNotification: "+adminNotification);
-			_log.debug("idmEnabled: "+idmEnabled);
-			_log.debug("organizationType: "+organizationType);
-			_log.debug("organization: "+organization);
-			_log.debug("copyrightCompany: "+copyrightCompany);
-			_log.debug("copyrightCompanyUrl: "+copyrightCompanyUrl);
-			_log.debug("name: "+name);
-			_log.debug("surname: "+surname);
-			_log.debug("question: "+question);
-			_log.debug("reply: "+reply);
-//			_log.debug("organizationRole: "+organizationRole);
-			_log.debug("website: "+website);
-		}
-		
+	public void sentMail(String mailSubject, String from, String to, boolean adminNotification, boolean idmEnabled, String templateID, String[] placeholders, String[] values) {
 		try {
-			/*
-			if (!idmEnabled) {
-				_log.info("idmEnabled = false ");
-				if (adminNotification) {
-					_log.info("adminNotification = true ");
-					body = FileUtil.read(new File(LIFERAY_HOME + "/data/templates/"+IDM_ADMIN_NOTIFICATION_TO_ENABLE_REGISTERED_USER));
-					body = StringUtil.replace(body, new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]", "[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]", "[$COPYRIGHT_COMPANY$]", "[$COPYRIGHT_YEAR$]", "[$TO$]", "[$EMAIL$]", "[$PASSWORD$]", "[$IDM$]", "[$ORGANIZATION_TYPE$]", "[$ORGANIZATION$]", "[$NAME$]", "[$SURNAME$]", "[$QUESTION$]", "[$REPLY$]", "[$WEBSITE$]"}, 
-							                                new String[] {projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, copyrightCompanyUrl, copyrightCompany, copyrightYear, to, registeredUserEmail, password, idmUrl, organizationType, organization, name, surname, question, reply, website});
-				} else {
-					_log.info("adminNotification = false ");
-					body = FileUtil.read(new File(LIFERAY_HOME + "/data/templates/"+USER_NOTIFICATION_DISABLED_IDM_REGISTRATION));
-					body = StringUtil.replace(body, new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]", "[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]", "[$COPYRIGHT_COMPANY$]", "[$COPYRIGHT_YEAR$]", "[$TO$]", "[$EMAIL$]", "[$PASSWORD$]", "[$IDM$]", "[$ORGANIZATION_TYPE$]", "[$ORGANIZATION$]", "[$NAME$]", "[$SURNAME$]", "[$QUESTION$]", "[$REPLY$]", "[$WEBSITE$]"}, 
-							                                new String[] {projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, copyrightCompanyUrl, copyrightCompany, copyrightYear, to, registeredUserEmail, password, idmUrl, organizationType, organization, name, surname, question, reply, website});
-				}
-			} else {
-				_log.info("idmEnabled = true ");
-				body = FileUtil.read(new File(LIFERAY_HOME + "/data/templates/"+USER_NOTIFICATION_ENABLED_REGISTRATION));
-				body = StringUtil.replace(body, new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]", "[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]", "[$COPYRIGHT_COMPANY$]", "[$COPYRIGHT_YEAR$]", "[$TO$]", "[$EMAIL$]", "[$PASSWORD$]", "[$IDM$]", "[$ORGANIZATION_TYPE$]", "[$ORGANIZATION$]", "[$NAME$]", "[$SURNAME$]", "[$QUESTION$]", "[$REPLY$]", "[$WEBSITE$]"}, 
-						                                new String[] {projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, copyrightCompanyUrl, copyrightCompany, copyrightYear, to, registeredUserEmail, password, idmUrl, organizationType, organization, name, surname, question, reply, website});
-			}*/
+			MailMessage mailMessage = new MailMessage();
 			
-			if (!idmEnabled) {
-				_log.info("idmEnabled = false ");
-				if (adminNotification) {
-					_log.info("adminNotification = true ");
-					_log.debug("template: "+IDM_ADMIN_NOTIFICATION_TO_ENABLE_REGISTERED_USER);
-					body = FileUtil.read(new File(LIFERAY_HOME + "/data/templates/"+IDM_ADMIN_NOTIFICATION_TO_ENABLE_REGISTERED_USER));
-					body = StringUtil.replace(body, new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]", "[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]", "[$COPYRIGHT_COMPANY$]", "[$COPYRIGHT_YEAR$]", "[$TO$]", "[$EMAIL$]", "[$PASSWORD$]", "[$IDM$]", "[$ORGANIZATION_TYPE$]", "[$ORGANIZATION$]", "[$NAME$]", "[$SURNAME$]", "[$QUESTION$]", "[$REPLY$]", "[$WEBSITE$]"}, 
-							                                new String[] {projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, copyrightCompanyUrl, copyrightCompany, copyrightYear, to, registeredUserEmail, password, idmUrl, organizationType, organization, name, surname, question, reply, website});
-				} else {
-					_log.info("adminNotification = false ");
-					_log.debug("template: "+USER_NOTIFICATION_DISABLED_IDM_REGISTRATION);
-					body = FileUtil.read(new File(LIFERAY_HOME + "/data/templates/"+USER_NOTIFICATION_DISABLED_IDM_REGISTRATION));
-					body = StringUtil.replace(body, new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]", "[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]", "[$COPYRIGHT_COMPANY$]", "[$COPYRIGHT_YEAR$]", "[$TO$]", "[$EMAIL$]", "[$PASSWORD$]", "[$IDM$]", "[$ORGANIZATION_TYPE$]", "[$ORGANIZATION$]", "[$NAME$]", "[$SURNAME$]", "[$QUESTION$]", "[$REPLY$]", "[$WEBSITE$]"}, 
-							                                new String[] {projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, copyrightCompanyUrl, copyrightCompany, copyrightYear, to, registeredUserEmail, password, idmUrl, organizationType, organization, name, surname, question, reply, website});
-				}
-			} else {
-				_log.info("idmEnabled = true ");
-				if (adminNotification) {
-					_log.info("adminNotification = true ");
-					_log.debug("template: "+IDM_ADMIN_NOTIFICATION_ENABLED_USER);
-					body = FileUtil.read(new File(LIFERAY_HOME + "/data/templates/"+IDM_ADMIN_NOTIFICATION_ENABLED_USER));
-					body = StringUtil.replace(body, new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]", "[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]", "[$COPYRIGHT_COMPANY$]", "[$COPYRIGHT_YEAR$]", "[$TO$]", "[$EMAIL$]", "[$PASSWORD$]", "[$IDM$]", "[$ORGANIZATION_TYPE$]", "[$ORGANIZATION$]", "[$NAME$]", "[$SURNAME$]", "[$QUESTION$]", "[$REPLY$]", "[$WEBSITE$]"}, 
-                            new String[] {projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, copyrightCompanyUrl, copyrightCompany, copyrightYear, to, registeredUserEmail, password, idmUrl, organizationType, organization, name, surname, question, reply, website});
-				} else {
-					_log.info("adminNotification = false ");
-					_log.debug("template: "+USER_NOTIFICATION_ENABLED_REGISTRATION);
-					body = FileUtil.read(new File(LIFERAY_HOME + "/data/templates/"+USER_NOTIFICATION_ENABLED_REGISTRATION));
-					body = StringUtil.replace(body, new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]", "[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]", "[$COPYRIGHT_COMPANY$]", "[$COPYRIGHT_YEAR$]", "[$TO$]", "[$EMAIL$]", "[$PASSWORD$]", "[$IDM$]", "[$ORGANIZATION_TYPE$]", "[$ORGANIZATION$]", "[$NAME$]", "[$SURNAME$]", "[$QUESTION$]", "[$REPLY$]", "[$WEBSITE$]"}, 
-							                                new String[] {projectName, logoLiferayPortalUrl, liferayPortalName, liferayPortalUrl, copyrightCompanyUrl, copyrightCompany, copyrightYear, to, registeredUserEmail, password, idmUrl, organizationType, organization, name, surname, question, reply, website});
-				}
-			}
-			
+			String body = getBodyMail(idmEnabled, adminNotification, templateID, placeholders, values);
 			
 			mailMessage = new MailMessage();
 			mailMessage.setFrom(new InternetAddress(from));
@@ -153,24 +46,140 @@ public class Mailer {
 			mailMessage.setSubject(mailSubject);
 			mailMessage.setHTMLFormat(true);
 			mailMessage.setBody(body);
-			try {
-			  MailServiceUtil.sendEmail(mailMessage);
-			  if (_log.isDebugEnabled()) {
-				  _log.debug("-----------------------------------e-mail body sended-----------------------------------");
-				  if (Validator.isNotNull(mailMessage)) {
-					  _log.debug(mailMessage.getBody());
-				  }
-			  }
-				  	
-			} catch(Exception e) {
-				_log.error(e,e);
-			}
-		} catch (IOException e1) {
-			_log.error("An error occurred while reading template: " + e1.getMessage());
-			_log.error(e1,e1);
+		
+			MailServiceUtil.sendEmail(mailMessage);
+		} catch(AddressException e1) {
+			_log.error("An error occurred in sendMail method, check <from> and <to> fields: "+e1.getMessage());
+		} catch(Exception e) {
+			_log.error("An error occurred in sendMail method: "+e.getMessage());
+			_log.error(e,e);
 		}
 	}
+	
+	private String[] getTemplateNames(boolean idmEnabled, boolean adminNotification, String templateID) {
+		Locale locale = LocaleUtil.getDefault();
 		
+		String LANG_SUFFIX=StringPool.BLANK;
+		if (locale!=null && !locale.getLanguage().equalsIgnoreCase(IdpRegistrationPortletKeys.LANGUAGE_DEFAULT) && !locale.getCountry().equalsIgnoreCase(IdpRegistrationPortletKeys.COUNTRY_DEFAULT)) {
+			LANG_SUFFIX = StringPool.UNDERLINE+locale.getLanguage()+StringPool.UNDERLINE+locale.getCountry();
+		}
+		
+		String ID = StringPool.BLANK;
+		if (Validator.isNotNull(templateID)) {
+			ID = StringPool.UNDERLINE + templateID;
+		}
+		
+		//if "Enable self-registering users on Identity Manager" is checked
+		String ADMIN_NOTIFICATION = IdpRegistrationPortletKeys.ADMIN_NOTIFICATION+LANG_SUFFIX + ID+IdpRegistrationPortletKeys.TMPL;
+		String USER_NOTIFICATION = IdpRegistrationPortletKeys.USER_NOTIFICATION+LANG_SUFFIX + ID+IdpRegistrationPortletKeys.TMPL;
+		
+		String ADMIN_NOTIFICATION_DEFAULT = IdpRegistrationPortletKeys.ADMIN_NOTIFICATION + StringPool.UNDERLINE + IdpRegistrationPortletKeys.DEFAULT + IdpRegistrationPortletKeys.TMPL;
+		String USER_NOTIFICATION_DEFAULT = IdpRegistrationPortletKeys.USER_NOTIFICATION + StringPool.UNDERLINE + IdpRegistrationPortletKeys.DEFAULT + IdpRegistrationPortletKeys.TMPL;
+		String E_ADMIN_NOTIFICATION_DEFAULT = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + ADMIN_NOTIFICATION_DEFAULT;
+		String E_USER_NOTIFICATION_DEFAULT = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + USER_NOTIFICATION_DEFAULT;
+		
+		String name = StringPool.BLANK;
+		String defaultTemplateName = StringPool.BLANK;
+        if (idmEnabled && adminNotification) {
+        	name = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + ADMIN_NOTIFICATION;
+        	defaultTemplateName = E_ADMIN_NOTIFICATION_DEFAULT;
+        }
+        if (idmEnabled && !adminNotification) {
+        	name = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + USER_NOTIFICATION;
+        	defaultTemplateName = E_USER_NOTIFICATION_DEFAULT;
+        }
+        if (!idmEnabled && adminNotification) {
+        	_log.info("idmEnabled: false, adminNotification: true");
+        	name = ADMIN_NOTIFICATION;
+        	defaultTemplateName = ADMIN_NOTIFICATION_DEFAULT;
+        }
+        if (!idmEnabled && !adminNotification) {
+        	_log.info("idmEnabled: false, adminNotification: false");
+        	name = USER_NOTIFICATION;
+        	defaultTemplateName = USER_NOTIFICATION_DEFAULT;
+        }
+        if (_log.isDebugEnabled()) {
+        	_log.debug("default language: "+locale.getLanguage());
+        	_log.debug("default country: "+locale.getCountry());
+        	_log.debug("idmEnabled: "+idmEnabled+", adminNotification: "+adminNotification);
+        	_log.debug("templateName: "+name);
+        	_log.debug("defaultTemplateName: "+defaultTemplateName);
+        }
+       
+        return new String[]{name, defaultTemplateName};
+	}
+	
+	private String getBodyMail(boolean idmEnabled, boolean adminNotification, String templateID, String[] placeholders, String[] values) {
+		String body = StringPool.BLANK;
+		String[] templateNames = getTemplateNames(idmEnabled, adminNotification, templateID);
+		String templateName = templateNames[0];
+		String defaultTemplateName = templateNames[1];
+		body = getTemplate(templateName, defaultTemplateName);
+		body = StringUtil.replace(body, placeholders, values);
+		if (_log.isDebugEnabled()) {
+			_log.debug("------------------------------body Mail using template " + templateName + "------------------------------");
+			_log.debug(body);
+		}
+		return body;
+	}
+		
+	private String getTemplate(String name, String defaultName) {
+		long groupId = 0;
+		String defaultTemplate = StringPool.BLANK;
+		try {
+			groupId = getGlobalGroupId();
+			long rootId = 0;
+			DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.fetchFileEntryByFileName(groupId, rootId, name);
+			
+			if (dlFileEntry!=null) {
+				int bufferSize = 1024;
+				char[] buffer = new char[bufferSize];
+				StringBuilder out = new StringBuilder();
+				Reader in = new InputStreamReader(dlFileEntry.getContentStream(), StandardCharsets.UTF_8);
+				for (int numRead; (numRead = in.read(buffer, 0, buffer.length)) > 0; ) {
+				    out.append(buffer, 0, numRead);
+				}
+				String template = out.toString();
+				if (_log.isDebugEnabled()) {
+					_log.debug("------------------------------template------------------------------");
+					_log.debug(template);
+				}
+				return template;
+			} else {
+				defaultTemplate = ContentUtil.get(this.getClass().getClassLoader(), IdpRegistrationPortletKeys.REPOSITORY_TEMPLATES+defaultName, true);
+				if (_log.isDebugEnabled()) {
+					_log.debug("------------------------------defaultTemplate------------------------------");
+					_log.debug(defaultTemplate);
+				}
+				return defaultTemplate;
+			}
+		} catch (NoSuchGroupException e) {
+			defaultTemplate = ContentUtil.get(this.getClass().getClassLoader(), IdpRegistrationPortletKeys.REPOSITORY_TEMPLATES+defaultName, true);
+			_log.error("An error occurred while getting template: " + e.getMessage());
+			return defaultTemplate;
+		} catch (PortalException e) {
+			_log.error("An error occurred while getting template: " + e.getMessage());
+			return defaultTemplate;
+		} catch (IOException e) {
+			_log.error("An error occurred while getting template: " + e.getMessage());
+			return defaultTemplate;
+		}
+	}
+	
+	private long getGlobalGroupId() throws NoSuchGroupException {
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Group.class);
+		dynamicQuery.add(RestrictionsFactoryUtil.like("name", "%"+GroupConstants.GLOBAL+"%") );
+		List<Group> group =  DLFileEntryLocalServiceUtil.dynamicQuery(dynamicQuery);
+		
+		if (group!=null && group.size()==1) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("globalGroupId: "+group.get(0).getGroupId());
+			}
+			return group.get(0).getGroupId();
+		} else {
+			throw new NoSuchGroupException("No Group exists with the name Global");
+		}
+	}
 	
 	
 	private static final Log _log = LogFactoryUtil.getLog(

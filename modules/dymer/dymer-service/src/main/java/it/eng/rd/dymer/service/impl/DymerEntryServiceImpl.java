@@ -250,7 +250,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
         }
     }
 	
-	@Deprecated
+	/*@Deprecated
 	@JSONWebService(value="deleteOLD",method="POST")
     public void deleteOLD(
     		String emailAddress,
@@ -306,7 +306,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
         }
         
 
-    }
+    }*/
 	
 	@Deprecated
 	private void dymerEntryDelete(

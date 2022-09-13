@@ -5,15 +5,22 @@
   border: solid var(--form-input-border-width, 1px) #aab3c5;
   overflow: hidden;
 }
-
+.idmEnableContentLabel{
+   margin: auto; 
+   padding: 10px;
+}
+.termsOfUseContentLabel {
+   margin: auto; 
+   padding: 10px;
+}
 .userAddContentLabel{
   margin: auto; 
   padding: 10px;
 }
-.userAddContent{
-	margin: auto; 
-	border: 3px solid #333798;  
-	padding: 10px;
+.userAddContent {
+    margin: auto;
+    border: 1px solid #5f5f5f;
+    padding: 10px;
 }
 .switch2 {
   position: relative;

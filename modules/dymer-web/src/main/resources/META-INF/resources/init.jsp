@@ -54,14 +54,23 @@
 <%@ page import="com.liferay.portal.kernel.dao.search.SearchEntry" %>
 <%@ page import="com.liferay.portal.kernel.dao.search.ResultRow" %>
 
+
+<%@ page import="it.eng.rd.dymer.web.util.crypto.AesCrypto"%>
+<%@ page import="com.liferay.portal.kernel.util.Validator" %>
+<%@ page import="it.eng.rd.dymer.portlet.constants.DymerPortletKeys" %>
+<%@ page import="com.liferay.portal.kernel.util.GetterUtil" %>
+<%@ page import="com.liferay.portal.kernel.util.PropsUtil" %>
+<%@ page import="com.liferay.portal.kernel.log.Log" %>
+<%@ page import="com.liferay.portal.kernel.log.LogFactoryUtil" %>
+
 <liferay-theme:defineObjects />
 <portlet:defineObjects />
 
 <%  
+	Log log = LogFactoryUtil.getLog("init.jsp");
+
 	User currentUser = themeDisplay.getUser();
 	
-	JSONObject userInfoJSONObject = JSONFactoryUtil.createJSONObject();
-	JSONArray roleArray = JSONFactoryUtil.createJSONArray();
 	List<Role> roles = currentUser.getRoles();
 	Boolean isAdmin = false;
 	for (Role role : roles) {
@@ -70,47 +79,24 @@
 		if (Validator.isNotNull(role.getName()) && role.getName().equalsIgnoreCase("Administrator")){
 			isAdmin = true;
 		}
-		userRole.put("role", role.getName());
-		roleArray.put(userRole);
 	}
-	userInfoJSONObject.put("username", currentUser.getFullName());
-	userInfoJSONObject.put("app_azf_domain", "");
-	userInfoJSONObject.put("authorization_decision", "");
-	userInfoJSONObject.put("id", "");
-	userInfoJSONObject.put("email", currentUser.getEmailAddress());
-	userInfoJSONObject.put("isGravatarEnabled", false);
-	userInfoJSONObject.put("app_id", "");
-	userInfoJSONObject.put("roles", roleArray);
-	JSONObject extraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-	extraInfoJSONObject.put("userId", currentUser.getUserId());
-	extraInfoJSONObject.put("groupId", themeDisplay.getScopeGroupId());
-	extraInfoJSONObject.put("companyId", currentUser.getCompanyId());
-	extraInfoJSONObject.put("cms", "lfr");
- 	extraInfoJSONObject.put("virtualhost", company.getVirtualHostname());
-	userInfoJSONObject.put("extrainfo", extraInfoJSONObject);
 	
-	JSONObject dymerExtraInfoJSONObject = JSONFactoryUtil.createJSONObject();
-	dymerExtraInfoJSONObject.put("extrainfo", extraInfoJSONObject);
-
-
-	String dymerToken = userInfoJSONObject.toJSONString();
-	String dymerJwt = new String (Base64.getEncoder().encode(dymerToken.getBytes()));
+	String[] jwts = AesCrypto.dymerJwts(currentUser, themeDisplay.getScopeGroupId());
 	
-	String dymerExtraJwt = new String (Base64.getEncoder().encode((dymerExtraInfoJSONObject.toJSONString()).getBytes()));
-	
-// 	String showbread = portletPreferences.getValue("showbread", dymerViewerConfiguration.showbread());
-// 	boolean roleOkay = Util.isUserRoleOkay(currentUser.getUserId(), themeDisplay.getSiteGroup().getGroupId(), checkedRoles);
-	
+	String dymerJwt = AesCrypto.encrypting(jwts[0]);
+	if (dymerJwt.equalsIgnoreCase(jwts[0])){	
+		dymerJwt = new String (Base64.getEncoder().encode(dymerJwt.getBytes()));
+		if (log.isDebugEnabled())
+			log.debug("[dymer-web] dymerJwt base64: "+dymerJwt);
+	}
+	String dymerExtraJwt = new String (Base64.getEncoder().encode((jwts[1]).getBytes()));
 %>
 
 <script type="text/javascript">
-	var dymExtraJWT = '<%=dymerExtraJwt%>';
 	var dymJWT = '<%=dymerJwt%>';
-	localStorage.setItem('DYM_EXTRA', dymExtraJWT );
+	var dymExtraJWT = '<%=dymerExtraJwt%>';
 	localStorage.setItem('DYM', dymJWT );
+	localStorage.setItem('DYM_EXTRA', dymExtraJWT );
 </script>
 
-
-
-    
-    
+<!-- upgrade 300822 --> 

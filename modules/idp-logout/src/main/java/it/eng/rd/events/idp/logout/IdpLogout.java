@@ -1,6 +1,5 @@
 package it.eng.rd.events.idp.logout;
 
-
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;
@@ -26,7 +25,6 @@ import com.nimbusds.openid.connect.sdk.rp.OIDCClientMetadata;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +56,7 @@ public class IdpLogout implements LifecycleAction {
 	
     @Override    
     public void processLifecycleEvent(LifecycleEvent lifecycleEvent) throws ActionException {
-    	
+    	_log.info("upgrade 300822");
     	/*
     	Collection<String> openIdConnectProviderNames =	_openIdConnectProviderRegistry.getOpenIdConnectProviderNames(_portal.getCompanyId(httpServletRequest));  
     	
@@ -120,16 +118,10 @@ public class IdpLogout implements LifecycleAction {
 	        		
 	        		HttpServletRequest originalRequest = PortalUtil.getOriginalServletRequest(request);
 	        		String logoutDYMAT = CookieKeys.getCookie(originalRequest, "LODYMAT");
-
-	        		try {
-		        		String messageDecriptato = "";
-		        		if(Validator.isNotNull(secretKey) && !secretKey.equalsIgnoreCase("")) {
-		        			logoutDYMAT = AesCrypto.decrypt(logoutDYMAT, secretKey);
-		        			
-						}
-	        		} catch(Exception e) {
-	        			_log.error("An error occurred while decrypting access token: " + e.getMessage());
-	        		} 
+	        		
+	        		/* TODO
+	        		logoutDymAT = AesCrypto.decrypting(logoutDYMAT);
+	        		*/
 	        		
 	        		String authorization = idm_client_id+":"+idm_secret_id;
 					String authEncoded = Base64.getEncoder().encodeToString(authorization.getBytes());

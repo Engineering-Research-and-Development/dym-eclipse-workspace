@@ -39,7 +39,6 @@ public class DymerEntryAssetRenderer extends BaseJSPAssetRenderer<DymerEntry> {
     @Override
     public boolean hasViewPermission(PermissionChecker permissionChecker) 
     {
-    	_log.info("DymerEntryAssetRenderer, hasViewPermission");
         try {
         	if(_log.isDebugEnabled()){
         		_log.debug("_entry.getEntryId "+_entry.getEntryId());
