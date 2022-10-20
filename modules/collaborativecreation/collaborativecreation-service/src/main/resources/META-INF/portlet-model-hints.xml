@@ -25,11 +25,16 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="title" type="String" />
+		<field name="title" type="String">
+			<hint-collection name="CLOB" />
+		</field>
 		<field name="description" type="String">
 			<hint-collection name="CLOB" />
 		</field>
 		<field name="desiredOutcome" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="additionalInformation" type="String">
 			<hint-collection name="CLOB" />
 		</field>
 		<field name="startDate" type="Date" />
@@ -60,7 +65,9 @@
 		<field name="message" type="String">
 			<hint-collection name="CLOB" />
 		</field>
-		<field name="title" type="String" />
+		<field name="title" type="String">
+			<hint-collection name="CLOB" />
+		</field>
 		<field name="description" type="String">
 			<hint-collection name="CLOB" />
 		</field>

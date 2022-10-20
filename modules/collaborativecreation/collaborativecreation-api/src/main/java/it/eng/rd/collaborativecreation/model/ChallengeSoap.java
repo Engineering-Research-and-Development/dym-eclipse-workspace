@@ -45,6 +45,7 @@ public class ChallengeSoap implements Serializable {
 		soapModel.setTitle(model.getTitle());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setDesiredOutcome(model.getDesiredOutcome());
+		soapModel.setAdditionalInformation(model.getAdditionalInformation());
 		soapModel.setStartDate(model.getStartDate());
 		soapModel.setEndDate(model.getEndDate());
 		soapModel.setDlFolderName(model.getDlFolderName());
@@ -203,6 +204,14 @@ public class ChallengeSoap implements Serializable {
 		_desiredOutcome = desiredOutcome;
 	}
 
+	public String getAdditionalInformation() {
+		return _additionalInformation;
+	}
+
+	public void setAdditionalInformation(String additionalInformation) {
+		_additionalInformation = additionalInformation;
+	}
+
 	public Date getStartDate() {
 		return _startDate;
 	}
@@ -291,6 +300,7 @@ public class ChallengeSoap implements Serializable {
 	private String _title;
 	private String _description;
 	private String _desiredOutcome;
+	private String _additionalInformation;
 	private Date _startDate;
 	private Date _endDate;
 	private String _dlFolderName;

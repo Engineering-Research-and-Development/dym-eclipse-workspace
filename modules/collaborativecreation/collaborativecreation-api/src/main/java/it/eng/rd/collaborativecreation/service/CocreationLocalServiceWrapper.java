@@ -137,10 +137,11 @@ public class CocreationLocalServiceWrapper
 	}
 
 	@Override
-	public void deleteCocreationsByChallengeId(long challengeId)
+	public void deleteCocreationsByChallengeId(long challengeId, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		_cocreationLocalService.deleteCocreationsByChallengeId(challengeId);
+		_cocreationLocalService.deleteCocreationsByChallengeId(
+			challengeId, companyId);
 	}
 
 	/**

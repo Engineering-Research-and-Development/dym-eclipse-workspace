@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
@@ -93,10 +94,10 @@ public class ActivityModelImpl
 		"drop table COCREATION_Activity";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY activity.description DESC";
+		" ORDER BY activity.expirationDate ASC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY COCREATION_Activity.description DESC";
+		" ORDER BY COCREATION_Activity.expirationDate ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -121,7 +122,7 @@ public class ActivityModelImpl
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long DESCRIPTION_COLUMN_BITMASK = 4L;
+	public static final long EXPIRATIONDATE_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -502,9 +503,8 @@ public class ActivityModelImpl
 	public int compareTo(Activity activity) {
 		int value = 0;
 
-		value = getDescription().compareTo(activity.getDescription());
-
-		value = value * -1;
+		value = DateUtil.compareTo(
+			getExpirationDate(), activity.getExpirationDate());
 
 		if (value != 0) {
 			return value;

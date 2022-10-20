@@ -132,10 +132,11 @@ public class CocreationLocalServiceUtil {
 		return getService().deleteCocreationByCocreationId(cocreationId);
 	}
 
-	public static void deleteCocreationsByChallengeId(long challengeId)
+	public static void deleteCocreationsByChallengeId(
+			long challengeId, long companyId)
 		throws PortalException {
 
-		getService().deleteCocreationsByChallengeId(challengeId);
+		getService().deleteCocreationsByChallengeId(challengeId, companyId);
 	}
 
 	/**

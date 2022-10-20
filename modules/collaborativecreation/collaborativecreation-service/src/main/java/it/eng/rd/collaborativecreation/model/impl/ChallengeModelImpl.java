@@ -81,13 +81,13 @@ public class ChallengeModelImpl
 		{"challengeId", Types.BIGINT}, {"groupId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
 		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
-		{"modifiedDate", Types.TIMESTAMP}, {"title", Types.VARCHAR},
+		{"modifiedDate", Types.TIMESTAMP}, {"title", Types.CLOB},
 		{"description", Types.CLOB}, {"desiredOutcome", Types.CLOB},
-		{"startDate", Types.TIMESTAMP}, {"endDate", Types.TIMESTAMP},
-		{"dlFolderName", Types.VARCHAR}, {"dlFolderId", Types.BIGINT},
-		{"status", Types.INTEGER}, {"statusByUserId", Types.BIGINT},
-		{"statusByUserName", Types.VARCHAR}, {"statusDate", Types.TIMESTAMP},
-		{"active_", Types.BOOLEAN}
+		{"additionalInformation", Types.CLOB}, {"startDate", Types.TIMESTAMP},
+		{"endDate", Types.TIMESTAMP}, {"dlFolderName", Types.VARCHAR},
+		{"dlFolderId", Types.BIGINT}, {"status", Types.INTEGER},
+		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
+		{"statusDate", Types.TIMESTAMP}, {"active_", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -103,9 +103,10 @@ public class ChallengeModelImpl
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("title", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("description", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("desiredOutcome", Types.CLOB);
+		TABLE_COLUMNS_MAP.put("additionalInformation", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("startDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("endDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("dlFolderName", Types.VARCHAR);
@@ -118,7 +119,7 @@ public class ChallengeModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table COCREATION_Challenge (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,challengeId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title VARCHAR(75) null,description TEXT null,desiredOutcome TEXT null,startDate DATE null,endDate DATE null,dlFolderName VARCHAR(75) null,dlFolderId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,active_ BOOLEAN)";
+		"create table COCREATION_Challenge (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,challengeId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title TEXT null,description TEXT null,desiredOutcome TEXT null,additionalInformation TEXT null,startDate DATE null,endDate DATE null,dlFolderName VARCHAR(75) null,dlFolderId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,active_ BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table COCREATION_Challenge";
@@ -233,6 +234,7 @@ public class ChallengeModelImpl
 		model.setTitle(soapModel.getTitle());
 		model.setDescription(soapModel.getDescription());
 		model.setDesiredOutcome(soapModel.getDesiredOutcome());
+		model.setAdditionalInformation(soapModel.getAdditionalInformation());
 		model.setStartDate(soapModel.getStartDate());
 		model.setEndDate(soapModel.getEndDate());
 		model.setDlFolderName(soapModel.getDlFolderName());
@@ -435,6 +437,11 @@ public class ChallengeModelImpl
 		attributeSetterBiConsumers.put(
 			"desiredOutcome",
 			(BiConsumer<Challenge, String>)Challenge::setDesiredOutcome);
+		attributeGetterFunctions.put(
+			"additionalInformation", Challenge::getAdditionalInformation);
+		attributeSetterBiConsumers.put(
+			"additionalInformation",
+			(BiConsumer<Challenge, String>)Challenge::setAdditionalInformation);
 		attributeGetterFunctions.put("startDate", Challenge::getStartDate);
 		attributeSetterBiConsumers.put(
 			"startDate", (BiConsumer<Challenge, Date>)Challenge::setStartDate);
@@ -748,6 +755,26 @@ public class ChallengeModelImpl
 		}
 
 		_desiredOutcome = desiredOutcome;
+	}
+
+	@JSON
+	@Override
+	public String getAdditionalInformation() {
+		if (_additionalInformation == null) {
+			return "";
+		}
+		else {
+			return _additionalInformation;
+		}
+	}
+
+	@Override
+	public void setAdditionalInformation(String additionalInformation) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_additionalInformation = additionalInformation;
 	}
 
 	@JSON
@@ -1079,6 +1106,7 @@ public class ChallengeModelImpl
 		challengeImpl.setTitle(getTitle());
 		challengeImpl.setDescription(getDescription());
 		challengeImpl.setDesiredOutcome(getDesiredOutcome());
+		challengeImpl.setAdditionalInformation(getAdditionalInformation());
 		challengeImpl.setStartDate(getStartDate());
 		challengeImpl.setEndDate(getEndDate());
 		challengeImpl.setDlFolderName(getDlFolderName());
@@ -1251,6 +1279,17 @@ public class ChallengeModelImpl
 			challengeCacheModel.desiredOutcome = null;
 		}
 
+		challengeCacheModel.additionalInformation = getAdditionalInformation();
+
+		String additionalInformation =
+			challengeCacheModel.additionalInformation;
+
+		if ((additionalInformation != null) &&
+			(additionalInformation.length() == 0)) {
+
+			challengeCacheModel.additionalInformation = null;
+		}
+
 		Date startDate = getStartDate();
 
 		if (startDate != null) {
@@ -1388,6 +1427,7 @@ public class ChallengeModelImpl
 	private String _title;
 	private String _description;
 	private String _desiredOutcome;
+	private String _additionalInformation;
 	private Date _startDate;
 	private Date _endDate;
 	private String _dlFolderName;
@@ -1439,6 +1479,8 @@ public class ChallengeModelImpl
 		_columnOriginalValues.put("title", _title);
 		_columnOriginalValues.put("description", _description);
 		_columnOriginalValues.put("desiredOutcome", _desiredOutcome);
+		_columnOriginalValues.put(
+			"additionalInformation", _additionalInformation);
 		_columnOriginalValues.put("startDate", _startDate);
 		_columnOriginalValues.put("endDate", _endDate);
 		_columnOriginalValues.put("dlFolderName", _dlFolderName);
@@ -1496,23 +1538,25 @@ public class ChallengeModelImpl
 
 		columnBitmasks.put("desiredOutcome", 2048L);
 
-		columnBitmasks.put("startDate", 4096L);
+		columnBitmasks.put("additionalInformation", 4096L);
 
-		columnBitmasks.put("endDate", 8192L);
+		columnBitmasks.put("startDate", 8192L);
 
-		columnBitmasks.put("dlFolderName", 16384L);
+		columnBitmasks.put("endDate", 16384L);
 
-		columnBitmasks.put("dlFolderId", 32768L);
+		columnBitmasks.put("dlFolderName", 32768L);
 
-		columnBitmasks.put("status", 65536L);
+		columnBitmasks.put("dlFolderId", 65536L);
 
-		columnBitmasks.put("statusByUserId", 131072L);
+		columnBitmasks.put("status", 131072L);
 
-		columnBitmasks.put("statusByUserName", 262144L);
+		columnBitmasks.put("statusByUserId", 262144L);
 
-		columnBitmasks.put("statusDate", 524288L);
+		columnBitmasks.put("statusByUserName", 524288L);
 
-		columnBitmasks.put("active_", 1048576L);
+		columnBitmasks.put("statusDate", 1048576L);
+
+		columnBitmasks.put("active_", 2097152L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

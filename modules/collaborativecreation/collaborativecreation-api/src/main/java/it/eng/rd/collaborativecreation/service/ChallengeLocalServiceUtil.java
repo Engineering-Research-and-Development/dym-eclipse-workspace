@@ -62,13 +62,14 @@ public class ChallengeLocalServiceUtil {
 
 	public static Challenge addChallenge(
 			String title, String description, String desiredOutcome,
-			java.util.Date startDate, java.util.Date endDate, boolean active,
+			String additionalInformation, java.util.Date startDate,
+			java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().addChallenge(
-			title, description, desiredOutcome, startDate, endDate, active,
-			serviceContext);
+			title, description, desiredOutcome, additionalInformation,
+			startDate, endDate, active, serviceContext);
 	}
 
 	/**
@@ -415,14 +416,14 @@ public class ChallengeLocalServiceUtil {
 
 	public static Challenge updateChallenge(
 			long challengeId, String title, String description,
-			String desiredOutcome, java.util.Date startDate,
-			java.util.Date endDate, boolean active,
+			String desiredOutcome, String additionalInformation,
+			java.util.Date startDate, java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		return getService().updateChallenge(
-			challengeId, title, description, desiredOutcome, startDate, endDate,
-			active, serviceContext);
+			challengeId, title, description, desiredOutcome,
+			additionalInformation, startDate, endDate, active, serviceContext);
 	}
 
 	public static ChallengeLocalService getService() {

@@ -268,6 +268,21 @@ public interface ChallengeModel
 	public void setDesiredOutcome(String desiredOutcome);
 
 	/**
+	 * Returns the additional information of this challenge.
+	 *
+	 * @return the additional information of this challenge
+	 */
+	@AutoEscape
+	public String getAdditionalInformation();
+
+	/**
+	 * Sets the additional information of this challenge.
+	 *
+	 * @param additionalInformation the additional information of this challenge
+	 */
+	public void setAdditionalInformation(String additionalInformation);
+
+	/**
 	 * Returns the start date of this challenge.
 	 *
 	 * @return the start date of this challenge

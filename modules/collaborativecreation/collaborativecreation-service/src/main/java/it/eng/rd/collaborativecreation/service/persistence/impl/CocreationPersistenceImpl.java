@@ -2476,10 +2476,10 @@ public class CocreationPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_TITLE_TITLE_2 =
-		"cocreation.title = ?";
+		"CAST_CLOB_TEXT(cocreation.title) = ?";
 
 	private static final String _FINDER_COLUMN_TITLE_TITLE_3 =
-		"(cocreation.title IS NULL OR cocreation.title = '')";
+		"(cocreation.title IS NULL OR CAST_CLOB_TEXT(cocreation.title) = '')";
 
 	private FinderPath _finderPathWithPaginationFindByUserId;
 	private FinderPath _finderPathWithoutPaginationFindByUserId;

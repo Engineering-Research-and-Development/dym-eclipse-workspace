@@ -258,7 +258,7 @@ public class CocreationCacheModel
 		completionDate = objectInput.readLong();
 		request = (String)objectInput.readObject();
 		message = (String)objectInput.readObject();
-		title = objectInput.readUTF();
+		title = (String)objectInput.readObject();
 		description = (String)objectInput.readObject();
 		dlFolderName = objectInput.readUTF();
 
@@ -320,10 +320,10 @@ public class CocreationCacheModel
 		}
 
 		if (title == null) {
-			objectOutput.writeUTF("");
+			objectOutput.writeObject("");
 		}
 		else {
-			objectOutput.writeUTF(title);
+			objectOutput.writeObject(title);
 		}
 
 		if (description == null) {

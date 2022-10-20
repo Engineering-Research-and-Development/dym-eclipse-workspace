@@ -1979,10 +1979,10 @@ public class ChallengePersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_TITLE_TITLE_2 =
-		"challenge.title = ?";
+		"CAST_CLOB_TEXT(challenge.title) = ?";
 
 	private static final String _FINDER_COLUMN_TITLE_TITLE_3 =
-		"(challenge.title IS NULL OR challenge.title = '')";
+		"(challenge.title IS NULL OR CAST_CLOB_TEXT(challenge.title) = '')";
 
 	private FinderPath _finderPathWithPaginationFindByUserId;
 	private FinderPath _finderPathWithoutPaginationFindByUserId;

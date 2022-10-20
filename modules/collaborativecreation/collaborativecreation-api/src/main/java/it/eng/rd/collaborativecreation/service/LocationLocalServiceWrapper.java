@@ -119,6 +119,13 @@ public class LocationLocalServiceWrapper
 		return _locationLocalService.deleteLocation(locationId);
 	}
 
+	@Override
+	public void deleteLocationByChallengeId(long challengeId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_locationLocalService.deleteLocationByChallengeId(challengeId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */

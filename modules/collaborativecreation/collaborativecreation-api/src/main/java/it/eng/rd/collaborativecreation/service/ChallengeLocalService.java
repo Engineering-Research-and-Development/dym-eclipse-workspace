@@ -82,8 +82,8 @@ public interface ChallengeLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Challenge addChallenge(
 			String title, String description, String desiredOutcome,
-			Date startDate, Date endDate, boolean active,
-			ServiceContext serviceContext)
+			String additionalInformation, Date startDate, Date endDate,
+			boolean active, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**
@@ -358,8 +358,8 @@ public interface ChallengeLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Challenge updateChallenge(
 			long challengeId, String title, String description,
-			String desiredOutcome, Date startDate, Date endDate, boolean active,
-			ServiceContext serviceContext)
+			String desiredOutcome, String additionalInformation, Date startDate,
+			Date endDate, boolean active, ServiceContext serviceContext)
 		throws PortalException, SystemException;
 
 }

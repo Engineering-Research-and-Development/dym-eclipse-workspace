@@ -6,9 +6,8 @@ String active = ParamUtil.getString(request, "active", null);
 String inactive = ParamUtil.getString(request, "inactive", null);
 String location = ParamUtil.getString(request, "location", null);
 String category = ParamUtil.getString(request, "category", null);
+/* String hot = ParamUtil.getString(request, "hot", null); */
 String topVoted = ParamUtil.getString(request, "topVoted", null);
-String challengesAuthor = ParamUtil.getString(request, "challengesAuthor", null);
-
 Map<Long, Double> scoreMap = new HashMap<Long, Double>();
 List<Entry<Long, Double>> scoreMapAsList = new ArrayList<Map.Entry<Long, Double>>();
 
@@ -56,42 +55,6 @@ for (Challenge challenge : challenges) {
 	 }
 }	
 
-if (challengesAuthor != null && challengesAuthor.equalsIgnoreCase("false")){
-	if (filteredChallenges.size() > 0){
-		List<Challenge> otherChallengesList = new ArrayList();
-		List<Challenge> filteredOtherChallengesList = new ArrayList();
-		otherChallengesList = ChallengeLocalServiceUtil.getChallengesByGroupId(themeDisplay.getScopeGroupId());
-		for(int i=0; i < filteredChallenges.size(); i++){
-			for(int l=0; l < otherChallengesList.size(); l++){	
-				if (otherChallengesList.get(l).getUserId() != themeDisplay.getUserId()){
-					if (filteredChallenges.get(i).getChallengeId() == otherChallengesList.get(l).getChallengeId()){
-						filteredOtherChallengesList.add(otherChallengesList.get(l));	
-					}
-				}
-			}
-		}
-		filteredChallenges = new ArrayList();
-		filteredChallenges = filteredOtherChallengesList;
-	}
-}
-
-if (challengesAuthor != null && challengesAuthor.equalsIgnoreCase("true")){
-	if (filteredChallenges.size() > 0){
-		List<Challenge> myChallengesList = new ArrayList();
-		List<Challenge> filteredMyChallengesList = new ArrayList();
-		myChallengesList = ChallengeLocalServiceUtil.getChallengesByUserId(user.getUserId(), themeDisplay.getScopeGroupId());
-		for(int i=0; i < filteredChallenges.size(); i++){
-			for(int l=0; l < myChallengesList.size(); l++){	
-				if (filteredChallenges.get(i).getChallengeId() == myChallengesList.get(l).getChallengeId()){
-					filteredMyChallengesList.add(myChallengesList.get(l));	
-				}
-			}
-		}
-		filteredChallenges = new ArrayList();
-		filteredChallenges = filteredMyChallengesList;
-	}
-}
-
 if (topVoted != null && topVoted.equalsIgnoreCase("true")){
 	if (filteredChallenges.size() > 0){
 		for (Challenge challenge : filteredChallenges) {
@@ -104,6 +67,7 @@ if (topVoted != null && topVoted.equalsIgnoreCase("true")){
 		    }
 		});
 		filteredChallenges = new ArrayList();
+		/* filteredChallenges.add(ChallengeLocalServiceUtil.getChallenge(scoreMapAsList.get(scoreMapAsList.size()-1).getKey())); */
 		for(int i=1; i < scoreMapAsList.size() + 1; i++){	
 			filteredChallenges.add(ChallengeLocalServiceUtil.getChallenge(scoreMapAsList.get(scoreMapAsList.size()-i).getKey()));
 		}
@@ -123,6 +87,10 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
     <portlet:param name="jspPage" value="/challenges.jsp" />
 </portlet:renderURL>
 
+<portlet:renderURL var="needDetails">
+    <portlet:param name="jspPage" value="/needDetails.jsp" />
+</portlet:renderURL>
+
 <portlet:renderURL var="farmerProfile">
     <portlet:param name="jspPage" value="/farmerProfile.jsp" />
     <portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request) %>"></portlet:param>
@@ -131,16 +99,6 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 <liferay-ui:success key="actionSuccess" message="Operation performed"/>
 <liferay-ui:error key="actionError" message="Operation performed"/>									
 <div class="container-fluid p-0 co-creation">
-	<div class="row">
-		<div class="userRole">
-			<h4><a href="<%=UserLocalServiceUtil.getUserById(themeDisplay.getUserId()).getDisplayURL(themeDisplay)%>"><%=themeDisplay.getUser().getFullName()%></a></h4>
-			<%if (isChallengeOwner){%>
-				<h4>Farmer</h4>
-			<%}else{%>
-				<h4>Technology developer </h4>
-			<%}%>
-		</div>		
-   </div>	
    <div class="row mb-4 border-bottom">
 		<div class="col col-lg-6 col-sm-6 col-6 col-md-12">
 			<h3 class="co-title">Challenges</a></h3>
@@ -161,33 +119,16 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 					<portlet:param name="jspPage" value="/challenges.jsp"/>
 				</portlet:renderURL>
 				<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-			</aui:nav>
-			<aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
-				<portlet:renderURL var="viewURL">
-					<portlet:param name="jspPage" value="/view.jsp"/>
-				</portlet:renderURL>
-				<aui:nav-item href="<%=viewURL%>" label="Help"/>
-			</aui:nav>
+			  </aui:nav>
 		</div><!-- w-1/2 END -->
 	</div>
     <div class="row">
 	    <div class="col col-lg-3 col-sm-3 col-3 col-md-12">
 			<div id="trending" class="co-box mt-2 mb-4  card-1">
-		    	<!-- <label class="aui-field-label co-title">Trending</label> -->    
+		    	<label class="aui-field-label co-title">Trending</label>    
 				<%-- <aui:input label="Top Voted" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input> --%>
 				<aui:input label="sortByVote" id="topVoted" name="topVoted" type="radio" value="<%=topVoted%>"></aui:input>
 			</div>
-			<%if (isChallengeOwner){%>
-				<div id="challengesAuthor" class="co-box mt-2 mb-4  card-1" style="display:block;">    
-					<aui:input label="myChallenges" id="challengesAuthor" name="challengesAuthor" type="radio" value="true" checked="null"></aui:input>
-					<aui:input label="otherChallenges" id="challengesAuthor" name="challengesAuthor" type="radio" value="false" checked="null"></aui:input>
-				</div>
-			<%}else{%>
-				<div id="challengesAuthor" class="co-box mt-2 mb-4  card-1" style="display:none;">    
-					<aui:input label="myChallenges" id="challengesAuthor" name="challengesAuthor" type="radio" value="true" checked="null"></aui:input>
-					<aui:input label="otherChallenges" id="challengesAuthor" name="challengesAuthor" type="radio" value="false" checked="null"></aui:input>
-				</div>
-			<%}%>
 			<div id="location" class="co-box mt-2 mb-4 card-1">
 				<label class="aui-field-label co-title"><liferay-ui:message key="location"/></label> 
 				<aui:select label="" id="location" name="location" showEmptyOption="false">
@@ -271,17 +212,56 @@ if (keywords != null && !keywords.equalsIgnoreCase("")){
 										<portlet:param name="redirectTo" value="<%=PortalUtil.getCurrentURL(request)%>"></portlet:param>
 									</portlet:renderURL>
 									<li class="user-card-item" d-pagegroup="1">
-									    <div class="user-card">			 	 
-									      <!-- <div class="user-card-img"></div> -->
+									    <div class="user-card">
+									      <div class="user-card-pb card__image--fence"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><img class="userProfilePicture" src="https://eu.ui-avatars.com/api/?name=<%=challenge.getUserName()%>&amp;background=222e5a&amp;color=fff"></a></div>			 	 
+									      <div class="user-card-img"></div>
 									      <div class="user-card-cont">
 									        <div class="user-card-title"><a href="<%=viewChallengeDetails%>"><%=challenge.getTitle() %></a></div>
 									        <p class="user-id"><i class="fa fa-map-marker" aria-hidden="true"></i> <liferay-ui:message key="location"/></label> : <span><%=LocationLocalServiceUtil.getLocationByChallengeId(challenge.getChallengeId()).getName()%></span></p>
-									        <div id="author">
-											   	<span><b><label class="aui-field-label"><i class="fa fa-user-circle-o" aria-hidden="true"></i> <liferay-ui:message key="author"/></label></b></span> : <span><label class="aui-field-label"><a href="<%=UserLocalServiceUtil.getUserById(challenge.getUserId()).getDisplayURL(themeDisplay)%>"><%=challenge.getUserName()%></a></label></span>
-											</div>
-									        <div id="description">
-											   	<span><b><label class="aui-field-label"><i class="fa fa-vcard-o" aria-hidden="true"></i> <liferay-ui:message key="description"/></label></b></span> : <span><label><%=challenge.getDescription()%></label></span>
-											</div>
+									        <div id="startDate" class="challengesLeft">
+												<span><b><label class="aui-field-label"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> <liferay-ui:message key="start"/></label></b></span> : <span><%=formatter.format(challenge.getStartDate()) %></span>
+										    </div>
+										    <div id="endDate" class="challengesLeft">
+												<span><b><label class="aui-field-label"><i class="fa fa-calendar-times-o" aria-hidden="true"></i> <liferay-ui:message key="end"/></label></b></span> : <span><%=formatter.format(challenge.getEndDate()) %></span>
+										    </div>
+						     				<%-- <div id="status" class="challengesLeft">
+											   	<span><b><label class="aui-field-label"><liferay-ui:message key="status"/></label></b></span> : <span><%=challenge.getActive() == true ?  "Active" : "Inactive"%></span>
+											</div>  --%>
+											<div id="status" class="challengesLeft">
+											   	<span><b><label class="aui-field-label"><i class="fa fa-lightbulb-o" aria-hidden="true"></i> <liferay-ui:message key="status"/></label></b></span> : <span><label class="aui-field-label"><%=challenge.getEndDate().after(nowDate) == true ?  "Active" : "Inactive"%></label></span>
+											</div> 
+											<div id="tags" class="challengesLeft">
+											    <span><b><label class="aui-field-label"><i class="fa fa-tag" aria-hidden="true"></i> Tags</label></b></span> : <span>	
+											  	<%
+											  	Iterator<Hashtag> hashtagsIt = HashtagLocalServiceUtil.getHashtagsByChallengeId(challenge.getChallengeId()).iterator();
+											  	while(hashtagsIt.hasNext()){
+												%>
+													<span><%=hashtagsIt.next().getName()%></span>	
+													<%
+											      	if (hashtagsIt.hasNext()){
+											      	%>
+									      				<span><label class="aui-field-label">,</label></span>
+													<%
+											      	}		
+												}
+												%>
+											</div> 
+											<div id="categories" class="challengesLeft">
+												<span><b><label class="aui-field-label"><i class="fa fa-cog" aria-hidden="true"></i> <liferay-ui:message key="categories"/></label></b></span> : <span>	
+									    	  	<%
+									    	  	Iterator<Category> categoriesIt = CategoryLocalServiceUtil.getCategoriesByChallengeId(challenge.getChallengeId()).iterator();
+									    	  	while(categoriesIt.hasNext()){
+												%>
+													<span><%=categoriesIt.next().getName()%></span>	
+													<%
+											      	if (categoriesIt.hasNext()){
+											      	%>
+									      				<span><label class="aui-field-label">,</label></span>
+													<%
+											      	}		
+												}
+												%>
+									     	</div>
 										  </div>
 									      <liferay-ui:ratings className="<%=Challenge.class.getName()%>" classPK="<%=challenge.getChallengeId()%>" type="thumbs" />
 									      <%
@@ -339,8 +319,8 @@ function deleteConfirmation(url) {
       	    getChallenges.setParameter("inactive", A.one('#<portlet:namespace />inactive').attr('checked'));
       	    getChallenges.setParameter("location", A.one('#<portlet:namespace />location').val());	
       	    getChallenges.setParameter("category", A.one('#<portlet:namespace />category').val());
+      	    <%-- getChallenges.setParameter("hot", A.one('#<portlet:namespace />hot').attr('checked')); --%>
       	    getChallenges.setParameter("topVoted", A.one('#<portlet:namespace />topVoted').attr('checked'));
-      	    getChallenges.setParameter("challengesAuthor", A.one('#<portlet:namespace />challengesAuthor').attr('checked'));
             window.location.href=getChallenges; 
       });
       A.one("#<portlet:namespace/>clearFilter").on('click',function(event){
@@ -348,8 +328,8 @@ function deleteConfirmation(url) {
       	    A.one('#<portlet:namespace />inactive').val("");
       	    A.one('#<portlet:namespace />location').val("");	
       	    A.one('#<portlet:namespace />category').val("");
+      	    <%-- A.one('#<portlet:namespace />hot').val(""); --%>
       	    A.one('#<portlet:namespace />topVoted').val("");
-      	    A.one('#<portlet:namespace />challengesAuthor').val("");
       	    window.location.href=getChallenges;     
       });
       A.one("#<portlet:namespace/>clearSearch").on('click',function(event){

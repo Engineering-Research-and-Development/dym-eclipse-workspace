@@ -140,5 +140,12 @@ public class LocationLocalServiceImpl extends LocationLocalServiceBaseImpl {
 		return locationPersistence.findByChallenge(challengeId);
     }
 	
+	public void deleteLocationByChallengeId(long challengeId) throws PortalException {
+    	_log.info("LocationLocalServiceImpl - deleteLocationByChallengeId method");
+		_log.info("challengeId "+challengeId);
+		
+		locationPersistence.removeByChallenge(challengeId);
+    }
+	
 	private static final Log _log = LogFactoryUtil.getLog(LocationLocalServiceImpl.class);
 }

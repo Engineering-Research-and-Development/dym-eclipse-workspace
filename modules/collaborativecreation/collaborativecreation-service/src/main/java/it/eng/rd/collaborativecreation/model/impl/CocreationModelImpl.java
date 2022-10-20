@@ -83,7 +83,7 @@ public class CocreationModelImpl
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
 		{"completionDate", Types.TIMESTAMP}, {"request", Types.CLOB},
-		{"message", Types.CLOB}, {"title", Types.VARCHAR},
+		{"message", Types.CLOB}, {"title", Types.CLOB},
 		{"description", Types.CLOB}, {"dlFolderName", Types.VARCHAR},
 		{"ldFolderId", Types.BIGINT}, {"status", Types.INTEGER},
 		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
@@ -107,7 +107,7 @@ public class CocreationModelImpl
 		TABLE_COLUMNS_MAP.put("completionDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("request", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("message", Types.CLOB);
-		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("title", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("description", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("dlFolderName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("ldFolderId", Types.BIGINT);
@@ -119,7 +119,7 @@ public class CocreationModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table COCREATION_Cocreation (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,cocreationId LONG not null primary key,challengeId LONG,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,completionDate DATE null,request TEXT null,message TEXT null,title VARCHAR(75) null,description TEXT null,dlFolderName VARCHAR(75) null,ldFolderId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,completed BOOLEAN)";
+		"create table COCREATION_Cocreation (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,cocreationId LONG not null primary key,challengeId LONG,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,completionDate DATE null,request TEXT null,message TEXT null,title TEXT null,description TEXT null,dlFolderName VARCHAR(75) null,ldFolderId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,completed BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table COCREATION_Cocreation";

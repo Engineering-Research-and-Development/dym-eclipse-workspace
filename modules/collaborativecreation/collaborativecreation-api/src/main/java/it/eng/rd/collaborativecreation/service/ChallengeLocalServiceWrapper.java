@@ -52,13 +52,14 @@ public class ChallengeLocalServiceWrapper
 	@Override
 	public it.eng.rd.collaborativecreation.model.Challenge addChallenge(
 			String title, String description, String desiredOutcome,
-			java.util.Date startDate, java.util.Date endDate, boolean active,
+			String additionalInformation, java.util.Date startDate,
+			java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _challengeLocalService.addChallenge(
-			title, description, desiredOutcome, startDate, endDate, active,
-			serviceContext);
+			title, description, desiredOutcome, additionalInformation,
+			startDate, endDate, active, serviceContext);
 	}
 
 	/**
@@ -476,15 +477,15 @@ public class ChallengeLocalServiceWrapper
 	@Override
 	public it.eng.rd.collaborativecreation.model.Challenge updateChallenge(
 			long challengeId, String title, String description,
-			String desiredOutcome, java.util.Date startDate,
-			java.util.Date endDate, boolean active,
+			String desiredOutcome, String additionalInformation,
+			java.util.Date startDate, java.util.Date endDate, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
 		return _challengeLocalService.updateChallenge(
-			challengeId, title, description, desiredOutcome, startDate, endDate,
-			active, serviceContext);
+			challengeId, title, description, desiredOutcome,
+			additionalInformation, startDate, endDate, active, serviceContext);
 	}
 
 	@Override

@@ -135,7 +135,7 @@ public interface CocreationLocalService
 		throws PortalException;
 
 	@Indexable(type = IndexableType.DELETE)
-	public void deleteCocreationsByChallengeId(long challengeId)
+	public void deleteCocreationsByChallengeId(long challengeId, long companyId)
 		throws PortalException;
 
 	/**

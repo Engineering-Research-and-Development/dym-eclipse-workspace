@@ -4,7 +4,9 @@
 String redirectTo = request.getParameter("redirectTo");
 long challengeId = ParamUtil.getLong(request, "challengeId");
 long cocreationId = ParamUtil.getLong(request, "cocreationId");
-List<User> users = UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId());
+/*List<User> users = UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId());*/
+List<User> users = UserLocalServiceUtil.getUsers(0, 999);
+
 User currentUser = themeDisplay.getUser();
 List<Cocreator> allCocreators = new ArrayList();
 List<Cocreator> cocreators = new ArrayList();
@@ -51,7 +53,7 @@ if (cocreationId > 0){
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<aui:input label="request" name="request" id="request" type="textarea" required='true'/>
+	             	<liferay-ui:input-editor name="request" initMethod="initEditor" width="100" height="600" resizable="true" toolbarSet="liferay-article"></liferay-ui:input-editor>
 	             </div>
 	             <div>
 	             	<aui:select label="inviteParticipants" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
@@ -80,7 +82,6 @@ if (cocreationId > 0){
 						%>
 				   </aui:select>
 	             </div>  
-	             <%-- <aui:input label="Contribution requested" placeholder="Type a message here..." name="message" id="message" type="textarea" required='true'/> --%>
 		    </div>            
 		</aui:fieldset>
 		<aui:button-row>

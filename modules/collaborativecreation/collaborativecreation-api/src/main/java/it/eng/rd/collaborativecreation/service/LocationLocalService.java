@@ -124,6 +124,9 @@ public interface LocationLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public Location deleteLocation(long locationId) throws PortalException;
 
+	public void deleteLocationByChallengeId(long challengeId)
+		throws PortalException;
+
 	/**
 	 * @throws PortalException
 	 */

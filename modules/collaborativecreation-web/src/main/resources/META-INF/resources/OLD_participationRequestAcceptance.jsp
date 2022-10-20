@@ -33,11 +33,7 @@ User currentUser = themeDisplay.getUser();
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
 	             <div>
-	             	<h3 class="sheet-subtitle"><liferay-ui:message key="request"/></h3>
-	             	<aui:input label="request" name="request" id="request" type="hidden" readonly="true" value="<%=participationRequest%>"/>
-	             	<div id="requestText">
-					   	<span><%=participationRequest%></span>
-					</div>
+	             	<aui:input label="request" name="request" id="request" type="textarea" readonly="true" value="<%=participationRequest%>"/>
 	             </div>
 		    </div>            
 		</aui:fieldset>

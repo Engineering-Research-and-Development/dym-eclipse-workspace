@@ -55,6 +55,7 @@ public class ChallengeWrapper
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("desiredOutcome", getDesiredOutcome());
+		attributes.put("additionalInformation", getAdditionalInformation());
 		attributes.put("startDate", getStartDate());
 		attributes.put("endDate", getEndDate());
 		attributes.put("dlFolderName", getDlFolderName());
@@ -142,6 +143,13 @@ public class ChallengeWrapper
 			setDesiredOutcome(desiredOutcome);
 		}
 
+		String additionalInformation = (String)attributes.get(
+			"additionalInformation");
+
+		if (additionalInformation != null) {
+			setAdditionalInformation(additionalInformation);
+		}
+
 		Date startDate = (Date)attributes.get("startDate");
 
 		if (startDate != null) {
@@ -205,6 +213,16 @@ public class ChallengeWrapper
 	@Override
 	public boolean getActive() {
 		return model.getActive();
+	}
+
+	/**
+	 * Returns the additional information of this challenge.
+	 *
+	 * @return the additional information of this challenge
+	 */
+	@Override
+	public String getAdditionalInformation() {
+		return model.getAdditionalInformation();
 	}
 
 	/**
@@ -540,6 +558,16 @@ public class ChallengeWrapper
 	@Override
 	public void setActive(boolean active) {
 		model.setActive(active);
+	}
+
+	/**
+	 * Sets the additional information of this challenge.
+	 *
+	 * @param additionalInformation the additional information of this challenge
+	 */
+	@Override
+	public void setAdditionalInformation(String additionalInformation) {
+		model.setAdditionalInformation(additionalInformation);
 	}
 
 	/**

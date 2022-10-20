@@ -69,6 +69,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 			String title,
 			String description,
 			String desiredOutcome,
+			String additionalInformation,
 	        Date startDate,
 	        Date endDate,
 	        boolean active,
@@ -100,6 +101,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		challenge.setTitle(title);
 		challenge.setDescription(description);
 		challenge.setDesiredOutcome(desiredOutcome);
+		challenge.setAdditionalInformation(additionalInformation);
 		challenge.setStartDate(startDate);
 		challenge.setEndDate(endDate);
 		challenge.setActive(active);
@@ -116,6 +118,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		_log.info("title: " +title);
 		_log.info("description: " +description);
 		_log.info("desiredOutcome: " +desiredOutcome);
+		_log.info("additionalInformation: " +additionalInformation);
 		_log.info("startDate: " +startDate);
 		_log.info("endDate: " +endDate);
 		_log.info("active: " +active);
@@ -146,6 +149,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 			String title,
 			String description,
 			String desiredOutcome,
+			String additionalInformation,
 	        Date startDate,
 	        Date endDate,
 	        boolean active,
@@ -164,10 +168,10 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		challenge.setUserId(serviceContext.getUserId());
 		challenge.setUserName(user.getFullName());
 		challenge.setModifiedDate(serviceContext.getModifiedDate(now));
-		
 		challenge.setTitle(title);
 		challenge.setDescription(description);
 		challenge.setDesiredOutcome(desiredOutcome);
+		challenge.setAdditionalInformation(additionalInformation);
 		challenge.setStartDate(startDate);
 		challenge.setEndDate(endDate);
 		challenge.setActive(active);
@@ -182,6 +186,7 @@ public class ChallengeLocalServiceImpl extends ChallengeLocalServiceBaseImpl {
 		_log.info("title: " +title);
 		_log.info("description: " +description);
 		_log.info("desiredOutcome: " +desiredOutcome);
+		_log.info("additionalInformation: " +additionalInformation);
 		_log.info("startDate: " +startDate);
 		_log.info("endDate: " +endDate);
 		_log.info("active: " +active);

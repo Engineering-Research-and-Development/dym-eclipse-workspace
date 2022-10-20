@@ -12,12 +12,6 @@ String folderTitle = challengeTitle.replaceAll("[^a-zA-Z0-9]", "_");
 Folder cocreationFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, "CO-CREATION");
 Folder challengeFolder = DLAppServiceUtil.getFolder(themeDisplay.getScopeGroupId(), cocreationFolder.getFolderId(), folderTitle);
 List<FileEntry> fileEntries = DLAppServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), challengeFolder.getFolderId());
-int fileEntriesSize = 0;
-for (FileEntry file : fileEntries) {    
-	if (file.getFileName().startsWith(cocreation.getTitle().replaceAll("[^a-zA-Z0-9]", "_"))){
-		fileEntriesSize++;
-	}
-}
 List<Activity> milestones = ActivityLocalServiceUtil.getActivitiesByCocreationId(Long.parseLong(cocreationId));
 List<Task> toDos = TaskLocalServiceUtil.getTasksByCocreationId(Long.parseLong(cocreationId), user.getUserId());
 boolean isCocreator = false;
@@ -78,8 +72,6 @@ boolean isCocreator = false;
 </portlet:actionURL>
 <portlet:actionURL name="updateCocreation" var="updateCocreationURL">
 	<portlet:param name="cocreationId" value="<%=String.valueOf(cocreationId)%>"/>
-	<portlet:param name="challengeTitle" value="<%=challengeTitle%>"/>
-	<portlet:param name="desiredOutcome" value="<%=desiredOutcome%>"/>
 	<portlet:param name="redirectTo" value="<%=redirectTo%>"/>
 </portlet:actionURL>
 
@@ -96,7 +88,7 @@ boolean isCocreator = false;
 				<span class="co-title"><liferay-ui:message key="cocreationDetails"/></span>
 			</div><!-- w-1/2  END-->
 			<div class="col col-lg-6 col-sm-6 col-6 col-md-12"> 
-				<aui:nav cssClass="nav-tabs nav-co-tabs">	
+				  <aui:nav cssClass="nav-tabs nav-co-tabs">	
 					<portlet:renderURL var="mycocreationsURL">
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
@@ -112,73 +104,39 @@ boolean isCocreator = false;
 					</portlet:renderURL>
 					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
 			    </aui:nav>	
-				<aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
-					<portlet:renderURL var="viewURL">
-						<portlet:param name="jspPage" value="/view.jsp"/>
-					</portlet:renderURL>
-					<aui:nav-item href="<%=viewURL%>" label="Help"/>
-				</aui:nav>
 			</div><!-- w-1/2 END -->
 		</div>
    </div>
    <aui:form id="formCocreation" name="fm" method="post" enctype="multipart/form-data" action="<%= updateCocreationURL.toString() %>">
    	   <aui:fieldset> 
-   	   	   <span><b><liferay-ui:message key="postedBy"/> : </b><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getUserName()%></a></span>
+   	   	   <span><b>Challenge Owner : </b><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><%=ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getUserName()%></a></span>
 		   <br>	
-		   <div id="date" class="challengesLeft">
+	       <div id="cocreators" class="challengesLeft">
+				<span><b><label class="aui-field-label">Co-creators : </label></b></span>
+		   </div>
+	       <%
+		   List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(Long.parseLong(cocreationId));
+		   Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
+		   while(cocreatorsIt.hasNext()){
+				Cocreator cocreator = cocreatorsIt.next();
+				User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId());
+				if (user.getUserId() == cocreator.getUserId()){
+					/*L'utente loggato è uno dei co-creatori*/
+					isCocreator = true;
+				}
+				%>
+				<span><label class="aui-field-label"><a href="<%=userDisplay.getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
+				<%
+				if (cocreatorsIt.hasNext()){
+				%>
+					<span><label class="aui-field-label">,</label></span>
+				<%
+				}		
+			}	
+		    %>
+	       <div id="date" class="challengesLeft">
 		 		<span><b><label class="aui-field-label"><liferay-ui:message key="createdOn"/></label></b></span> : <span><%=formatter.format(cocreation.getCreateDate())%></span>
 		   </div>
-	       <div id="cocreators" class="challengesLeft">
-			   <span><b><label class="aui-field-label">Co-creators : </label></b></span>
-		       <%
-			   List<Cocreator> cocreators = CocreatorLocalServiceUtil.getCocreatorsByCocreationId(Long.parseLong(cocreationId));
-			   Iterator<Cocreator> cocreatorsIt = cocreators.iterator();
-			   while(cocreatorsIt.hasNext()){
-					Cocreator cocreator = cocreatorsIt.next();
-					User userDisplay = UserLocalServiceUtil.getUserById(cocreator.getUserId());
-					if (user.getUserId() == cocreator.getUserId()){
-						/*L'utente loggato è uno dei co-creatori*/
-						isCocreator = true;
-					}
-					%>
-					<span><label class="aui-field-label"><a href="<%=userDisplay.getDisplayURL(themeDisplay)%>"><%=cocreator.getUserName()%></a></label></span>
-					<%
-					if (cocreatorsIt.hasNext()){
-					%>
-						<span><label class="aui-field-label">,</label></span>
-					<%
-					}		
-				}	
-			    %>	
-		    </div>	
-		    <%if (ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getEndDate().after(nowDate) == true && !cocreation.getCompleted()){%>	
-			 	<div class="pb-2">
-			 		<aui:button-row>
-			  			<div id="aui_popup_requestToCocreate_click">
-			  				<%if (isCocreator){%>
-			       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info"></aui:button>
-			       			<%}%>	
-			       			<%-- <%}else{%>
-			       				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info"></aui:button>
-			       			<%}%> --%>
-			   			</div>
-			   			<div id="aui_popup_requestToCocreate_content" ></div>
-					</aui:button-row>  
-				</div>	
-			 <%}else{%>
-			 	<div class="pb-2">
-			 		<aui:button-row>
-			  			<div id="aui_popup_requestToCocreate_click">
-			  				<%-- <%if (isCocreator){%>
-			       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info" disabled="true"></aui:button>
-			       			<%}else{%>
-			       				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
-			       			<%}%> --%>
-			   			</div>
-			   			<div id="aui_popup_requestToCocreate_content" ></div>
-					</aui:button-row>  
-				</div>
-			<%}%>
 	       <p></p>    	    
 		   <h3 class="sheet-subtitle">Challenge</h3>
 	       <aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=challengeTitle%>" cssClass="field disabled form-control"/>
@@ -203,36 +161,58 @@ boolean isCocreator = false;
 				    <%}%>
 			    </aui:select>
 		   <%}%>
-		   <aui:button-row>
-		   		<%if (isCocreator){%>
-		   			<aui:button type="submit" value="save" cssClass="btn-outline-info"></aui:button>
-		   			<aui:button name="deleteCocreation" type="button" value="delete" onClick="javascript:deleteConfirmation();"/>
-		   		<%}%>
-		   		<aui:button name="cancel" type="button" value="cancel" onClick="<%=ongoingCocreationsURL%>"/>
-	   		</aui:button-row>
-	   		<%if (isCocreator || fileEntriesSize > 0){%>
-			    <div class="col-12 col-md-12">
-	       	   		<div class="pb-2">	
-	       	   			<%if (isCocreator){%>
-							<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures"/> <%=stringUploadMaxSize%>)</h3>
-						<%}%>
-						<%if (!isCocreator){%>
-							<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures1"/></h3>
-						<%}%>
-						<% 
-						String fileURL = "";
+		   <div class="col-12 col-md-12">
+       	   		<div class="pb-2">	
+					<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures"/></h3>
+					<% 
+					String fileURL = "";
+					for (FileEntry file : fileEntries) {    
+						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
+						if (file.getFileName().startsWith(cocreation.getTitle().replaceAll("[^a-zA-Z0-9]", "_"))){
+						%>	
+							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
+					 	<%
+						}
+					 }
+					 %>
+				</div>
+		   </div>
+		   <%-- <div class="col-12 col-md-12">
+       	   		<div class="pb-2">	
+					<h3 class="sheet-subtitle">View pictures</h3>
+					<% 
+					String fileURL = "";
+					for (FileEntry file : fileEntries) {    
+						fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
+						if ((file.getExtension().equalsIgnoreCase("jpeg") || 
+						     file.getExtension().equalsIgnoreCase("jpg")  ||
+						     file.getExtension().equalsIgnoreCase("png")) && 	
+							 file.getFileName().startsWith("COCREATION_")){
+						%>	
+							<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
+					 	<%
+						}
+					 }
+					 %>
+				</div>
+				<div class="pb-2">	
+					<h3 class="sheet-subtitle">Attached Documents</h3>
+					<% 
 						for (FileEntry file : fileEntries) {    
 							fileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + file.getUuid();
-							if (file.getFileName().startsWith(cocreation.getTitle().replaceAll("[^a-zA-Z0-9]", "_"))){
+							if ((!file.getExtension().equalsIgnoreCase("jpeg") && 
+								 !file.getExtension().equalsIgnoreCase("jpg")  &&
+								 !file.getExtension().equalsIgnoreCase("png")) && 	
+								  file.getFileName().startsWith("COCREATION_")){
 							%>	
 								<liferay-ui:icon target="_blank" label="<%= true %>" message="<%=file.getTitle() %>" url="<%= fileURL %>"/></br>
 						 	<%
 							}
 						 }
 						 %>
-					</div>
-			    </div>
-		   <%}%>	  
+				</div>
+		   </div> --%>
+		   <h3 class="sheet-subtitle"></h3>   	  
      	   <div id="fileList"></div>
 		   <span style="display:block; height: 10px;"></span>
 		   <div class="btn-group">
@@ -248,9 +228,9 @@ boolean isCocreator = false;
 							url="javascript:void(0)" onClick="clearFileList();"  
 				    /> 
 			    </div>
-			    <input type="file" id="uploadedFile" name="uploadedFile" style="visibility:hidden;" multiple="multiple" accept="video/*, image/*, .xlsx, .xls, .doc, .docx, .ppt, .pptx, .txt, .pdf" onchange="javascript:updateFileList()"/>
+			    <input type="file" id="uploadedFile" name="uploadedFile" style="visibility:hidden;" multiple="multiple" accept="image/*, .xlsx, .xls, .doc, .docx, .ppt, .pptx, .txt, .pdf" onchange="javascript:updateFileList()"/>
 	       </div>    	
-	       <h3 class="sheet-subtitle"></h3>   
+		   <h3 class="sheet-subtitle"></h3>
 		   <div id="products" class="row view-group">			
 		        <div class="item col-xs-4 col-lg-4" d-pagegroup="1">
 		            <div class="thumbnail card">
@@ -363,7 +343,49 @@ boolean isCocreator = false;
 					</aui:button-row>          
 		         <%}%>
 		   </div>					   				   
+		   <h3 class="sheet-subtitle"></h3>
+		   <%if (ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getEndDate().after(nowDate) == true && !cocreation.getCompleted()){%>	
+			   <div class="col-12 col-md-12">
+				 	<div class="pb-2">
+				 		<aui:button-row>
+				  			<div id="aui_popup_requestToCocreate_click">
+				  				<%if (isCocreator){%>
+				       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info"></aui:button>
+				       			<%}%>	
+				       			<%-- <%}else{%>
+				       				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info"></aui:button>
+				       			<%}%> --%>
+				   			</div>
+				   			<div id="aui_popup_requestToCocreate_content" ></div>
+						</aui:button-row>  
+					</div>
+				</div>
+				<h3 class="sheet-subtitle"></h3>	
+			<%}else{%>
+				<div class="col-12 col-md-12">
+				 	<div class="pb-2">
+				 		<aui:button-row>
+				  			<div id="aui_popup_requestToCocreate_click">
+				  				<%-- <%if (isCocreator){%>
+				       				<aui:button type="button" value="inviteParticipants" cssClass="btn-outline-info" disabled="true"></aui:button>
+				       			<%}else{%>
+				       				<aui:button type="button" value="requestToCoCreate" cssClass="btn-outline-info" disabled="true"></aui:button>
+				       			<%}%> --%>
+				   			</div>
+				   			<div id="aui_popup_requestToCocreate_content" ></div>
+						</aui:button-row>  
+					</div>
+				</div>
+				<h3 class="sheet-subtitle"></h3>
+			<%}%>		
        </aui:fieldset>
+	   <aui:button-row>
+	   		<%if (isCocreator){%>
+	   			<aui:button type="submit" value="publish" cssClass="btn-outline-info"></aui:button>
+	   			<aui:button name="deleteCocreation" type="button" value="delete" onClick="javascript:deleteConfirmation();"/>
+	   		<%}%>
+	   		<aui:button name="cancel" type="button" value="cancel" onClick="<%=ongoingCocreationsURL%>"/>
+	   </aui:button-row>
   </aui:form>
   <%
   AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Cocreation.class.getName(), cocreation.getCocreationId());
@@ -407,10 +429,10 @@ boolean isCocreator = false;
 		<%if (ChallengeLocalServiceUtil.getChallengeByCocreationId(Long.parseLong(cocreationId), themeDisplay.getScopeGroupId()).getEndDate().after(nowDate) == true &&  !cocreation.getCompleted()){%>	
 			<%if(isCocreator){
 				participationURL = inviteParticipantsURL.toString();
-				height = 720;
+				height = 520;
 			}else{
 				participationURL = requestParticipationURL.toString();
-				height = 620;
+				height = 420;
 			}%>
 			
 			var popUpWindow=Liferay.Util.Window.getWindow(
@@ -420,8 +442,8 @@ boolean isCocreator = false;
 						constrain2view: true,					
 						modal: true,
 						resizable: false,
-						width: 700,
-						height: <%=height%>
+						width: 500,
+						height: 520
 					}
 				}
 			).plug(
@@ -441,18 +463,11 @@ boolean isCocreator = false;
 			{
 				dialog: {
 					centered: true,
-					constrain2view: true,
-					destroyOnClose: true,
-            		destroyOnHide: true,					
+					constrain2view: true,					
 					modal: true,
 					resizable: false,
 					width: 500,
-					height: 600,
-					on: {
-		                destroy: function() { 
-		                    Liferay.Util.getOpener().refreshPortlet();                
-		                }
-		            }
+					height: 600
 				}
 			}
 		).plug(
@@ -471,18 +486,11 @@ boolean isCocreator = false;
 			{
 				dialog: {
 					centered: true,
-					constrain2view: true,
-					destroyOnClose: true,
-            		destroyOnHide: true,					
+					constrain2view: true,					
 					modal: true,
 					resizable: false,
 					width: 500,
-					height: 400,
-					on: {
-		                destroy: function() { 
-		                    Liferay.Util.getOpener().refreshPortlet();                
-		                }
-		            }
+					height: 400
 				}
 			}
 		).plug(
@@ -495,4 +503,27 @@ boolean isCocreator = false;
 		popUpWindow.show(popUpWindow);
 		popUpWindow.titleNode.html("<%=addToDo%>");
 	});
+	
+	<%-- A.one("#aui_popup_questionsFeedbacks_click").on('click',function(event){
+		var popUpWindow=Liferay.Util.Window.getWindow(
+			{
+				dialog: {
+					centered: true,
+					constrain2view: true,					
+					modal: true,
+					resizable: false,
+					width: 500,
+					height: 300
+				}
+			}
+		).plug(
+			A.Plugin.DialogIframe,
+			{
+				autoLoad: true,
+				uri:"<%=addQuestionFeedbackURL.toString()%>"
+			}
+		).render();
+		popUpWindow.show(popUpWindow);
+		popUpWindow.titleNode.html("Add Question or Feedback");
+	}); --%>
 </aui:script>

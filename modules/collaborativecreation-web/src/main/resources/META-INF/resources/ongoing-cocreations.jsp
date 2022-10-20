@@ -81,6 +81,16 @@ cocreationsSize = filteredCocreations.size();
 <liferay-ui:error key="actionError" message="Operation performed"/>
 <div id="oingoingCocreations">
 	<div class="container-fluid p-0 co-creation">
+		<div class="row">
+			<div class="userRole">
+				<h4><a href="<%=UserLocalServiceUtil.getUserById(themeDisplay.getUserId()).getDisplayURL(themeDisplay)%>"><%=themeDisplay.getUser().getFullName()%></a></h4>
+				<%if (isChallengeOwner){%>
+					<h4>Farmer</h4>
+				<%}else{%>
+					<h4>Technology developer </h4>
+				<%}%>
+			</div>		
+	   </div>	
 	   <div class="row mb-4 border-bottom">
 			<div class="col col-lg-6 col-sm-6 col-6 col-md-12">
 				<h3 class="co-title"><liferay-ui:message key="ongoingCocreations"/></a></h3>
@@ -101,14 +111,20 @@ cocreationsSize = filteredCocreations.size();
 						<portlet:param name="jspPage" value="/challenges.jsp"/>
 					</portlet:renderURL>
 					<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
-				  </aui:nav>		
+				 </aui:nav>	
+				 <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
+					<portlet:renderURL var="viewURL">
+						<portlet:param name="jspPage" value="/view.jsp"/>
+					</portlet:renderURL>
+				  <aui:nav-item href="<%=viewURL%>" label="Help"/>
+				</aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
    </div>
    <div class="container-fluid p-0 co-creation">
 	   <div class="row mb-4 border-bottom">
 			<div class="col col-lg-4-2 col-sm-4 col-4 col-md-12  "> 
-				  <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
+			    <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
 					<portlet:renderURL var="previousCocreationsURL">
 						<portlet:param name="jspPage" value="/previous-cocreations.jsp"/>
 					</portlet:renderURL>
@@ -119,7 +135,7 @@ cocreationsSize = filteredCocreations.size();
 						<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
 					</portlet:renderURL>
 					<aui:nav-item href="<%=ongoingCocreationsURL%>" label="ongoingCocreations"/>
-				  </aui:nav>	
+				</aui:nav>	
 			</div><!-- w-1/2 END -->
 		</div>
 		<div class="container">
@@ -214,8 +230,8 @@ cocreationsSize = filteredCocreations.size();
 									</portlet:renderURL>
 							        <li class="user-card-item" d-pagegroup="1">
 							        	<div class="user-card">
-								      		<div class="user-card-pb card__image--fence"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><img class="userProfilePicture" src="https://eu.ui-avatars.com/api/?name=<%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %>&amp;background=222e5a&amp;color=fff"></a></div>	 	 
-								      		<div class="user-card-img"></div>
+								      		<%-- <div class="user-card-pb card__image--fence"><a href="<%=UserLocalServiceUtil.getUserById(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserId()).getDisplayURL(themeDisplay)%>"><img class="userProfilePicture" src="https://eu.ui-avatars.com/api/?name=<%=ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreation.getCocreationId(), themeDisplay.getScopeGroupId()).getUserName() %>&amp;background=222e5a&amp;color=fff"></a></div> --%>	 	 
+								      		<!-- <div class="user-card-img"></div> -->
 								      		<div class="user-card-cont">
 								        		<div class="user-card-title"> 
 									        		<label class="aui-field-label">

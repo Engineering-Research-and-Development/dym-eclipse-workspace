@@ -12,10 +12,8 @@
 }
 
 .co-mainTitle{
-	
 	font-size: 2.0rem;
-    font-weight: 700;
-	
+    font-weight: 700;	
 }
 
 .co-creation .co-round{
@@ -31,7 +29,7 @@
 }
 
 .co-creation .co-count{
-	    margin: 0px auto;
+	margin: 0px auto;
     text-align: center;
     font-size: 25px;
     font-weight: 300;
@@ -94,6 +92,12 @@ a:hover{text-decoration: none;}
     margin-bottom: 14px !important;
     box-shadow: 0 1px 3px -1px rgb(0, 0, 0 / 60%);
 }
+
+.userRole {
+	margin-left: 85%;
+	margin-bottom: 30px; 
+	color: #6b6c7e;
+} 
 
 label.control-label{
 	font-size: 1.0rem;

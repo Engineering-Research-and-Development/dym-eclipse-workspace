@@ -1,16 +1,46 @@
 <%@ include file="/init.jsp" %>
 
-<style>
-	.aui .navbar .navbar-inner {
-    	min-height: 67px;
-	}
-</style>
-
-<liferay-ui:success key="actionSuccess" message="Operation performed"/>
-<liferay-ui:error key="actionError" message="Operation performed"/>		
-<div class=" m-2 p-1">
-	<div class=" mb-2">
-		<h3 class="co-title"><liferay-ui:message key='collaborativecreationweb.caption'></liferay-ui:message></h3>
+<div class="container-fluid p-0 co-creation">
+	<div class="row">
+		<div class="userRole">
+			<h4><a href="<%=UserLocalServiceUtil.getUserById(themeDisplay.getUserId()).getDisplayURL(themeDisplay)%>"><%=themeDisplay.getUser().getFullName()%></a></h4>
+			<%if (isChallengeOwner){%>
+				<h4>Farmer</h4>
+			<%}else{%>
+				<h4>Technology developer </h4>
+			<%}%>
+		</div>		
+   </div>	
+   <div class="row mb-4 border-bottom">
+   		<div class="col col-lg-6 col-sm-6 col-6 col-md-12">
+			<h3 class="co-title"><liferay-ui:message key='collaborativecreationweb.caption'></liferay-ui:message></h3>
+		</div><!-- w-1/2  END-->
+		<div class="col col-lg-6 col-sm-6 col-6 col-md-12  "> 
+			  <aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
+				<portlet:renderURL var="mycocreationsURL">
+					<portlet:param name="jspPage" value="/ongoing-cocreations.jsp"/>
+				</portlet:renderURL>
+				<%if (isChallengeOwner){%>
+					<aui:nav-item href="<%=mycocreationsURL%>" label="Co-Creations"/>
+				<%}else{%>
+					<aui:nav-item href="<%=mycocreationsURL%>" label="My Co-Creations"/>
+				<%}%>
+			</aui:nav>	
+			<aui:nav cssClass="nav-tabs nav-co-tabs-not-sel">
+				<portlet:renderURL var="challengesURL">
+					<portlet:param name="jspPage" value="/challenges.jsp"/>
+				</portlet:renderURL>
+				<aui:nav-item href="<%=challengesURL%>" label="Challenges"/>
+			</aui:nav>
+			<aui:nav cssClass="nav-tabs nav-co-tabs">
+				<portlet:renderURL var="viewURL">
+					<portlet:param name="jspPage" value="/view.jsp"/>
+				</portlet:renderURL>
+				<aui:nav-item href="<%=viewURL%>" label="Help"/>
+			</aui:nav>
+		</div><!-- w-1/2 END -->
+	</div>
+	<div class="row">
 		<div id="welcome" class="m-2 p-2">
 			<div class="span4" id="first">
 		        <p></p>
@@ -26,11 +56,9 @@
 		        <p></p>
 		        <span>Under <b>'Co-creations'</b> you can find all the challenges that you are a part of.</span>
 		        <p></p>
+		        <span>At the top right, in the <b>User Profile</b> menu, you can find the notifications section.</span>
+		        <p></p>
 		    </div>
 		</div>
-		<portlet:renderURL var="challengesURL">
-				<portlet:param name="jspPage" value="/challenges.jsp"/>
-		</portlet:renderURL>
- 		<a href="<%=challengesURL%>" class="btn btn-primary"><liferay-ui:message key="getStarted"/></a>
  	</div>
 </div>

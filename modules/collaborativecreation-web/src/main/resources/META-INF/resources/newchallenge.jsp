@@ -88,9 +88,11 @@ String redirectTo = request.getParameter("redirectTo");
 			          <select label="Tags" id="tags" name="tags" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 						    <%
 							for (AssetTag assetTag : assetTags) {
-							%>
-								<option value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
-							<% 
+								if (assetTag.getGroupId() == themeDisplay.getScopeGroupId()){
+								%>
+									<option value="<%=assetTag.getName()%>"><%=assetTag.getName()%></option>	
+								<% 
+								}
 							}
 							%>
 					  </select>
@@ -102,14 +104,22 @@ String redirectTo = request.getParameter("redirectTo");
 			          <select label="categories" id="categories" name="categories" showEmptyOption="false" multiple="true" style="width: 100%;" required>
 						    <%
 							for (AssetCategory assetCategory : assetCategories) {
-							%>
-								<option value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
-							<% 
+								if (assetCategory.getGroupId() == themeDisplay.getScopeGroupId()){
+								%>
+									<option value="<%=assetCategory.getName()%>"><%=assetCategory.getName()%></option>	
+								<% 
+								}
 							}
 							%>
 					  </select>
 				</div>
 		    </div>
+		    <h3 class="sheet-subtitle"></h3>
+		    <div class="col-12 col-md-12">
+                <div class="pb-2">
+                       <div><aui:input class="form-control col-12 span12 " label="additionalInformation" name="additionalInformation" id="additionalInformation" type="textarea"/></div>
+                </div>
+			</div>
 		    <h3 class="sheet-subtitle"></h3>
 		    <div class="col-sm-6 col-md-6">
 	           <div class=" pb-2 borderGroup"> 
@@ -123,13 +133,13 @@ String redirectTo = request.getParameter("redirectTo");
 				  <input id="endDate" name="endDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" required='true'>
 		 	   </div>
 			</div>
-		    <h3 class="sheet-subtitle"></h3>
 			<div class="col-12 col-md-12">
+				   <h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures"/> <%=stringUploadMaxSize%>)</h3>
 		       	   <div class="pb-2">
 		       			<div id="fileList"></div>
 						<span style="display:block; height: 10px;"></span>
 						<div class="btn-group">
-							<label for="uploadedFile" class="btn btn-primary pull-left"><liferay-ui:message key="upload"/> <liferay-ui:message key="documentsPictures"/></label>
+							<label for="uploadedFile" class="btn btn-primary pull-left"><liferay-ui:message key="upload"/></label>
 						    <div id="clearFileList" style="display:none">
 								<liferay-ui:icon
 										cssClass="btn-outline-info"
@@ -147,7 +157,7 @@ String redirectTo = request.getParameter("redirectTo");
          <div class="row">
 		    <div class="col-12 col-md-12">
 	           <aui:button-row>
-		        	<aui:button type="submit" value="publish" cssClass="btn-outline-info"></aui:button> 
+		        	<aui:button type="submit" value="post" cssClass="btn-outline-info"></aui:button> 
 		        	<aui:button name="cancel" type="button" value="cancel" onClick="<%=challengesURL%>"/>	 
 		        </aui:button-row>  		 
 			</div>

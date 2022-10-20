@@ -120,6 +120,12 @@ public class LocationLocalServiceUtil {
 		return getService().deleteLocation(locationId);
 	}
 
+	public static void deleteLocationByChallengeId(long challengeId)
+		throws PortalException {
+
+		getService().deleteLocationByChallengeId(challengeId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */

@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
@@ -95,10 +96,10 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	public static final String TABLE_SQL_DROP = "drop table COCREATION_Task";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY task.description DESC";
+		" ORDER BY task.expirationDate ASC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY COCREATION_Task.description DESC";
+		" ORDER BY COCREATION_Task.expirationDate ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -129,7 +130,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long DESCRIPTION_COLUMN_BITMASK = 8L;
+	public static final long EXPIRATIONDATE_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -544,9 +545,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	public int compareTo(Task task) {
 		int value = 0;
 
-		value = getDescription().compareTo(task.getDescription());
-
-		value = value * -1;
+		value = DateUtil.compareTo(
+			getExpirationDate(), task.getExpirationDate());
 
 		if (value != 0) {
 			return value;

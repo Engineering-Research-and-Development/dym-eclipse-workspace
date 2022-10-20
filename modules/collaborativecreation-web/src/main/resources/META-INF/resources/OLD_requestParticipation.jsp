@@ -21,7 +21,7 @@ long challengeId = ParamUtil.getLong(request, "challengeId");
 	             <div>
 	             	<aui:input label="Challenge" name="challenge" id="challenge" readonly="true" value="<%=ChallengeLocalServiceUtil.getChallenge(challengeId).getTitle()%>"/>
 	             </div>
-	             <liferay-ui:input-editor name="request" initMethod="initEditor" width="100" height="600" resizable="true" toolbarSet="liferay-article"></liferay-ui:input-editor>
+	             <aui:input label="request" placeholder="Type a message here..." name="request" id="request" type="textarea" required='true'/>
 		    </div>            
 		</aui:fieldset>
 		<aui:button-row>
@@ -32,10 +32,3 @@ long challengeId = ParamUtil.getLong(request, "challengeId");
 		</aui:button-row>
 	</aui:form>      
 </div>
-
-<aui:script>
- function <portlet:namespace/>initEditor(){ 
-	 var contentValue="<%=typeAmessageHere%>";
-	 return contentValue;
- }
-</aui:script>

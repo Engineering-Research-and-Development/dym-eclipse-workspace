@@ -19,6 +19,7 @@
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.ResourceBundle" %>
+<%@ page import="java.util.stream.Collectors" %>
 
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
@@ -75,6 +76,7 @@
 <%@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@ page import="com.liferay.portal.kernel.repository.model.Folder"%>
+<%@ page import="com.liferay.portal.kernel.upload.UploadServletRequestConfigurationHelperUtil"%>
 <%@ page import="com.liferay.document.library.kernel.model.DLFileEntry"%>
 <%@ page import="com.liferay.document.library.kernel.model.DLFolder"%>
 <%@ page import="com.liferay.document.library.kernel.model.DLFolderConstants"%>
@@ -101,11 +103,13 @@ String deleteOperationConfirmation = languages.getString("deleteConfirmation");
 String addMilestone = languages.getString("addMilestone");
 String addToDo = languages.getString("addToDo");
 String requestToCoCreate = languages.getString("requestToCoCreate");
+String typeAmessageHere  = languages.getString("typeAmessageHere");
 
 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-/* SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); */
+SimpleDateFormat rangeControlFormatter = new SimpleDateFormat("yyyy-MM-dd");
 Calendar calendar = Calendar.getInstance();
 Date nowDate = calendar.getTime();
+
 List<Country> countries = CountryServiceUtil.getCountries();
 List<AssetTag> assetTags = AssetTagLocalServiceUtil.getAssetTags(0, 999);
 List<AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getAssetCategories(0, 999);
@@ -117,6 +121,29 @@ while(userRelatedRolesIt.hasNext()){
 	if (role.getName().equalsIgnoreCase("SOCS Challenge Owner")){
 		isChallengeOwner = true;
 	}
+}
+
+/*Grandezza massima dei file in upload*/
+long uploadMaxSize = UploadServletRequestConfigurationHelperUtil.getMaxSize();
+String stringUploadMaxSize = "";
+long kilo = 1024;
+long mega = kilo * kilo;
+long giga = mega * kilo;
+long tera = giga * kilo;
+double kb = (double)uploadMaxSize / kilo;
+double mb = kb / kilo;
+double gb = mb / kilo;
+double tb = gb / kilo;
+if(uploadMaxSize < kilo) {
+	stringUploadMaxSize = uploadMaxSize + " Bytes";
+} else if(uploadMaxSize >= kilo && uploadMaxSize < mega) {
+	stringUploadMaxSize =  String.format("%.2f", kb) + " KB";
+} else if(uploadMaxSize >= mega && uploadMaxSize < giga) {
+	stringUploadMaxSize = String.format("%.2f", mb) + " MB";
+} else if(uploadMaxSize >= giga && uploadMaxSize < tera) {
+	stringUploadMaxSize = String.format("%.2f", gb) + " GB";
+} else if(uploadMaxSize >= tera) {
+	stringUploadMaxSize = String.format("%.2f", tb) + " TB";
 }
 %>
 

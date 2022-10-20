@@ -19,10 +19,6 @@ if (cocreationId > 0){
 			allCocreators.add(cocreator);
 	}
 }
-
-/*Date minima e massima selezionabili*/
-String startDate = rangeControlFormatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, themeDisplay.getScopeGroupId()).getStartDate());
-String endDate = rangeControlFormatter.format(ChallengeLocalServiceUtil.getChallengeByCocreationId(cocreationId, themeDisplay.getScopeGroupId()).getEndDate());
 %>
 
 <portlet:actionURL name="addMilestone" var="addMilestoneURL">
@@ -67,7 +63,7 @@ String endDate = rangeControlFormatter.format(ChallengeLocalServiceUtil.getChall
 	             </div> 
 	             <div>  
 		  			<label class="control-label"><liferay-ui:message key="expirationDate"/>*</label>
-			     	<input id="expirationDate" name="expirationDate" type="date" min="<%=startDate%>" max="<%=endDate%>" required='true'></input>
+		  			<input id="expirationDate" name="expirationDate" class="form-control date" type="text" placeholder="dd/mm/yyyy" value="" required='true'>
 			     </div> 
 		    </div>            
 		</aui:fieldset>

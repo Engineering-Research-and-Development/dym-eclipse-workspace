@@ -77,7 +77,7 @@ public class ChallengeCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(43);
+		StringBundler sb = new StringBundler(45);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -103,6 +103,8 @@ public class ChallengeCacheModel
 		sb.append(description);
 		sb.append(", desiredOutcome=");
 		sb.append(desiredOutcome);
+		sb.append(", additionalInformation=");
+		sb.append(additionalInformation);
 		sb.append(", startDate=");
 		sb.append(startDate);
 		sb.append(", endDate=");
@@ -186,6 +188,13 @@ public class ChallengeCacheModel
 			challengeImpl.setDesiredOutcome(desiredOutcome);
 		}
 
+		if (additionalInformation == null) {
+			challengeImpl.setAdditionalInformation("");
+		}
+		else {
+			challengeImpl.setAdditionalInformation(additionalInformation);
+		}
+
 		if (startDate == Long.MIN_VALUE) {
 			challengeImpl.setStartDate(null);
 		}
@@ -249,9 +258,10 @@ public class ChallengeCacheModel
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
-		title = objectInput.readUTF();
+		title = (String)objectInput.readObject();
 		description = (String)objectInput.readObject();
 		desiredOutcome = (String)objectInput.readObject();
+		additionalInformation = (String)objectInput.readObject();
 		startDate = objectInput.readLong();
 		endDate = objectInput.readLong();
 		dlFolderName = objectInput.readUTF();
@@ -297,10 +307,10 @@ public class ChallengeCacheModel
 		objectOutput.writeLong(modifiedDate);
 
 		if (title == null) {
-			objectOutput.writeUTF("");
+			objectOutput.writeObject("");
 		}
 		else {
-			objectOutput.writeUTF(title);
+			objectOutput.writeObject(title);
 		}
 
 		if (description == null) {
@@ -315,6 +325,13 @@ public class ChallengeCacheModel
 		}
 		else {
 			objectOutput.writeObject(desiredOutcome);
+		}
+
+		if (additionalInformation == null) {
+			objectOutput.writeObject("");
+		}
+		else {
+			objectOutput.writeObject(additionalInformation);
 		}
 
 		objectOutput.writeLong(startDate);
@@ -357,6 +374,7 @@ public class ChallengeCacheModel
 	public String title;
 	public String description;
 	public String desiredOutcome;
+	public String additionalInformation;
 	public long startDate;
 	public long endDate;
 	public String dlFolderName;
