@@ -308,7 +308,9 @@ while(cocreationsIt.hasNext()){
 				    <div class="col-12 col-md-12">
 		       	   		<div class="pb-2">	
 		       	   			<%if (isChallengeOwner){%>
-								<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures"/> <%=stringUploadMaxSize%>)</h3>
+		       	   				<%if (themeDisplay.getUserId() == challenge.getUserId()){%>
+									<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures"/> <%=stringUploadMaxSize%>)</h3>
+								<%}%>
 							<%}else{%>					
 								<h3 class="sheet-subtitle"><liferay-ui:message key="documentsPictures1"/></h3>
 							<%}%>
@@ -325,11 +327,6 @@ while(cocreationsIt.hasNext()){
 							 %>
 						</div>
 				    </div>
-				    <div class="col-12 col-md-12">
-		       	   		<div class="pb-2">	
-				   			<h3 class="sheet-subtitle"></h3>
-				   		</div>
-				   </div>
 		   		<%}%>	  
 			    <%if (challenge.getUserId() == user.getUserId()){%>
 				   <div class="col-sm-6 col-md-6">

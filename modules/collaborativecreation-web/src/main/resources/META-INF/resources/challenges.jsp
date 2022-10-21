@@ -1,3 +1,4 @@
+<%@page import="com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 
 <%
@@ -95,7 +96,12 @@ if (challengesAuthor != null && challengesAuthor.equalsIgnoreCase("true")){
 if (topVoted != null && topVoted.equalsIgnoreCase("true")){
 	if (filteredChallenges.size() > 0){
 		for (Challenge challenge : filteredChallenges) {
-			scoreMap.put(challenge.getChallengeId(), ChallengeLocalServiceUtil.getAverageScore(challenge.getChallengeId()));
+			for (int l=0; l < RatingsStatsLocalServiceUtil.getRatingsStatses(0, Integer.MAX_VALUE).size(); l++) {
+				if (RatingsStatsLocalServiceUtil.getRatingsStatses(0, Integer.MAX_VALUE).get(l).getClassPK() == challenge.getChallengeId()){
+					/*Per determinare il ranking considero la somma calcolata fra i voti positivi e la media determinata fra i voti positivi e il totale dei voti espressi*/
+					scoreMap.put(challenge.getChallengeId(), RatingsStatsLocalServiceUtil.getStats(Challenge.class.getName(), challenge.getChallengeId()).getTotalScore() + RatingsStatsLocalServiceUtil.getStats(Challenge.class.getName(), challenge.getChallengeId()).getAverageScore());
+				}
+			}
 		}
 		scoreMapAsList.addAll(scoreMap.entrySet());
 		Collections.sort(scoreMapAsList, new Comparator<Entry<Long, Double>>(){

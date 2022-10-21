@@ -57,7 +57,7 @@ if (cocreationId > 0){
 	             </div>
 	             <div>
 	             	<aui:select label="inviteParticipants" name="participants" id="participants" showEmptyOption="false" multiple="true" required="true">
-	             		<aui:option selected="<%=true%>" value=""><liferay-ui:message key="select"/>...</aui:option>
+	             		<aui:option selected="<%=true%>" value=""><liferay-ui:message key="selectOrType"/>...</aui:option>
 						<%
 						for (User groupUser : users) {
 							boolean isCocreator = false;
