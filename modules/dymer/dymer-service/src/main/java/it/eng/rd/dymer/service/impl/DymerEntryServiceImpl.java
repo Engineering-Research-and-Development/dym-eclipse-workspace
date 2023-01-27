@@ -15,8 +15,13 @@
 package it.eng.rd.dymer.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -31,6 +36,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.osgi.service.component.annotations.Component;
@@ -208,6 +214,8 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 						sc
 				);
 			}
+			
+			
 			return dymerEntry;
 		} catch (PortalException e) {
 			_log.error("An error occurred while invoking remote update service");
@@ -234,8 +242,6 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			_log.debug("id: " +id);
 		}
         
-        ServiceContext sc = new ServiceContext();
-        
         DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, id);
 
         if(dymerEntry != null) {
@@ -250,63 +256,33 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
         }
     }
 	
-	/*@Deprecated
-	@JSONWebService(value="deleteOLD",method="POST")
-    public void deleteOLD(
-    		String emailAddress,
-    		long companyId,
-            String index,
-            String type,
-            String id
-    ) {
-		if (_log.isDebugEnabled()) {
-			_log.debug("Deprecated DymerEntryServiceImpl, delete method---------------------------------------------");
-			
-			_log.debug("emailAddress: " +emailAddress);
-			_log.debug("companyId: " +companyId);
-			_log.debug("index: " +index);
-			_log.debug("type: " +type);
-			_log.debug("id: " +id);
+	@JSONWebService(value="getUserInfoByEmail",method="POST")
+	public JSONObject getUserInfoByEmail(String emailAddress, long companyId) {
+		
+		if (_log.isDebugEnabled()){
+			 _log.debug("getUserInfoByEmail method ");
+			 _log.debug("emailAddress "+emailAddress);
+			 _log.debug("companyId "+companyId);
 		}
-        
-        ServiceContext sc = new ServiceContext();
-    
-        User user;
-        try {
-        	user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
-			sc.setUserId(user.getUserId());
-        } catch (NoSuchUserException e) {
-			_log.error("No User with "+emailAddress+" in companyId="+companyId);
-			
-			emailAddress = DymerServicePropsKeys.DEFAULT_CATALOGUE_RESOURCE_OWNER;
-			
-			if (Validator.isNotNull(catalague_resource_email)) {
-				emailAddress = catalague_resource_email;
-			}
-			try {
-				user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
-				sc.setUserId(user.getUserId());
-				_log.warn("Catalogue Resource [index:"+index+",type:"+",id:"+id+"] is related to "+emailAddress);
-			} catch (PortalException e1) {
-				_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"], "+e1.getMessage());
-			}
-        } catch (Exception e2) {
-        	_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"], "+e2.getMessage());
-        }
-        finally {
-            sc.setUuid(UUID.randomUUID().toString());
-            Date now = new Date();
-            sc.setCreateDate(now);
-            sc.setModifiedDate(now);
-            sc.setAssetCategoryIds(new long[] {});
-            sc.setAssetTagNames(new String[] {});
-            sc.setAssetLinkEntryIds(new long[] {});
-            
-            dymerEntryDelete(emailAddress, companyId, index, type, id, sc);
-        }
-        
-
-    }*/
+		
+		DynamicQuery userQuery = DynamicQueryFactoryUtil.forClass(User.class);
+		userQuery.add(PropertyFactoryUtil.forName("emailAddress").eq(emailAddress));
+		userQuery.add(PropertyFactoryUtil.forName("companyId").eq(new Long(companyId)));
+		List<User> users = userLocalService.dynamicQuery(userQuery);
+		JSONObject userJSON = JSONFactoryUtil.createJSONObject();
+		/*if (users!=null) {
+			_log.info("# of users "+users.size());
+		}*/
+		
+		if (users!=null && users.size()==1) {
+			User u = users.get(0);
+			userJSON.put("userId", u.getUserId());
+			userJSON.put("fullName", u.getFullName());
+			return userJSON;
+		}
+		userJSON.put("error", "No User exists with email "+ emailAddress);
+		return userJSON;
+	}
 	
 	@Deprecated
 	private void dymerEntryDelete(

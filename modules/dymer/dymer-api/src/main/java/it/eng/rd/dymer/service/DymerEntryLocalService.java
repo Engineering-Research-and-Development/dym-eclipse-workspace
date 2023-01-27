@@ -332,6 +332,9 @@ public interface DymerEntryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getNotificationType(String cmd);
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

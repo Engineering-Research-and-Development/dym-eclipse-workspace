@@ -54,6 +54,13 @@ public class DymerEntryServiceWrapper
 		return _dymerEntryService.getOSGiServiceIdentifier();
 	}
 
+	@Override
+	public com.liferay.portal.kernel.json.JSONObject getUserInfoByEmail(
+		String emailAddress, long companyId) {
+
+		return _dymerEntryService.getUserInfoByEmail(emailAddress, companyId);
+	}
+
 	/**
 	 * Old remote services
 	 */

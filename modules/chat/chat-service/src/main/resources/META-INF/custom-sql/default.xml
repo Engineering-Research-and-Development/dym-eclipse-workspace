@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<custom-sql>
+   <sql id="it.eng.rd.chat.service.persistence.impl.ChatMessageFinderImpl.getUserByRecentChat"> 
+      <![CDATA[ 
+select u.* from User_ u inner join dym_chatmessage c on c.fromUser=u.userId or c.toUser=u.userId
+where c.fromUser=? or c. toUser=? order by c.sentDate desc;
+]]>
+   </sql>
+</custom-sql>

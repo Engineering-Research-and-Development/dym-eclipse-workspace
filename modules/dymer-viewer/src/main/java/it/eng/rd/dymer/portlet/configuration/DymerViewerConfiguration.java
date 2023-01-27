@@ -33,6 +33,9 @@ public interface DymerViewerConfiguration {
 	public String autostartsearch();
 	
 	@Meta.AD(required = false)
+	public String showtour();
+	
+	@Meta.AD(required = false)
 	public String showbread();
 	
 	@Meta.AD(required = false)
@@ -40,6 +43,9 @@ public interface DymerViewerConfiguration {
 	
 	@Meta.AD(required = false)
 	public String dymerTour();
+	
+	@Meta.AD(required = false)
+	public String dymerTourText();
 	
 	@Meta.AD(required = false)
 	public String dymerFreeJSON();

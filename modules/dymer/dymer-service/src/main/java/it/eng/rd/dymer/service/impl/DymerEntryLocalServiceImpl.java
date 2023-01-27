@@ -1,47 +1,59 @@
-/**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- */
-
 package it.eng.rd.dymer.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserNotificationDeliveryConstants;
+import com.liferay.portal.kernel.notifications.NotificationEvent;
+import com.liferay.portal.kernel.notifications.NotificationEventFactoryUtil;
+import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
+import com.liferay.portal.kernel.notifications.UserNotificationManagerUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.SubscriptionSender;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import it.eng.rd.dymer.model.Dymer;
 import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.service.base.DymerEntryLocalServiceBaseImpl;
+import it.eng.rd.dymer.service.constants.DymerServicePropsKeys;
+import java.util.ResourceBundle;
 
 @Component(
 	property = "model.class.name=it.eng.rd.dymer.model.DymerEntry",
 	service = AopService.class
 )
 public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
+	
+	private final String portletId = "it_eng_rd_dymer_portlet_DymerPortlet";
+	
+	private final ResourceBundle _resourceBundle = ResourceBundle.getBundle("content/Language", new Locale(Locale.getDefault().toString(), Locale.getDefault().getDisplayCountry()));
 
 	@Indexable(type = IndexableType.REINDEX)
 	public DymerEntry addDymerEntry(
@@ -136,6 +148,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		if (_log.isDebugEnabled()) 
 			_log.debug("generated permission");
 		
+		sendNotifications(entry, entry.getTitle(), entry.getExtContent(), user, portletId, getNotificationType(Constants.ADD), serviceContext);
+		
 		return entry;
 	}
 	
@@ -215,6 +229,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		
 		if (_log.isDebugEnabled()) 
 			_log.debug("generated assetLink");
+				
+		sendNotifications(entry, title, extContent, user, portletId, getNotificationType(Constants.UPDATE), serviceContext);
 		
 		return entry;
 	}
@@ -398,11 +414,20 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			_log.debug("DymerEntryLocalServiceImpl, deleteDymerEntry method");
 			_log.debug("entryId "+entry.getEntryId());
 		}
-			
-		dymerEntryPersistence.remove(entry);
+		
+		ServiceContext sc = new ServiceContext();
+		//sc.setUuid(UUID.randomUUID().toString());
+		Date now = new Date();
+		sc.setCreateDate(now);
+		sc.setModifiedDate(now);
+		sc.setAssetCategoryIds(new long[] {});
+		sc.setAssetTagNames(new String[] {});
+		sc.setAssetLinkEntryIds(new long[] {});
 		
 		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
                 DymerEntry.class.getName(), entry.getEntryId());
+		
+		dymerEntryPersistence.remove(entry);
 		
 		if (_log.isDebugEnabled())
 			_log.debug("removed assetEntry");
@@ -423,6 +448,10 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			_log.error(e,e);
 		}
 
+		User user = UserLocalServiceUtil.getUser(entry.getUserId());
+		
+		sendNotifications(entry, entry.getTitle(), entry.getExtContent(), user, portletId, getNotificationType(Constants.DELETE), sc);
+		
 		return entry;
 	}
 	
@@ -461,6 +490,144 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	public int getDymerEntriesCount(long groupId, long dymerId) {
 		return dymerEntryPersistence.countByG_D(groupId, dymerId);
 	}
+	
+	public int getNotificationType(String cmd) {
+		_log.debug("cmd: "+cmd);
+	     int notificationType;
+	     switch (cmd) {
+	         case Constants.ADD:
+	        	 notificationType =  UserNotificationDefinition.NOTIFICATION_TYPE_ADD_ENTRY;
+	             break;
+	         case  Constants.UPDATE:
+	        	 notificationType =  UserNotificationDefinition.NOTIFICATION_TYPE_UPDATE_ENTRY;
+	             break;
+	         case Constants.DELETE:
+	        	 notificationType = 2;
+	             break;
+	         default:
+	             throw new IllegalArgumentException("Invalid cmd: " + cmd);
+	     }
+	     return notificationType;
+	}
+	
+	private void sendNotifications(DymerEntry entry, String title, String extContent, User user, String portletId, int notificationType, ServiceContext serviceContext) throws PortalException {
+		_log.debug("sendNotifications method, notificationType: "+String.valueOf(notificationType));
+		String fromAddress = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.DEFAULT_PORTAL_EMAIL), StringPool.BLANK);
+		String fromName = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.DEFAULT_PORTAL_NAME), StringPool.BLANK);
+		String portalUrl = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.DEFAULT_PORTAL_URL), StringPool.BLANK);
+		
+		if (_log.isDebugEnabled()) {
+			_log.debug("fromAddress: "+fromAddress);
+			_log.debug("fromName: "+fromName);
+		}
+		long classNameId =  0;
+		List<User> destinationUsers = userLocalService.getCompanyUsers(entry.getCompanyId(), 0, userLocalService.getCompanyUsersCount(entry.getCompanyId()));
+		for (User destinationUser : destinationUsers) {
+			
+			long destinationUserId = destinationUser.getUserId();
+			if (destinationUser.isActive() && !(destinationUser.isDefaultUser()) && (destinationUserId!=entry.getUserId())) {
+				if (_log.isDebugEnabled())
+					_log.debug("destinationUser: "+destinationUser.getEmailAddress() +" destinationUserId: "+destinationUser.getUserId());
+				if (UserNotificationManagerUtil.isDeliver(destinationUserId, portletId, classNameId, notificationType, UserNotificationDeliveryConstants.TYPE_WEBSITE)){
+					notifyByWebsite(destinationUserId, notificationType, title, extContent, entry.getUserId(), entry.getGroupId(), entry.getCompanyId(), user.getFullName(), entry.getEntryId(),  DymerEntry.class.getName(), portletId, serviceContext);
+				}
+				if (UserNotificationManagerUtil.isDeliver(destinationUserId, portletId, classNameId, notificationType, UserNotificationDeliveryConstants.TYPE_EMAIL)){
+					notifyByEmail(destinationUserId, notificationType, title, extContent, user.getUserId(), entry.getGroupId(), user.getCompanyId(), user.getFullName(), entry.getEntryId(), DymerEntry.class.getName(), portletId, fromAddress, fromName, portalUrl, entry.getId());
+				}
+			}
+		}
+	}
+	
+	protected void notifyByWebsite(long destinationUserId, int notificationType, String title, String extContent,
+			long userId, long groupId, long companyId, String fullName, 
+			long classPK, String className, String portletId, ServiceContext serviceContext) {
+		
+		Map<Integer,String> map =  new HashMap<>();
+		map.put(UserNotificationDefinition.NOTIFICATION_TYPE_ADD_ENTRY, Constants.ADD);
+		map.put(UserNotificationDefinition.NOTIFICATION_TYPE_UPDATE_ENTRY, Constants.UPDATE);
+		map.put(2, Constants.DELETE);
+		
+		JSONObject notificationEventJSONObject = JSONFactoryUtil.createJSONObject();
+		notificationEventJSONObject.put("title", title);
+		notificationEventJSONObject.put("description", extContent);
+		notificationEventJSONObject.put("companyId", companyId);
+		notificationEventJSONObject.put("groupId", groupId);
+		notificationEventJSONObject.put("userId", userId);
+		notificationEventJSONObject.put("sender", fullName);
+		notificationEventJSONObject.put("type", className);
+		notificationEventJSONObject.put("classPK", classPK);	
+		notificationEventJSONObject.put("notificationType", notificationType);
+		notificationEventJSONObject.put("cmd", map.get(notificationType));
+		
+		NotificationEvent notificationEvent = NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(), portletId, notificationEventJSONObject);
+		notificationEvent.setDeliveryType(UserNotificationDeliveryConstants.TYPE_WEBSITE);
+		notificationEvent.setDeliverBy(userId);
+		try {
+			if (_log.isDebugEnabled())
+				_log.debug(fullName + "(userId: "+userId+") has sent a WEBSITE notification to userId: "+destinationUserId);
+			_userNotificationEventLocalService.addUserNotificationEvent(destinationUserId, portletId, System.currentTimeMillis(), UserNotificationDeliveryConstants.TYPE_WEBSITE, userId, notificationEventJSONObject.toString(), false, serviceContext);
+		} catch (Exception e) {
+			_log.error("Error in notifyByWebsite method: " +e.getMessage());
+		}
+	}
+	
+	protected void notifyByEmail(long destinationUserId, int notificationType, String title, String extContent,
+			long currentUserId,  
+			long groupId, long companyId, String fullName,  
+			long classPK, String className, String portletId, String fromAddress, String fromName, String portalUrl, String _id) {
+		
+		try {
+			Map<Integer,String> map =  new HashMap<>();
+			
+			map.put(UserNotificationDefinition.NOTIFICATION_TYPE_ADD_ENTRY, LanguageUtil.format(_resourceBundle, "new-catalogue-resource-in-x", new Object[] {fromName}));
+			map.put(UserNotificationDefinition.NOTIFICATION_TYPE_UPDATE_ENTRY, LanguageUtil.format(_resourceBundle, "catalogue-resource-updated-in-x", new Object[] {fromName}));
+			map.put(2, LanguageUtil.format(_resourceBundle, "catalogue-deleted-in-x", new Object[] {fromName}));
+			
+			Map<Integer,String> map2 =  new HashMap<>();
+			map2.put(UserNotificationDefinition.NOTIFICATION_TYPE_ADD_ENTRY, "added");
+			map2.put(UserNotificationDefinition.NOTIFICATION_TYPE_UPDATE_ENTRY, "updated");
+			map2.put(2, "deleted");
+			
+			SubscriptionSender subscriptionSender = new SubscriptionSender();
+				
+			if (!(fromAddress.isEmpty()) && !(fromName.isEmpty()) && !(portalUrl.isEmpty())) {
+				subscriptionSender.setSubject(map.get(notificationType));
+				
+				String header = LanguageUtil.format(_resourceBundle, "the-user-x-has-y-the-following-catalogue-resource", new Object[] {fullName, map2.get(notificationType)});
+				String resourceTitle = title;
+				if (notificationType!=2)
+					resourceTitle = "<a href=\""+portalUrl+"/group/guest/catalogue-detail?id="+_id+"\">"+ title+"</a>";
+				
+				_log.debug("resourceTitle: "+resourceTitle);
+				
+				String body = "<p><b>"+header+StringPool.SPACE+resourceTitle+"</b></p>"
+						+ "<div style=\" background-color: #e1e4ea;\">"+extContent+"<div>";
+				subscriptionSender.setBody(body);
+				subscriptionSender.setFrom(fromAddress, fromName);
+				subscriptionSender.setCompanyId(companyId);
+				subscriptionSender.setGroupId(groupId);
+				subscriptionSender.setCurrentUserId(currentUserId);
+				subscriptionSender.setClassName(className);
+				subscriptionSender.setClassPK(classPK);
+				subscriptionSender.setNotificationType(notificationType);
+				subscriptionSender.setHtmlFormat(true);
+				subscriptionSender.setPortletId(portletId);
+			} else {
+				throw new Exception("configure portal-ext.properties with default.portal.email, default.portal.name and default.portal.url");
+			}
+			
+			if (_log.isDebugEnabled())
+				_log.debug(fromAddress + " has sent an E-MAIL notification to userId: "+destinationUserId);
+			subscriptionSender.sendEmailNotification(destinationUserId);
+		} catch (Exception e) {
+			_log.error("Error in notifyByEmail method: " +e.getMessage());
+		}
+	}
+	
+	@Reference
+	private UserNotificationEventLocalService
+		_userNotificationEventLocalService;
+
 	
 	private static final Log _log = LogFactoryUtil.getLog(DymerEntryLocalServiceImpl.class);
 }

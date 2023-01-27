@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="it.eng.rd.chat.model.ChatConfigure">
+		<field name="uuid" type="String" />
+		<field name="id" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="enable" type="boolean" />
+		<field name="headerColor" type="String" />
+		<field name="chatRightColor" type="String" />
+		<field name="chatLeftColor" type="String" />
+		<field name="headerTextColor" type="String" />
+		<field name="contentTextColor" type="String" />
+		<field name="backColor" type="String" />
+		<field name="chatRoleId" type="String" />
+		<field name="fontFamily" type="String" />
+		<field name="requestFeature" type="boolean" />
+	</model>
+	<model name="it.eng.rd.chat.model.ChatMessage">
+		<field name="uuid" type="String" />
+		<field name="id" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="fromUser" type="long" />
+		<field name="toUser" type="long" />
+		<field name="sentDate" type="Date" />
+		<field name="readDate" type="Date" />
+		<field name="message" type="String" />
+		<field name="readed" type="boolean" />
+		<field name="deleted" type="boolean" />
+		<field name="fileName" type="String" />
+		<field name="fileId" type="long" />
+	</model>
+	<model name="it.eng.rd.chat.model.ChatRequest">
+		<field name="uuid" type="String" />
+		<field name="id" type="long" />
+		<field name="fromUserId" type="long" />
+		<field name="toUserId" type="long" />
+		<field name="isAccepted" type="boolean" />
+		<field name="isRejected" type="boolean" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+	</model>
+</model-hints>

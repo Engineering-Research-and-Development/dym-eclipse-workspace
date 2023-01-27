@@ -190,6 +190,25 @@
 // 				 tour.init();
 
 // 				 tour.start();
+		
+		   <%  if(showtour_) {    %>
+					   $( document ).ready(function() {
+							
+							$("#startTour").click(function() { 
+								
+						     	introJs().setOptions({
+								  steps: [<%=dymerTour%>]
+								}).start();
+						
+						     });	
+						});			
+						
+	  	 	 
+	  	    <%}%>
+
+                
+
+
 				var str_not_import = "<%=not_import%>";
 				var ar = str_not_import.split(',');
 			
@@ -309,6 +328,37 @@
 			}
 
 			</script>
+			  
+	         <%  if(showtour_) {    %>
+	         
+	         <%= dymerTourText %>
+	         
+	          <%}%>
+			 
+			 
+			 
+			 <div class="row">
+			    <div class="col-md-12">
+					<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Dymer Toolbar">
+						  <div class="btn-group" role="group" aria-label="First group">
+						    <button id="primodfil" type="button" class="btn btn-outline-secondary" onclick="drawEntities(jsonConfig)"><i class="fa fa-home" aria-hidden="true"></i> <%= label %></button>
+						     
+						  </div>
+						  <%  boolean roleOkay_=true;
+									if(roleOkay_) { 
+								%> <div class="input-group" id="cont-addentity">
+						       
+						  
+								  </div><%
+								}%>
+						</div>
+			 
+			    </div>
+			 </div>
+			 
+			 
+			 
+			 
 			 <div class="row">
  					<% if(showVerticalfilter_) { %>
                     <div id="dymer_filtercontent" class="col-md-3 ">
@@ -333,28 +383,22 @@
                     </div>
                     <div class="col-md-9">
                     <% }else{%>
-                    <div class="col-12">
+                    <div class="col-md-12">
 		   			 <% }%>
 				 
-					<span id="primodfil" class="  btn-listdymer " onclick="drawEntities(jsonConfig)">
-						<i class="fa fa-list" aria-hidden="true"></i> <%= label %>
-					</span>
-					
-					<span class="  btn-listdymer " id="startTour" >
-					<i class="fa fa-info-circle" aria-hidden="true"></i> Info
-					</span>
-					<%  boolean roleOkay_=true;
-						if(roleOkay_) { 
-					%>
-					<span id="cont-addentity" class="pull-right"></span>
-					<% }%>
-					
-					
-					<c:if test="<%=showbread_ %>">
+				 	 
+				  	<c:if test="<%=showbread_ %>">
 						<div id="dymer_breadcrumb" class="col-12"></div>
 					</c:if>
 	
-					<div id="cont-MyList"></div>
+					<div id="cont-MyList">
+							 
+							<div class="text-center">
+							<div class="spinner-border text-secondary" role="status">
+							  <span class="sr-only">Loading...</span>
+							</div>	
+						</div>
+					</div>
 					
 					</div>			 
 		    </div>
@@ -392,7 +436,23 @@
 
 // 					 tour.start();
 // 				});			
+			<%  if(showtour_) {    %>
+			
+			$( document ).ready(function() {
 				
+				$("#startTour").click(function() { 
+					
+			     	introJs().setOptions({
+					  steps: [<%=dymerTour%>]
+					}).start();
+			
+			     });	
+ 			});			
+			
+				 
+				 
+			  <%}%>
+
 			
 			var str_not_import = "<%=not_import%>";
 			var ar = str_not_import.split(',');
@@ -539,50 +599,56 @@
 			</script>
 
 			<div class="container_">
-
-  				<div class="row">
-					<div class="col-12 span12  "  >
+				  <%  if(showtour_) {    %>
+				  
+				  <%= dymerTourText %>
+			                
+			    <%}%> 
+  				<div class="row mb-2 ">
+					<div class="col-12 col-md-12 span12  "  >
+					<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Dymer Toolbar">
+					
+					
 					<% 
 						if(typemapdt.equals("map")) { 
 					%>	
-<!-- 						<span class="btn btn-mini btn-listdymer" onclick="location.reload();">  -->
-<!-- 							<i class="fa fa-refresh" aria-hidden="true"></i>Reload Map -->
-<!-- 						</span> -->
-						<span class="btn btn-mini btn-listdymer" id="showmap" onclick="showDatasetContainer();">
-							<i class="fa fa-globe" aria-hidden="true"></i>Show Map
-						</span>
+  	
+						<div class="btn-group" role="group" aria-label="First group">
+						    <button type="button" class="btn btn-outline-secondary" id="showmap" onclick="showDatasetContainer();"><i class="fa fa-globe" aria-hidden="true"></i> Show Map</button>
+						 </div>
+						
+						
+						
 					<% } %>
 					<% 
 						if(typemapdt.equals("dt")) { 
 					%>	
-<!-- 						<span class="btn btn-mini btn-listdymer " onclick="location.reload();"> -->
-<!-- 							<i class="fa fa-refresh" aria-hidden="true"></i>Reload Table -->
-<!-- 						</span> -->
-						<span class="btn btn-mini btn-listdymer" id="showmap"  onclick="showDatasetContainer();">
-							<i class="fa fa-table" aria-hidden="true"></i>Show Table
-						</span>
+ 
+						 <div class="btn-group" role="group" aria-label="First group">
+						    <button type="button" class="btn btn-outline-secondary" id="showmap" onclick="showDatasetContainer();"> <i class="fa fa-table" aria-hidden="true"></i> Show Table</button>
+						 </div>
+						
+						
+						
 					<% } %>
 					<% 
 						if(typemapdt.equals("mapdt")) { 
 					%>	
-<!-- 						<span class="btn btn-mini btn-listdymer " onclick="location.reload();"> -->
-<!-- 							<i class="fa fa-refresh" aria-hidden="true"></i>Reload Map & Table -->
-<!-- 						</span> -->
-						<span class="btn btn-mini btn-listdymer" id="showmap" onclick="showDatasetContainer();">
-							<i class="fa fa-table" aria-hidden="true"></i> Show Map & Table
-						</span>
+  						 <div class="btn-group" role="group" aria-label="First group">
+						    <button type="button" class="btn btn-outline-secondary" id="showmap" onclick="showDatasetContainer();"> <i class="fa fa-table" aria-hidden="true"></i> Show Map & Table</button>
+						 </div>
 					<% } %>
 					
-							<span class="  btn-listdymer " id="startTour">
-							<i class="fa fa-info-circle" aria-hidden="true"></i> Info
-							</span>
-					
-					  <%  	if(roleOkay) { 
+					   <%  	if(roleOkay) { 
 						   %>
-						  	<span id="cont-addentity" class="pull-right"></span>
+						   <div class="input-group" id="cont-addentity">
+						  	 
+						  	</div>
 						   <% 
 					 		} 
 					   %>
+					   
+					     </div>
 					</div>
 				</div>
 			</div>
@@ -628,6 +694,7 @@
 							  <span class="sr-only">Loading...</span>
 							</div>	
 						</div>
+					<span class="loader"></span>
 					</div>
 				</div>
 

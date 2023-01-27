@@ -66,8 +66,9 @@ public class DymerViewerConfigurationAction
 		if (not_import!=null) {
 			not_import = not_import.trim();
 		}
-		
+		String showtour = ParamUtil.getString(actionRequest, "showtour");
 		String dymerTour = ParamUtil.getString(actionRequest, "dymerTour");
+		String dymerTourText = ParamUtil.getString(actionRequest, "dymerTourText");
 		String dymerFreeHTML = ParamUtil.getString(actionRequest, "dymerFreeHTML");
 		String dymerFreeJSON = ParamUtil.getString(actionRequest, "dymerFreeJSON");
 		 
@@ -109,7 +110,9 @@ public class DymerViewerConfigurationAction
 		setPreference(actionRequest, "not_import", not_import);
 
 //		Dymer tour		
+		setPreference(actionRequest, "showtour", showtour);
 		setPreference(actionRequest, "dymerTour", dymerTour);
+		setPreference(actionRequest, "dymerTourText", dymerTourText);
 		setPreference(actionRequest, "dymerFreeHTML", dymerFreeHTML);
 		setPreference(actionRequest, "dymerFreeJSON", dymerFreeJSON);
 

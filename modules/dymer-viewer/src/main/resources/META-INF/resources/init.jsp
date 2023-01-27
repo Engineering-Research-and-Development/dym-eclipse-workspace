@@ -66,6 +66,11 @@
 		dymerTour = portletPreferences.getValue("dymerTour", dymerViewerConfiguration.dymerTour());
 	}
 	
+	String dymerTourText = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		dymerTourText = portletPreferences.getValue("dymerTourText", dymerViewerConfiguration.dymerTourText());
+	}
+	
 	String dymerFreeHTML = "";
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		dymerFreeHTML = portletPreferences.getValue("dymerFreeHTML", dymerViewerConfiguration.dymerFreeHTML());
@@ -86,6 +91,13 @@
 		showbread = portletPreferences.getValue("showbread", dymerViewerConfiguration.showbread());
 	}
 	
+	String showtour = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		showtour = portletPreferences.getValue("showtour", dymerViewerConfiguration.showtour());
+	}
+	
+	
+	 
 	String autostartsearch = "";
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		autostartsearch = portletPreferences.getValue("autostartsearch", dymerViewerConfiguration.autostartsearch());
@@ -215,6 +227,13 @@
 		}
 	}
 	
+	boolean showtour_ = false;
+	if (showtour!=null && !showtour.isEmpty()){
+		if(showtour.equalsIgnoreCase("on") ){
+			showtour_=true;
+		}
+	}
+	
 	boolean showVerticalfilter_ = false;
 	if (showVerticalfilter!=null && !showVerticalfilter.isEmpty()){
 		if(showVerticalfilter.equalsIgnoreCase("on") ){
@@ -289,7 +308,7 @@
 	_log.info("[DymerViewerPortlet][init.jsp] map_markers: "+map_markers);*/
 %>
 
-
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/main.css">
 <c:set var="dymerIp_" value="<%=dymerIp %>" />
 <c:set var="dviewtype_" value="<%=dviewtype %>" />
 <c:set var="addModel_" value="<%=addModel %>" />
@@ -303,6 +322,10 @@
 <c:set var="placeHolderFilter_" value="<%=placeHolderFilter_ %>" />
 
 <c:set var="showbread_" value="<%=showbread_ %>" />
+<c:set var="showtour_" value="<%=showtour_ %>" />
+ 
+
+
 <c:set var="autostartsearch_" value="<%=autostartsearch_ %>" />
 
 <c:set var="showfilter_txt" value="<%=showfilter %>" />
@@ -349,8 +372,5 @@
 
 
 <script id="dymerurl" src="${dymerIp_}/public/cdn/js/${viewjs}" data-senna-off="true"></script>
-<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.12.0/css/bootstrap-tour.min.css" rel="stylesheet"> -->
-<!-- <script id="dymertour" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.12.0/js/bootstrap-tour.min.js" data-senna-off="true"></script> -->
-
-
+ 
 <!-- upgrade 300822 -->

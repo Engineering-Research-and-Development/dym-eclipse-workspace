@@ -40,6 +40,7 @@ import it.eng.rd.dymer.web.util.crypto.AesCrypto;
 /**
  * @author ENGRD
  */
+@SuppressWarnings("deprecation")
 @Component(
 	immediate = true,
 	property = {
@@ -63,7 +64,7 @@ public class DymerPortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 	    throws IOException, PortletException {
-
+		
 	    try {
 	        ServiceContext serviceContext = ServiceContextFactory.getInstance(
 	            Dymer.class.getName(), renderRequest);
@@ -98,6 +99,7 @@ public class DymerPortlet extends MVCPortlet {
 	        
 	        try {
 				setCookies(renderRequest, renderResponse);
+				    
 			} catch (PortalException e) {
 				_log.error(e,e);
 			}
@@ -106,7 +108,8 @@ public class DymerPortlet extends MVCPortlet {
 	    catch (Exception e) {
 	        throw new PortletException(e);
 	    }
-
+	    
+	    
 	    super.render(renderRequest, renderResponse);
 	}
 	
@@ -189,4 +192,5 @@ public class DymerPortlet extends MVCPortlet {
 
 	@Reference
 	private DymerLocalService _dymerLocalService;
+	
 }

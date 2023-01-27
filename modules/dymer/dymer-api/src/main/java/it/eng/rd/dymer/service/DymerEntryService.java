@@ -16,10 +16,12 @@ package it.eng.rd.dymer.service;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
 import it.eng.rd.dymer.model.DymerEntry;
@@ -64,6 +66,10 @@ public interface DymerEntryService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
+
+	@JSONWebService(method = "POST", value = "getUserInfoByEmail")
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONObject getUserInfoByEmail(String emailAddress, long companyId);
 
 	/**
 	 * Old remote services

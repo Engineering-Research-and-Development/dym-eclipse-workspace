@@ -426,6 +426,11 @@ public class DymerEntryLocalServiceWrapper
 		return _dymerEntryLocalService.getIndexableActionableDynamicQuery();
 	}
 
+	@Override
+	public int getNotificationType(String cmd) {
+		return _dymerEntryLocalService.getNotificationType(cmd);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

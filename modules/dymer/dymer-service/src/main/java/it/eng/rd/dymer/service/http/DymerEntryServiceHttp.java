@@ -114,13 +114,45 @@ public class DymerEntryServiceHttp {
 		}
 	}
 
+	public static com.liferay.portal.kernel.json.JSONObject getUserInfoByEmail(
+		HttpPrincipal httpPrincipal, String emailAddress, long companyId) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DymerEntryServiceUtil.class, "getUserInfoByEmail",
+				_getUserInfoByEmailParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, emailAddress, companyId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static it.eng.rd.dymer.model.DymerEntry update(
 		HttpPrincipal httpPrincipal, long userId, long groupId, String index,
 		String type, String id, String url, String title, String extContent) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "update", _updateParameterTypes4);
+				DymerEntryServiceUtil.class, "update", _updateParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, groupId, index, type, id, url, title,
@@ -153,7 +185,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes5);
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, index, type, id);
@@ -185,11 +217,13 @@ public class DymerEntryServiceHttp {
 	private static final Class<?>[] _deleteParameterTypes2 = new Class[] {
 		String.class, long.class, String.class, String.class, String.class
 	};
-	private static final Class<?>[] _updateParameterTypes4 = new Class[] {
+	private static final Class<?>[] _getUserInfoByEmailParameterTypes3 =
+		new Class[] {String.class, long.class};
+	private static final Class<?>[] _updateParameterTypes5 = new Class[] {
 		long.class, long.class, String.class, String.class, String.class,
 		String.class, String.class, String.class
 	};
-	private static final Class<?>[] _deleteParameterTypes5 = new Class[] {
+	private static final Class<?>[] _deleteParameterTypes6 = new Class[] {
 		long.class, String.class, String.class, String.class
 	};
 

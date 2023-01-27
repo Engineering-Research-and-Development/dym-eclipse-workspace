@@ -1,4 +1,4 @@
-<%@ include file="/init.jsp" %>
+<%@ include file="/initConf.jsp" %>
 
 <liferay-portlet:actionURL
 	portletConfiguration="<%= true %>"
@@ -88,7 +88,7 @@
 			  </div>
 			  
 			  <div class="position-relative row">
-				  <div data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1" class="col-ddm col-md-6">
+				  <div  class="col-ddm col-md-6">
 					 <div class="ddm-field-container ddm-target h-100" data-field-name="Field65143131">
 						<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1">
 						</div>
@@ -101,6 +101,21 @@
 						<div class="ddm-resize-handle ddm-resize-handle-right hide" data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1"></div>
 					 </div>
 				  </div>
+			  
+			     <div   class="col-ddm col-md-6">
+							  <div class="form-group form-inline input-checkbox-wrapper">
+									 <label for="showonload">
+									 	<input class="field" id="autostartsearch" 
+									 		name="<portlet:namespace/>autostartsearch" 
+									 		<c:if test="${autostartsearch_}">checked="checked"</c:if> 
+									 		type="checkbox">
+									 	<span class="">
+									             Search Entities on load page. Deactive to use global search
+							           	</span>
+									</label>
+						 </div>
+			  
+			     </div>
 			  
 		   </div>
 		   <div class="placeholder row">
@@ -137,6 +152,24 @@
 								 </aui:validator>
 						 	</aui:input>
 							<span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field70149449$DIOH9jwz$0$$en_US_fieldDetails">Query<br></span>
+						  
+						  <span class="btn badge badge-primary" id="setquery"><i class="fas fa-paste"></i> Set Default Query</span>
+		 	    
+		 	    <script>
+
+		 	   
+		 	  $( document ).ready(function() {
+	              
+                     $('#setquery').click(function() {
+	    					var linktoquery='{"bool": {"must": [{"term": {"_index": "YOUR_INDEX"}	}]}}';
+	              			
+	    					$('#<portlet:namespace />query').val(linktoquery);
+	    					 
+	 				 });
+	          });	
+		 	   </script>
+						  
+						  
 						  </div>
 					   </div>
 					</div>
@@ -163,14 +196,12 @@
 			 </div>
 			 
 		   </div>
-		   <div class="placeholder row">
-			  <div data-ddm-field-page="0" data-ddm-field-row="3" class="col col-ddm col-empty col-md-12">
-				 <div class="ddm-target"></div>
-			  </div>
-		   </div>
-		   <div class="position-relative row">
+		    
+		   
+		   <hr>
+		   <div class="position-relative col-12 col-md-12">
 		  	 <div class="form-group input-resource-wrapper">
-				<label class="control-label" for="not_import">Excludes the following libraries (e.g. bootstrap,jquery")</label>
+				<label class="control-label" for="not_import">Excludes the following libraries</label>
 				<input class="form-control form-text lfr-input-resource " 
 					id="<portlet:namespace />not_import" 
 					name="<portlet:namespace />not_import" 
@@ -178,12 +209,18 @@
 					value="<%= not_import %>">
 		  	 </div>
 		  </div>
+		  <div class="alert alert-info" role="alert"><div class="alert-autofit-row autofit-row"><div class="autofit-col"><div class="autofit-section"><span class="alert-indicator"><svg class="lexicon-icon lexicon-icon-info-circle" role="presentation" viewBox="0 0 512 512">	<path class="lexicon-icon-outline" d="M437,75C388.7,26.6,324.4,0,256,0C187.6,0,123.3,26.6,75,75C26.6,123.3,0,187.6,0,256c0,68.4,26.6,132.7,75,181c48.4,48.4,112.6,75,181,75c68.4,0,132.7-26.6,181-75c48.4-48.4,75-112.6,75-181C512,187.6,485.4,123.3,437,75z M288,384c0,17.7-14.3,32-32,32c-17.7,0-32-14.3-32-32V224c0-17.7,14.3-32,32-32c17.7,0,32,14.3,32,32V384z M256,160c-17.7,0-32-14.3-32-32c0-17.7,14.3-32,32-32s32,14.3,32,32C288,145.7,273.7,160,256,160z"></path>
+								</svg></span></div></div><div class="autofit-col autofit-col-expand"><div class="autofit-section"><strong class="lead">Info</strong>List some libraries to exclude from Dymer import. [bootstrap,jquery,summernote,font-awesome] </div></div></div></div>
+								<hr>
+
+
 		</div>
 		<div>
+		  
 		   <div class="position-relative row">
-			  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-6">
-				 <div class="form-group form-inline input-checkbox-wrapper">
-					 <label for="showbread">
+			  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
+				 <div class="form-group form-inline input-checkbox-wrapper alert alert-warning">
+					<i class="fa fas fa-bars" aria-hidden="true"></i>  <label for="showbread">
 						<input class="field" 
 							id="showbread" 
 							name="<portlet:namespace/>showbread"
@@ -193,22 +230,12 @@
 					 </label>
 				 </div>
 			  </div>
-			  <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-6">
-				  <div class="form-group form-inline input-checkbox-wrapper">
-					 <label for="showonload">
-					 	<input class="field" id="autostartsearch" 
-					 		name="<portlet:namespace/>autostartsearch" 
-					 		<c:if test="${autostartsearch_}">checked="checked"</c:if> 
-					 		type="checkbox">
-					 	<span class="">
-					             Search Entities on load page. Deactive to use global search
-			           	</span>
-					</label>
-				  </div>
-			  </div>
+			   
 		   </div>
+		  <hr>
+		  
 		   <div class="placeholder row">
-		  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
+		  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12 mb-2">
 			  	 <div class="container_keyget bordercont row">
 					<div class="col-12 span12">
 						<label><liferay-ui:message key="label-dymer-keyget" /></label>
@@ -217,17 +244,79 @@
 			  	 </div>
 		  	 </div>
 		   </div>
+		    <div class="alert alert-info" role="alert"><div class="alert-autofit-row autofit-row"><div class="autofit-col"><div class="autofit-section"><span class="alert-indicator"><svg class="lexicon-icon lexicon-icon-info-circle" role="presentation" viewBox="0 0 512 512">	<path class="lexicon-icon-outline" d="M437,75C388.7,26.6,324.4,0,256,0C187.6,0,123.3,26.6,75,75C26.6,123.3,0,187.6,0,256c0,68.4,26.6,132.7,75,181c48.4,48.4,112.6,75,181,75c68.4,0,132.7-26.6,181-75c48.4-48.4,75-112.6,75-181C512,187.6,485.4,123.3,437,75z M288,384c0,17.7-14.3,32-32,32c-17.7,0-32-14.3-32-32V224c0-17.7,14.3-32,32-32c17.7,0,32,14.3,32,32V384z M256,160c-17.7,0-32-14.3-32-32c0-17.7,14.3-32,32-32s32,14.3,32,32C288,145.7,273.7,160,256,160z"></path>
+								</svg></span></div></div><div class="autofit-col autofit-col-expand"><div class="autofit-section"><strong class="lead">Info</strong>Use key in get request that contain the element's id  </div></div></div></div>
 		   
-		   <div class="lfr-ddm-field-group field-wrapper" class="col-ddm col-md-12">
+		   <hr>
+		    
+			
+			<div class="position-relative row">
+			  
+			  <div data-ddm-field-column="0" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
+				 <div class="form-group form-inline input-checkbox-wrapper">
+					 <label for="showbread">
+						<input class="field" 
+							id="showtour" 
+							name="<portlet:namespace/>showtour"
+							type="checkbox"  
+							<c:if test="${showtour_}">checked="checked"</c:if>/>
+						<span class="">Show tour</span>
+					 </label>
+				 </div>
+			  </div>
+			  
+			  
+			  
+			  <div   class="col-ddm col-md-6 col-xs-12">
+				 <div class="lfr-ddm-field-group field-wrapper"  >
 				<span class="control-label" >
-					<label>Dymer Bootstrap Tour</label>
+					<label>Dymer Tour Text</label>
+			 	</span>
+			  
+		 		<textarea class="field form-control lfr-textarea" 
+		 			id="<portlet:namespace />dymerTourText"  
+		 			name="<portlet:namespace />dymerTourText"><%=dymerTourText%>
+		 		</textarea>
+		 	    <span class="btn badge badge-primary" id="setbutton"><i class="fas fa-paste"></i> Set Default</span>
+		 	    <script>
+                        $( document ).ready(function() {
+				                 $('#setbutton').click(function() {
+				    					var linktocopy='<div class="row" id="dymerTourContainer"><div class="col-12 col-md-12"><div class="alert alert-warning" role="alert"><p style="font-size:16px;" class=""> <a id="startTour"  > <i class="fa fa-info-circle" aria-hidden="true"></i> Take the tour !</a></p>  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div></div></div>';
+				              			
+				    					$('#<portlet:namespace />dymerTourText').val(linktocopy);
+				    			  });
+	           			});	
+		 	    </script>
+			</div>
+			  </div>
+			  <div   class="col-ddm col-md-6 col-xs-12">
+				   <div class="lfr-ddm-field-group field-wrapper"  >
+				<span class="control-label" >
+					<label>Dymer Tour json</label>
 			 	</span>
 			  
 		 		<textarea class="field form-control lfr-textarea" 
 		 			id="<portlet:namespace />dymerTour"  
 		 			name="<portlet:namespace />dymerTour"><%=dymerTour%>
 		 		</textarea>
+		 		
+		 		<span class="btn badge badge-success" id="setjson"><i class="fas fa-code"></i> Set JSON</span>
+		 	    <script>
+                        $( document ).ready(function() {
+				                 $('#setjson').click(function() {
+				    					var linktojson="{ title: 'Welcome',intro: 'Hello DIHIWARE User! ' }, { title: 'One Page Navigation',	element: document.querySelector('#primodfil'),  intro: 'List Button: use this to return in the main list view.'}, { title: 'Add Item',  element: document.querySelector('#cont-addentity'),intro: 'Use this button to insert a new catalogue item'},{ title: 'Content Section', element: document.querySelector('#cont-MyList'), intro: 'Catalogue item card or list. You can enter in the details of each element and come back to the main view.'}";
+				              			
+				    					$('#<portlet:namespace />dymerTour').val(linktojson);
+				    			  });
+	           			});	
+		 	    </script>
 			</div>
+			  </div>
+		   </div>	
+			 <div class="alert alert-info" role="alert"><div class="alert-autofit-row autofit-row"><div class="autofit-col"><div class="autofit-section"><span class="alert-indicator"><svg class="lexicon-icon lexicon-icon-info-circle" role="presentation" viewBox="0 0 512 512">	<path class="lexicon-icon-outline" d="M437,75C388.7,26.6,324.4,0,256,0C187.6,0,123.3,26.6,75,75C26.6,123.3,0,187.6,0,256c0,68.4,26.6,132.7,75,181c48.4,48.4,112.6,75,181,75c68.4,0,132.7-26.6,181-75c48.4-48.4,75-112.6,75-181C512,187.6,485.4,123.3,437,75z M288,384c0,17.7-14.3,32-32,32c-17.7,0-32-14.3-32-32V224c0-17.7,14.3-32,32-32c17.7,0,32,14.3,32,32V384z M256,160c-17.7,0-32-14.3-32-32c0-17.7,14.3-32,32-32s32,14.3,32,32C288,145.7,273.7,160,256,160z"></path>
+								</svg></span></div></div><div class="autofit-col autofit-col-expand"><div class="autofit-section"><strong class="lead">Info</strong>IntroJs configuration section. See tutorial and documentation <a href="https://introjs.com/docs/examples/basic/json-config" target="_blank">here</a>  </div></div></div></div>
+			
+			 <hr>
 			
 			<div class="lfr-ddm-field-group field-wrapper" class="col-ddm col-md-12">
 				<span class="control-label" >
@@ -449,7 +538,7 @@
 		       </div>
 			</div>
 			</fieldset>
-		 	<br>
+		 	
 			<!------------------------------------------------------------ end tab search ------------------------------------------------------------>
 		 
 		 	

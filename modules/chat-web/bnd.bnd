@@ -1,0 +1,7 @@
+Bundle-Name: chat-web
+Bundle-SymbolicName: it.eng.rd.chat.web
+Bundle-Version: 1.0.0
+Export-Package: it.eng.rd.chat.web.constants,\
+	it.eng.rd.chat.web.portlet,\
+	it.eng.rd.chat.web
+-includeresource: META-INF/lib/gson.jar=gson-2.8.2.jar;lib:=true,META-INF/lib/hamcrest-core.jar=hamcrest-core-1.3.jar;lib:=true,META-INF/lib/json-simple.jar=json-simple-1.1.1.jar;lib:=true,META-INF/lib/junit.jar=junit-4.12.jar;lib:=true

@@ -102,6 +102,23 @@ public class DymerEntryServiceSoap {
 		}
 	}
 
+	public static String getUserInfoByEmail(String emailAddress, long companyId)
+		throws RemoteException {
+
+		try {
+			com.liferay.portal.kernel.json.JSONObject returnValue =
+				DymerEntryServiceUtil.getUserInfoByEmail(
+					emailAddress, companyId);
+
+			return returnValue.toString();
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	/**
 	 * Old remote services
 	 */

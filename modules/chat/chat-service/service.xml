@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="it.eng.rd.chat">
+	<namespace>dym</namespace>
+	<entity local-service="true" name="ChatMessage" remote-service="true" uuid="true">
+
+		<column name="id" primary="true" type="long" />
+
+		<column name="groupId" type="long" />
+
+		<column name="companyId" type="long" />
+		<column name="fromUser" type="long" />
+		<column name="toUser" type="long" />
+		
+		<column name="sentDate" type="Date" />
+		<column name="readDate" type="Date" />
+
+		<column name="message" type="String"></column>
+		<column name="readed" type="boolean" />
+		<column name="deleted" type="boolean" />
+		<column name="fileName" type="String" />
+		<column name="fileId" type="long" />
+
+		<finder name="FindByToUser" return-type="Collection">
+			<finder-column name="toUser" />
+		</finder>
+		
+		<reference entity="User" package-path="com.liferay.portal" />
+	</entity>
+	<entity local-service="true" name="ChatConfigure" remote-service="true" uuid="true">
+
+		<column name="id" primary="true" type="long" />
+
+		<column name="groupId" type="long" />
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<column name="enable" type="boolean"></column>
+		<column name="headerColor" type="String" />
+		<column name="chatRightColor" type="String" />
+		<column name="chatLeftColor" type="String" />
+		<column name="headerTextColor" type="String" />
+		<column name="contentTextColor" type="String" />
+		<column name="backColor" type="String" />
+		<column name="chatRoleId" type="String" />
+		<column name="fontFamily" type="String"/>
+		<column name="requestFeature" type="boolean"/>
+
+		<order by="asc">
+			<order-column name="id" />
+		</order>
+
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+	</entity>
+	<entity local-service="true" name="ChatRequest" remote-service="true" uuid="true">
+		<!-- PK fields -->
+		<column name="id" primary="true" type="long" />
+		<column name="fromUserId" type="long" />
+		<column name="toUserId" type="long" />
+		<column name="isAccepted" type="boolean" />
+		<column name="isRejected" type="boolean" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+		
+		<order by="asc">
+			<order-column name="id" />
+		</order>
+
+		<finder name="IsAccested" return-type="Collection">
+			<finder-column name="isAccepted" />
+		</finder>
+	</entity>
+</service-builder>

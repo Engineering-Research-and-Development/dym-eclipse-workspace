@@ -379,6 +379,10 @@ public class DymerEntryLocalServiceUtil {
 		return getService().getIndexableActionableDynamicQuery();
 	}
 
+	public static int getNotificationType(String cmd) {
+		return getService().getNotificationType(cmd);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

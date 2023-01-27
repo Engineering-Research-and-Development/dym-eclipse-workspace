@@ -1,0 +1,4 @@
+Bundle-Name: chat-config
+Bundle-SymbolicName: it.eng.rd.chat.config
+Bundle-Version: 1.0.0
+Export-Package: it.eng.rd.chat.config.constants
