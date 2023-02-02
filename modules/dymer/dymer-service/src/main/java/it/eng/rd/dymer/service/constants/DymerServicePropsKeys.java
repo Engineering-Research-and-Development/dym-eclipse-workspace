@@ -15,5 +15,7 @@ public class DymerServicePropsKeys implements PropsKeys {
 	public static final String DEFAULT_PORTAL_NAME  = "default.portal.name";
 	
 	public static final String DEFAULT_PORTAL_URL = "default.portal.url";
+	
+	public static final String MAIL_SMTP_USER = "mail.session.mail.smtp.user";
 
 }

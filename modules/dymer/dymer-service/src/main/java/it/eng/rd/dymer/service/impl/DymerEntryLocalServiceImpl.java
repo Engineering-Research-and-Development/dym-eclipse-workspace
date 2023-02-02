@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.PortalPreferences;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationDeliveryConstants;
 import com.liferay.portal.kernel.notifications.NotificationEvent;
@@ -19,6 +20,7 @@ import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
 import com.liferay.portal.kernel.notifications.UserNotificationManagerUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.PortalPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
@@ -26,9 +28,12 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.SubscriptionSender;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,14 +41,23 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import it.eng.rd.dymer.model.Dymer;
 import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.service.base.DymerEntryLocalServiceBaseImpl;
 import it.eng.rd.dymer.service.constants.DymerServicePropsKeys;
-import java.util.ResourceBundle;
 
 @Component(
 	property = "model.class.name=it.eng.rd.dymer.model.DymerEntry",
@@ -512,13 +526,54 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	
 	private void sendNotifications(DymerEntry entry, String title, String extContent, User user, String portletId, int notificationType, ServiceContext serviceContext) throws PortalException {
 		_log.debug("sendNotifications method, notificationType: "+String.valueOf(notificationType));
-		String fromAddress = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.DEFAULT_PORTAL_EMAIL), StringPool.BLANK);
+//		String fromAddress = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.DEFAULT_PORTAL_EMAIL), StringPool.BLANK);
+		List<PortalPreferences>  portalPreferences = PortalPreferencesLocalServiceUtil.getPortalPreferenceses(0, PortalPreferencesLocalServiceUtil.getPortalPreferencesesCount());
+		String fromAddress = StringPool.BLANK;
+		for (PortalPreferences pp : portalPreferences) {
+			if (fromAddress.isEmpty()) {
+				pp.getPortalPreferencesId();
+				try {
+					String xml = pp.getPreferences();
+					if (_log.isDebugEnabled())
+						_log.debug("xml:" +xml); 
+					Document dom = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+					Element docEle = dom.getDocumentElement();
+				    NodeList nl = docEle.getChildNodes();
+				    int length = nl.getLength();
+				    for (int i = 0; i < length; i++) {
+				        if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				            Element el = (Element) nl.item(i);
+				            if (el.getNodeName().contains("preference")) {
+				                String name = el.getElementsByTagName("name").item(0).getTextContent();
+				                if (name.equalsIgnoreCase(DymerServicePropsKeys.MAIL_SMTP_USER)) {
+				                	fromAddress = el.getElementsByTagName("value").item(0).getTextContent();
+				                	if (_log.isDebugEnabled())
+				                		_log.debug("mail.session.mail.smtp.user: " +el.getElementsByTagName("value").item(0).getTextContent());
+				                	continue;
+				                }
+				            }
+				        }
+				    }
+				} catch (SAXException  e) {
+					_log.error("SAXException in sendNotifications method: " +e.getMessage());
+				} catch (IOException e) {
+					_log.error("IOException in sendNotifications method: " +e.getMessage());
+				} catch (ParserConfigurationException e) {
+					_log.error("ParserConfigurationException in sendNotifications method: " +e.getMessage());
+				}
+			} else {
+				continue;
+			}
+		    
+		}
+//		String fromAddress = GetterUtil.getString(PortalUtil.getPortalProperties().getProperty("admin.email.from.address"), StringPool.BLANK);;
 		String fromName = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.DEFAULT_PORTAL_NAME), StringPool.BLANK);
 		String portalUrl = GetterUtil.getString(PropsUtil.get(DymerServicePropsKeys.DEFAULT_PORTAL_URL), StringPool.BLANK);
 		
 		if (_log.isDebugEnabled()) {
-			_log.debug("fromAddress: "+fromAddress);
-			_log.debug("fromName: "+fromName);
+			_log.debug("mail.session.mail.smtp.user: "+fromAddress);
+			_log.debug("default.portal.url: "+portalUrl);
+			_log.debug("default.portal.name: "+fromName); 
 		}
 		long classNameId =  0;
 		List<User> destinationUsers = userLocalService.getCompanyUsers(entry.getCompanyId(), 0, userLocalService.getCompanyUsersCount(entry.getCompanyId()));
@@ -589,8 +644,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			map2.put(2, "deleted");
 			
 			SubscriptionSender subscriptionSender = new SubscriptionSender();
-				
-			if (!(fromAddress.isEmpty()) && !(fromName.isEmpty()) && !(portalUrl.isEmpty())) {
+			if (!(fromName.isEmpty()) && !(portalUrl.isEmpty())) {
+//			if (!(fromAddress.isEmpty()) && !(fromName.isEmpty()) && !(portalUrl.isEmpty())) {
 				subscriptionSender.setSubject(map.get(notificationType));
 				
 				String header = LanguageUtil.format(_resourceBundle, "the-user-x-has-y-the-following-catalogue-resource", new Object[] {fullName, map2.get(notificationType)});
@@ -613,7 +668,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 				subscriptionSender.setHtmlFormat(true);
 				subscriptionSender.setPortletId(portletId);
 			} else {
-				throw new Exception("configure portal-ext.properties with default.portal.email, default.portal.name and default.portal.url");
+				throw new Exception("configure portal-ext.properties with default.portal.name and default.portal.url");
 			}
 			
 			if (_log.isDebugEnabled())
