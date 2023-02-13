@@ -56,6 +56,22 @@
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		label = portletPreferences.getValue("label", dymerViewerConfiguration.label());
 	}
+	
+ 
+	
+	String dymerQoptions = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		if (portletPreferences!=null){
+			dymerQoptions = portletPreferences.getValue("dymerQoptions", dymerViewerConfiguration.dymerQoptions());
+			if (dymerQoptions!=null){
+				if (dymerQoptions.equalsIgnoreCase("null")){
+					dymerQoptions = "";
+				} 
+			}
+		} 
+	}
+	
+	 
 	String not_import = "";
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		not_import = portletPreferences.getValue("not_import", dymerViewerConfiguration.not_import());
@@ -266,6 +282,45 @@
 		map_configuration = portletPreferences.getValue("map_configuration", dymerViewerConfiguration.map_configuration());
 	}
 	
+	
+	/*********************************************************************************************
+	header footer html
+	
+	*/
+	String dymerHeaderHtml = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		if (portletPreferences!=null){
+			dymerHeaderHtml = portletPreferences.getValue("dymerHeaderHtml", dymerViewerConfiguration.dymerHeaderHtml());
+			if (dymerHeaderHtml!=null){
+				if (dymerHeaderHtml.equalsIgnoreCase("null")){
+					dymerHeaderHtml = "";
+				} 
+			}
+		} 
+	}
+	
+	
+	String dymerFooterHtml = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		if (portletPreferences!=null){
+			dymerFooterHtml = portletPreferences.getValue("dymerFooterHtml", dymerViewerConfiguration.dymerFooterHtml());
+			if (dymerFooterHtml!=null){
+				if (dymerFooterHtml.equalsIgnoreCase("null")){
+					dymerFooterHtml = "";
+				} 
+			}
+		} 
+	}
+ 	String userMail=themeDisplay.getUser().getDisplayEmailAddress();
+	
+	String query2=query.replaceFirst("@OWNERMAIL", userMail);
+	
+// 	_log.info("[userMail][init.jsp] "+userMail);
+	
+// 	_log.info("[query2][init.jsp] "+query2);
+	
+
+	
 // 	String[] checkedRoles = portletPreferences.getValues("checkedRoles", dymerViewerConfiguration.checkedRoles());
 	
 /*	_log.info("[DymerViewerPortlet][init.jsp] dymerIp: "+dymerIp);
@@ -313,8 +368,8 @@
 <c:set var="dviewtype_" value="<%=dviewtype %>" />
 <c:set var="addModel_" value="<%=addModel %>" />
 <c:set var="keyget_" value="<%=keyget %>" />
-<c:set var="query_" value="<%=query %>" />
-
+<c:set var="query_" value="<%=query2 %>" />
+<c:set var="dymerQoptions_" value="<%=dymerQoptions %>" />
 <!-- renderer conditions -->
 <c:set var="showfilter_" value="<%=showfilter_ %>" />
 
@@ -354,7 +409,8 @@
 <c:set var="dymerFreeHTML_" value="<%=dymerFreeHTML %>" />
 <c:set var="dymerFreeJSON_" value="<%=dymerFreeJSON %>" />
 
-
+<c:set var="dymerHeaderHtml_" value="<%=dymerHeaderHtml %>" />
+<c:set var="dymerFooterHtml_" value="<%=dymerFooterHtml %>" />
 <c:choose>
 	<c:when test="${dviewtype_ eq 'dymerlist'}">
 		<c:set var="viewjs" value="dymer.viewer.js" />

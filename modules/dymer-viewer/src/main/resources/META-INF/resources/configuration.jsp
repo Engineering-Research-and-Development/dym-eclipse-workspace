@@ -87,7 +87,7 @@
 				  </div>
 			  </div>
 			  
-			  <div class="position-relative row">
+		  <div class="position-relative row">
 				  <div  class="col-ddm col-md-6">
 					 <div class="ddm-field-container ddm-target h-100" data-field-name="Field65143131">
 						<div class="ddm-resize-handle ddm-resize-handle-left hide" data-ddm-field-column="2" data-ddm-field-page="0" data-ddm-field-row="1">
@@ -153,7 +153,8 @@
 						 	</aui:input>
 							<span class="sr-only" id="_com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet_ddm$$Field70149449$DIOH9jwz$0$$en_US_fieldDetails">Query<br></span>
 						  
-						  <span class="btn badge badge-primary" id="setquery"><i class="fas fa-paste"></i> Set Default Query</span>
+						  <span class="btn badge  badge-success" id="setquery"><i class="fas fa-paste"></i> Set Default Query</span>
+						  <span class="btn badge badge-info" id="setqueryowner"><i class="fas fa-paste"></i> Set Owner Query</span>
 		 	    
 		 	    <script>
 
@@ -162,6 +163,13 @@
 	              
                      $('#setquery').click(function() {
 	    					var linktoquery='{"bool": {"must": [{"term": {"_index": "YOUR_INDEX"}	}]}}';
+	              			
+	    					$('#<portlet:namespace />query').val(linktoquery);
+	    					 
+	 				 });
+                     
+                     $('#setqueryowner').click(function() {
+	    					var linktoquery='{  "bool": {  "must": [     { "term": { "_index": "YOUR_INDEX" } 	}, { "match_phrase": { "properties.owner.uid": "@OWNERMAIL" } }] }  }';
 	              			
 	    					$('#<portlet:namespace />query').val(linktoquery);
 	    					 
@@ -196,8 +204,42 @@
 			 </div>
 			 
 		   </div>
+		    <!-- qoption textarea  -->
+		    <div class="position-relative row">
+				  <div class="col-ddm col-md-8">
+					  <div class="lfr-ddm-field-group field-wrapper"  >
+				<span class="control-label" >
+					<label>Query qoptions</label>
+			 	</span>
+			  
+		 		<textarea class="field form-control lfr-textarea" 
+		 			id="<portlet:namespace />dymerQoptions"  
+		 			name="<portlet:namespace />dymerQoptions"><%=dymerQoptions%>
+		 		</textarea>
+		 	    <span class="btn badge badge-primary" id="setQoptions"><i class="fas fa-paste"></i> Set Qoptions</span>
+		 	    <script>
+                        $( document ).ready(function() {
+				                 $('#setQoptions').click(function() {
+				    					var linktocopy=',qoptions: {  size:3000, sort:["properties.created:desc"],"relations": true}';
+				              			
+				    					$('#<portlet:namespace />dymerQoptions').val(linktocopy);
+				    					
+				    					$('#qoptiondemo').html('<div class="alert alert-info" role="alert"><div class="alert-autofit-row autofit-row"><div class="autofit-col"><div class="autofit-section"><span class="alert-indicator"><svg class="lexicon-icon lexicon-icon-info-circle" role="presentation" viewBox="0 0 512 512">	<path class="lexicon-icon-outline" d="M437,75C388.7,26.6,324.4,0,256,0C187.6,0,123.3,26.6,75,75C26.6,123.3,0,187.6,0,256c0,68.4,26.6,132.7,75,181c48.4,48.4,112.6,75,181,75c68.4,0,132.7-26.6,181-75c48.4-48.4,75-112.6,75-181C512,187.6,485.4,123.3,437,75z M288,384c0,17.7-14.3,32-32,32c-17.7,0-32-14.3-32-32V224c0-17.7,14.3-32,32-32c17.7,0,32,14.3,32,32V384z M256,160c-17.7,0-32-14.3-32-32c0-17.7,14.3-32,32-32s32,14.3,32,32C288,145.7,273.7,160,256,160z"></path></svg></span></div></div><div class="autofit-col autofit-col-expand"><div class="autofit-section"><strong class="lead">Example:</strong> ,qoptions: {  size:3000, sort:["properties.created:desc"],"relations": true </div></div></div></div>')
+				    			  });
+	           			});	
+		 	    </script>
+			</div>
+				  </div>
+			      <div  class="col-ddm col-md-4">
+							   
+			  			<div id="qoptiondemo"></div>
+			      </div>
+			 </div>
 		    
-		   
+		    
+		 
+		    
+		    <!-- qoption textarea end -->
 		   <hr>
 		   <div class="position-relative col-12 col-md-12">
 		  	 <div class="form-group input-resource-wrapper">
@@ -424,7 +466,7 @@
 		
 		
 			<!------------------------------------------------------------ start tab search ------------------------------------------------------------>
-			<fieldset aria-labelledby="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarTitle" class="panel " id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbar" role="group">
+			<fieldset aria-labelledby="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarTitle" class="panel " id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbar" role="group" style="display:none;">
 		 		<div class="panel-heading" id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarHeader" role="presentation">
 					<div id="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarTitle">
 						 <a aria-controls="_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarContent" aria-expanded="false" class="collapse-icon sheet-subtitle collapsed" data-toggle="liferay-collapse" href="#_com_liferay_portlet_configuration_web_portlet_PortletConfigurationPortlet_searchbarContent" role="button">
@@ -660,7 +702,87 @@
 				</div>
 			</fieldset>
 		    <br>
-		    <!------------------------------------------------------------ end tab map ------------------------------------------------------------>  
+		    <!------------------------------------------------------------ end tab map ------------------------------------------------------------>
+		    
+		    
+		    
+		   <fieldset  class="panel " id="header_footer_tab" role="group">
+		 	<div class="panel-heading" id="header_footer_tab_Header" role="presentation">
+					<div id="header_footer_tab_Title">
+						 <a aria-controls="header_footer_tab_Content" 
+						 	aria-expanded="false" class="collapse-icon sheet-subtitle collapsed" 
+						 	data-toggle="liferay-collapse" 
+						 	href="#header_footer_tab_Content" 
+						 	role="button">Header & Footer HTML
+			   				<span class="collapse-icon-closed" id="ffek____">
+			   					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-right" focusable="false">
+			   						<use href="/o/dihiware-theme/images/clay/icons.svg#angle-right"></use>
+			   					</svg>
+			   				</span>
+			
+							<span class="collapse-icon-open" id="qcss____">
+								<svg aria-hidden="true" class="lexicon-icon lexicon-icon-angle-down" focusable="false">
+									<use href="/o/dihiware-theme/images/clay/icons.svg#angle-down"></use></svg>
+							</span>
+						</a>
+							
+				 		
+					</div>
+				</div>
+				<div aria-labelledby="header_footer_tab_ContentHeader" 
+					class="panel-collapse collapse" 
+					id="header_footer_tab_Content" 
+					role="presentation" 
+					style="height: 0px;">
+					<div class="panel-body">
+								<div class="alert alert-info">
+									Header & Footer HTML
+								</div>
+			  
+			                     <div   class="col-ddm col-md-12 col-xs-12">
+										 <div class="lfr-ddm-field-group field-wrapper"  >
+										<span class="control-label" >
+											<label>HEADER HTML</label>
+									 	</span>
+									  
+								 		<textarea class="field form-control lfr-textarea" 
+								 			id="<portlet:namespace />dymerHeaderHtml"  
+								 			name="<portlet:namespace />dymerHeaderHtml"><%=dymerHeaderHtml%>
+								 		</textarea>
+								 	    
+								 	 
+								 </div>
+								  </div>
+								  <div   class="col-ddm col-md-12 col-xs-12">
+										   <div class="lfr-ddm-field-group field-wrapper"  >
+										<span class="control-label" >
+											<label>FOOTER HTML</label>
+									 	</span>
+									  
+								 		<textarea class="field form-control lfr-textarea" 
+								 			id="<portlet:namespace />dymerFooterHtml"  
+								 			name="<portlet:namespace />dymerFooterHtml"><%=dymerFooterHtml%>
+								 		</textarea>
+								 		
+								 		 
+								 	    
+									</div>
+							 </div>
+			
+			         </div>
+				</div>
+			</fieldset> 
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		      
 		    <br>
 		    <div class="placeholder row">
 			  <div data-ddm-field-page="0" data-ddm-field-row="6" class="col col-ddm col-empty col-md-12">

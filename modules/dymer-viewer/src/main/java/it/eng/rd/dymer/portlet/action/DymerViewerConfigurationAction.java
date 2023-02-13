@@ -62,6 +62,7 @@ public class DymerViewerConfigurationAction
 		String keyget = ParamUtil.getString(actionRequest, "keyget");
 		String query = ParamUtil.getString(actionRequest, "query");
 		String label = ParamUtil.getString(actionRequest, "label");
+		String dymerQoptions = ParamUtil.getString(actionRequest, "dymerQoptions");
 		String not_import = ParamUtil.getString(actionRequest, "not_import");
 		if (not_import!=null) {
 			not_import = not_import.trim();
@@ -71,6 +72,10 @@ public class DymerViewerConfigurationAction
 		String dymerTourText = ParamUtil.getString(actionRequest, "dymerTourText");
 		String dymerFreeHTML = ParamUtil.getString(actionRequest, "dymerFreeHTML");
 		String dymerFreeJSON = ParamUtil.getString(actionRequest, "dymerFreeJSON");
+		
+//      header footer
+		String dymerHeaderHtml = ParamUtil.getString(actionRequest, "dymerHeaderHtml");
+		String dymerFooterHtml = ParamUtil.getString(actionRequest, "dymerFooterHtml");
 		 
 //		renderer conditions		
 		String autostartsearch = ParamUtil.getString(actionRequest, "autostartsearch");
@@ -105,6 +110,15 @@ public class DymerViewerConfigurationAction
 		setPreference(actionRequest, "keyget", keyget);
 		setPreference(actionRequest, "query", query);
 		setPreference(actionRequest, "label", label);
+
+//		qoption query		
+		setPreference(actionRequest, "dymerQoptions", dymerQoptions);
+		
+//      header footer
+		setPreference(actionRequest, "dymerHeaderHtml", dymerHeaderHtml);
+		setPreference(actionRequest, "dymerFooterHtml", dymerFooterHtml);
+		
+		
 		if (_log.isDebugEnabled())
 			_log.debug("excludes the following libraries: " + not_import);
 		setPreference(actionRequest, "not_import", not_import);

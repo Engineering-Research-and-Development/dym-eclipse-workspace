@@ -1,5 +1,4 @@
 <%@ include file="/init.jsp" %>
-<%@ page import="it.eng.rd.dymer.portlet.util.Util" %>
 
 <%@ page import="com.liferay.portal.kernel.json.JSONFactoryUtil" %>
 <%@ page import="com.liferay.portal.kernel.json.JSONObject" %>
@@ -20,7 +19,6 @@
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="it.eng.rd.dymer.portlet.configuration.DymerViewerConfiguration" %>
 <%@ page import="it.eng.rd.dymer.portlet.util.crypto.AesCrypto"%>
-<%@ page import="it.eng.rd.dymer.portlet.util.Util" %>
 
 <%  
 
@@ -30,6 +28,8 @@
 	fglobalsearch=(fglobalsearch==null) ? "" : fglobalsearch;
 	User currentUser = themeDisplay.getUser();
 	
+	
+	 
 	String[] jwts = AesCrypto.dymerJwts(currentUser, themeDisplay.getScopeGroupId());
 	
 	String dymerJwt = AesCrypto.encrypting(jwts[0]);
@@ -164,7 +164,7 @@
 			</div>
 		</c:when>
 		<c:when test="${dviewtype_ eq 'dymerfree'}">
-			
+			<%=dymerHeaderHtml%>
 			<script>
 			 
 			 	var str_not_import = "<%=not_import%>";
@@ -177,6 +177,7 @@
 				<%=dymerFreeJSON%>
 	  	 	 </script>
 			 <%=dymerFreeHTML%>
+			 <%=dymerFooterHtml%>
 		</c:when>
 		<c:when test="${dviewtype_ eq 'dymerlist'}">
 		<!-- ------------------------------------------------------------------------------------------------ -->
@@ -213,13 +214,13 @@
 				var ar = str_not_import.split(',');
 			
 			 	var dTagFilter;
-				var dymerQueries = [<%=query%>];
+				var dymerQueries = [<%=query2%>];
 				var dymerconf= {
 	  				notImport:ar
 	  			};
 
 		  	 	var jsonConfig = {
-					query: { 'query': { 'query' : dymerQueries[0]}},
+					query: { 'query': { 'query' : dymerQueries[0]}<%=dymerQoptions%>},
 					endpoint: 'entity.search',
 					viewtype: 'teaserlist',
 					target: {
@@ -335,7 +336,7 @@
 	         
 	          <%}%>
 			 
-			 
+			 <%=dymerHeaderHtml%>
 			 
 			 <div class="row">
 			    <div class="col-md-12">
@@ -402,6 +403,7 @@
 					
 					</div>			 
 		    </div>
+		    <%=dymerFooterHtml%>
 		</c:when>
 		
 		<c:when test="${dviewtype_ eq 'dymersingleid'}">
@@ -458,7 +460,7 @@
 			var ar = str_not_import.split(',');
 		
 		 	var dTagFilter;
-			var dymerQueries = [<%=query%>];
+			var dymerQueries = [<%=query2%>];
 			var dymerconf= {
   				notImport:ar
   			};
@@ -485,7 +487,7 @@
 				
 				//query: { 'instance': dymerQueries[0] },
 		  		var callconf = {
-		  			query: { 'query': { 'query' : dymerQueries[0]}},
+		  		    query: { 'query': { 'query' : dymerQueries[0]}<%=dymerQoptions%>},
 					endpoint: 'entity.search',
 					viewtype: 'teaserlist',
 					swapgeop: true,
@@ -604,6 +606,8 @@
 				  <%= dymerTourText %>
 			                
 			    <%}%> 
+			    
+			    <%=dymerHeaderHtml%>
   				<div class="row mb-2 ">
 					<div class="col-12 col-md-12 span12  "  >
 					<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Dymer Toolbar">
@@ -694,7 +698,7 @@
 							  <span class="sr-only">Loading...</span>
 							</div>	
 						</div>
-					<span class="loader"></span>
+					 
 					</div>
 				</div>
 
@@ -711,6 +715,8 @@
 			%>
 				<div id="cont-MyEnt"></div>
 			</div>
+			<%=dymerFooterHtml%>
+			
 			<!--<div id="cont-MyList">Loading...3</div>-->
 		</c:when>
 

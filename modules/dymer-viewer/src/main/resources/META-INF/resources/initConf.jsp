@@ -56,6 +56,24 @@
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		label = portletPreferences.getValue("label", dymerViewerConfiguration.label());
 	}
+	
+	String dymerQoptions = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		if (portletPreferences!=null){
+			dymerQoptions = portletPreferences.getValue("dymerQoptions", dymerViewerConfiguration.dymerQoptions());
+			if (dymerQoptions!=null){
+				if (dymerQoptions.equalsIgnoreCase("null")){
+					dymerQoptions = "";
+				} 
+			}
+		} 
+	}
+	
+	
+	
+	
+	
+	
 	String not_import = "";
 	if (Validator.isNotNull(dymerViewerConfiguration)) {
 		not_import = portletPreferences.getValue("not_import", dymerViewerConfiguration.not_import());
@@ -266,7 +284,38 @@
 		map_configuration = portletPreferences.getValue("map_configuration", dymerViewerConfiguration.map_configuration());
 	}
 	
- 
+	
+	
+	/*********************************************************************************************
+	header footer html
+	
+	*/
+	
+	
+	String dymerHeaderHtml = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		if (portletPreferences!=null){
+			dymerHeaderHtml = portletPreferences.getValue("dymerHeaderHtml", dymerViewerConfiguration.dymerHeaderHtml());
+			if (dymerHeaderHtml!=null){
+				if (dymerHeaderHtml.equalsIgnoreCase("null")){
+					dymerHeaderHtml = "";
+				} 
+			}
+		} 
+	}
+	
+	
+	String dymerFooterHtml = "";
+	if (Validator.isNotNull(dymerViewerConfiguration)) {
+		if (portletPreferences!=null){
+			dymerFooterHtml = portletPreferences.getValue("dymerFooterHtml", dymerViewerConfiguration.dymerFooterHtml());
+			if (dymerFooterHtml!=null){
+				if (dymerFooterHtml.equalsIgnoreCase("null")){
+					dymerFooterHtml = "";
+				} 
+			}
+		} 
+	}
 %>
 
  
@@ -332,5 +381,3 @@
 </c:choose>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <script data-senna-track="permanent" src="/combo?browserId=chrome&amp;minifierType=js&amp;languageId=en_US&amp;b=7305&amp;t=1666195393036&amp;/o/frontend-js-jquery-web/jquery/jquery.min.js&amp;/o/frontend-js-jquery-web/jquery/init.js&amp;/o/frontend-js-jquery-web/jquery/ajax.js&amp;/o/frontend-js-jquery-web/jquery/bootstrap.bundle.min.js&amp;/o/frontend-js-jquery-web/jquery/collapsible_search.js&amp;/o/frontend-js-jquery-web/jquery/fm.js&amp;/o/frontend-js-jquery-web/jquery/form.js&amp;/o/frontend-js-jquery-web/jquery/popper.min.js&amp;/o/frontend-js-jquery-web/jquery/side_navigation.js" type="text/javascript"></script>
-  
-<!-- upgrade 300822 -->
