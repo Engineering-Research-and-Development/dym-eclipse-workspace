@@ -165,7 +165,6 @@
  }); 
  
  function getUsers(){
-	 console.log('gu');
 	 var url = "<%= getUsers.toString() %>";
 	 if(url != 'undefined'){
 		 $.ajax({
@@ -411,7 +410,6 @@
 	                withCredentials: true
 	            },
 	            success: function (data) {
-	            	console.log('sendMessage ok');
 	                var data = $.parseJSON(data);
 	                userChatHistory(data.chat, data.fromUser, userId, false);
 	                clearChatArea(userId);

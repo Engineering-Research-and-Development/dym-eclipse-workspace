@@ -6,25 +6,19 @@ var selectedTab;
 var loggedUserId=-1;
 
 function isChatPossible(toUserId){
-//	console.log("chatIsAbailable: "+toUserId);
 	if(loggedUserId<0){
-		// Check if current user is logged in
-		if(Liferay.ThemeDisplay.isSignedIn()){ // Check to verify the user is logged in
+		if(Liferay.ThemeDisplay.isSignedIn()){
 		    loggedUserId = Liferay.ThemeDisplay.getUserId();
-		    // ...
-		    
 		}
 		else {
 		    console.log('Current user is not logged.');
 		    return false;
 		}
 	}
-	console.log('Logged user id is ' + loggedUserId + '.');
+//	console.log('Logged user id is ' + loggedUserId + '.');
     if(parseInt(loggedUserId)!=parseInt(toUserId)){
-//    	console.log("Chat is available from different users");
     	return true;
     }else{
-//    	console.log("Chat is not possible to himself!");
     	return false;
     }
 
@@ -208,7 +202,7 @@ function displayChatBox(){
 }
 
 function sendMsg(obj) {
-	console.log('sendMsg');
+//	console.log('sendMsg');
 	var userId = $(obj).parents().parents().parents().attr("rel");
 	if(!isChatPossible(userId)){
 		console.log("I won't send the message!");

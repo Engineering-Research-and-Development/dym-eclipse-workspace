@@ -1,7 +1,7 @@
 package it.eng.rd.chat.web.constants;
 
 /**
- * @author Viviana Latino
+ * @author ENGRD
  */
 public class ChatWebPortletKeys {
 

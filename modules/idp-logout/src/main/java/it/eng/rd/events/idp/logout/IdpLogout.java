@@ -56,12 +56,12 @@ public class IdpLogout implements LifecycleAction {
 	
     @Override    
     public void processLifecycleEvent(LifecycleEvent lifecycleEvent) throws ActionException {
-    	_log.info("upgrade 300822");
+    	
     	/*
     	Collection<String> openIdConnectProviderNames =	_openIdConnectProviderRegistry.getOpenIdConnectProviderNames(_portal.getCompanyId(httpServletRequest));  
     	
     	for (String provider : openIdConnectProviderNames) {
-    		_log.info("--->providerName: "+provider);
+    		_log.info("providerName: "+provider);
     	}
     	*/
     	
@@ -119,9 +119,9 @@ public class IdpLogout implements LifecycleAction {
 	        		HttpServletRequest originalRequest = PortalUtil.getOriginalServletRequest(request);
 	        		String logoutDYMAT = CookieKeys.getCookie(originalRequest, "LODYMAT");
 	        		
-	        		/* TODO
-	        		logoutDymAT = AesCrypto.decrypting(logoutDYMAT);
-	        		*/
+	        		
+	        		
+	        		
 	        		
 	        		String authorization = idm_client_id+":"+idm_secret_id;
 					String authEncoded = Base64.getEncoder().encodeToString(authorization.getBytes());

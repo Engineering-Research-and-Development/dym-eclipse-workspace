@@ -20,7 +20,7 @@ function initWebSocket(socketChatEndPointPath) {
 }
 
 function wsOpen(message){
-	console.log('Info: Chat socket connection opened.');
+//	console.log('Info: Chat socket connection opened.');
 }
 function wsSendMessage(message){
 	websocket.send(message);
@@ -94,7 +94,7 @@ function wsGetMessage(message){
 }
 
 function wsClose(message){
-	console.log('Info: Chat socket is closed.');
+//	console.log('Info: Chat socket is closed.');
 }
 
 function wsError(message){
@@ -121,23 +121,18 @@ function checkSocket() {
 		var stateStr;
 		switch (websocket.readyState) {
 			case 0: {
-				console.log("CONNECTING");
 				break;
 			}
 			case 1: {
-				console.log("OPEN");
 	            break;
 	        }
 	        case 2: {
-	            console.log("CLOSING");
 	            break;
 	        }
 	        case 3: {
-	            console.log("CLOSED");
 	            break;
 	        }
 	        default: {
-	            console.log("UNKNOW");
 	            break;
 	        }
 	    }

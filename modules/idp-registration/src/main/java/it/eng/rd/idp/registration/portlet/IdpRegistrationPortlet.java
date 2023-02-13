@@ -400,7 +400,7 @@ public class IdpRegistrationPortlet extends MVCPortlet {
 			msgNewAccount = IdpRegistrationPortletKeys.NEW_ACCOUNT_IT;
 		}
 		
-//		Placeholder.PROJECT_NAME.getValue()
+
 		
 		String[] placeholders = new String[] { "[$PROJECT_NAME$]", "[$LOGO_LIFERAY_PORTAL_URL$]",
 				"[$LIFERAY_PORTAL_NAME$]", "[$LIFERAY_PORTAL_URL$]", "[$COPYRIGHT_COMPANY_URL$]",
