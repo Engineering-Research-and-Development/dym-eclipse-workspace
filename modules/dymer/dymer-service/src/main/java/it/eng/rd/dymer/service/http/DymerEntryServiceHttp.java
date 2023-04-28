@@ -146,13 +146,121 @@ public class DymerEntryServiceHttp {
 		}
 	}
 
+	public static com.liferay.portal.kernel.json.JSONObject
+		sendPersonalNotification(
+			HttpPrincipal httpPrincipal, String companyId, String title,
+			String description, String resourceId, String index, String type,
+			String resourceLink, String sender, String[] recipients) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DymerEntryServiceUtil.class, "sendPersonalNotification",
+				_sendPersonalNotificationParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, companyId, title, description, resourceId, index,
+				type, resourceLink, sender, recipients);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.portal.kernel.json.JSONObject
+		sendNotificationByRole(
+			HttpPrincipal httpPrincipal, String companyId, String title,
+			String description, String resourceId, String index, String type,
+			String resourceLink, String sender, String role) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DymerEntryServiceUtil.class, "sendNotificationByRole",
+				_sendNotificationByRoleParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, companyId, title, description, resourceId, index,
+				type, resourceLink, sender, role);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.portal.kernel.json.JSONObject
+		sendNotificationByTeam(
+			HttpPrincipal httpPrincipal, String companyId, String groupId,
+			String title, String description, String resourceId, String index,
+			String type, String resourceLink, String sender, String team) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DymerEntryServiceUtil.class, "sendNotificationByTeam",
+				_sendNotificationByTeamParameterTypes6);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, companyId, groupId, title, description, resourceId,
+				index, type, resourceLink, sender, team);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONObject)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
 	public static it.eng.rd.dymer.model.DymerEntry update(
 		HttpPrincipal httpPrincipal, long userId, long groupId, String index,
 		String type, String id, String url, String title, String extContent) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "update", _updateParameterTypes5);
+				DymerEntryServiceUtil.class, "update", _updateParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, groupId, index, type, id, url, title,
@@ -185,7 +293,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes6);
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, index, type, id);
@@ -219,11 +327,28 @@ public class DymerEntryServiceHttp {
 	};
 	private static final Class<?>[] _getUserInfoByEmailParameterTypes3 =
 		new Class[] {String.class, long.class};
-	private static final Class<?>[] _updateParameterTypes5 = new Class[] {
+	private static final Class<?>[] _sendPersonalNotificationParameterTypes4 =
+		new Class[] {
+			String.class, String.class, String.class, String.class,
+			String.class, String.class, String.class, String.class,
+			String[].class
+		};
+	private static final Class<?>[] _sendNotificationByRoleParameterTypes5 =
+		new Class[] {
+			String.class, String.class, String.class, String.class,
+			String.class, String.class, String.class, String.class, String.class
+		};
+	private static final Class<?>[] _sendNotificationByTeamParameterTypes6 =
+		new Class[] {
+			String.class, String.class, String.class, String.class,
+			String.class, String.class, String.class, String.class,
+			String.class, String.class
+		};
+	private static final Class<?>[] _updateParameterTypes8 = new Class[] {
 		long.class, long.class, String.class, String.class, String.class,
 		String.class, String.class, String.class
 	};
-	private static final Class<?>[] _deleteParameterTypes6 = new Class[] {
+	private static final Class<?>[] _deleteParameterTypes9 = new Class[] {
 		long.class, String.class, String.class, String.class
 	};
 

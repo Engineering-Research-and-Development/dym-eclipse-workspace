@@ -28,7 +28,7 @@ public class DymerEntryAddUserNotificationDefinition
 		
 		boolean defaulWebSiteStatus = GetterUtil.getBoolean(PropsUtil.get(DymerPropsKeys.DEFAULT_ADD_WEBSITE_NOTIFICATION_STATUS), false);
 
-		boolean defaulEmailStatus = GetterUtil.getBoolean(PropsUtil.get(DymerPropsKeys.DEFAULT_ADD_EMAIL_NOTIFICATION_STATUS), true);
+		boolean defaulEmailStatus = GetterUtil.getBoolean(PropsUtil.get(DymerPropsKeys.DEFAULT_ADD_EMAIL_NOTIFICATION_STATUS), false);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("defaulWebSiteStatus:" + defaulWebSiteStatus);
@@ -37,11 +37,11 @@ public class DymerEntryAddUserNotificationDefinition
 		
 		addUserNotificationDeliveryType(
 			new UserNotificationDeliveryType(
-				"email", UserNotificationDeliveryConstants.TYPE_EMAIL, defaulWebSiteStatus,
+				"email", UserNotificationDeliveryConstants.TYPE_EMAIL, defaulEmailStatus,
 				true));
 		addUserNotificationDeliveryType(
 			new UserNotificationDeliveryType(
-				"website", UserNotificationDeliveryConstants.TYPE_WEBSITE, defaulEmailStatus,
+				"website", UserNotificationDeliveryConstants.TYPE_WEBSITE, defaulWebSiteStatus,
 				true));
 	}
 	

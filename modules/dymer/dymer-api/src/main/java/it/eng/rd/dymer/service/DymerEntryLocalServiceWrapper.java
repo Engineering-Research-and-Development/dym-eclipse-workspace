@@ -497,6 +497,33 @@ public class DymerEntryLocalServiceWrapper
 	}
 
 	@Override
+	public it.eng.rd.dymer.model.DymerEntry v2DeleteDymerEntry(
+			it.eng.rd.dymer.model.DymerEntry entry,
+			com.liferay.portal.kernel.model.User user)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			   com.liferay.portal.kernel.exception.SystemException {
+
+		return _dymerEntryLocalService.v2DeleteDymerEntry(entry, user);
+	}
+
+	/**
+	 * notifications v2
+	 */
+	@Override
+	public void v2SendNotifications(
+			java.util.List<com.liferay.portal.kernel.model.User> recipients,
+			it.eng.rd.dymer.model.DymerEntry entry, String resourceLink,
+			int notificationType, String title, String description,
+			com.liferay.portal.kernel.model.User sender, String portletId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_dymerEntryLocalService.v2SendNotifications(
+			recipients, entry, resourceLink, notificationType, title,
+			description, sender, portletId, serviceContext);
+	}
+
+	@Override
 	public DymerEntryLocalService getWrappedService() {
 		return _dymerEntryLocalService;
 	}

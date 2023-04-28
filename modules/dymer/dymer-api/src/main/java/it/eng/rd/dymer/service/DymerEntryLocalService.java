@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
@@ -377,5 +378,18 @@ public interface DymerEntryLocalService
 			String url, String title, String extContent,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException;
+
+	@Indexable(type = IndexableType.DELETE)
+	public DymerEntry v2DeleteDymerEntry(DymerEntry entry, User user)
+		throws PortalException, SystemException;
+
+	/**
+	 * notifications v2
+	 */
+	public void v2SendNotifications(
+			List<User> recipients, DymerEntry entry, String resourceLink,
+			int notificationType, String title, String description, User sender,
+			String portletId, ServiceContext serviceContext)
+		throws PortalException;
 
 }

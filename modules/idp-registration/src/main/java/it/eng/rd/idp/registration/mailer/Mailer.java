@@ -34,11 +34,21 @@ import it.eng.rd.idp.registration.constants.IdpRegistrationPortletKeys;
 
 public class Mailer {
 	
-	public void sentMail(String mailSubject, String from, String to, boolean adminNotification, boolean idmEnabled, String templateID, String[] placeholders, String[] values) {
+	public void sentMail(
+			String mailSubject, 
+			String from, 
+			String to, 
+			boolean adminNotification, 
+			boolean liferayEnabled, 
+			boolean userEnabled, 
+			String templateID, 
+			String[] placeholders, 
+			String[] values) 
+	{
 		try {
 			MailMessage mailMessage = new MailMessage();
 			
-			String body = getBodyMail(idmEnabled, adminNotification, templateID, placeholders, values);
+			String body = getBodyMail(liferayEnabled, userEnabled, adminNotification, templateID, placeholders, values);
 			
 			mailMessage = new MailMessage();
 			mailMessage.setFrom(new InternetAddress(from));
@@ -56,7 +66,7 @@ public class Mailer {
 		}
 	}
 	
-	private String[] getTemplateNames(boolean idmEnabled, boolean adminNotification, String templateID) {
+	private String[] getTemplateNames(boolean liferayEnabled, boolean userEnabled, boolean adminNotification, String templateID) {
 		Locale locale = LocaleUtil.getDefault();
 		
 		String LANG_SUFFIX=StringPool.BLANK;
@@ -80,28 +90,52 @@ public class Mailer {
 		
 		String name = StringPool.BLANK;
 		String defaultTemplateName = StringPool.BLANK;
-        if (idmEnabled && adminNotification) {
-        	name = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + ADMIN_NOTIFICATION;
-        	defaultTemplateName = E_ADMIN_NOTIFICATION_DEFAULT;
-        }
-        if (idmEnabled && !adminNotification) {
-        	name = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + USER_NOTIFICATION;
-        	defaultTemplateName = E_USER_NOTIFICATION_DEFAULT;
-        }
-        if (!idmEnabled && adminNotification) {
-        	_log.info("idmEnabled: false, adminNotification: true");
-        	name = ADMIN_NOTIFICATION;
-        	defaultTemplateName = ADMIN_NOTIFICATION_DEFAULT;
-        }
-        if (!idmEnabled && !adminNotification) {
-        	_log.info("idmEnabled: false, adminNotification: false");
-        	name = USER_NOTIFICATION;
-        	defaultTemplateName = USER_NOTIFICATION_DEFAULT;
-        }
+		
+		String LFR_SUFFIX="lfr_";
+		
+		if (liferayEnabled) {
+			if (userEnabled && adminNotification) {
+				//lfr_admin_notification_<templateID>.tmpl
+	        	name = LFR_SUFFIX+IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + ADMIN_NOTIFICATION;
+	        	//lfr_e_admin_notification_default.tmpl
+	        	defaultTemplateName = LFR_SUFFIX+E_ADMIN_NOTIFICATION_DEFAULT;
+	        }
+	        if (userEnabled && !adminNotification) {
+	        	//lfr_user_notification_<templateID>.tmpl
+	        	name = LFR_SUFFIX+IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + USER_NOTIFICATION;
+	        	//lfr_e_user_notification_default.tmpl
+	        	defaultTemplateName = LFR_SUFFIX+E_USER_NOTIFICATION_DEFAULT;
+	        }
+		} else {
+			if (userEnabled && adminNotification) {
+				//e_admin_notification_<templateID>.tmpl
+	        	name = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + ADMIN_NOTIFICATION;
+	        	defaultTemplateName = E_ADMIN_NOTIFICATION_DEFAULT;
+	        }
+	        if (userEnabled && !adminNotification) {
+	        	//e_user_notification_<templateID>.tmpl
+	        	name = IdpRegistrationPortletKeys.ENABLED + StringPool.UNDERLINE + USER_NOTIFICATION;
+	        	defaultTemplateName = E_USER_NOTIFICATION_DEFAULT;
+	        }
+	        if (!userEnabled && adminNotification) {
+	        	//admin_notification_<templateID>.tmpl
+	        	name = ADMIN_NOTIFICATION;
+	        	defaultTemplateName = ADMIN_NOTIFICATION_DEFAULT;
+	        }
+	        if (!userEnabled && !adminNotification) {
+	        	//user_notification_<templateID>.tmpl
+	        	name = USER_NOTIFICATION;
+	        	defaultTemplateName = USER_NOTIFICATION_DEFAULT;
+	        }
+		}
+        
         if (_log.isDebugEnabled()) {
+        	_log.debug("liferayEnabled: "+liferayEnabled);
+    		_log.debug("userEnabled: "+userEnabled);
         	_log.debug("default language: "+locale.getLanguage());
         	_log.debug("default country: "+locale.getCountry());
-        	_log.debug("idmEnabled: "+idmEnabled+", adminNotification: "+adminNotification);
+        	_log.debug("user registered is enabled (userEnabled: "+userEnabled+")");
+        	_log.debug("adminNotification: "+adminNotification);
         	_log.debug("templateName: "+name);
         	_log.debug("defaultTemplateName: "+defaultTemplateName);
         }
@@ -109,15 +143,15 @@ public class Mailer {
         return new String[]{name, defaultTemplateName};
 	}
 	
-	private String getBodyMail(boolean idmEnabled, boolean adminNotification, String templateID, String[] placeholders, String[] values) {
+	private String getBodyMail(boolean liferayEnabled, boolean userEnabled, boolean adminNotification, String templateID, String[] placeholders, String[] values) {
 		String body = StringPool.BLANK;
-		String[] templateNames = getTemplateNames(idmEnabled, adminNotification, templateID);
+		String[] templateNames = getTemplateNames(liferayEnabled, userEnabled, adminNotification, templateID);
 		String templateName = templateNames[0];
 		String defaultTemplateName = templateNames[1];
 		body = getTemplate(templateName, defaultTemplateName);
 		body = StringUtil.replace(body, placeholders, values);
 		if (_log.isDebugEnabled()) {
-			_log.debug("------------------------------body Mail using template " + templateName + "------------------------------");
+			_log.debug("body Mail using template " + templateName);
 			_log.debug(body);
 		}
 		return body;
@@ -140,17 +174,9 @@ public class Mailer {
 				    out.append(buffer, 0, numRead);
 				}
 				String template = out.toString();
-				if (_log.isDebugEnabled()) {
-					_log.debug("------------------------------template------------------------------");
-					_log.debug(template);
-				}
 				return template;
 			} else {
 				defaultTemplate = ContentUtil.get(this.getClass().getClassLoader(), IdpRegistrationPortletKeys.REPOSITORY_TEMPLATES+defaultName, true);
-				if (_log.isDebugEnabled()) {
-					_log.debug("------------------------------defaultTemplate------------------------------");
-					_log.debug(defaultTemplate);
-				}
 				return defaultTemplate;
 			}
 		} catch (NoSuchGroupException e) {

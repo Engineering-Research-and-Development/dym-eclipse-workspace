@@ -29,7 +29,9 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.social.kernel.service.SocialRequestLocalService;
 
 import java.util.Locale;
@@ -41,6 +43,7 @@ import org.osgi.service.component.annotations.Reference;
 import it.eng.rd.dymer.constants.DymerPortletKeys;
 import it.eng.rd.dymer.model.DymerEntry;
 import it.eng.rd.dymer.service.DymerEntryLocalServiceUtil;
+import it.eng.rd.dymer.service.persistence.DymerEntryUtil;
 
 @Component(
 	immediate = true, property = "javax.portlet.name=" + DymerPortletKeys.DYMER,
@@ -64,40 +67,61 @@ public class DymerEntryUserNotificationHandler
 		String title = jsonObject.getString("title");
 		String userId = jsonObject.getString("userId");
 		
+		int notificationType = jsonObject.getInt("notificationType");
+		String link = getLink(userNotificationEvent, serviceContext);
+		
 		User user = UserLocalServiceUtil.getUser(Long.valueOf(userId));
+		String body = StringPool.BLANK;
 		
-		String opType;
-	    switch (cmd) {
-	        case Constants.ADD:
-	        	opType = resourceBundle.getString("added"); 
-	            break;
-	        case Constants.UPDATE:
-	        	opType = resourceBundle.getString("updated");
-	            break;
-	        case Constants.DELETE:
-	        	opType = resourceBundle.getString("deleted");
-	            break;
-	        default:
-	        	opType = "unknown";
-	            break;
-	    }
+		//notification v1
+		if (notificationType < 3) {
+			String opType;
+		    switch (cmd) {
+		        case Constants.ADD:
+		        	opType = resourceBundle.getString("added"); 
+		            break;
+		        case Constants.UPDATE:
+		        	opType = resourceBundle.getString("updated");
+		            break;
+		        case Constants.DELETE:
+		        	opType = resourceBundle.getString("deleted");
+		            break;
+		        default:
+		        	opType = "unknown";
+		            break;
+		    }
+			
+		    String userInfo = theUser + StringPool.SPACE + user.getFullName() +  StringPool.SPACE + opType;
+		    
+		    StringBundler bodyTemplate = new StringBundler(2);
+		    bodyTemplate.append("<div class=\"title\">[$USER_INFO]</div></a>");
+		    bodyTemplate.append("<br><div><a href=\"[$URL]\">[$TITLE]</div>");
+		    
+			body = StringUtil.replace(bodyTemplate.toString(), new String[] {"[$USER_INFO]", "[$TITLE]", "[$URL]"}, new String[] {userInfo, title, link});
+			
+			if (_log.isDebugEnabled()) {
+				_log.debug("userInfo: "+userInfo);
+				_log.debug("link: "+link);
+				_log.debug("bodyTemplate: "+bodyTemplate);
+				_log.debug("body: "+body);
+			}
+		} 
 		
-	    String userInfo = theUser + StringPool.SPACE + user.getFullName() +  StringPool.SPACE + opType;
-	    String link = getLink(userNotificationEvent, serviceContext);
-	    
-	    StringBundler bodyTemplate = new StringBundler(2);
-	    bodyTemplate.append("<div class=\"title\">[$USER_INFO]</div></a>");
-	    bodyTemplate.append("<br><div><a href=\"[$URL]\">[$TITLE]</div>");
-	    
-		String body = StringUtil.replace(bodyTemplate.toString(), new String[] {"[$USER_INFO]", "[$TITLE]", "[$URL]"}, new String[] {userInfo, title, link});
-		
-		if (_log.isDebugEnabled()) {
-			_log.debug("userInfo: "+userInfo);
-			_log.debug("link: "+link);
-			_log.debug("bodyTemplate: "+bodyTemplate);
-			_log.debug("body: "+body);
+		//notification v2
+		if (notificationType >= 3) {
+			
+			String description = HtmlUtil.stripHtml(jsonObject.getString("description"));
+			
+			StringBundler bodyTemplate2 = new StringBundler(2);
+		    bodyTemplate2.append("<div class=\"title\">[$TITLE]</div></a>");
+		    bodyTemplate2.append("<br><div><a href=\"[$URL]\">[$DESCRIPTION]</div>");
+		    
+			body = StringUtil.replace(bodyTemplate2.toString(), new String[] {"[$TITLE]", "[$DESCRIPTION]", "[$URL]"}, new String[] {title, description, link});
+			
+			if (_log.isDebugEnabled()) {
+				_log.debug("body: "+body);
+			}
 		}
-		 
 		return body;
 	}
 	
@@ -107,19 +131,41 @@ public class DymerEntryUserNotificationHandler
 			ServiceContext serviceContext)
 		throws Exception {
 		
+		if (_log.isDebugEnabled())
+        	_log.debug("userNotificationEvent.getPayload: "+userNotificationEvent.getPayload());
+		
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
 				userNotificationEvent.getPayload());
-        if (_log.isDebugEnabled())
-        	_log.debug("userNotificationEvent.getPayload: "+userNotificationEvent.getPayload());
-        
-        long classPK = jsonObject.getLong("classPK");
 		
+		String cmd = jsonObject.getString("cmd");
+		
+		int notificationType = jsonObject.getInt("notificationType");
+		long classPK = jsonObject.getLong("classPK");
 		DymerEntry entry = DymerEntryLocalServiceUtil.fetchDymerEntry(classPK);
-		
-		if (entry!=null) {
-			String _id = entry.getId();
+		//notification v1
+		if (notificationType < 3) {
+			if (Validator.isNotNull(entry)) {
+				return "/group/guest/catalogue-detail?id="+entry.getId();
+			}
+		} 
+		//notification v2
+		if (notificationType >= 3){
+			String resourceLink = jsonObject.getString("resourceLink");
+			String portalUrl = jsonObject.getString("portalUrl");
 			
-			return "/group/guest/catalogue-detail?id="+_id;
+			if (Validator.isNotNull(resourceLink) && !resourceLink.isEmpty()) {
+				/*if (resourceLink.contains(portalUrl))  
+					return resourceLink;
+				
+				return (portalUrl + resourceLink);
+				*/
+				return resourceLink;
+			}
+			
+			if (Validator.isNotNull(entry)) {
+				return "/group/guest/catalogue-detail-v2?id="+ entry.getId();
+			}
+			
 		}
 		return "#";
 		
@@ -137,7 +183,5 @@ public class DymerEntryUserNotificationHandler
 	
 	private static final Log _log = LogFactoryUtil.getLog(
 			DymerEntryUserNotificationHandler.class);
-	
-
 
 }

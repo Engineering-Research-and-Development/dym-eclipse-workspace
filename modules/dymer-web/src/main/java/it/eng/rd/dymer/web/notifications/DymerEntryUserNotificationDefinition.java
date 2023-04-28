@@ -10,4 +10,10 @@ public class DymerEntryUserNotificationDefinition extends UserNotificationDefini
 	}
 
 	public static final int NOTIFICATION_TYPE_DELETE_ENTRY = 2;
+	
+	public static final int NOTIFICATION_TYPE_PERSONAL_ENTRY = 3;
+	
+	public static final int NOTIFICATION_TYPE_ROLE_ENTRY = 4;
+	
+	public static final int NOTIFICATION_TYPE_TEAM_ENTRY = 5;
 }

@@ -21,12 +21,14 @@ import org.osgi.service.component.annotations.Component;
 )
 public class DymerEntryModelSummaryContributor implements ModelSummaryContributor {
 
+// It gets the Summary object created for each search document, so you can manipulate 
+//	it by adding specific fields or setting the length of the displayed content.
 	@Override
 	public Summary getSummary(
 		Document document, Locale locale, String snippet) {
 
 		String languageId = LocaleUtil.toLanguageId(locale);
-
+		
 		return _createSummary(
 			document,
 			LocalizationUtil.getLocalizedName(Field.CONTENT, languageId),
@@ -37,6 +39,8 @@ public class DymerEntryModelSummaryContributor implements ModelSummaryContributo
 		Document document, String contentField, String titleField) {
 
 		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
+		if (_log.isDebugEnabled())
+			_log.debug("_createSummary DymerEntryModelSummaryContributor");
 
 		Summary summary = new Summary(
 			document.get(prefix + titleField, titleField),
@@ -55,4 +59,6 @@ public class DymerEntryModelSummaryContributor implements ModelSummaryContributo
 	}
 	
 	private static final Log _log = LogFactoryUtil.getLog(DymerEntryModelSummaryContributor.class);
+
+
 }

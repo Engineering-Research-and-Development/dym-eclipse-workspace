@@ -59,6 +59,16 @@ if (idmEnable!=null && !idmEnable.isEmpty()){
 		idmEnable_=true;
 	}
 }
+String idmActive = StringPool.BLANK;
+if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
+	idmActive = portletPreferences.getValue("idmActive", idpUserRegistrationConfiguration.idmActive());
+}
+boolean idmActive_ = false;
+if (idmActive!=null && !idmActive.isEmpty()){
+	if(idmActive.equalsIgnoreCase("on") ){
+		idmActive_=true;
+	}
+}
 String mailSubject = IdpRegistrationPortletKeys.MAIL_SUBJECT_DEFAULT;
 if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 	mailSubject = portletPreferences.getValue("mailSubject", idpUserRegistrationConfiguration.mailSubject());
@@ -107,4 +117,4 @@ if (Validator.isNotNull(idpUserRegistrationConfiguration)) {
 }
 %>
 <c:set var="idmEnable_" value="<%=idmEnable_ %>" />
- <!-- 050922 -->
+<c:set var="idmActive_" value="<%=idmActive_ %>" />

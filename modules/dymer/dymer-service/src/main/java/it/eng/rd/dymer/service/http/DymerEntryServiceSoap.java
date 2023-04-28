@@ -64,6 +64,20 @@ import java.rmi.RemoteException;
 @Deprecated
 public class DymerEntryServiceSoap {
 
+	/**
+	 * Add/Update Dymer Resource
+	 *
+	 * @param dymerDomainName
+	 * @param emailAddress the emailAddress of user owner of the resource
+	 * @param companyId the primary key of the user's company
+	 * @param groupId
+	 * @param index the index name of the Dymer resource
+	 * @param type the type name of the Dymer resource
+	 * @param id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param url the Dymer Portal URL
+	 * @param title the title Dymer resource
+	 * @param extContent the Dymer resource description
+	 */
 	public static it.eng.rd.dymer.model.DymerEntrySoap update(
 			String dymerDomainName, String emailAddress, long companyId,
 			long groupId, String index, String type, String id, String url,
@@ -86,6 +100,15 @@ public class DymerEntryServiceSoap {
 		}
 	}
 
+	/**
+	 * Delete Dymer Resource
+	 *
+	 * @param emailAddress the emailAddress of user owner of the resource
+	 * @param companyId the primary key of the user's company
+	 * @param index the index name of the Dymer resource
+	 * @param type the type name of the Dymer resource
+	 * @param id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 */
 	public static void delete(
 			String emailAddress, long companyId, String index, String type,
 			String id)
@@ -102,6 +125,13 @@ public class DymerEntryServiceSoap {
 		}
 	}
 
+	/**
+	 * Get userId and fullName by emailAddress of a Liferay user
+	 *
+	 * @param emailAddress the emailAddress of user
+	 * @param companyId the primary key of the user's company
+	 * @return service response json with userId and fullName
+	 */
 	public static String getUserInfoByEmail(String emailAddress, long companyId)
 		throws RemoteException {
 
@@ -120,8 +150,110 @@ public class DymerEntryServiceSoap {
 	}
 
 	/**
-	 * Old remote services
+	 * Send Dymer notification to a list of Liferay users
+	 *
+	 * @param companyId the primary key of the user's company
+	 * @param title the Dymer notification title
+	 * @param description the Dymer notification description
+	 * @param resourceId the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param index the index name of the Dymer resource
+	 * @param type the type name of the Dymer resource
+	 * @param resourceLink the relative URL of the resource
+	 * @param sender the email address of the sender of the notification
+	 * @param recipients the email addresses array of the notification recipients
+	 * @return service response json: success true if everything went well or success false and the type of error otherwise
 	 */
+	public static String sendPersonalNotification(
+			String companyId, String title, String description,
+			String resourceId, String index, String type, String resourceLink,
+			String sender, String[] recipients)
+		throws RemoteException {
+
+		try {
+			com.liferay.portal.kernel.json.JSONObject returnValue =
+				DymerEntryServiceUtil.sendPersonalNotification(
+					companyId, title, description, resourceId, index, type,
+					resourceLink, sender, recipients);
+
+			return returnValue.toString();
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	/**
+	 * Send a Dymer Notification to a list of Liferay users who have the indicated role
+	 *
+	 * @param companyId the primary key of the user's company
+	 * @param title the Dymer notification title
+	 * @param description the Dymer notification description
+	 * @param resourceId the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param index the index name of the Dymer resource
+	 * @param type the type name of the Dymer resource
+	 * @param resourceLink the relative URL of the resource
+	 * @param sender the email address of the sender of the notification
+	 * @param role the role of the users receiving the notification
+	 * @return service response json: success true if everything went well or success false and the type of error otherwise
+	 */
+	public static String sendNotificationByRole(
+			String companyId, String title, String description,
+			String resourceId, String index, String type, String resourceLink,
+			String sender, String role)
+		throws RemoteException {
+
+		try {
+			com.liferay.portal.kernel.json.JSONObject returnValue =
+				DymerEntryServiceUtil.sendNotificationByRole(
+					companyId, title, description, resourceId, index, type,
+					resourceLink, sender, role);
+
+			return returnValue.toString();
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	/**
+	 * Send a Dymer Notification to a list of Liferay users who belong to the indicated team
+	 *
+	 * @param companyId the primary key of the user's company
+	 * @param title the Dymer notification title
+	 * @param description the Dymer notification description
+	 * @param resourceId the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param index the index name of the Dymer resource
+	 * @param type the type name of the Dymer resource
+	 * @param resourceLink the relative URL of the resource
+	 * @param sender the email address of the sender of the notification
+	 * @param team the team of the users receiving the notification
+	 * @return service response json: success true if everything went well or success false and the type of error otherwise
+	 */
+	public static String sendNotificationByTeam(
+			String companyId, String groupId, String title, String description,
+			String resourceId, String index, String type, String resourceLink,
+			String sender, String team)
+		throws RemoteException {
+
+		try {
+			com.liferay.portal.kernel.json.JSONObject returnValue =
+				DymerEntryServiceUtil.sendNotificationByTeam(
+					companyId, groupId, title, description, resourceId, index,
+					type, resourceLink, sender, team);
+
+			return returnValue.toString();
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	@Deprecated
 	public static it.eng.rd.dymer.model.DymerEntrySoap update(
 			long userId, long groupId, String index, String type, String id,

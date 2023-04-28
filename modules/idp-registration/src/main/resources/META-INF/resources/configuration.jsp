@@ -42,6 +42,34 @@
 					<div class="alert alert-info">
 						<liferay-ui:message key="use-this-configuration-widget-to-send-requests-to-identity-manager"/>
 					</div>
+					
+					
+					<div class="placeholder" >
+							<div class="row ">
+								<div class="col-10 idmEnableContentLabel">  
+									<span>
+										<label class="control-label" >
+											<liferay-ui:message key="enable-fiware-idm-as-identity-manager"/>
+										</label>
+									</span> 
+								</div>
+								<div class="col-2">
+									<label class="switch2">
+										<input 
+											id="<portlet:namespace />idmActive" 
+											name="<portlet:namespace />idmActive" 
+											onclick="" 
+											type="checkbox" 
+											<% 
+												if(idmActive_) { 
+											%>
+											checked="checked"
+											<% } %>>
+									  <span class="slider2"></span>
+									</label>
+								</div>
+							</div>
+						</div>
 		 			
 <!-- 		 			<div> -->
 <!-- 					   <div class="position-relative row"> -->
@@ -88,7 +116,7 @@
 					  	 <div data-ddm-field-column="1" data-ddm-field-page="0" data-ddm-field-row="3" class="col-ddm col-md-12">
 						  	 <div class="container_keyget bordercont row">
 								<div class="col-12 span12">
-									<label><liferay-ui:message key="identity-manager-admin-e-mail-notification"/></label>
+									<label><liferay-ui:message key="liferay-or-identity-manager-admin-e-mail-notification"/></label>
 								    <input class="form-control form-text lfr-input-resource " 
 										id="<portlet:namespace />idmEmailAdminNotification" 
 										name="<portlet:namespace />idmEmailAdminNotification" 

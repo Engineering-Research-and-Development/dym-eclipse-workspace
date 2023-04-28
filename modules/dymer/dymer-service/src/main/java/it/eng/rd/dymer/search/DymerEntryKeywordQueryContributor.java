@@ -19,25 +19,32 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class DymerEntryKeywordQueryContributor implements KeywordQueryContributor {
 
+	// It contributes clauses to the ongoing search query.
+	// This is called at search time, and ensures that all the fields you indexed are also the ones searched. 
     @Override
     public void contribute(
         String keywords, BooleanQuery booleanQuery,
         KeywordQueryContributorHelper keywordQueryContributorHelper) {
 
+        if (_log.isDebugEnabled())
+        	_log.debug("contribute DymerEntryKeywordQueryContributor");
+    	
         SearchContext searchContext =
-    keywordQueryContributorHelper.getSearchContext();
+        		keywordQueryContributorHelper.getSearchContext();
 
         queryHelper.addSearchLocalizedTerm(
-    booleanQuery, searchContext, Field.TITLE, false);
+        		booleanQuery, searchContext, Field.TITLE, false);
         queryHelper.addSearchLocalizedTerm(
-    booleanQuery, searchContext, Field.CONTENT, false);
-       /* queryHelper.addSearchLocalizedTerm(
-        	    booleanQuery, searchContext, "type", false);*/
+        		booleanQuery, searchContext, Field.CONTENT, false);
+        queryHelper.addSearchLocalizedTerm(
+        	    booleanQuery, searchContext, "index", false);
         
     }
 
     @Reference
     protected QueryHelper queryHelper;
+    
+    final Log _log = LogFactoryUtil.getLog(DymerEntryKeywordQueryContributor.class);
 
 }
 

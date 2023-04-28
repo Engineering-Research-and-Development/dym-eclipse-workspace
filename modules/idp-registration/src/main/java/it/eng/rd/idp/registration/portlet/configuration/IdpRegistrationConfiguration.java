@@ -26,6 +26,9 @@ public interface IdpRegistrationConfiguration {
 	@Meta.AD(required = false)
 	public String idmEnable();
 	
+	@Meta.AD(required = false)
+	public String idmActive();
+	
 	@Meta.AD(deflt = "", required = false)
 	public String projectName();
 	

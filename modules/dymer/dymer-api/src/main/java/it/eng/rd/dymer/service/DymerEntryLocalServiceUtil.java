@@ -438,6 +438,29 @@ public class DymerEntryLocalServiceUtil {
 			serviceContext);
 	}
 
+	public static DymerEntry v2DeleteDymerEntry(
+			DymerEntry entry, com.liferay.portal.kernel.model.User user)
+		throws PortalException, SystemException {
+
+		return getService().v2DeleteDymerEntry(entry, user);
+	}
+
+	/**
+	 * notifications v2
+	 */
+	public static void v2SendNotifications(
+			List<com.liferay.portal.kernel.model.User> recipients,
+			DymerEntry entry, String resourceLink, int notificationType,
+			String title, String description,
+			com.liferay.portal.kernel.model.User sender, String portletId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws PortalException {
+
+		getService().v2SendNotifications(
+			recipients, entry, resourceLink, notificationType, title,
+			description, sender, portletId, serviceContext);
+	}
+
 	public static DymerEntryLocalService getService() {
 		return _service;
 	}
