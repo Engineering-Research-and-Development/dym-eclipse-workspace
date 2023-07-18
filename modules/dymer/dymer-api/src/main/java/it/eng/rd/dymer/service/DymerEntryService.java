@@ -63,11 +63,28 @@ public interface DymerEntryService extends BaseService {
 	 * @param index the index name of the Dymer resource
 	 * @param type the type name of the Dymer resource
 	 * @param id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param notify, if true send notification
 	 */
+	@Deprecated
 	@JSONWebService(method = "POST", value = "delete")
 	public void delete(
 		String emailAddress, long companyId, String index, String type,
 		String id);
+
+	/**
+	 * Delete Dymer Resource
+	 *
+	 * @param emailAddress the emailAddress of user owner of the resource
+	 * @param companyId the primary key of the user's company
+	 * @param index the index name of the Dymer resource
+	 * @param type the type name of the Dymer resource
+	 * @param id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param notify, if true send notification
+	 */
+	@JSONWebService(method = "POST", value = "delete")
+	public void delete(
+		String emailAddress, long companyId, String index, String type,
+		String id, boolean notify);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -166,11 +183,34 @@ public interface DymerEntryService extends BaseService {
 	 * @param url the Dymer Portal URL
 	 * @param title the title Dymer resource
 	 * @param extContent the Dymer resource description
+	 * @param notify is true by default so the system enables the sending of notifications; the user receives the notification according to the configuration he has set
 	 */
+	@Deprecated
 	@JSONWebService(method = "POST", value = "update")
 	public DymerEntry update(
 		String dymerDomainName, String emailAddress, long companyId,
 		long groupId, String index, String type, String id, String url,
 		String title, String extContent);
+
+	/**
+	 * Add/Update Dymer Resource
+	 *
+	 * @param dymerDomainName
+	 * @param emailAddress the emailAddress of user owner of the resource
+	 * @param companyId the primary key of the user's company
+	 * @param groupId
+	 * @param index the index name of the Dymer resource
+	 * @param type the type name of the Dymer resource
+	 * @param id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param url the Dymer Portal URL
+	 * @param title the title Dymer resource
+	 * @param extContent the Dymer resource description
+	 * @param notify, if notify is true the system enables the sending of notifications; the user receives the notification according to the configuration he has set
+	 */
+	@JSONWebService(method = "POST", value = "update")
+	public DymerEntry update(
+		String dymerDomainName, String emailAddress, long companyId,
+		long groupId, String index, String type, String id, String url,
+		String title, String extContent, boolean notify);
 
 }

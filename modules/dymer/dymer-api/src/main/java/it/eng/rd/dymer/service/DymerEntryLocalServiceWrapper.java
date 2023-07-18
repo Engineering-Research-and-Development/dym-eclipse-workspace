@@ -499,11 +499,11 @@ public class DymerEntryLocalServiceWrapper
 	@Override
 	public it.eng.rd.dymer.model.DymerEntry v2DeleteDymerEntry(
 			it.eng.rd.dymer.model.DymerEntry entry,
-			com.liferay.portal.kernel.model.User user)
+			com.liferay.portal.kernel.model.User user, boolean notify)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			   com.liferay.portal.kernel.exception.SystemException {
 
-		return _dymerEntryLocalService.v2DeleteDymerEntry(entry, user);
+		return _dymerEntryLocalService.v2DeleteDymerEntry(entry, user, notify);
 	}
 
 	/**

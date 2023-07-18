@@ -71,6 +71,9 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	public DymerEntry addDymerEntry(long dymerId, String index, String type, String id, String url, String title,
 			String extContent, ServiceContext serviceContext) throws PortalException, SystemException {
 
+		
+		boolean notify = GetterUtil.getBoolean(serviceContext.getAttribute("notify"));
+		
 		long groupId = serviceContext.getScopeGroupId();
 
 		User user = userLocalService.getUserById(serviceContext.getUserId());
@@ -115,6 +118,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			_log.debug("type: " + type);
 			_log.debug("id: " + id);
 			_log.debug("url: " + url);
+			_log.debug("notify: " + notify);
+			
 		}
 
 		entry = dymerEntryPersistence.update(entry);
@@ -148,7 +153,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		if (_log.isDebugEnabled())
 			_log.debug("generated permission");
 
-		sendNotifications(entry, getNotificationType(Constants.ADD), entry.getTitle(), entry.getExtContent(), user, portletId, serviceContext);
+		if (notify)
+			sendNotifications(entry, getNotificationType(Constants.ADD), entry.getTitle(), entry.getExtContent(), user, portletId, serviceContext);
 
 		return entry;
 	}
@@ -157,6 +163,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	public DymerEntry updateDymerEntry(long dymerId, long entryId, String index, String type, String id, String url,
 			String title, String extContent, ServiceContext serviceContext) throws PortalException, SystemException {
 
+		boolean notify = GetterUtil.getBoolean(serviceContext.getAttribute("notify"));
+		
 		Date now = new Date();
 
 		DymerEntry entry = dymerEntryPersistence.findByPrimaryKey(entryId);
@@ -192,6 +200,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			_log.debug("type: " + type);
 			_log.debug("id: " + id);
 			_log.debug("url: " + url);
+			_log.debug("notify: " + notify);
 		}
 
 		entry = dymerEntryPersistence.update(entry);
@@ -212,7 +221,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		if (_log.isDebugEnabled())
 			_log.debug("generated assetLink");
 
-		sendNotifications(entry, getNotificationType(Constants.UPDATE), entry.getTitle(), entry.getExtContent(), user, portletId, serviceContext);
+		if (notify)
+			sendNotifications(entry, getNotificationType(Constants.UPDATE), entry.getTitle(), entry.getExtContent(), user, portletId, serviceContext);
 
 		return entry;
 	}
@@ -265,7 +275,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 	}
 	
 	@Indexable(type = IndexableType.DELETE)
-	public DymerEntry v2DeleteDymerEntry(DymerEntry entry, User user) throws PortalException, SystemException {
+	public DymerEntry v2DeleteDymerEntry(DymerEntry entry, User user, boolean notify) throws PortalException, SystemException {
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("DymerEntryLocalServiceImpl, deleteDymerEntry method");
@@ -304,7 +314,8 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			_log.error(e, e);
 		}
 		
-		sendNotifications(entry, getNotificationType(Constants.DELETE), entry.getTitle(), entry.getExtContent(), user, portletId, sc);
+		if (notify)
+			sendNotifications(entry, getNotificationType(Constants.DELETE), entry.getTitle(), entry.getExtContent(), user, portletId, sc);
 
 		return entry;
 	}
@@ -737,19 +748,24 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 				
 				if (notificationType >= 3) {
 					
-					//HOW TO COMPOSE LINK
-					String link1;
-					//String link2;
+					String resourceLink1 = "#";
 					
-					if (_id.equalsIgnoreCase("0")) {
-						link1 = portalUrl + "/group/guest/catalogue-detail?id=" + _id;
-						resourceTitle = "<a href=\"" + link1 + "\">" + title + "</a>";
+					if (!_id.equalsIgnoreCase("0")) {
+						resourceLink1 = portalUrl + "/group/guest/catalogue-detail?id=" + _id;
+						resourceTitle = "<a href=\"" + resourceLink1 + "\">" + title + "</a>";
 					}
-					if (Validator.isNotNull(resourceLink)) {
-						//link2 = portalUrl + resourceLink;
-						resourceTitle = "<a href=\"" + resourceLink + "\">" + title + "</a>";
+					
+					String resourceLink2 = "#";
+					
+					if (!resourceLink.isEmpty()) {
+						resourceLink2 = portalUrl + resourceLink;
+						resourceTitle = "<a href=\"" + resourceLink2 + "\">" + title + "</a>";
+					} 
+					
+					if (_id.equalsIgnoreCase("0") && resourceLink.isEmpty()){
+						resourceTitle = title;
 					}
-
+					
 					String body = "<p><b>" + resourceTitle + "</b></p>"
 							+ "<div style=\" background-color: #e1e4ea;\">" + description + "<div>";
 					
@@ -920,7 +936,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 
 		return entry;
 	}
-	
+
 
 	@Reference
 	private UserNotificationEventLocalService _userNotificationEventLocalService;

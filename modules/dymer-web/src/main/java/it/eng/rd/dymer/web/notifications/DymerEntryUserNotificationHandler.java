@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationEvent;
 import com.liferay.portal.kernel.notifications.BaseModelUserNotificationHandler;
 import com.liferay.portal.kernel.notifications.UserNotificationHandler;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -113,11 +114,16 @@ public class DymerEntryUserNotificationHandler
 			String description = HtmlUtil.stripHtml(jsonObject.getString("description"));
 			
 			StringBundler bodyTemplate2 = new StringBundler(2);
-		    bodyTemplate2.append("<div class=\"title\">[$TITLE]</div></a>");
-		    bodyTemplate2.append("<br><div><a href=\"[$URL]\">[$DESCRIPTION]</div>");
+			if (!link.equalsIgnoreCase("#")) {
+				bodyTemplate2.append("<div class=\"title\">[$TITLE]</div></a>");
+				bodyTemplate2.append("<br><div><a href=\"[$URL]\">[$DESCRIPTION]</div>");
+			} else {
+		    	bodyTemplate2.append("<div class=\"title\">[$TITLE]</div></a>");
+		    	bodyTemplate2.append("<br><div>[$DESCRIPTION]</div>");
+		    }
 		    
 			body = StringUtil.replace(bodyTemplate2.toString(), new String[] {"[$TITLE]", "[$DESCRIPTION]", "[$URL]"}, new String[] {title, description, link});
-			
+
 			if (_log.isDebugEnabled()) {
 				_log.debug("body: "+body);
 			}
@@ -140,33 +146,40 @@ public class DymerEntryUserNotificationHandler
 		String cmd = jsonObject.getString("cmd");
 		
 		int notificationType = jsonObject.getInt("notificationType");
+		
 		long classPK = jsonObject.getLong("classPK");
+		
 		DymerEntry entry = DymerEntryLocalServiceUtil.fetchDymerEntry(classPK);
+		
 		//notification v1
 		if (notificationType < 3) {
 			if (Validator.isNotNull(entry)) {
 				return "/group/guest/catalogue-detail?id="+entry.getId();
 			}
 		} 
+		
 		//notification v2
 		if (notificationType >= 3){
 			String resourceLink = jsonObject.getString("resourceLink");
 			String portalUrl = jsonObject.getString("portalUrl");
 			
 			if (Validator.isNotNull(resourceLink) && !resourceLink.isEmpty()) {
-				/*if (resourceLink.contains(portalUrl))  
-					return resourceLink;
-				
-				return (portalUrl + resourceLink);
-				*/
+				_log.info("getLink - resourceLink "+ resourceLink);
 				return resourceLink;
 			}
 			
 			if (Validator.isNotNull(entry)) {
-				return "/group/guest/catalogue-detail-v2?id="+ entry.getId();
+				_log.info("getLink - /group/guest/catalogue-detail?id="+ entry.getId());
+				return "/group/guest/catalogue-detail?id="+ entry.getId();
+			}
+			
+			if (classPK==0 && resourceLink.isEmpty()) {
+				_log.info("getLink0 - #");
+				return "#";
 			}
 			
 		}
+		_log.info("getLink2 - #");
 		return "#";
 		
 	}

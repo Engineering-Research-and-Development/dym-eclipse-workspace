@@ -380,7 +380,8 @@ public interface DymerEntryLocalService
 		throws PortalException, SystemException;
 
 	@Indexable(type = IndexableType.DELETE)
-	public DymerEntry v2DeleteDymerEntry(DymerEntry entry, User user)
+	public DymerEntry v2DeleteDymerEntry(
+			DymerEntry entry, User user, boolean notify)
 		throws PortalException, SystemException;
 
 	/**

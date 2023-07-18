@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +54,7 @@ import it.eng.rd.dymer.service.base.DymerEntryServiceBaseImpl;
 import it.eng.rd.dymer.service.constants.DymerServicePropsKeys;
 import it.eng.rd.dymer.service.notifications.DymerUserNotificationDefinition;
 import it.eng.rd.dymer.service.persistence.DymerEntryUtil;
-
+import com.liferay.portal.kernel.json.JSONArray;
 
 @Component(
 	property = {
@@ -81,6 +82,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 	 * @param  url the Dymer Portal URL
 	 * @param  title the title Dymer resource
 	 * @param  extContent the Dymer resource description
+	 * @param  notify, if notify is true the system enables the sending of notifications; the user receives the notification according to the configuration he has set
 	 */
 	
 	@JSONWebService(value="update",method="POST")
@@ -94,7 +96,8 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			String id,
 			String url,
 			String title,
-			String extContent
+			String extContent,
+			boolean notify
 	) {
 		
 		if (_log.isDebugEnabled()) {
@@ -110,10 +113,11 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			_log.debug("url: " +url);
 			_log.debug("title: " +title);
 			_log.debug("extContent: " +extContent);
+			_log.debug("notify: " + notify);
 		}
-		
 		ServiceContext sc = new ServiceContext();
 		sc.setAttribute("dymerDomainName", dymerDomainName);
+		sc.setAttribute("notify", notify);//Boolean.TRUE
 		User user;
 		try {
 			user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
@@ -152,6 +156,96 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		
 	}
 	
+	/**
+	 * Add/Update Dymer Resource
+	 *
+	 * @param  dymerDomainName 
+	 * @param  emailAddress the emailAddress of user owner of the resource
+	 * @param  companyId the primary key of the user's company
+	 * @param  groupId 
+	 * @param  index the index name of the Dymer resource
+	 * @param  type the type name of the Dymer resource
+	 * @param  id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param  url the Dymer Portal URL
+	 * @param  title the title Dymer resource
+	 * @param  extContent the Dymer resource description
+	 * @param  notify is true by default so the system enables the sending of notifications; the user receives the notification according to the configuration he has set
+	 */
+	
+	@Deprecated
+	@JSONWebService(value="update",method="POST")
+	public DymerEntry update(
+			String dymerDomainName,
+			String emailAddress,
+			long companyId,
+			long groupId,
+			String index,
+			String type,
+			String id,
+			String url,
+			String title,
+			String extContent
+	) {
+		
+		if (_log.isDebugEnabled()) {
+			_log.debug("@Deprecated DymerEntryServiceImpl, update method---------------------------------------------");
+			
+			_log.debug("dymerDomainName: " +dymerDomainName);
+			_log.debug("emailAddress: " +emailAddress);
+			_log.debug("companyId: " +companyId);
+			_log.debug("groupId: " +groupId);
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+			_log.debug("url: " +url);
+			_log.debug("title: " +title);
+			_log.debug("extContent: " +extContent);
+		}
+		
+		ServiceContext sc = new ServiceContext();
+		sc.setAttribute("dymerDomainName", dymerDomainName);
+		sc.setAttribute("notify", "true");
+		User user;
+		try {
+			user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
+			sc.setUserId(user.getUserId());
+			sc.setScopeGroupId(groupId);
+		} catch (NoSuchUserException e) {
+			_log.error("No User with "+emailAddress+" in companyId="+companyId);
+			try {
+				
+				emailAddress = DymerServicePropsKeys.DEFAULT_CATALOGUE_RESOURCE_OWNER;
+				
+				if (Validator.isNotNull(catalague_resource_email)) {
+					emailAddress = catalague_resource_email;
+				}
+				
+				user = UserLocalServiceUtil.getUserByEmailAddress(companyId, emailAddress);
+				sc.setUserId(user.getUserId());
+				sc.setScopeGroupId(groupId);
+				_log.warn("Catalogue Resource [index:"+index+",type:"+",id:"+id+"] is related to "+emailAddress);
+			} catch (PortalException e1) {
+				throw new PortalException(e1);
+			}
+		} catch (Exception e2) {
+			_log.error("An error occurred while invoking remote update service "+e2.getMessage());
+		} finally {
+			sc.setUuid(UUID.randomUUID().toString());
+			Date now = new Date();
+			sc.setCreateDate(now);
+			sc.setModifiedDate(now);
+			sc.setAssetCategoryIds(new long[] {});
+			sc.setAssetTagNames(new String[] {});
+			sc.setAssetLinkEntryIds(new long[] {});
+			
+			return updateDymerEntry(dymerDomainName, emailAddress, companyId, groupId, index, type, id, url, title, extContent, sc);
+		}
+		
+	}
+	
+	
+	
+	
 	private DymerEntry updateDymerEntry(String dymerDomainName,
 			String emailAddress,
 			long companyId,
@@ -167,6 +261,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		if(_log.isDebugEnabled()){
 			_log.debug("sc.userId: "+sc.getUserId());
 			_log.debug("sc.groupId: "+sc.getScopeGroupId());
+			_log.debug("sc.notificationActive: " + sc.getAttribute("notify"));
 		}
 		
 		try {
@@ -255,8 +350,61 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 	 * @param  index the index name of the Dymer resource
 	 * @param  type the type name of the Dymer resource
 	 * @param  id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param  notify, if true send notification
 	 */
 	
+	@JSONWebService(value="delete",method="POST")
+    public void delete(
+    		String emailAddress,
+    		long companyId,
+            String index,
+            String type,
+            String id,
+            boolean notify
+    ) {
+		if (_log.isDebugEnabled()) {
+			_log.debug("DymerEntryServiceImpl, delete method---------------------------------------------");
+			
+			_log.debug("emailAddress: " +emailAddress);
+			_log.debug("companyId: " +companyId);
+			_log.debug("index: " +index);
+			_log.debug("type: " +type);
+			_log.debug("id: " +id);
+			_log.debug("notify: " +notify);
+		}
+        
+        DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, id);
+        
+        if(dymerEntry != null) {
+            try {
+            	User user = UserLocalServiceUtil.getUserByEmailAddress(dymerEntry.getCompanyId(), emailAddress);
+            	if (_log.isDebugEnabled())
+            		_log.debug("user "+user.getScreenName() +" is deleting "+dymerEntry.getTitle());
+            	
+            	if (user!=null) {
+            		DymerEntryLocalServiceUtil.v2DeleteDymerEntry(dymerEntry, user, notify);
+            	}
+            } catch (PortalException e) {
+            	_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"]");
+                _log.error(e, e);
+            }
+        } else {
+            _log.warn("No Dymer resource [index:"+index+", type:"+ type+", id:"+ id+"] found");
+        }
+    }
+	
+	/**
+	 * Delete Dymer Resource
+	 *
+	 * @param  emailAddress the emailAddress of user owner of the resource
+	 * @param  companyId the primary key of the user's company
+	 * @param  index the index name of the Dymer resource
+	 * @param  type the type name of the Dymer resource
+	 * @param  id the Dymer resource ID (e.g. basedyml-eym6-4168-3806-138016813806)
+	 * @param  notify, if true send notification
+	 */
+	
+	@Deprecated
 	@JSONWebService(value="delete",method="POST")
     public void delete(
     		String emailAddress,
@@ -266,7 +414,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
             String id
     ) {
 		if (_log.isDebugEnabled()) {
-			_log.debug("DymerEntryServiceImpl, delete method---------------------------------------------");
+			_log.debug("@Deprecated DymerEntryServiceImpl, delete method---------------------------------------------");
 			
 			_log.debug("emailAddress: " +emailAddress);
 			_log.debug("companyId: " +companyId);
@@ -284,7 +432,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
             		_log.debug("user "+user.getScreenName() +" is deleting "+dymerEntry.getTitle());
             	
             	if (user!=null) {
-            		DymerEntryLocalServiceUtil.v2DeleteDymerEntry(dymerEntry, user);
+            		DymerEntryLocalServiceUtil.v2DeleteDymerEntry(dymerEntry, user, true);
             	}
             } catch (PortalException e) {
             	_log.error("An error occured while deleting Dymer resource [id: "+id+", index: "+index+", type: "+type+", email: "+emailAddress+", companyId: "+companyId+"]");
@@ -331,7 +479,6 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		return userJSON;
 	}
 	
-
 	/**
 	 * Send Dymer notification to a list of Liferay users
 	 *
@@ -363,30 +510,46 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		
 		int notificationType = DymerUserNotificationDefinition.NOTIFICATION_TYPE_PERSONAL_ENTRY;
 		JSONObject response = JSONFactoryUtil.createJSONObject();
-		boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
+		
 		if (Validator.isNull(companyId) || Validator.isNull(title) || Validator.isNull(description) 
-				|| Validator.isNull(sender) || Validator.isNull(recipients)
-				|| (dymerResource && Validator.isNull(resourceLink))) {
+				|| Validator.isNull(sender) || recipients == null || (recipients!=null && recipients.length == 0)) {
 			response.put("success", false);
 			response.put("error", "empty input parameters");
 			return response;
 		}
 		
-		ServiceContext sc = new ServiceContext();
-		DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
 		User usrSender = userLocalService.fetchUserByEmailAddress(Long.valueOf(companyId), sender);
+		
+		if (Validator.isNull(usrSender)){
+			response.put("success", false);
+			response.put("error", "unknown sender");
+			return response;
+		}
+		
 		List<User> usrRecipients = new ArrayList<User>();
 		for (String r : recipients) {
 			User recipient = userLocalService.fetchUserByEmailAddress(Long.valueOf(companyId), r);
 			if (recipient!=null) {
 				usrRecipients.add(recipient);
-			}	
+			} else {
+				_log.warn("recipient "+r+ " unknown");
+			}
 		}
 		
-		if (Validator.isNull(usrSender) || Validator.isNull(usrRecipients)){
+		if (usrRecipients.isEmpty()){
 			response.put("success", false);
-			response.put("error", "sender unknown or recipients empty");
+			response.put("error", "unknown recipients");
 			return response;
+		}
+		
+		ServiceContext sc = new ServiceContext();
+		
+		DymerEntry dymerEntry = null;
+				
+		boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
+		
+		if (!dymerResource) {
+			dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
 		}
 		
 		try {
@@ -430,28 +593,43 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		
 		int notificationType = DymerUserNotificationDefinition.NOTIFICATION_TYPE_ROLE_ENTRY;
 		JSONObject response = JSONFactoryUtil.createJSONObject();
-		boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
+		
 		if (Validator.isNull(companyId) || Validator.isNull(title) || Validator.isNull(description) 
-				|| Validator.isNull(sender) || Validator.isNull(role)
-				|| (dymerResource && Validator.isNull(resourceLink))) {
+				|| Validator.isNull(sender) || Validator.isNull(role)) {
 			response.put("success", false);
 			response.put("error", "empty input parameters");
 			return response;
 		}
 		
 		ServiceContext sc = new ServiceContext();
-		DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
-		Role usrRole = RoleLocalServiceUtil.fetchRole(Long.valueOf(companyId), role);
+		
 		User usrSender = userLocalService.fetchUserByEmailAddress(Long.valueOf(companyId), sender);
 		
-		if (Validator.isNull(usrSender) || Validator.isNull(usrRole)){
+		if (Validator.isNull(usrSender)){
 			response.put("success", false);
-			response.put("error", "sender or role unknown");
+			response.put("error", "sender unknown");
+			return response;
+		}
+		
+		Role usrRole = RoleLocalServiceUtil.fetchRole(Long.valueOf(companyId), role);
+		
+		if (Validator.isNull(usrRole)){
+			response.put("success", false);
+			response.put("error", "role unknown");
 			return response;
 		}
 		
 		List<User> usrRecipients = userLocalService.getRoleUsers(usrRole.getRoleId());
 		try {
+			
+			boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
+			
+			DymerEntry dymerEntry = null;
+			
+			if (!dymerResource) {
+				dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
+			}
+			
 			dymerEntryLocalService.v2SendNotifications(usrRecipients, dymerEntry, resourceLink, notificationType, title, description, usrSender, portletId, sc);
 		} catch (PortalException e) {
 			response.put("success", false);
@@ -496,30 +674,48 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		
 		int notificationType = DymerUserNotificationDefinition.NOTIFICATION_TYPE_TEAM_ENTRY;
 		JSONObject response = JSONFactoryUtil.createJSONObject();
-		boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
+		
 		if (Validator.isNull(companyId) || Validator.isNull(title) || Validator.isNull(description) 
-				|| Validator.isNull(sender) || Validator.isNull(team) 
-				|| (dymerResource && Validator.isNull(resourceLink))) {
+				|| Validator.isNull(sender) || Validator.isNull(team)) {
 			response.put("success", false);
 			response.put("error", "empty input parameters");
 			return response;
 		}
 		
 		ServiceContext sc = new ServiceContext();
-		DymerEntry dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
+		
 		User usrSender = userLocalService.fetchUserByEmailAddress(Long.valueOf(companyId), sender);
+		
+		if (Validator.isNull(usrSender)){
+			response.put("success", false);
+			response.put("error", "sender unknown");
+			return response;
+		}
+		
 		Team usrTeam = TeamLocalServiceUtil.fetchTeam(Long.valueOf(groupId), team);
 		
-		if (Validator.isNull(usrSender) || Validator.isNull(usrTeam)){
+		if (Validator.isNull(usrTeam)){
 			response.put("success", false);
-			response.put("error", "sender or team unknown");
+			response.put("error", "team unknown");
 			return response;
 		}
 		
 		List<User> usrRecipients = userLocalService.getTeamUsers(usrTeam.getTeamId());
 		try {
-			if (usrRecipients.size()>0)
+			boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
+			
+			DymerEntry dymerEntry = null;
+			
+			if (!dymerResource) {
+				dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
+			}
+			
+			if (usrRecipients.size()>0) {
 				dymerEntryLocalService.v2SendNotifications(usrRecipients, dymerEntry, resourceLink, notificationType, title, description, usrSender, portletId, sc);
+			} else {
+				_log.warn("no user belongs to the team "+team);
+			}
+				
 		} catch (PortalException e) {
 			response.put("success", false);
 			response.put("error", e.getMessage());

@@ -55,11 +55,46 @@ public class DymerEntryServiceHttp {
 	public static it.eng.rd.dymer.model.DymerEntry update(
 		HttpPrincipal httpPrincipal, String dymerDomainName,
 		String emailAddress, long companyId, long groupId, String index,
-		String type, String id, String url, String title, String extContent) {
+		String type, String id, String url, String title, String extContent,
+		boolean notify) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
 				DymerEntryServiceUtil.class, "update", _updateParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, dymerDomainName, emailAddress, companyId, groupId,
+				index, type, id, url, title, extContent, notify);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (it.eng.rd.dymer.model.DymerEntry)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static it.eng.rd.dymer.model.DymerEntry update(
+		HttpPrincipal httpPrincipal, String dymerDomainName,
+		String emailAddress, long companyId, long groupId, String index,
+		String type, String id, String url, String title, String extContent) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DymerEntryServiceUtil.class, "update", _updateParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, dymerDomainName, emailAddress, companyId, groupId,
@@ -88,11 +123,39 @@ public class DymerEntryServiceHttp {
 
 	public static void delete(
 		HttpPrincipal httpPrincipal, String emailAddress, long companyId,
+		String index, String type, String id, boolean notify) {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, emailAddress, companyId, index, type, id, notify);
+
+			try {
+				TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static void delete(
+		HttpPrincipal httpPrincipal, String emailAddress, long companyId,
 		String index, String type, String id) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes2);
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, emailAddress, companyId, index, type, id);
@@ -120,7 +183,7 @@ public class DymerEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				DymerEntryServiceUtil.class, "getUserInfoByEmail",
-				_getUserInfoByEmailParameterTypes3);
+				_getUserInfoByEmailParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, emailAddress, companyId);
@@ -155,7 +218,7 @@ public class DymerEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				DymerEntryServiceUtil.class, "sendPersonalNotification",
-				_sendPersonalNotificationParameterTypes4);
+				_sendPersonalNotificationParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, companyId, title, description, resourceId, index,
@@ -191,7 +254,7 @@ public class DymerEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				DymerEntryServiceUtil.class, "sendNotificationByRole",
-				_sendNotificationByRoleParameterTypes5);
+				_sendNotificationByRoleParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, companyId, title, description, resourceId, index,
@@ -227,7 +290,7 @@ public class DymerEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(
 				DymerEntryServiceUtil.class, "sendNotificationByTeam",
-				_sendNotificationByTeamParameterTypes6);
+				_sendNotificationByTeamParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, companyId, groupId, title, description, resourceId,
@@ -260,7 +323,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "update", _updateParameterTypes8);
+				DymerEntryServiceUtil.class, "update", _updateParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, groupId, index, type, id, url, title,
@@ -293,7 +356,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes9);
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, index, type, id);
@@ -320,35 +383,44 @@ public class DymerEntryServiceHttp {
 
 	private static final Class<?>[] _updateParameterTypes0 = new Class[] {
 		String.class, String.class, long.class, long.class, String.class,
+		String.class, String.class, String.class, String.class, String.class,
+		boolean.class
+	};
+	private static final Class<?>[] _updateParameterTypes1 = new Class[] {
+		String.class, String.class, long.class, long.class, String.class,
 		String.class, String.class, String.class, String.class, String.class
 	};
-	private static final Class<?>[] _deleteParameterTypes2 = new Class[] {
+	private static final Class<?>[] _deleteParameterTypes3 = new Class[] {
+		String.class, long.class, String.class, String.class, String.class,
+		boolean.class
+	};
+	private static final Class<?>[] _deleteParameterTypes4 = new Class[] {
 		String.class, long.class, String.class, String.class, String.class
 	};
-	private static final Class<?>[] _getUserInfoByEmailParameterTypes3 =
+	private static final Class<?>[] _getUserInfoByEmailParameterTypes5 =
 		new Class[] {String.class, long.class};
-	private static final Class<?>[] _sendPersonalNotificationParameterTypes4 =
+	private static final Class<?>[] _sendPersonalNotificationParameterTypes6 =
 		new Class[] {
 			String.class, String.class, String.class, String.class,
 			String.class, String.class, String.class, String.class,
 			String[].class
 		};
-	private static final Class<?>[] _sendNotificationByRoleParameterTypes5 =
+	private static final Class<?>[] _sendNotificationByRoleParameterTypes7 =
 		new Class[] {
 			String.class, String.class, String.class, String.class,
 			String.class, String.class, String.class, String.class, String.class
 		};
-	private static final Class<?>[] _sendNotificationByTeamParameterTypes6 =
+	private static final Class<?>[] _sendNotificationByTeamParameterTypes8 =
 		new Class[] {
 			String.class, String.class, String.class, String.class,
 			String.class, String.class, String.class, String.class,
 			String.class, String.class
 		};
-	private static final Class<?>[] _updateParameterTypes8 = new Class[] {
+	private static final Class<?>[] _updateParameterTypes10 = new Class[] {
 		long.class, long.class, String.class, String.class, String.class,
 		String.class, String.class, String.class
 	};
-	private static final Class<?>[] _deleteParameterTypes9 = new Class[] {
+	private static final Class<?>[] _deleteParameterTypes11 = new Class[] {
 		long.class, String.class, String.class, String.class
 	};
 

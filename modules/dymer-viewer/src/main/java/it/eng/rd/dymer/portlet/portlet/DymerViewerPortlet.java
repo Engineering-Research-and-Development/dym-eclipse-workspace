@@ -80,7 +80,7 @@ public class DymerViewerPortlet extends MVCPortlet {
 			if (httpSession!=null) {
 				OpenIdConnectSession openIdConnectSession = (OpenIdConnectSession)httpSession.getAttribute(OpenIdConnectWebKeys.OPEN_ID_CONNECT_SESSION);
 				if (openIdConnectSession==null) {
-					 _log.warn("no OPEN_ID_CONNECT_SESSION data");	
+					// _log.warn("no OPEN_ID_CONNECT_SESSION data");	
 				} else {
 					String accessToken = "";
 					try {
@@ -142,7 +142,7 @@ public class DymerViewerPortlet extends MVCPortlet {
 		cookie.setMaxAge(CookieKeys.MAX_AGE);
 		cookie.setPath("/");
 		
-		Cookie cookieExtra = new Cookie("DYM_EXTRA", dymerJwt);
+		Cookie cookieExtra = new Cookie("DYM_EXTRA", dymerExtraJwt);
 		cookieExtra.setMaxAge(CookieKeys.MAX_AGE);
 		cookieExtra.setPath("/");
 

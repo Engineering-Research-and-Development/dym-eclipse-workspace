@@ -9,7 +9,7 @@ import javax.portlet.Portlet;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author viviana.latino
+ * @author ENGRD
  */
 @Component(
 	immediate = true,

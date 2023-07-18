@@ -439,10 +439,11 @@ public class DymerEntryLocalServiceUtil {
 	}
 
 	public static DymerEntry v2DeleteDymerEntry(
-			DymerEntry entry, com.liferay.portal.kernel.model.User user)
+			DymerEntry entry, com.liferay.portal.kernel.model.User user,
+			boolean notify)
 		throws PortalException, SystemException {
 
-		return getService().v2DeleteDymerEntry(entry, user);
+		return getService().v2DeleteDymerEntry(entry, user, notify);
 	}
 
 	/**
