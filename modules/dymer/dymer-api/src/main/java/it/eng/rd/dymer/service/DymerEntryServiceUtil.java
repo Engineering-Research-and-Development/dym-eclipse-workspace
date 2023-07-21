@@ -160,7 +160,7 @@ public class DymerEntryServiceUtil {
 	 * @param type the type name of the Dymer resource
 	 * @param resourceLink the relative URL of the resource
 	 * @param sender the email address of the sender of the notification
-	 * @param recipients the email addresses array of the notification recipients
+	 * @param recipients the email addresses array of the notification recipients (if the recipient is the owner of the resource, the notification does not start)
 	 * @return service response json: success true if everything went well or success false and the type of error otherwise
 	 */
 	public static com.liferay.portal.kernel.json.JSONObject

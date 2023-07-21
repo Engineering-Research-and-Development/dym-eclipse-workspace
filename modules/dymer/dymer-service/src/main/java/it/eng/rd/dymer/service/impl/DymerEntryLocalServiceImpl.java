@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.PortalPreferences;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationDeliveryConstants;
@@ -19,6 +20,7 @@ import com.liferay.portal.kernel.notifications.NotificationEventFactoryUtil;
 import com.liferay.portal.kernel.notifications.UserNotificationManagerUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -690,6 +692,7 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 		long userId = 0;
 		String id = "0";
 		String fullName = StringPool.BLANK;
+		String groupFriendlyURL = StringPool.BLANK; 
 		
 		if (sender != null) {
 			companyId = sender.getCompanyId();
@@ -701,6 +704,10 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 			groupId = entry.getGroupId();
 			entryId = entry.getEntryId();
 			id = entry.getId();
+		} else {
+			_log.debug("Dymer resource is null");
+			if ( Validator.isNull(resourceLink))
+				_log.debug("Dymer resource and resourceLink is null");
 		}
 
 		for (User recipient : recipients) {
@@ -750,8 +757,16 @@ public class DymerEntryLocalServiceImpl extends DymerEntryLocalServiceBaseImpl {
 					
 					String resourceLink1 = "#";
 					
+					String groupFriendlyURL = "/guest";
+					
 					if (!_id.equalsIgnoreCase("0")) {
-						resourceLink1 = portalUrl + "/group/guest/catalogue-detail?id=" + _id;
+						
+						if (groupId!=0) {
+							Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+							groupFriendlyURL = group.getFriendlyURL();
+						}
+						_log.debug("groupFriendlyURL: "+groupFriendlyURL);
+						resourceLink1 = portalUrl + "/group"+groupFriendlyURL+"/catalogue-detail?id=" + _id;
 						resourceTitle = "<a href=\"" + resourceLink1 + "\">" + title + "</a>";
 					}
 					

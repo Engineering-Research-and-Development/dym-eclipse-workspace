@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationEvent;
 import com.liferay.portal.kernel.notifications.BaseModelUserNotificationHandler;
@@ -103,7 +104,7 @@ public class DymerEntryUserNotificationHandler
 			if (_log.isDebugEnabled()) {
 				_log.debug("userInfo: "+userInfo);
 				_log.debug("link: "+link);
-				_log.debug("bodyTemplate: "+bodyTemplate);
+				//_log.debug("bodyTemplate: "+bodyTemplate);
 				_log.debug("body: "+body);
 			}
 		} 
@@ -154,6 +155,7 @@ public class DymerEntryUserNotificationHandler
 		//notification v1
 		if (notificationType < 3) {
 			if (Validator.isNotNull(entry)) {
+				_log.debug("Notified resource url (v1): /group/guest/catalogue-detail?id="+entry.getId());
 				return "/group/guest/catalogue-detail?id="+entry.getId();
 			}
 		} 
@@ -162,24 +164,33 @@ public class DymerEntryUserNotificationHandler
 		if (notificationType >= 3){
 			String resourceLink = jsonObject.getString("resourceLink");
 			String portalUrl = jsonObject.getString("portalUrl");
+			long groupId = jsonObject.getLong("groupId");
+			String groupFriendlyURL = "/guest";
+			if (groupId!=0) {
+				Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+				groupFriendlyURL = group.getFriendlyURL();
+			}
+			_log.debug("groupFriendlyURL: "+groupFriendlyURL);
+			
 			
 			if (Validator.isNotNull(resourceLink) && !resourceLink.isEmpty()) {
-				_log.info("getLink - resourceLink "+ resourceLink);
+				_log.debug("Notified resource url (v2), resourceLink is "+resourceLink);
 				return resourceLink;
 			}
 			
 			if (Validator.isNotNull(entry)) {
-				_log.info("getLink - /group/guest/catalogue-detail?id="+ entry.getId());
-				return "/group/guest/catalogue-detail?id="+ entry.getId();
+				String url = "/group"+groupFriendlyURL+"/catalogue-detail?id="+entry.getId();
+				_log.debug("Notified resource url (v2), resource url is "+url);
+				return url;
 			}
 			
 			if (classPK==0 && resourceLink.isEmpty()) {
-				_log.info("getLink0 - #");
+				_log.debug("Notified resource url (v2), resourceLink is empty and dymer resource is null ");
 				return "#";
 			}
 			
 		}
-		_log.info("getLink2 - #");
+		_log.debug("Notified resource url is #");
 		return "#";
 		
 	}

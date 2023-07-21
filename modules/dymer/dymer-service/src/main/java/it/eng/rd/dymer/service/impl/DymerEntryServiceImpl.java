@@ -490,7 +490,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 	 * @param  type the type name of the Dymer resource
 	 * @param  resourceLink the relative URL of the resource
 	 * @param  sender the email address of the sender of the notification
-	 * @param  recipients the email addresses array of the notification recipients
+	 * @param  recipients the email addresses array of the notification recipients (if the recipient is the owner of the resource, the notification does not start)
 	 * @return service response json: success true if everything went well or success false and the type of error otherwise
 	 */
 	
@@ -506,15 +506,28 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			String sender,
 			String[] recipients) 
 	{
-		_log.debug("sendPersonalNotification method");
+		if (_log.isDebugEnabled()) {
+			_log.debug("sendPersonalNotification method");
+			_log.debug("companyId:"+companyId);
+			_log.debug("title:"+title);
+			_log.debug("description:"+description);
+			_log.debug("resourceId:"+resourceId);
+			_log.debug("index:"+index);
+			_log.debug("type:"+type);
+			_log.debug("resourceLink:"+resourceLink);
+			_log.debug("sender:"+sender);
+			_log.debug("recipients:"+Arrays.toString(recipients));
+		}
 		
 		int notificationType = DymerUserNotificationDefinition.NOTIFICATION_TYPE_PERSONAL_ENTRY;
 		JSONObject response = JSONFactoryUtil.createJSONObject();
+		
 		
 		if (Validator.isNull(companyId) || Validator.isNull(title) || Validator.isNull(description) 
 				|| Validator.isNull(sender) || recipients == null || (recipients!=null && recipients.length == 0)) {
 			response.put("success", false);
 			response.put("error", "empty input parameters");
+			_log.error("Error in sendPersonalNotification method: empty input parameters");
 			return response;
 		}
 		
@@ -523,6 +536,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		if (Validator.isNull(usrSender)){
 			response.put("success", false);
 			response.put("error", "unknown sender");
+			_log.error("Error in sendPersonalNotification method: unknown sender");
 			return response;
 		}
 		
@@ -539,28 +553,21 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		if (usrRecipients.isEmpty()){
 			response.put("success", false);
 			response.put("error", "unknown recipients");
+			_log.error("Error in sendPersonalNotification method: unknown recipients");
 			return response;
 		}
 		
-		ServiceContext sc = new ServiceContext();
-		
-		DymerEntry dymerEntry = null;
-				
-		boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
-		
-		if (!dymerResource) {
-			dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
-		}
-		
-		try {
-			dymerEntryLocalService.v2SendNotifications(usrRecipients, dymerEntry, resourceLink, notificationType, title, description, usrSender, portletId, sc);
-		} catch (PortalException e) {
+		if (Validator.isNotNull(resourceLink)&&Validator.isNotNull(resourceId)&&Validator.isNotNull(index)&&Validator.isNotNull(type)) {
 			response.put("success", false);
-			response.put("error", e.getMessage());
+			response.put("error", "too many parameters");
+			_log.error("Error in sendPersonalNotification method: too many parameters");
+			return response;
 		}
-		response.put("success", true);
-		return response;
+		
+		return notificationRules(resourceLink, resourceId, index, type, usrRecipients, notificationType, title, description, usrSender);
+		
 	}
+
 	
 	/**
 	 * Send a Dymer Notification to a list of Liferay users who have the indicated role
@@ -589,7 +596,19 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			String sender,
 			String role) 
 	{
-		_log.debug("sendNotificationByRole method");
+		
+		if (_log.isDebugEnabled()) {
+			_log.debug("sendNotificationByRole method");
+			_log.debug("companyId:"+companyId);
+			_log.debug("title:"+title);
+			_log.debug("description:"+description);
+			_log.debug("resourceId:"+resourceId);
+			_log.debug("index:"+index);
+			_log.debug("type:"+type);
+			_log.debug("resourceLink:"+resourceLink);
+			_log.debug("sender:"+sender);
+			_log.debug("role:"+role);
+		}
 		
 		int notificationType = DymerUserNotificationDefinition.NOTIFICATION_TYPE_ROLE_ENTRY;
 		JSONObject response = JSONFactoryUtil.createJSONObject();
@@ -598,6 +617,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 				|| Validator.isNull(sender) || Validator.isNull(role)) {
 			response.put("success", false);
 			response.put("error", "empty input parameters");
+			_log.error("Error in sendNotificationByRole method: empty input parameters");
 			return response;
 		}
 		
@@ -608,6 +628,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		if (Validator.isNull(usrSender)){
 			response.put("success", false);
 			response.put("error", "sender unknown");
+			_log.error("Error in sendNotificationByRole method: sender unknown");
 			return response;
 		}
 		
@@ -616,29 +637,21 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		if (Validator.isNull(usrRole)){
 			response.put("success", false);
 			response.put("error", "role unknown");
+			_log.error("Error in sendNotificationByRole method: role unknown");
+			return response;
+		}
+		
+		if (Validator.isNotNull(resourceLink)&&Validator.isNotNull(resourceId)&&Validator.isNotNull(index)&&Validator.isNotNull(type)) {
+			response.put("success", false);
+			response.put("error", "too many parameters");
+			_log.error("Error in sendPersonalNotification method: too many parameters");
 			return response;
 		}
 		
 		List<User> usrRecipients = userLocalService.getRoleUsers(usrRole.getRoleId());
-		try {
-			
-			boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
-			
-			DymerEntry dymerEntry = null;
-			
-			if (!dymerResource) {
-				dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
-			}
-			
-			dymerEntryLocalService.v2SendNotifications(usrRecipients, dymerEntry, resourceLink, notificationType, title, description, usrSender, portletId, sc);
-		} catch (PortalException e) {
-			response.put("success", false);
-			response.put("error", e.getMessage());
-			return response;
-		}
 		
-		response.put("success", true);
-		return response;
+		return notificationRules(resourceLink, resourceId, index, type, usrRecipients, notificationType, title, description, usrSender);
+		
 	}
 	
 	/**
@@ -670,7 +683,19 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 			String team) 
 	{
 		
-		_log.debug("sendNotificationByTeam method");
+		if (_log.isDebugEnabled()) {
+			_log.debug("sendNotificationByTeam method");
+			_log.debug("companyId:"+companyId);
+			_log.debug("groupId:"+groupId);
+			_log.debug("title:"+title);
+			_log.debug("description:"+description);
+			_log.debug("resourceId:"+resourceId);
+			_log.debug("index:"+index);
+			_log.debug("type:"+type);
+			_log.debug("resourceLink:"+resourceLink);
+			_log.debug("sender:"+sender);
+			_log.debug("team:"+team);
+		}
 		
 		int notificationType = DymerUserNotificationDefinition.NOTIFICATION_TYPE_TEAM_ENTRY;
 		JSONObject response = JSONFactoryUtil.createJSONObject();
@@ -679,6 +704,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 				|| Validator.isNull(sender) || Validator.isNull(team)) {
 			response.put("success", false);
 			response.put("error", "empty input parameters");
+			_log.error("Error in sendNotificationByTeam method: empty input parameters");
 			return response;
 		}
 		
@@ -689,6 +715,7 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		if (Validator.isNull(usrSender)){
 			response.put("success", false);
 			response.put("error", "sender unknown");
+			_log.error("Error in sendNotificationByTeam method: sender unknown");
 			return response;
 		}
 		
@@ -697,30 +724,71 @@ public class DymerEntryServiceImpl extends DymerEntryServiceBaseImpl {
 		if (Validator.isNull(usrTeam)){
 			response.put("success", false);
 			response.put("error", "team unknown");
+			_log.error("Error in sendNotificationByTeam method: team unknown");
+			return response;
+		}
+		
+		if (Validator.isNotNull(resourceLink)&&Validator.isNotNull(resourceId)&&Validator.isNotNull(index)&&Validator.isNotNull(type)) {
+			response.put("success", false);
+			response.put("error", "too many parameters");
+			_log.error("Error in sendPersonalNotification method: too many parameters");
 			return response;
 		}
 		
 		List<User> usrRecipients = userLocalService.getTeamUsers(usrTeam.getTeamId());
+		
+		return notificationRules(resourceLink, resourceId, index, type, usrRecipients, notificationType, title, description, usrSender);
+		
+	}
+	
+	
+	private JSONObject notificationRules(String resourceLink, String resourceId, String index, String type, List<User> usrRecipients, int notificationType, String title, String description, User usrSender) {
+		JSONObject response = JSONFactoryUtil.createJSONObject();
+		ServiceContext sc = new ServiceContext();
 		try {
-			boolean dymerResource = Validator.isNull(resourceId) && Validator.isNull(index) && Validator.isNull(type);
 			
 			DymerEntry dymerEntry = null;
 			
-			if (!dymerResource) {
-				dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
-			}
+			boolean notificationTextMessage = Validator.isNull(resourceLink)&&Validator.isNull(resourceId)&&Validator.isNull(index)&&Validator.isNull(type);
+			
+			boolean notificationByResourceLink = Validator.isNotNull(resourceLink)&&Validator.isNull(resourceId)&&Validator.isNull(index)&&Validator.isNull(type);
+			
+			boolean notificationByIdIndexType = Validator.isNull(resourceLink)&&Validator.isNotNull(resourceId)&&Validator.isNotNull(index)&&Validator.isNotNull(type);
 			
 			if (usrRecipients.size()>0) {
-				dymerEntryLocalService.v2SendNotifications(usrRecipients, dymerEntry, resourceLink, notificationType, title, description, usrSender, portletId, sc);
-			} else {
-				_log.warn("no user belongs to the team "+team);
-			}
+
+				if (notificationTextMessage || notificationByResourceLink) {
+					dymerEntryLocalService.v2SendNotifications(usrRecipients, dymerEntry, resourceLink, notificationType, title, description, usrSender, portletId, sc);
+					response.put("success", true);
+					return response;
+				}
 				
+				if (notificationByIdIndexType) {
+					
+					dymerEntry = DymerEntryUtil.fetchByForIndexTypeId(index, type, resourceId);
+					
+					if (dymerEntry!=null) {
+						dymerEntryLocalService.v2SendNotifications(usrRecipients, dymerEntry, resourceLink, notificationType, title, description, usrSender, portletId, sc);
+						response.put("success", true);
+						return response;
+					} else {
+						_log.debug("Dymer resource [index:"+index+", type:"+type+", resourceId:"+resourceId+"] not found");
+						response.put("error", "Dymer not found");
+						return response;
+					}
+				}
+				
+			} else {
+				_log.warn("-no users");
+			}
 		} catch (PortalException e) {
+			_log.error("Error: "+e.getMessage());
 			response.put("success", false);
 			response.put("error", e.getMessage());
+			return response;
 		}
-		response.put("success", true);
+		response.put("success", false);
+		response.put("error", "generic error");
 		return response;
 	}
 	

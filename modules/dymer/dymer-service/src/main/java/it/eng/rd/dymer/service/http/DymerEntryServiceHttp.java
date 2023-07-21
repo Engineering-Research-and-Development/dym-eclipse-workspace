@@ -323,7 +323,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "update", _updateParameterTypes10);
+				DymerEntryServiceUtil.class, "update", _updateParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, groupId, index, type, id, url, title,
@@ -356,7 +356,7 @@ public class DymerEntryServiceHttp {
 
 		try {
 			MethodKey methodKey = new MethodKey(
-				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes11);
+				DymerEntryServiceUtil.class, "delete", _deleteParameterTypes12);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, userId, index, type, id);
@@ -416,11 +416,11 @@ public class DymerEntryServiceHttp {
 			String.class, String.class, String.class, String.class,
 			String.class, String.class
 		};
-	private static final Class<?>[] _updateParameterTypes10 = new Class[] {
+	private static final Class<?>[] _updateParameterTypes11 = new Class[] {
 		long.class, long.class, String.class, String.class, String.class,
 		String.class, String.class, String.class
 	};
-	private static final Class<?>[] _deleteParameterTypes11 = new Class[] {
+	private static final Class<?>[] _deleteParameterTypes12 = new Class[] {
 		long.class, String.class, String.class, String.class
 	};
 
